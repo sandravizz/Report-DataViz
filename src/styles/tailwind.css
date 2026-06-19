@@ -1,5 +1,6 @@
 @import 'tailwindcss' source(none);
-@source '../**/*.{js,ts,jsx,tsx}';
+@source '../**/*.{js,ts,svelte}';
+@source '../../node_modules/layerchart/**/*.svelte';
 
 @import 'tw-animate-css';
 
