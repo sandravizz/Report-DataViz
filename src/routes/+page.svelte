@@ -60,13 +60,13 @@
 
 <Header />
 
-<div id="top" bind:this={containerEl} class="bg-[#080808]" style:height="{pairs.length * 120 + 200}vh">
-  <div class="sticky top-0 h-screen overflow-hidden bg-[#080808]">
+<div id="top" bind:this={containerEl} class="bg-[#F4DDD6]" style:height="{pairs.length * 120 + 200}vh">
+  <div class="sticky top-0 h-screen overflow-hidden bg-[#F4DDD6]">
     <ScrollColumn items={pairs.map((p) => p.product)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />
     <ScrollColumn items={pairs.map((p) => p.chartType)} {activeIndex} y={listY} align="right" />
-    <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-gradient-to-b from-[#080808] to-transparent"></div>
-    <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-gradient-to-t from-[#080808] to-transparent"></div>
+    <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-[#F4DDD6] to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-linear-to-t from-[#F4DDD6] to-transparent"></div>
   </div>
 </div>
 
