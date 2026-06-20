@@ -1,8 +1,10 @@
 <script>
-  import { pairs } from "./data/pairs";
-  import { ITEM_H } from "./lib/scroll-animation";
-  import ScrollColumn from "./components/ScrollColumn.svelte";
-  import ChartDisplay from "./components/ChartDisplay.svelte";
+  import { pairs } from "$lib/data/pairs";
+  import { ITEM_H } from "$lib/scroll-animation";
+  import ScrollColumn from "$lib/components/ScrollColumn.svelte";
+  import ChartDisplay from "$lib/components/ChartDisplay.svelte";
+  import Header from "$lib/components/Header.svelte";
+  import Footer from "$lib/components/Footer.svelte";
 
   let containerEl;
 
@@ -56,13 +58,9 @@
   let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
 </script>
 
-<div bind:this={containerEl} class="bg-[#080808]" style:height="{pairs.length * 120 + 200}vh">
-  <div class="fixed top-6 left-6 z-50 flex gap-4 font-mono text-[11px] tracking-[0.12em] text-white/30">
-    <span>RCHARTS</span>
-    <span>CHARTTYPES</span>
-    <span>UI</span>
-  </div>
+<Header />
 
+<div id="top" bind:this={containerEl} class="bg-[#080808]" style:height="{pairs.length * 120 + 200}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-[#080808]">
     <ScrollColumn items={pairs.map((p) => p.product)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />
@@ -71,3 +69,5 @@
     <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-gradient-to-t from-[#080808] to-transparent"></div>
   </div>
 </div>
+
+<Footer />

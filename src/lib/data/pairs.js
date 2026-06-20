@@ -10,7 +10,7 @@ export const pairs = [
       { m: "A", v: 740 }, { m: "M", v: 690 }, { m: "J", v: 870 },
     ],
   },
- 
+
   {
     product: "Name 3",
     chartType: "AREA CHART",
@@ -36,7 +36,7 @@ export const pairs = [
       { s: "AW23", v: 470 }, { s: "SS24", v: 410 }, { s: "AW24", v: 560 },
     ],
   },
- 
+
   {
     product: "Name 7",
     chartType: "RADAR CHART",

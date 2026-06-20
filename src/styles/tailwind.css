@@ -1,8 +1,12 @@
-@import 'tailwindcss' source(none);
-@source '../**/*.{js,ts,svelte}';
+@import 'tailwindcss';
 @source '../../node_modules/layerchart/**/*.svelte';
+@source '../../node_modules/flowbite-svelte/**/*.svelte';
+@source '../../node_modules/flowbite-svelte-icons/**/*.svelte';
 
 @import 'tw-animate-css';
+
+/* This site has no light mode, so disable the OS-based dark: variant rather than fighting it component by component. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-mono: 'Space Mono', monospace;

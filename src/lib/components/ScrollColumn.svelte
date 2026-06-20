@@ -1,5 +1,5 @@
 <script>
-  import { getOpacity, getScale } from "../lib/scroll-animation";
+  import { getOpacity, getScale } from "../scroll-animation";
 
   let { items, activeIndex, y, align } = $props();
 
