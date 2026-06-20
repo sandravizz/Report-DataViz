@@ -60,7 +60,7 @@
 
 <Header />
 
-<div id="top" bind:this={containerEl} class="bg-[#F4DDD6]" style:height="{pairs.length * 120 + 200}vh">
+<div id="top" bind:this={containerEl}  style:height="{pairs.length * 120 + 200}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-[#F4DDD6]">
     <ScrollColumn items={pairs.map((p) => p.chartType)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />

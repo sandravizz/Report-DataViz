@@ -1,26 +1,16 @@
 export const pairs = [
   {
-    product: "Catchy headline for Line Chart",
-    chartType: "LINE CHART",
-    kind: "line",
-    xKey: "m",
-    xType: "category",
-    yKey: "v",
-    data: [
-      { m: "J", v: 420 }, { m: "F", v: 580 }, { m: "M", v: 510 },
-      { m: "A", v: 740 }, { m: "M", v: 690 }, { m: "J", v: 870 },
-    ],
-  },
-  {
     product: "Catchy headline for Area Chart",
     chartType: "AREA CHART",
     kind: "area",
-    xKey: "y",
-    xType: "linear",
+    xKey: "date",
     yKey: "v",
     data: [
-      { y: 2020, v: 310 }, { y: 2021, v: 420 }, { y: 2022, v: 390 },
-      { y: 2023, v: 550 }, { y: 2024, v: 610 },
+      { date: new Date(2020, 0, 1), v: 310 },
+      { date: new Date(2021, 0, 1), v: 420 },
+      { date: new Date(2022, 0, 1), v: 390 },
+      { date: new Date(2023, 0, 1), v: 550 },
+      { date: new Date(2024, 0, 1), v: 610 },
     ],
   },
   {
@@ -28,7 +18,6 @@ export const pairs = [
     chartType: "BAR CHART",
     kind: "bar",
     xKey: "region",
-    xType: "category",
     yKey: "v",
     data: [
       { region: "Sub-Saharan Africa", v: 290 },
