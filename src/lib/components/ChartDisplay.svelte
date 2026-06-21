@@ -15,6 +15,7 @@
     <div
       class="absolute inset-0 transition-opacity duration-500 ease-[ease]"
       style:opacity={i === activeIndex ? 1 : 0}
+      style:pointer-events={i === activeIndex ? "auto" : "none"}
     >
       <div class="mb-1 font-sans text-[10px] tracking-wide text-[#2A2659]/50 uppercase lg:hidden">
         {pair.chartType}

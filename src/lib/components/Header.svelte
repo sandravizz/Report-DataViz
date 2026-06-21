@@ -10,19 +10,19 @@
 </script>
 
 <header
-  class="fixed inset-x-0 top-0 z-50 border-b border-[#2A2659]/10 bg-[#F4DDD6]/80 backdrop-blur-sm"
+  class="fixed inset-x-0 top-0 z-50 border-b border-base-content/10 bg-base-100/80 backdrop-blur-sm"
 >
   <div class="flex items-center justify-between px-6 py-3">
     <a
       href="#top"
-      class="whitespace-nowrap font-sans text-lg font-semibold text-[#2A2659]"
+      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content"
     >
       GLOBAL JUSTICE REPORT
     </a>
 
     <button
       type="button"
-      class="inline-flex items-center justify-center rounded-lg p-2 text-[#2A2659] hover:bg-[#2A2659]/10 focus:outline-none focus:ring-2 focus:ring-[#2A2659]/20 md:hidden"
+      class="inline-flex items-center justify-center rounded-lg p-2 text-base-content hover:bg-base-content/10 focus:outline-none focus:ring-2 focus:ring-base-content/20 md:hidden"
       aria-controls="primary-nav"
       aria-expanded={open}
       onclick={() => (open = !open)}
@@ -45,14 +45,14 @@
 
     <nav
       id="primary-nav"
-      class="absolute inset-x-0 top-full flex-col gap-1 border-b border-[#2A2659]/10 bg-[#F4DDD6] p-4 font-sans text-sm md:static md:flex md:w-auto md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0 {open
+      class="absolute inset-x-0 top-full flex-col gap-1 border-b border-base-content/10 bg-base-100 p-4 font-sans text-sm md:static md:flex md:w-auto md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0 {open
         ? 'flex'
         : 'hidden'}"
     >
       {#each links as link}
         <a
           href={link.href}
-          class="px-3 py-2 text-[#2A2659]/50 hover:text-[#2A2659] md:px-0 md:py-0"
+          class="px-3 py-2 text-base-content/50 hover:text-base-content md:px-0 md:py-0"
         >
           {link.label}
         </a>

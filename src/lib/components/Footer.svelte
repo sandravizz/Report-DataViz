@@ -1,37 +1,44 @@
-<script>
-  import { Footer, FooterCopyright, FooterLinkGroup, FooterLink, FooterIcon } from "flowbite-svelte";
-  import { GithubSolid, TwitterSolid, InstagramSolid } from "flowbite-svelte-icons";
-</script>
-
-<Footer
-  footerType="socialmedia"
-  class="fixed inset-x-0 bottom-0 z-50 border-t border-[#2A2659]/10 bg-[#F4DDD6]/80 px-6 py-8 backdrop-blur-sm"
+<footer
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-base-content/10 bg-base-100/80 px-6 py-8 backdrop-blur-sm"
 >
   <div class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-    <FooterCopyright
-      href="#top"
-      by="SandraViz.com"
-      class="text-[#2A2659]/50"
-      classes={{ link: "text-[#2A2659] hover:underline" }}
-    />
+    <p class="text-sm text-base-content/50">
+      &copy; {new Date().getFullYear()}
+      <a href="#top" class="link link-hover text-base-content">SandraViz.com</a>. All rights reserved.
+    </p>
 
-    <FooterLinkGroup class="flex gap-6 text-sm text-[#2A2659]/50">
-      <FooterLink href="#top" classes={{ link: "hover:text-[#2A2659]" }}>Home</FooterLink>
-      <FooterLink href="#work" classes={{ link: "hover:text-[#2A2659]" }}>Work</FooterLink>
-      <FooterLink href="#about" classes={{ link: "hover:text-[#2A2659]" }}>About</FooterLink>
-      <FooterLink href="#contact" classes={{ link: "hover:text-[#2A2659]" }}>Contact</FooterLink>
-    </FooterLinkGroup>
+    <ul class="flex gap-6 text-sm text-base-content/50">
+      <li><a href="#top" class="hover:text-base-content">Home</a></li>
+      <li><a href="#work" class="hover:text-base-content">Work</a></li>
+      <li><a href="#about" class="hover:text-base-content">About</a></li>
+      <li><a href="#contact" class="hover:text-base-content">Contact</a></li>
+    </ul>
 
-    <div class="flex gap-4">
-      <FooterIcon href="#" ariaLabel="GitHub" class="text-[#2A2659]/50 hover:text-[#2A2659]">
-        <GithubSolid class="h-5 w-5" />
-      </FooterIcon>
-      <FooterIcon href="#" ariaLabel="Twitter" class="text-[#2A2659]/50 hover:text-[#2A2659]">
-        <TwitterSolid class="h-5 w-5" />
-      </FooterIcon>
-      <FooterIcon href="#" ariaLabel="Instagram" class="text-[#2A2659]/50 hover:text-[#2A2659]">
-        <InstagramSolid class="h-5 w-5" />
-      </FooterIcon>
+    <div class="flex gap-4 text-base-content/50">
+      <!-- svelte-ignore a11y_invalid_attribute -->
+      <a href="#" aria-label="GitHub" class="hover:text-base-content">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.755-1.333-1.755-1.089-.745.084-.729.084-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.466-1.332-5.466-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.5 11.5 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.804 5.624-5.476 5.92.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.297 24 12c0-6.627-5.373-12-12-12Z"
+          />
+        </svg>
+      </a>
+      <!-- svelte-ignore a11y_invalid_attribute -->
+      <a href="#" aria-label="Twitter" class="hover:text-base-content">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162c-.542.929-.856 2.01-.857 3.17 0 2.188 1.115 4.117 2.823 5.247a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.084c.627 1.956 2.444 3.379 4.6 3.419a9.868 9.868 0 0 1-6.102 2.105c-.395 0-.79-.023-1.17-.067a13.995 13.995 0 0 0 7.557 2.209c9.054 0 14-7.496 14-13.986 0-.21 0-.42-.015-.63A10.025 10.025 0 0 0 24 4.59z"
+          />
+        </svg>
+      </a>
+      <!-- svelte-ignore a11y_invalid_attribute -->
+      <a href="#" aria-label="Instagram" class="hover:text-base-content">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+          />
+        </svg>
+      </a>
     </div>
   </div>
-</Footer>
+</footer>

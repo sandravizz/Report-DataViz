@@ -1,9 +1,24 @@
 @import 'tailwindcss';
 @source '../../node_modules/layerchart/**/*.svelte';
-@source '../../node_modules/flowbite-svelte/**/*.svelte';
-@source '../../node_modules/flowbite-svelte-icons/**/*.svelte';
 
 @import 'tw-animate-css';
+@import 'layerchart/daisyui-5.css';
+
+@plugin "daisyui" {
+  themes: globaljustice --default;
+}
+
+@plugin "daisyui/theme" {
+  name: 'globaljustice';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #f4ddd6;
+  --color-base-content: #2a2659;
+  --color-primary: #2a2659;
+  --color-primary-content: #f4ddd6;
+}
 
 @theme {
   --font-sans: 'Geist', sans-serif;
