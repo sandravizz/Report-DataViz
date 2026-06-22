@@ -5,8 +5,8 @@
   let isLeft = $derived(align === "left");
 </script>
 
-<div class="absolute inset-y-0 {isLeft ? 'left-0' : 'right-0'} hidden w-[20%] overflow-hidden lg:block">
-  <div style:transform="translateY({y}px)" class="absolute top-0 {isLeft ? 'left-8' : 'right-8 text-right'}">
+<div class="absolute inset-y-0 {isLeft ? 'left-0' : 'right-0'} hidden w-[14%] overflow-hidden lg:block">
+  <div style:transform="translateY({y}px)" class="absolute top-0 {isLeft ? 'left-6' : 'right-6 text-right'}">
     {#each items as item, i (i)}
       {@const dist = Math.abs(i - activeIndex)}
       <div

@@ -2,6 +2,7 @@
   import { pairs } from "$lib/data/pairs";
   import { ITEM_H } from "$lib/scroll-animation";
   import ScrollColumn from "$lib/components/ScrollColumn.svelte";
+  import DescriptionColumn from "$lib/components/DescriptionColumn.svelte";
   import ChartDisplay from "$lib/components/ChartDisplay.svelte";
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
@@ -64,7 +65,7 @@
   <div class="sticky top-0 h-screen overflow-hidden bg-[#F4DDD6]">
     <ScrollColumn items={pairs.map((p) => p.chartType)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />
-    <ScrollColumn items={pairs.map((p) => p.chartType)} {activeIndex} y={listY} align="right" />
+    <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
     <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-[#F4DDD6] to-transparent"></div>
     <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-linear-to-t from-[#F4DDD6] to-transparent"></div>
   </div>

@@ -2,7 +2,12 @@ import { palette } from "$lib/colors";
 
 export const pairs = [
   {
-    product: "Catchy headline for Area Chart",
+    index: 0,
+    title: "Growth Has Accelerated Over the Past Five Years",
+    subtitle: "Catchy headline for Area Chart",
+    description:
+      "Growth has climbed steadily across the past five years, rising from 310 to 610 even after a brief dip in 2022. The acceleration suggests momentum is still building rather than leveling off.",
+    source: "Source: Illustrative data",
     chartType: "AREA CHART",
     kind: "area",
     xKey: "date",
@@ -16,7 +21,12 @@ export const pairs = [
     ],
   },
   {
-    product: "Large Gaps in Average Monthly Income Between Regions",
+    index: 1,
+    title: "2025: Large Gaps in Average Monthly Income Between Regions",
+    subtitle: "Monthly Gross National Disposable Income, 2025 Euros PPP",
+    description:
+      "Average monthly disposable income ranges from just 290 in Sub-Saharan Africa to 4,590 in North America and Oceania — roughly a 16x gap. The world average of 1,410 sits well below incomes in Europe and North America, underscoring how uneven the global distribution remains.",
+    source: "Source: gjp.wid.world (F1)",
     chartType: "BAR CHART",
     kind: "bar",
     xKey: "region",
@@ -26,16 +36,41 @@ export const pairs = [
       { region: "South & South-East Asia", v: 720 },
       { region: "Latin America", v: 1250 },
       { region: "Middle East & North Africa", v: 1370 },
-      { region: "World", v: 1410 },
+            { region: "World", v: 1410, color: palette[7] },
       { region: "East Asia", v: 1830 },
       { region: "Russia/Central Asia", v: 1950 },
       { region: "Europe", v: 3590 },
       { region: "North America/Oceania", v: 4590 },
-      { region: "All Countries in 2100", v: 5000 },
+
     ],
   },
   {
-    product: "Maternal Deaths Have Fallen Fastest in South Asia",
+    index: 2,
+    title: "The Global Justice Fund Would Far Outspend Existing Global Aid Programs",
+    subtitle: "Comparison with Existing Development Aid and Other Institutions (% World GDP)",
+    description:
+      "The Global Justice Fund's projected annual expenditures of 10.3% of world GDP would dwarf today's total development aid budget of just 0.3%. Even excluding country dividends and investment flows, the fund would still outspend the combined UN, IMF, and World Bank budgets many times over.",
+    source: "Source: gjp.wid.world (F10)",
+    chartType: "BAR CHART",
+    kind: "bar",
+    xKey: "category",
+    yKey: "v",
+    valueSuffix: "%",
+    data: [
+      { category: "GJF Annual Expenditures (2026–2060)", v: 10.3 },
+      { category: "incl. Country Dividends", v: 5.7 },
+      { category: "incl. WSF Investment Flows", v: 4.6 },
+      { category: "Total Development Aid (2025)", v: 0.3 },
+      { category: "Total Budget UN-IMF-WB (2025)", v: 0.1 },
+    ],
+  },
+  {
+    index: 3,
+    title: "Maternal Mortality Has Fallen Sharply Since 1990",
+    subtitle: "Maternal Deaths Have Fallen Fastest in South Asia",
+    description:
+      "Maternal deaths have fallen sharply since 1990, with Sub-Saharan Africa's rate dropping from 1,450 to 540 per 100,000 live births. South & South-East Asia saw an even steeper decline, falling from 620 to 130 over the same period.",
+    source: "Source: Illustrative data",
     chartType: "LINE CHART",
     kind: "line",
     xKey: "year",
@@ -52,7 +87,12 @@ export const pairs = [
     ],
   },
   {
-    product: "Wealthier Nations Tend to Report Higher Life Satisfaction",
+    index: 4,
+    title: "Richer Countries Tend to Report Greater Happiness",
+    subtitle: "Wealthier Nations Tend to Report Higher Life Satisfaction",
+    description:
+      "Wealthier countries tend to report higher life satisfaction, with Norway and Germany scoring above 7 on the happiness scale alongside GDP per capita above $50,000. Lower-income countries like Nigeria and India cluster toward the bottom of both axes, though the relationship isn't perfectly linear.",
+    source: "Source: Illustrative data",
     chartType: "SCATTER PLOT",
     kind: "scatter",
     xKey: "gdp",
@@ -76,7 +116,12 @@ export const pairs = [
     ],
   },
   {
-    product: "Who Funds Global Humanitarian Aid",
+    index: 5,
+    title: "Government Donors Provide the Bulk of Humanitarian Funding",
+    subtitle: "Who Funds Global Humanitarian Aid",
+    description:
+      "Government donors supply the majority of humanitarian funding at 58%, more than double the combined share from private donors and multilateral agencies. NGOs, foundations, and other sources make up the remaining 8%.",
+    source: "Source: Illustrative data",
     chartType: "PIE CHART",
     kind: "pie",
     key: "source",
@@ -90,7 +135,12 @@ export const pairs = [
     ],
   },
   {
-    product: "Where the World's Displaced People Are Hosted",
+    index: 6,
+    title: "Sub-Saharan Africa Hosts the Most Displaced People",
+    subtitle: "Where the World's Displaced People Are Hosted",
+    description:
+      "Sub-Saharan Africa hosts the largest share of the world's displaced people at 26%, closely followed by the Middle East and North Africa at 24%. North America and Oceania host just 5%, the smallest share of any region.",
+    source: "Source: Illustrative data",
     chartType: "DONUT CHART",
     kind: "donut",
     key: "region",
@@ -105,7 +155,12 @@ export const pairs = [
     ],
   },
   {
-    product: "Women Remain Underrepresented in National Parliaments",
+    index: 7,
+    title: "Women Hold Far Fewer Parliamentary Seats Than Men",
+    subtitle: "Women Remain Underrepresented in National Parliaments",
+    description:
+      "Women remain underrepresented in national parliaments everywhere, holding at most 32% of seats in Latin America. The gap is widest in the Middle East and North Africa, where men hold 84% of seats to women's 16%.",
+    source: "Source: Illustrative data",
     chartType: "GROUPED BARS",
     kind: "grouped-bar",
     xKey: "region",
@@ -121,6 +176,28 @@ export const pairs = [
       { region: "Europe", men: 69, women: 31 },
       { region: "Latin America", men: 68, women: 32 },
       { region: "North America/Oceania", men: 71, women: 29 },
+    ],
+  },
+  {
+    index: 8,
+    title: "2025: Large Gaps in Average Monthly Income Between Regions (Stacked)",
+    subtitle: "Monthly Gross National Disposable Income, 2025 Euros PPP",
+    description:
+      "The same regional income gap shown as a single stacked bar, from Sub-Saharan Africa's 290 at the base to North America and Oceania's 4,590 at the top. Stacking the values highlights how much of the total is concentrated in the highest-income regions.",
+    source: "Source: gjp.wid.world (F1)",
+    chartType: "STACKED BAR CHART",
+    kind: "stacked-bar",
+    xKey: "region",
+    yKey: "v",
+    data: [
+      { region: "Sub-Saharan Africa", v: 290, color: palette[5] },
+      { region: "South & South-East Asia", v: 720, color: palette[9] },
+      { region: "Latin America", v: 1250, color: palette[4] },
+      { region: "Middle East & North Africa", v: 1370, color: palette[5] },
+      { region: "East Asia", v: 1830, color: palette[9] },
+      { region: "Russia/Central Asia", v: 1950, color: palette[9] },
+      { region: "Europe", v: 3590, color: palette[2] },
+      { region: "North America/Oceania", v: 4590, color: palette[3] },
     ],
   },
 ];
