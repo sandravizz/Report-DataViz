@@ -27,30 +27,6 @@ export const pairs = [
     ],
   },
   {
-    index: 1,
-    title: "2025: Large Gaps in Average Monthly Income Between Regions",
-    subtitle: "Monthly Gross National Disposable Income, 2025 Euros PPP",
-    description:
-      "Average monthly disposable income ranges from just 290 in Sub-Saharan Africa to 4,590 in North America and Oceania — roughly a 16x gap. The world average of 1,410 sits well below incomes in Europe and North America, underscoring how uneven the global distribution remains.",
-    source: "Source: gjp.wid.world (F1)",
-    chartType: "BAR CHART",
-    kind: "bar",
-    xKey: "region",
-    yKey: "v",
-    data: [
-      { region: "Sub-Saharan Africa", v: 290 },
-      { region: "South & South-East Asia", v: 720 },
-      { region: "Latin America", v: 1250 },
-      { region: "Middle East & North Africa", v: 1370 },
-            { region: "World", v: 1410, color: palette[7] },
-      { region: "East Asia", v: 1830 },
-      { region: "Russia/Central Asia", v: 1950 },
-      { region: "Europe", v: 3590 },
-      { region: "North America/Oceania", v: 4590 },
-
-    ],
-  },
-  {
     index: 2,
     title: "The Global Justice Fund Would Far Outspend Existing Global Aid Programs",
     subtitle: "Comparison with Existing Development Aid and Other Institutions (% World GDP)",
