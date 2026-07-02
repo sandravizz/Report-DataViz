@@ -1,6 +1,6 @@
 import { palette } from "$lib/colors";
 
-export const pairs = [
+export const data = [
   {
     title: "Large Gaps in Average Monthly Income Between Regions",
     subtitle: "Global Justice: Equality & Prosperity for all Countries by 2100",
@@ -8,7 +8,7 @@ export const pairs = [
       "Ensuring Equality and Prosperity for All. The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. Today, per capita monthly gross national income ranges from €290 in Sub-Saharan Africa to €4,590 in North America/Oceania (a 16-fold gap), with a world average of €1,410. By 2100, all countries will converge to €5,000 per month. This corresponds to a target of €60,000 per capita annually. Achieving this target implies annual GDP per capita growth rates of around 0-0.5% in today's richest regions (North America/Oceania, Europe) and around 3-4% in today's poorest regions (Sub-Saharan Africa, South and South-East Asia), the latter comparable to the average growth rate of East Asia over the last 75 years.",
     source:
       "Interpretation. The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. Incomes are projected to reach 5,000 Euros in all countries by 2100. Sources & series: gjp.wid.world (F1)",
-    chartType: "Figure 1",
+    number: "Figure 1",
     kind: "bar",
     xKey: "region",
     yKey: "v",
@@ -32,7 +32,7 @@ export const pairs = [
     description:
       "Maternal deaths have fallen sharply since 1990, with Sub-Saharan Africa's rate dropping from 1,450 to 540 per 100,000 live births. South & South-East Asia saw an even steeper decline, falling from 620 to 130 over the same period.",
     source: "Source: Illustrative data",
-    chartType: "Figure 2",
+    number: "Figure 2",
     kind: "line",
     xKey: "year",
     series: [
@@ -53,7 +53,7 @@ export const pairs = [
     description:
       "Wealthier countries tend to report higher life satisfaction, with Norway and Germany scoring above 7 on the happiness scale alongside GDP per capita above $50,000. Lower-income countries like Nigeria and India cluster toward the bottom of both axes, though the relationship isn't perfectly linear.",
     source: "Source: Illustrative data",
-    chartType: "Figure 3",
+    number: "Figure 3",
     kind: "scatter",
     xKey: "gdp",
     yKey: "happiness",
@@ -81,7 +81,7 @@ export const pairs = [
     description:
       "Government donors supply the majority of humanitarian funding at 58%, more than double the combined share from private donors and multilateral agencies. NGOs, foundations, and other sources make up the remaining 8%.",
     source: "Source: Illustrative data",
-    chartType: "Figure 4",
+    number: "Figure 4",
     kind: "pie",
     key: "source",
     value: "share",
@@ -99,17 +99,17 @@ export const pairs = [
     description:
       "Sub-Saharan Africa hosts the largest share of the world's displaced people at 26%, closely followed by the Middle East and North Africa at 24%. North America and Oceania host just 5%, the smallest share of any region.",
     source: "Source: Illustrative data",
-    chartType: "Figure 5",
+    number: "Figure 5",
     kind: "donut",
     key: "region",
     value: "share",
     data: [
-      { region: "Sub-Saharan Africa", share: 26, color: palette[3] },
-      { region: "Middle East & North Africa", share: 24, color: palette[5] },
-      { region: "South & South-East Asia", share: 18, color: palette[2] },
-      { region: "Europe", share: 16, color: palette[4] },
-      { region: "Latin America", share: 11, color: palette[6] },
-      { region: "North America/Oceania", share: 5, color: palette[9] },
+      { region: "Sub-Saharan Africa", share: 26 },
+      { region: "Middle East & North Africa", share: 24 },
+      { region: "South & South-East Asia", share: 18 },
+      { region: "Europe", share: 16 },
+      { region: "Latin America", share: 11 },
+      { region: "North America/Oceania", share: 5 },
     ],
   },
   {
@@ -118,7 +118,7 @@ export const pairs = [
     description:
       "Women remain underrepresented in national parliaments everywhere, holding at most 32% of seats in Latin America. The gap is widest in the Middle East and North Africa, where men hold 84% of seats to women's 16%.",
     source: "Source: Illustrative data",
-    chartType: "Figure 6",
+    number: "Figure 6",
     kind: "grouped-bar",
     xKey: "region",
     series: [
@@ -141,7 +141,7 @@ export const pairs = [
     description:
       "The same regional income gap shown as a single stacked bar, from Sub-Saharan Africa's 290 at the base to North America and Oceania's 4,590 at the top. Stacking the values highlights how much of the total is concentrated in the highest-income regions.",
     source: "Source: gjp.wid.world (F1)",
-    chartType: "Figure 7",
+    number: "Figure 7",
     kind: "stacked-bar",
     xKey: "region",
     yKey: "v",

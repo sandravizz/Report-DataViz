@@ -1,5 +1,6 @@
 <script>
   import { PieChart } from "layerchart";
+  import { legendProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 </script>
@@ -11,6 +12,6 @@
   c="color"
   legend={{ placement: "bottom" }}
   props={{
-    legend: { class: "text-xs font-light" },
+    legend: legendProps,
   }}
 />

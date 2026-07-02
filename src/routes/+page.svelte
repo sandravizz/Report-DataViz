@@ -1,18 +1,10 @@
 <script>
-  import { pairs } from "$lib/data/pairs";
+  import { data } from "$lib/data/data";
   import ScrollySection from "$lib/components/ScrollySection.svelte";
-  import TextBreak from "$lib/components/TextBreak.svelte";
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  const economicCharts = pairs.slice(0, 2);
-  const humanCostCharts = pairs.slice(2, 4);
-  const aidAndRepresentationCharts = pairs.slice(4, 8);
-
-  let chartsStartEl;
-  function scrollToCharts() {
-    chartsStartEl?.scrollIntoView({ behavior: "smooth" });
-  }
+  const chartSections = [data.slice(0, 2), data.slice(2, 4), data.slice(4)];
 </script>
 
 <Header />
@@ -28,7 +20,7 @@
       A Plan for Equality &amp; Prosperity Within Planetary Boundaries
     </p>
 
-    <button type="button" class="btn btn-primary mt-6" onclick={scrollToCharts}>
+    <a href="#charts" class="btn btn-primary mt-6">
       Jump to visualization
       <svg
         class="h-4 w-4"
@@ -43,7 +35,7 @@
           d="M12 5v14m0 0-6-6m6 6 6-6"
         />
       </svg>
-    </button>
+    </a>
 
     <p class="mt-8 text-lg leading-relaxed text-base-content/80">
       The Global Justice Report attempts to set out a new vision for global
@@ -176,10 +168,10 @@
 
   <div class="divider mx-auto w-[88vw] lg:ml-[calc(43%-400px)] lg:w-200"></div>
 
-  <div bind:this={chartsStartEl}></div>
-  <ScrollySection pairs={economicCharts} />
-  <ScrollySection pairs={humanCostCharts} />
-  <ScrollySection pairs={aidAndRepresentationCharts} />
+  <div id="charts"></div>
+  {#each chartSections as section (section[0].title)}
+    <ScrollySection pairs={section} />
+  {/each}
 </div>
 
 <Footer />

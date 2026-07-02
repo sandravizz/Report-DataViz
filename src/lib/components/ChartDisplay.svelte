@@ -17,13 +17,13 @@
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
     >
-      <div class="mb-1 font-sans text-sm tracking-wide text-[#2A2659]/50 uppercase lg:hidden">
-        {pair.chartType}
+      <div class="mb-1 font-sans text-sm tracking-wide text-base-content/50 uppercase lg:hidden">
+        {pair.number}
       </div>
-      <div class="mb-2 text-xl font-sans font-medium text-[#2A2659] ">
+      <div class="mb-2 text-xl font-sans font-medium text-base-content">
         {pair.title}
       </div>
-      <div class="mb-6 font-sans text-sm text-[#2A2659]">
+      <div class="mb-6 font-sans text-sm text-base-content">
         {pair.subtitle}
       </div>
 
@@ -46,7 +46,7 @@
         {/if}
       </div>
 
-      <div class="mt-6 font-sans text-xs text-[#2A2659]/50">
+      <div class="mt-6 font-sans text-xs text-base-content/50">
         {pair.source}
       </div>
     </div>

@@ -3,6 +3,7 @@
   import { scaleBand, scaleLinear } from "d3-scale";
   import { extent } from "d3-array";
   import { palette } from "$lib/colors";
+  import { tickLabelProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 
@@ -32,8 +33,7 @@
   ]}
   props={{
     labels: {
-      class: "text-xs font-light",
-      fill: "rgba(42,38,89)",
+      ...tickLabelProps,
       format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,
     },
   }}

@@ -8,7 +8,7 @@
   <div class="relative h-56">
     {#each items as item, i (i)}
       <p
-        class="absolute inset-0 flex items-start font-sans text-base leading-relaxed text-[#2A2659] transition-opacity duration-500 ease-[ease]"
+        class="absolute inset-0 flex items-start font-sans text-base leading-relaxed text-base-content transition-opacity duration-500 ease-[ease]"
         style:opacity={i === activeIndex ? 1 : 0}
         style:pointer-events={i === activeIndex ? "auto" : "none"}
       >

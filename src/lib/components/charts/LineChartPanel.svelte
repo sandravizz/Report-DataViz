@@ -1,6 +1,7 @@
 <script>
   import { LineChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
+  import { tickLabelProps, legendProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 
@@ -14,8 +15,8 @@
   legend={{ placement: "bottom" }}
   props={{
     spline: { strokeWidth: 2.5 },
-    xAxis: { tickLength: 0, format: formatYear, tickLabelProps: { fill: "rgba(42,38,89)", class: "text-xs font-light" } },
-    yAxis: { tickLabelProps: { fill: "rgba(42,38,89)", class: "text-xs font-light" } },
-    legend: { class: "text-xs font-light" },
+    xAxis: { tickLength: 0, format: formatYear, tickLabelProps },
+    yAxis: { tickLabelProps },
+    legend: legendProps,
   }}
 />

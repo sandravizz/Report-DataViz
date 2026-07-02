@@ -59,11 +59,11 @@
 </script>
 
 <div bind:this={containerEl} style:height="{pairs.length * 120 + 200}vh">
-  <div class="sticky top-0 h-screen overflow-hidden bg-[#F4DDD6]">
-    <ScrollColumn items={pairs.map((p) => p.chartType)} {activeIndex} y={listY} align="left" />
+  <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
+    <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
-    <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-[#F4DDD6] to-transparent"></div>
-    <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-linear-to-t from-[#F4DDD6] to-transparent"></div>
+    <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-base-100 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-linear-to-t from-base-100 to-transparent"></div>
   </div>
 </div>

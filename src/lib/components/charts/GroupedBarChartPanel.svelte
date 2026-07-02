@@ -1,6 +1,7 @@
 <script>
   import { BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
+  import { tickLabelProps, legendProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 
@@ -25,8 +26,8 @@
     xAxis: {
       tickLength: 0,
       format: wrapLabel,
-      tickLabelProps: { class: "text-xs font-light" },
+      tickLabelProps,
     },
-    legend: { class: "text-xs font-light" },
+    legend: legendProps,
   }}
 />

@@ -1,5 +1,6 @@
 <script>
   import { ArcChart } from "layerchart";
+  import { legendProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 </script>
@@ -13,6 +14,6 @@
   padAngle={0.01}
   legend={{ placement: "bottom" }}
   props={{
-    legend: { class: "text-xs font-light" },
+    legend: legendProps,
   }}
 />
