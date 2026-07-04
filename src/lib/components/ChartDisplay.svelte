@@ -1,11 +1,7 @@
 <script>
   import BarChartPanelHorizontal from "./charts/BarChartPanelHorizontal.svelte";
   import LineChartPanel from "./charts/LineChartPanel.svelte";
-  import ScatterChartPanel from "./charts/ScatterChartPanel.svelte";
-  import PieChartPanel from "./charts/PieChartPanel.svelte";
-  import DonutChartPanel from "./charts/DonutChartPanel.svelte";
   import GroupedBarChartPanel from "./charts/GroupedBarChartPanel.svelte";
-  import StackedBarChartPanel from "./charts/StackedBarChartPanel.svelte";
   import StackedAreaChartPanel from "./charts/StackedAreaChartPanel.svelte";
   import StackedColumnChartPanel from "./charts/StackedColumnChartPanel.svelte";
   import DiagramPanel from "./charts/DiagramPanel.svelte";
@@ -35,21 +31,12 @@
           <BarChartPanelHorizontal {pair} />
         {:else if pair.kind === "line"}
           <LineChartPanel {pair} />
-        {:else if pair.kind === "scatter"}
-          <ScatterChartPanel {pair} />
-        {:else if pair.kind === "pie"}
-          <PieChartPanel {pair} />
-        {:else if pair.kind === "donut"}
-          <DonutChartPanel {pair} />
         {:else if pair.kind === "grouped-bar"}
           <GroupedBarChartPanel {pair} />
         {:else if pair.kind === "stacked-area"}
           <StackedAreaChartPanel {pair} />
         {:else if pair.kind === "stacked-column"}
           <StackedColumnChartPanel {pair} />
-        {:else if pair.kind === "stacked-bar"}
-          <StackedBarChartPanel {pair} />
-          <BarChartPanelHorizontal {pair} />
         {:else if pair.kind === "diagram"}
           <DiagramPanel {pair} />
         {/if}
