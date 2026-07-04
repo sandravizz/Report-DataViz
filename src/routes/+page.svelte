@@ -4,49 +4,64 @@
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  const chartSections = [
-    data.slice(0, 4),
-    data.slice(4, 7),
-    data.slice(7, 11),
-    data.slice(11, 15),
-    data.slice(15, 17),
-  ];
-
-  const chapters = [
+  // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
+  // (the hero above the charts corresponds to "Global Justice by 2100 at a Glance").
+  const sections = [
     {
-      id: "chapter-1",
-      label: "Chapter 1",
-      title: "Convergence and the Transformation of Work",
+      id: "ensuring-equality",
+      title: "Ensuring Equality and Prosperity for All",
       intro:
-        "The first pillar of the Global Justice Report is full income convergence across countries by 2100. Today, average monthly incomes differ by a factor of 16 between the poorest and richest world regions – a gap that shapes every other dimension of well-being. The figures in this chapter show how that gap closes, and how productivity gains are redirected: annual work hours fall from about 2,100 to 1,000, men and women converge to equal shares of economic and domestic labour, and the economy shifts from material sectors like food and manufacturing toward education, health, leisure and culture.",
+        "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. Today, per capita monthly gross national income ranges from €290 in Sub-Saharan Africa to €4,590 in North America/Oceania – a 16-fold gap. By 2100, all countries converge to €5,000 per month, which implies annual growth rates of around 0-0.5% in today's richest regions and 3-4% in today's poorest – the latter comparable to East Asia's average growth over the last 75 years.",
+      charts: data.slice(0, 1),
     },
     {
-      id: "chapter-2",
-      label: "Chapter 2",
-      title: "Sufficiency, Energy and Climate",
+      id: "working-less",
+      title: "Working Less, Achieving Gender Equality",
       intro:
-        "Neither sufficiency nor the energy transition can keep warming below 2°C on its own – together they can. This chapter compares the cumulative emissions and temperature outcomes of the report's core scenarios, decomposes what actually drives emissions down between 2026 and 2100, and shows why targeted sufficiency with structural change outperforms large uniform degrowth: converging to €60,000 per capita with sectoral transformation yields less warming than pushing everyone down to €15,000 without it.",
+        "Productivity gains are used to reduce work rather than expand material output: annual labour hours decline from about 2,100 today to 1,000 by 2100, in line with two centuries of historical trends. Men and women converge to equal shares of economic and domestic labour with equal average pay, and the economy shifts from material sectors like food and manufacturing toward education, health, leisure and culture.",
+      charts: data.slice(1, 4),
     },
     {
-      id: "chapter-3",
-      label: "Chapter 3",
-      title: "Financing Global Justice",
+      id: "staying-below-2c",
+      title: "Staying Below 2 °C",
       intro:
-        "The institutional heart of the plan is the Global Justice Fund: it collects revenues from a global wealth tax and a global income tax, invests them through a World Sovereign Fund – an active portfolio of sustainable assets stabilizing at about 60% of world GDP – and distributes country dividends on an equal per-capita basis to finance climate investment, health and education. The figures in this chapter show the scale of that architecture: expenditures of around 10% of world GDP per year, roughly thirty times today's total development aid, and the convergence of education spending it makes possible.",
+        "Neither sufficiency nor the energy transition can keep warming below 2°C on its own – together they can. These figures compare the cumulative emissions and temperature outcomes of the report's core scenarios, decompose what drives emissions down between 2026 and 2100, and show why targeted sufficiency with structural change outperforms large uniform degrowth: converging to €60,000 per capita with sectoral transformation yields less warming than pushing everyone down to €15,000 without it.",
+      charts: data.slice(4, 7),
     },
     {
-      id: "chapter-4",
-      label: "Chapter 4",
-      title: "Compressing Income and Wealth Inequality",
+      id: "building-platform",
+      title: "Building the Global Justice Platform",
       intro:
-        "Global inequality compression is both a social justice objective and the condition for financing the transition. This chapter traces the projected redistribution: the top 10% income share falls from 52% to 18% while the bottom 50% rises from 8% to 38%; the bottom half of wealth holders go from owning 2% of global wealth to 30%; the billionaire class shrinks from 6.4% of global wealth to 0.05%; and in every region of the world, large majorities end up with higher incomes than today.",
+        "The key institution of the plan is the Global Justice Fund: it collects revenues from a global wealth tax and a global income tax and invests them through a World Sovereign Fund – an active portfolio of sustainable assets stabilizing at about 60% of world GDP, roughly 10% of the world capital stock. Initial accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the wealth tax on billionaires and centimillionaires.",
+      charts: data.slice(7, 9),
     },
     {
-      id: "chapter-5",
-      label: "Chapter 5",
-      title: "Power, Representation and Reparations",
+      id: "funding",
+      title: "Funding It at the Right Scale",
       intro:
-        "Who holds the power, and who owes whom? This final chapter looks at global governance and historical responsibility: the transition from today's IMF voting rights – where Europe and North America hold four times their population share – to one person-one vote by 2050, and the finding that the North-South transfers induced by the Global Justice Fund remain well below what reparations for colonial and climate damages accumulated since 1800 would actually require.",
+        "Global Justice Fund expenditures average 10.3% of world GDP per year over 2026-2060 – roughly thirty times today's total development aid. Country dividends, allocated on an equal per-capita basis, finance climate investment, health and education in each country, making possible the convergence of per capita education spending from a 1:20 gap today to €8,400 everywhere by 2100.",
+      charts: data.slice(9, 12),
+    },
+    {
+      id: "compressing",
+      title: "Compressing the Income and Wealth Scale",
+      intro:
+        "Global inequality compression is both a social justice objective and the condition for financing the transition. The top 10% income share falls from 52% to 18% while the bottom 50% rises from 8% to 38%; the bottom half of wealth holders go from owning 2% of global wealth to 30%; and the billionaire class shrinks from 6.4% of global wealth to 0.05%.",
+      charts: data.slice(12, 15),
+    },
+    {
+      id: "coalitions",
+      title: "Building National and Global Coalitions",
+      intro:
+        "Is such a transformation politically feasible? At the world level, 89% of the population double their income or more between 2025 and 2100, and large majorities benefit in every region – the basis for broad national and global coalitions behind the platform.",
+      charts: data.slice(15, 16),
+    },
+    {
+      id: "democratic-world-order",
+      title: "Building a Democratic World Order",
+      intro:
+        "Who holds the power, and who owes whom? The final figures look at global governance and historical responsibility: the transition from today's IMF voting rights – where Europe and North America hold four times their population share – to one person-one vote by 2050, and the finding that the North-South transfers induced by the Global Justice Fund remain well below what reparations for colonial and climate damages accumulated since 1800 would actually require.",
+      charts: data.slice(16, 18),
     },
   ];
 </script>
@@ -213,20 +228,17 @@
   <div class="divider mx-auto w-[88vw] lg:ml-[calc(43%-400px)] lg:w-200"></div>
 
   <div id="charts"></div>
-  {#each chapters as chapter, i (chapter.id)}
+  {#each sections as section (section.id)}
     <section
-      id={chapter.id}
+      id={section.id}
       class="mx-auto w-[88vw] scroll-mt-20 py-24 font-sans text-base-content lg:ml-[calc(43%-400px)] lg:w-200"
     >
-      <p class="text-sm font-semibold uppercase tracking-widest text-base-content/50">
-        {chapter.label}
-      </p>
-      <h2 class="mt-2 text-2xl font-semibold sm:text-3xl">{chapter.title}</h2>
+      <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
       <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-        {chapter.intro}
+        {section.intro}
       </p>
     </section>
-    <ScrollySection pairs={chartSections[i]} />
+    <ScrollySection pairs={section.charts} />
   {/each}
 </div>
 

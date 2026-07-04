@@ -224,13 +224,24 @@ export const data = [
     ],
   },
   {
+    title: "The Global Justice Platform",
+    subtitle: "How the Global Justice Fund Collects, Invests and Redistributes",
+    description:
+      "The key element of the Global Justice Platform is the Global Justice Fund, which collects revenues from a global wealth tax and a global income tax. These revenues are invested and yield returns through a World Sovereign Fund, an active portfolio of sustainable assets. The Global Justice Fund distributes country dividends, allocated to each country on an equal per-capita basis, to finance massive investments in climate, infrastructure, education and health.",
+    source:
+      "Interpretation. The key element of the Global Justice Platform is the Global Justice Fund, which collects revenues from a global wealth tax and a global income tax, which are then invested and yield returns through a World Sovereign Fund, an active portfolio of sustainable assets. The Global Justice Fund distributes country dividends to finance massive investments in climate, infrastructure, education and health. Sources and series: gjp.wid.world (F8)",
+    number: "Figure 8",
+    kind: "diagram",
+    data: [],
+  },
+  {
     title: "A World Sovereign Fund to Reorient Investment",
     subtitle: "World Capital Stock as % of World GDP, 1980–2100",
     description:
       "The key institution of the Global Justice Platform is a Global Justice Fund, collecting revenues from a global wealth tax and a global income tax, invested through a World Sovereign Fund – an active portfolio of sustainable assets. The World Sovereign Fund stabilizes its assets at about 60% of world GDP over 2030-2100, roughly 10% of the world capital stock. Initial accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the wealth tax on billionaires and centimillionaires, while private wealth declines from around 470% to 420% of world GDP.",
     source:
       "Interpretation. The World Sovereign Fund is set to stabilize its assets at about 60% of world GDP over the 2030-2100 period, i.e. about 10% of the world capital stock. Initial asset accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the global wealth tax on very top wealth holders (billionaires and centimillionaires). Sources and series: gjp.wid.world (F9)",
-    number: "Figure 8",
+    number: "Figure 9",
     kind: "stacked-area",
     xKey: "year",
     valueSuffix: "%",
@@ -268,7 +279,7 @@ export const data = [
       "Global Justice Fund expenditures average 10.3% of world GDP per year over 2026-2060, consisting of country dividends (5.7%, allocated on an equal per-capita basis) and gross investment flows accumulating into the World Sovereign Fund (4.6%). This vastly exceeds total development aid – about 0.3% of world GDP in 2025 – and the combined budget of the UN, IMF and World Bank, which amounts to just 0.1% of world GDP including all annual disbursements.",
     source:
       "Interpretation. GJF expenditures make 10.3% of world GDP per year on average over 2026-2060. GJF expenses consist of country dividends (allocated to each country on an equal per-capita basis) and gross investment flows accumulating into the World Sovereign Fund (WSF). This vastly exceeds total development aid (ODA, 0.3% of world GDP in 2025) or the combined budget of UN, IMF and WB (0.1% of world GDP in 2025). Sources & series: gjp.wid.world (F10)",
-    number: "Figure 9",
+    number: "Figure 10",
     kind: "bar",
     xKey: "item",
     yKey: "v",
@@ -288,7 +299,7 @@ export const data = [
       "Country dividends are allocated to each country on an equal per-capita basis and are used to finance climate investment and education and health expenditure. They represent 5-8% of world GDP on average over 2030-2050, peaking at 9.2% in the mid-2030s before settling at 2.2% by 2100. The split into climate investments, health and education shown here is illustrative – each country decides its own allocation.",
     source:
       "Interpretation. Country dividends are allocated to each country on an equal per-capita basis and are used to finance climate investment and education and health expenditure. They represent about 5-8% of world GDP on average over the 2030-2050, with the same geographical distribution as the world population. The split of country dividends into climate investments, health expenditures and education expenditures is illustrative and to be decided by each country themselves. Sources and series: gjp.wid.world (F11)",
-    number: "Figure 10",
+    number: "Figure 11",
     kind: "stacked-area",
     xKey: "year",
     valueSuffix: "%",
@@ -321,7 +332,7 @@ export const data = [
       "In 2025, per capita expenditure on education varies from €209 in Sub-Saharan Africa to €4,141 in North America/Oceania – a 1:20 gap, even larger when measured per child. In the Global Justice scenario, all countries converge to €8,400 in per capita education expenditure by 2100, financed in the poorest regions largely through country dividends from the Global Justice Fund.",
     source:
       "Interpretation. In 2025, per capita expenditure in education varies from 209 Euros in Sub-Saharan Africa to 4141 Euros in North America/Oceania (all amounts in PPP 2025 Euros). Gaps are even larger if we look at per children expenditure. In the global justice scenario, all countries are projected to converge to 8400 Euros in per capita expenditure by 2100. Sources & series: gjp.wid.world (F12)",
-    number: "Figure 11",
+    number: "Figure 12",
     kind: "bar",
     xKey: "region",
     yKey: "v",
@@ -346,7 +357,7 @@ export const data = [
       "According to the Global Justice Platform, the share of the top 10% highest incomes in total post-tax world income declines from 52% in 2025 to 18% in 2100, while the share of the global bottom 50% rises from 8% to 38% and the middle 40% edges up from 40% to 44%. These changes combine between-country income convergence with within-country compression, in line with long-run trends observed in Nordic Europe.",
     source:
       "Interpretation. According to the Global Justice Platform, the share of the top 10% highest incomes in total posttax income in the world is projected to decline from 52% in 2025 to 18% in 2100. The share of the global bottom 50% in posttax income is projected to increase from 8% in 2025 to 38% in 2100, and for the middle 40% from 40% today to 44% in 2100. Sources and series: gjp.wid.world (F13)",
-    number: "Figure 12",
+    number: "Figure 13",
     kind: "line",
     xKey: "year",
     valueSuffix: "%",
@@ -383,7 +394,7 @@ export const data = [
       "The share of the bottom 50% of wealth holders in total personal wealth is projected to increase from 2% in 2025 to 30% in 2100 – a fifteen-fold rise. The regional composition in 2100 follows the regional shares of global population, because average wealth and wealth distributions equalize between countries: Sub-Saharan Africa and South/South-East Asia together account for about two thirds of the bottom-50% total by then.",
     source:
       "Interpretation. According to the Global Justice Platform, the share of the bottom 50% wealth holders in total personal wealth is projected to increase from 2% in 2025 to 30% in 2100. The country composition in 2100 follows the regional shares in global population in 2100 because average wealth and wealth distributions equalize between countries. Sources and series: gjp.wid.world (F14)",
-    number: "Figure 13",
+    number: "Figure 14",
     kind: "stacked-area",
     xKey: "year",
     valueSuffix: "%",
@@ -423,7 +434,7 @@ export const data = [
       "The share of the top 0.001% wealth holders in total personal wealth – roughly the billionaire class, about 80,000 individuals with average wealth around €500 million in 2025 – is projected to decrease from 6.4% in 2025 to 0.05% in 2100. Historically this share was dominated by Europe in the 19th century and by North America in the 20th; the rapid decline after 2026 is driven by the global wealth tax on billionaires and centimillionaires that funds the Global Justice Fund.",
     source:
       "Interpretation. According to the Global Justice Platform, the share of the top 0.001% highest wealth holders in total personal wealth is projected to decrease from 6.4% in 2025 to 0.05% in 2100. In 2025, the group of the top 0.001% corresponds approximately to the group of billionaires (about 80 thousand individuals with average per capita wealth around 500 million Euros). Sources and series: gjp.wid.world (F15)",
-    number: "Figure 14",
+    number: "Figure 15",
     kind: "stacked-area",
     xKey: "year",
     valueSuffix: "%",
@@ -470,7 +481,7 @@ export const data = [
       "Large majorities of the population in every region benefit from rising monetary income between 2025 and 2100. At the world level, 89% of the population double their income or more, 7% gain between 20% and 100%, 2% gain up to 20%, and only 2% face an income decline. The fraction facing a decline rises to significantly higher levels in the richest regions – 6% in Europe and 14% in North America/Oceania – while in Sub-Saharan Africa and South/South-East Asia virtually everyone at least doubles their income.",
     source:
       "Interpretation. According to the Global Justice Platform, large majorities of the population in every region benefit from rising monetary income between 2025 and 2100. At the world level, 89% of the population double their income or more, 7% increase their income between 20% and 100%, 2% by 0-20% and 2% face an income decline. Sources and series: gjp.wid.world (F16)",
-    number: "Figure 15",
+    number: "Figure 16",
     kind: "stacked-column",
     xKey: "region",
     valueSuffix: "%",
@@ -499,7 +510,7 @@ export const data = [
       "In 2025, countries in Europe and North America/Oceania have 4x more votes at the IMF than their share in global population, while countries in South & South-East Asia and Sub-Saharan Africa have about 1/4 of their global population share in IMF voting rights. The Global Justice Platform envisions a transition from the current IMF formula to a per-capita allocation of voting rights, either immediately or at the latest by 2050 via a gradual transition – after which every region's voting power matches its population share.",
     source:
       "Interpretation. In 2025, countries in Europe and North America/Oceania had 4x more votes at the IMF than their share in global population, while countries in South & South-East Asia and Sub-Saharan Africa have about 1/4 of their global population share in IMF voting rights. The Global Justice Platform envisions a transition from the current IMF formula to a per-capita allocation of voting rights, either immediately (the best solution in our view) and at the latest by 2050 (via a gradual transition). Sources and series: gjp.wid.world (F17)",
-    number: "Figure 16",
+    number: "Figure 17",
     kind: "line",
     xKey: "year",
     yScaleType: "log",
@@ -550,7 +561,7 @@ export const data = [
       "The North-South transfers induced by the Global Justice Fund – the extra wealth and income taxes paid, and lower country dividends received, by Europe and North America/Oceania – represent about 0.8% of world GDP on average between 2026 and 2100. This is significantly smaller than the roughly 3.2% of world GDP per year that would be required to compensate for the cumulated colonial and climate damages imposed by Europe and North America/Oceania between 1800 and 2025, including slavery damages (1.5%), other colonial damages (0.9%) and climate damages (0.8%).",
     source:
       "Interpretation. The North-South transfers induced by the Global Justice Fund (i.e. the extra wealth and income taxes paid and lower country dividends received by Europe and North America/Oceania) represent about 0.8% of world GDP on average between 2026 and 2100. This is significantly smaller than the corresponding annual transfers which should have been paid over the same period in order to compensate for the cumulated colonial and climate damages imposed by Europe and North America/Oceania between 1800 and 2025. Sources and series: gjp.wid.world (F18)",
-    number: "Figure 17",
+    number: "Figure 18",
     kind: "bar",
     xKey: "item",
     yKey: "v",

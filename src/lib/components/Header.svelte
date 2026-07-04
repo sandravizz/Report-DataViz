@@ -1,14 +1,20 @@
 <script>
-  let open = $state(false);
-
   const links = [
-    { href: "#top", label: "Home" },
-    { href: "#chapter-1", label: "Chapter 1" },
-    { href: "#chapter-2", label: "Chapter 2" },
-    { href: "#chapter-3", label: "Chapter 3" },
-    { href: "#chapter-4", label: "Chapter 4" },
-    { href: "#chapter-5", label: "Chapter 5" },
+    { href: "#top", label: "Global Justice by 2100 at a Glance" },
+    { href: "#ensuring-equality", label: "Ensuring Equality and Prosperity for All" },
+    { href: "#working-less", label: "Working Less, Achieving Gender Equality" },
+    { href: "#staying-below-2c", label: "Staying Below 2 °C" },
+    { href: "#building-platform", label: "Building the Global Justice Platform" },
+    { href: "#funding", label: "Funding It at the Right Scale" },
+    { href: "#compressing", label: "Compressing the Income and Wealth Scale" },
+    { href: "#coalitions", label: "Building National and Global Coalitions" },
+    { href: "#democratic-world-order", label: "Building a Democratic World Order" },
   ];
+
+  function closeDropdown(event) {
+    event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
+    event.currentTarget.blur();
+  }
 </script>
 
 <header
@@ -22,43 +28,29 @@
       GLOBAL JUSTICE REPORT
     </a>
 
-    <button
-      type="button"
-      class="inline-flex items-center justify-center rounded-lg p-2 text-base-content hover:bg-base-content/10 focus:outline-none focus:ring-2 focus:ring-base-content/20 md:hidden"
-      aria-controls="primary-nav"
-      aria-expanded={open}
-      onclick={() => (open = !open)}
-    >
-      <span class="sr-only">Toggle menu</span>
-      <svg
-        class="h-6 w-6"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-    </button>
-
-    <nav
-      id="primary-nav"
-      class="absolute inset-x-0 top-full flex-col gap-1 border-b border-base-content/10 bg-base-100 p-4 font-sans text-sm md:static md:flex md:w-auto md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0 {open
-        ? 'flex'
-        : 'hidden'}"
-    >
-      {#each links as link}
-        <a
-          href={link.href}
-          class="px-3 py-2 text-base-content/50 hover:text-base-content md:px-0 md:py-0"
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost font-sans text-sm font-normal">
+        All Chapters
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          {link.label}
-        </a>
-      {/each}
-    </nav>
+          <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+        </svg>
+      </div>
+      <ul
+        tabindex="-1"
+        class="dropdown-content menu z-50 mt-2 w-80 rounded-box border border-base-content/10 bg-base-100 p-2 font-sans shadow-lg"
+      >
+        {#each links as link (link.href)}
+          <li>
+            <a href={link.href} onclick={closeDropdown}>{link.label}</a>
+          </li>
+        {/each}
+      </ul>
+    </div>
   </div>
 </header>
