@@ -1,6 +1,6 @@
 <script>
   const links = [
-    { href: "#top", label: "Global Justice by 2100 at a Glance" },
+    { href: "#at-a-glance", label: "Global Justice by 2100 at a Glance" },
     { href: "#ensuring-equality", label: "Ensuring Equality and Prosperity for All" },
     { href: "#working-less", label: "Working Less, Achieving Gender Equality" },
     { href: "#staying-below-2c", label: "Staying Below 2 °C" },
@@ -23,7 +23,7 @@
   <div class="flex items-center justify-between px-6 py-3">
     <a
       href="#top"
-      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content"
+      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content hover:opacity-70"
     >
       GLOBAL JUSTICE REPORT
     </a>

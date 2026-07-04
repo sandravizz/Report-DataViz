@@ -2,11 +2,70 @@
   import { data } from "$lib/data/data";
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
+  import Hero from "$lib/components/Hero.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
   // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
-  // (the hero above the charts corresponds to "Global Justice by 2100 at a Glance").
   const sections = [
+    {
+      id: "at-a-glance",
+      title: "Global Justice by 2100 at a Glance",
+      items: [
+        {
+          label: "Equality between countries",
+          text: "Average per capita monthly gross national income (PPP Euros 2025) rises to 5,000 Euros in all countries by 2100. Today, it ranges from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania (a 16-fold gap).",
+        },
+        {
+          label: "Less work, more emancipation",
+          text: "Annual labour hours per employed person fall from about 2,100 hours today to about 1,000 hours by 2100, continuing the historical trend toward shorter working time.",
+        },
+        {
+          label: "Education and health for all",
+          text: "Per capita education spending rises to 8,400 Euros per year across all countries in 2100. Today, it ranges from 210 to 4,140 Euros. Health spending rises to 14,400 euros. Today it ranges from 110 Euros to 8,300 Euros. The share of global working hours devoted to education and health rises from 11% today to 43% in 2100.",
+        },
+        {
+          label: "Full gender equality",
+          text: "Women and men converge on equal amounts of economic and domestic labour and on equal average pay.",
+        },
+        {
+          label: "A world below 2 °C",
+          text: "Warming reaches 1.8°C under sustainable convergence and fast decarbonization, against over 4°C under persistent inequality and slow decarbonization (current policies).",
+        },
+        {
+          label: "Inequality compression",
+          text: "The income scale is compressed to 1 to 5, and the wealth scale to 1 to 10. This represents a major compression of global income inequality, on a scale similar to the reduction achieved in Western and Nordic Europe over the 20th century.",
+        },
+        {
+          label: "Wealth redistribution",
+          text: "The bottom 50% global wealth share rises from 2% to 30% (×15), while the top 0.001% share (billionaire class) falls from 6% to 0.05% (÷100) – a striking redistribution.",
+        },
+        {
+          label: "Global Justice Fund",
+          text: "Annual expenditures (including country dividends and investment flows) reach 10.3% of world GDP per year on average over the 2026-2060 period. In comparison, current official development aid and the combined budgets of the UN, IMF, and World Bank account for less than 0.4% of world GDP. This is justified by the fact that new climate investments alone will represent 3-4% of world GDP per year in the coming decades and will need to be supplemented by a big push in education and health expenditures to foster global convergence.",
+        },
+        {
+          label: "World Sovereign Fund",
+          text: "An active portfolio of sustainable assets reaching 10% of the world capital stock (or equivalently, to 60% of the world GDP). Initial asset accumulation comes from reinvesting a large part of global wealth and income tax revenues over the 2026-2035 period.",
+        },
+        {
+          label: "Global wealth & income taxes",
+          text: "A global wealth tax (rising from 0% at 10 times the world average wealth to 20% per year on billionaires) and a global income tax (rising to 90% at the very top), both targeting around 1% of the world population.",
+        },
+        {
+          label: "Large majority benefit in every region",
+          text: "About 89% of the world will double their monetary income between 2026 and 2100; over 95% gain in the global South, and between 85–95% in the global North. Over 99% of the population is better off when the valuation of leisure and planetary habitability is included.",
+        },
+        {
+          label: "From global plutocracy to global democracy",
+          text: "All inhabitants of the world have equal political voice in the Global Justice Fund and the new international order. Currently, Europe & North America/Oceania have 4x as many votes at the IMF and World Bank as their population share, while Sub-Saharan Africa and South & South-East Asia have 4x fewer votes than their population share.",
+        },
+        {
+          label: "End of exorbitant privileges",
+          text: "The creation of an International Clearing Union and a new international currency to put an end to exorbitant privileges, i.e. the fact that rich countries benefit from higher returns on their foreign assets than what they pay on their foreign debt, thereby receiving a financial transfer from poor countries (0.6-0.8% of world GDP per year on average over 2000-2025 period, about twice as much as total development aid).",
+        },
+      ],
+      charts: [],
+    },
     {
       id: "ensuring-equality",
       title: "Ensuring Equality and Prosperity for All",
@@ -69,176 +128,37 @@
 <Header />
 
 <div id="top">
-  <section
-    class="mx-auto w-[88vw] pt-36 pb-24 font-sans text-base-content lg:ml-[calc(43%-400px)] lg:w-200"
-  >
-    <h1 class="text-3xl font-semibold sm:text-4xl">
-      The Global Justice Report
-    </h1>
-    <p class="mt-2 text-xl font-medium text-base-content/80 sm:text-2xl">
-      A Plan for Equality &amp; Prosperity Within Planetary Boundaries
-    </p>
-
-    <a href="#charts" class="btn btn-primary mt-6">
-      Jump to visualization
-      <svg
-        class="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 5v14m0 0-6-6m6 6 6-6"
-        />
-      </svg>
-    </a>
-
-    <p class="mt-8 text-lg leading-relaxed text-base-content/80">
-      The Global Justice Report attempts to set out a new vision for global
-      progress in the 21<sup>st</sup> century: grounding human development and equality
-      in planetary habitability. It explores the conditions under which the world
-      could move toward this horizon and traces an economically and ecologically
-      consistent transition path from 2026 to 2100.
-    </p>
-
-    <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-      Its main conclusion is simple: it is possible to reconcile planetary
-      habitability and high well-being for all, but only if the transformation
-      rests on three pillars simultaneously.
-      <strong>Fast decarbonization</strong> of energy systems is necessary. But
-      we also need a major shift toward <strong>sufficiency</strong> –
-      understood as a sharp reduction in labour hours and material footprint and
-      large changes in consumption patterns, food habits, land use, and forest
-      cover. In addition, neither decarbonization nor sufficiency can be
-      financed and politically sustained without a
-      <strong
-        >drastic reduction in inequality of income, wealth and power</strong
-      >, both between countries and within them. The compression of global
-      inequality is not only compatible with deep decarbonization; it is a
-      necessary condition for shared prosperity on a finite planet.
-    </p>
-
-    <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-      The Global Justice Report is the first attempt to propose a fully
-      quantified plan going in this direction, combining four dimensions that
-      today's debates often treat separately: redistribution at the world scale,
-      a deep reform of the international financial and economic order, a radical
-      transformation of energy systems, and substantial shifts in consumption
-      patterns.
-      <strong
-        >Compared to most climate scenarios, including by the Intergovernmental
-        Panel on Climate Change (IPCC), the main novelty</strong
-      >
-      is that we model all four dimensions together and
-      <strong
-        >place inequality and sufficiency at the center of the analysis</strong
-      >.
-    </p>
-
-    <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-      Concretely: Per capita monthly national income converges to €5,000 in
-      every country, closing a 16-fold gap. The share of the <strong
-        >bottom half of global wealth increases from 2% to 30%</strong
-      >, while the share of the billionaire class decreases from 6% to 0.05%.
-      Nearly 90% of the world's population double their income while working
-      roughly half as many hours as they do today. Warming reaches 1.8°C by
-      2100, rather than over 4°C under baseline macroeconomic and policy trends.
-    </p>
-
-    <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-      The Global Justice Report is part of a <strong
-        >broader international agenda for planetary habitability, social
-        justice, and reform of the global financial architecture</strong
-      > – including the Bridgetown Initiative launched by Barbados in 2022, combining
-      international monetary reform, global wealth taxation, and climate finance;
-      the recent Sevilla Commitment on development finance; the UN Tax Convention
-      process; and G20 initiatives led by Brazil and South Africa on global inequality
-      and the re-balancing of wealth and power within planetary limits. The main
-      contribution of this report is to place these proposals within a quantified
-      institutional framework, modeling socioeconomic convergence, temperature change,
-      and distributional trajectories through 2100. Our broad conclusion is that
-      it is possible to conceive of a quantitatively consistent plan for sustainable
-      development on a global scale based on proposals such as the Bridgetown Initiative
-      and other recent platforms.
-    </p>
-
-    <div class="mt-10 h-[160vh]">
-      <div class="sticky top-0 grid h-screen items-center gap-6 overflow-y-auto py-10 sm:grid-cols-2">
-      <div class="card card-dash card-md bg-base-100">
-        <div class="card-body gap-4 text-base-content/80">
-          <div class="flex items-center gap-3">
-            <span class="badge badge-neutral">Box 1</span>
-            <h3 class="card-title">Combining Global Equality and Planetary Habitability</h3>
-          </div>
-          <p>
-            The Global Justice Report describes desirable future scenarios combining two key goals:
-            <strong>socioeconomic equality</strong> (including full equality between countries, full
-            gender equality in labour hours and pay, sharp compression of within-country income and
-            wealth scales, combined with fair access to education, health and political voice), and
-            <strong>planetary habitability</strong> (aligning global resource use within ecological
-            boundaries, including a limitation of global temperature rise below 2°C).
-          </p>
-          <p>
-            To avoid climate catastrophes, we show that <strong>sufficiency</strong> is required: a
-            structural transformation of the economy involving shorter working hours, a lower material
-            footprint, a shift from material-intensive sectors toward relatively immaterial sectors
-            such as education and health, and major changes in food systems and land use. Rapid
-            <strong>decarbonization of energy systems is also necessary</strong>, as is the sharp
-            <strong>compression of income and wealth inequality</strong>. This compression is both a
-            social justice objective and a condition for financing necessary climate investment and
-            human capital expenditure and for sustaining political support from bottom- and
-            middle-income classes in both the North and the South.
-          </p>
-        </div>
-      </div>
-
-      <div class="card card-dash card-md bg-base-100">
-        <div class="card-body gap-4 text-base-content/80">
-          <div class="flex items-center gap-3">
-            <span class="badge badge-neutral">Box 2</span>
-            <h3 class="card-title">Material and Monetary Accounting for Democratic Debate</h3>
-          </div>
-          <p>
-            Economy and ecology cannot be debated apart: every economic activity has a material
-            footprint, every ecological policy shapes incomes and wealth. To make these links visible,
-            the Global Justice Report uses <strong>multidimensional social progress indicators</strong>.
-            We set quantitative targets for global socioeconomic justice by combining two
-            complementary languages: <strong>material accounting</strong> (work hours, sectoral
-            shares, education and health, energy systems, GHG emissions, land use, forest cover,
-            temperature levels) and <strong>monetary accounting</strong> (income and wealth scales
-            between and within countries, progressive tax rates). The report draws on two centuries of
-            historical data on global inequality and resource use, and on the recent literature on
-            social progress, climate and colonial reparations.
-          </p>
-          <p class="font-semibold text-base-content">
-            The Global Justice Report proposes a quantitatively and institutionally grounded step
-            toward global justice. It does not seek to close the debate: it offers a transparent
-            basis on which citizens, unions, parliaments, and international bodies can debate,
-            contest, and decide the course of the coming decades.
-          </p>
-        </div>
-      </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider mx-auto w-[88vw] lg:ml-[calc(43%-400px)] lg:w-200"></div>
+  <Hero />
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <section
-      id={section.id}
-      class="mx-auto w-[88vw] scroll-mt-20 py-24 font-sans text-base-content lg:ml-[calc(43%-400px)] lg:w-200"
-    >
-      <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
-      <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-        {section.intro}
-      </p>
+    <section id={section.id} class="h-[150vh] font-sans text-base-content">
+      <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
+        <div class="flex min-h-full">
+          <div class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200">
+            <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+            {#if section.intro}
+              <p class="mt-4 text-lg leading-relaxed text-base-content/80">
+                {section.intro}
+              </p>
+            {/if}
+            {#if section.items}
+              <ul class="mt-4 space-y-4 text-lg leading-relaxed text-base-content/80">
+                {#each section.items as item (item.label)}
+                  <li>
+                    <strong class="text-base-content">{item.label}:</strong>
+                    {item.text}
+                  </li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
+        </div>
+      </div>
     </section>
-    <ScrollySection pairs={section.charts} />
+    {#if section.charts.length > 0}
+      <ScrollySection pairs={section.charts} />
+    {/if}
   {/each}
 </div>
 
