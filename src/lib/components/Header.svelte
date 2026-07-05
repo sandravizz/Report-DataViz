@@ -21,16 +21,9 @@
   class="fixed inset-x-0 top-0 z-50 border-b border-base-content/10 bg-base-100/80 backdrop-blur-sm"
 >
   <div class="flex items-center justify-between px-6 py-3">
-    <a
-      href="#top"
-      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content hover:opacity-70"
-    >
-      GLOBAL JUSTICE REPORT
-    </a>
-
-    <div class="dropdown dropdown-end">
+    <div class="dropdown">
       <div tabindex="0" role="button" class="btn btn-ghost font-sans text-sm font-normal">
-        All Chapters
+        Table of Contents
         <svg
           class="h-4 w-4"
           viewBox="0 0 24 24"
@@ -52,5 +45,12 @@
         {/each}
       </ul>
     </div>
+
+    <a
+      href="#top"
+      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content hover:opacity-70"
+    >
+      GLOBAL JUSTICE REPORT
+    </a>
   </div>
 </header>

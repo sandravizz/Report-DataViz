@@ -2,7 +2,8 @@
   import { data } from "$lib/data/data";
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
-  import Hero from "$lib/components/Hero.svelte";
+  import Landing from "$lib/components/Landing.svelte";
+  // import Hero from "$lib/components/Hero.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
   // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
@@ -128,7 +129,9 @@
 <Header />
 
 <div id="top">
-  <Hero />
+  <Landing />
+
+  <!-- <Hero /> -->
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
