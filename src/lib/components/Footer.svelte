@@ -1,5 +1,18 @@
+<script>
+  let atBottom = $state(false);
+
+  function checkScroll() {
+    const { scrollY, innerHeight } = window;
+    atBottom = scrollY + innerHeight >= document.documentElement.scrollHeight - 10;
+  }
+</script>
+
+<svelte:window onscroll={checkScroll} onresize={checkScroll} />
+
 <footer
-  class="footer footer-center fixed inset-x-0 bottom-0 z-50 border-t border-base-content/10 bg-base-100/80 px-4 py-4 backdrop-blur-sm"
+  class="footer footer-center fixed inset-x-0 bottom-0 z-50 border-t border-base-content/10 bg-base-100/80 px-4 py-4 backdrop-blur-sm transition-all duration-300 {atBottom
+    ? 'translate-y-0 opacity-100'
+    : 'pointer-events-none translate-y-full opacity-0'}"
 >
   <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-base-content/50">
     <span>

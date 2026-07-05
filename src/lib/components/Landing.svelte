@@ -15,11 +15,4 @@
       class="w-full"
     />
   </div>
-
-  <a
-    href="#charts"
-    class="mt-10 self-start text-lg italic underline underline-offset-4 hover:opacity-70"
-  >
-    View Full Report
-  </a>
 </section>

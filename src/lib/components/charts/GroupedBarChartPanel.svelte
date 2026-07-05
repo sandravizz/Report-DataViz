@@ -1,5 +1,5 @@
 <script>
-  import { BarChart } from "layerchart";
+  import { BarChart, defaultChartPadding } from "layerchart";
   import { scaleBand } from "d3-scale";
   import { tickLabelProps, legendProps } from "$lib/chart-theme";
 
@@ -21,6 +21,10 @@
   seriesLayout="group"
   axis="x"
   legend={{ placement: "bottom" }}
+  tooltipContext={false}
+  padding={pair.series.length > 4
+    ? defaultChartPadding({ axis: "x", legend: true, bottom: 44 })
+    : undefined}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0, radius: 3 },
     xAxis: {
