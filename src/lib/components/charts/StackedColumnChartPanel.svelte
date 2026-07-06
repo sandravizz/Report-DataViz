@@ -1,7 +1,7 @@
 <script>
   import { BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { tickLabelProps, legendProps, legendPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -24,17 +24,14 @@
   xScale={scaleBand()}
   series={pair.series}
   seriesLayout="stack"
-  legend={{ placement: "bottom" }}
+  legend={{ placement: "bottom-left" }}
+  rule={false}
   tooltipContext={false}
-  padding={legendPadding(pair.series.length, innerWidth)}
+  padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0 },
-    xAxis: {
-      tickLength: 0,
-      format: wrapLabel,
-      tickLabelProps,
-    },
-    yAxis: { tickLabelProps, format: formatValue },
+    xAxis: { ...xAxisProps, format: wrapLabel },
+    yAxis: { ...yAxisProps, format: formatValue },
     legend: legendProps,
   }}
 />

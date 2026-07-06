@@ -1,7 +1,7 @@
 <script>
   import { AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { tickLabelProps, legendProps, legendPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -17,13 +17,14 @@
   x={pair.xKey}
   series={pair.series}
   seriesLayout="stack"
-  legend={{ placement: "bottom" }}
+  legend={{ placement: "bottom-left" }}
+  rule={false}
   tooltipContext={false}
-  padding={legendPadding(pair.series.length, innerWidth)}
+  padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
-    xAxis: { tickLength: 0, format: formatYear, tickLabelProps },
-    yAxis: { tickLabelProps, format: formatValue },
+    xAxis: { ...xAxisProps, format: formatYear },
+    yAxis: { ...yAxisProps, format: formatValue },
     legend: legendProps,
   }}
 />

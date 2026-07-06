@@ -3,11 +3,15 @@
   import { scaleBand, scaleLinear } from "d3-scale";
   import { max } from "d3-array";
   import { palette } from "$lib/colors";
-  import { tickLabelProps } from "$lib/chart-theme";
+  import { tickLabelProps, yAxisProps } from "$lib/chart-theme";
 
   let { pair } = $props();
 
   const hasPerRowColor = $derived(pair.data.every((d) => d.color));
+
+  // Width of the category-label gutter left of the bars. Labels are
+  // left-aligned at the container edge (dx cancels the gutter), Datawrapper-style.
+  const labelGutter = 90;
 </script>
 
 <BarChart
@@ -21,8 +25,9 @@
   axis="y"
   tooltipContext={true}
   grid={false}
+  rule={false}
   labels
-  padding={defaultChartPadding({ left: 90, right: 40 })}
+  padding={defaultChartPadding({ left: labelGutter, right: 40 })}
   {...hasPerRowColor ? { c: pair.xKey, cRange: pair.data.map((d) => d.color) } : {}}
   series={[
     {
@@ -33,6 +38,10 @@
     },
   ]}
   props={{
+    yAxis: {
+      ...yAxisProps,
+      tickLabelProps: { ...tickLabelProps, textAnchor: "start", dx: -labelGutter },
+    },
     labels: {
       ...tickLabelProps,
       format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,

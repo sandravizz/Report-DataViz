@@ -12,17 +12,17 @@
 <div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
   {#each pairs as pair, i (pair.title)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100svh-7.5rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
     >
-      <div class="mb-1 font-sans text-sm tracking-wide text-base-content/50 uppercase lg:hidden">
+      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/50 uppercase lg:hidden">
         {pair.number}
       </div>
-      <div class="mb-2 text-xl font-sans font-medium text-base-content">
+      <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-4 font-sans text-sm text-base-content lg:mb-6">
+      <div class="mb-8 font-sans text-xs text-base-content lg:mb-6 lg:text-sm">
         {pair.subtitle}
       </div>
 
@@ -42,7 +42,7 @@
         {/if}
       </div>
 
-      <div class="mt-3 font-sans text-xs text-base-content lg:mt-6">
+      <div class="mt-3 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6">
         {pair.source}
       </div>
     </div>
