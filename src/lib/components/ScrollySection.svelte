@@ -63,7 +63,5 @@
     <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
-    <div class="absolute inset-x-0 top-0 h-40 pointer-events-none z-10 bg-linear-to-b from-base-100 to-transparent"></div>
-    <div class="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10 bg-linear-to-t from-base-100 to-transparent"></div>
   </div>
 </div>

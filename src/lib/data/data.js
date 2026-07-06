@@ -18,9 +18,9 @@ export const data = [
     title: "Large Gaps in Average Monthly Income Between Regions",
     subtitle: "Global Justice: Equality & Prosperity for all Countries by 2100",
     description:
-      "Ensuring Equality and Prosperity for All. The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. Today, per capita monthly gross national income ranges from €290 in Sub-Saharan Africa to €4,590 in North America/Oceania (a 16-fold gap), with a world average of €1,410. By 2100, all countries will converge to €5,000 per month. This corresponds to a target of €60,000 per capita annually. Achieving this target implies annual GDP per capita growth rates of around 0-0.5% in today's richest regions (North America/Oceania, Europe) and around 3-4% in today's poorest regions (Sub-Saharan Africa, South and South-East Asia), the latter comparable to the average growth rate of East Asia over the last 75 years.",
+      "The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. Incomes are projected to reach 5,000 Euros in all countries by 2100.",
     source:
-      "Interpretation. The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. Incomes are projected to reach 5,000 Euros in all countries by 2100. Sources & series: gjp.wid.world (F1)",
+      "Sources & series: gjp.wid.world (F1)",
     number: "Figure 1",
     kind: "bar",
     xKey: "region",
@@ -43,9 +43,9 @@ export const data = [
     title: "Using Productivity Gains to Reduce Work Hours",
     subtitle: "Average Annual Labour Hours per Employed Individual, 1800–2100",
     description:
-      "In the Sustainable Convergence scenario, annual labour hours decline from about 2,100 today to 1,000 hours globally between 2025 and 2100, so as to reduce material production and consumption. This is in line with two centuries of historical trends and will require similarly strong collective mobilization and legislation. Annual hours around 3,000 – the norm in the 19th century – meant roughly 60 hours of work per week all year long; 1,000 hours correspond to about 25 hours per week during 40 weeks, with 12 weeks of paid vacation.",
+      "In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation).",
     source:
-      "Interpretation. In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation). Sources and series: gjp.wid.world (F2)",
+      "Sources & series: gjp.wid.world (F2)",
     number: "Figure 2",
     kind: "line",
     xKey: "year",
@@ -83,9 +83,9 @@ export const data = [
     title: "Toward Gender Equality in Work Hours by 2100",
     subtitle: "Average Annual Work Hours per Working-Age Individual, 1800–2100",
     description:
-      "In the Sustainable Convergence scenario, working-age men and women are projected to supply the same quantity of economic labour and domestic labour and to receive equal average pay by 2100. In 1800, men supplied 40% of all work hours as economic labour while women carried 30% as domestic labour; by 2100, each of the four categories converges to 25%. At the same time, total work hours per working-age individual fall from around 3,300 per year in 1800 and 2,300 today to roughly 1,600 by 2100 – a continuation of the trend toward gender equality observed between 1950 and 2025, albeit with a major acceleration.",
+      "In the Sustainable Convergence scenario, working-age men and women are projected to supply the same quantity of economic labour and domestic labour and to receive equal average pay. This would represent a continuation of the trend toward gender equality observed between 1950 and 2025, albeit with a major acceleration.",
     source:
-      "Interpretation. In the Sustainable Convergence scenario, working-age men and women are projected to supply the same quantity of economic labour and domestic labour and to receive equal average pay. This would represent a continuation of the trend toward gender equality observed between 1950 and 2025, albeit with a major acceleration. Sources and series: gjp.wid.world (F3)",
+      "Sources & series: gjp.wid.world (F3)",
     number: "Figure 3",
     kind: "stacked-area",
     xKey: "year",
@@ -118,9 +118,9 @@ export const data = [
     title: "A Large Shift from Material to Immaterial Sectors",
     subtitle: "Share of Global Economic Labour Hours by Sector, 1800–2100",
     description:
-      "Sustainable convergence requires a large shift from material to immaterial sectors over the 2026–2100 period. Food production absorbed 71% of global labour hours in 1800 and still 28% today; by 2100 it falls to 13%. Education and health move in the opposite direction, rising from 11% of global labour hours in 2025 to 43% in 2100 – well above the 30-35% observed in Nordic countries today – while leisure and culture stabilize around a quarter of all hours worked.",
+      "Sustainable convergence requires a large shift from material to immaterial sectors (especially education, health and other public services) in the share of total economic labour hours over the 2026-2100 period.",
     source:
-      "Interpretation. Sustainable convergence requires a large shift from material to immaterial sectors (especially education, health and other public services) in the share of total economic labour hours over the 2026-2100 period. Sources and series: gjp.wid.world (F4)",
+      "Sources & series: gjp.wid.world (F4)",
     number: "Figure 4",
     kind: "stacked-area",
     xKey: "year",
@@ -155,9 +155,9 @@ export const data = [
     title: "Sufficiency & Energy Transition Are Complementary",
     subtitle: "Projected Cumulative Emissions & Temperature of Core Scenarios, 2026–2100",
     description:
-      "To keep warming below 2°C, both socioeconomic sufficiency – labour hours reduction, a shift to immaterial consumption, changed food habits and implied reforestation – and energy system transformation play indispensable and complementary roles. Under Persistent Inequality or Productivist Convergence with slow decarbonization, cumulative emissions reach around 7,300-7,500 GtCO2e and warming approaches 5°C. Sufficiency alone halves the total (3.3°C); combined with fast decarbonization in the Sustainable Convergence scenario, cumulative emissions fall to about 1,100 GtCO2e and warming is limited to 1.8°C.",
+      "In order to reduce GHG emissions and keep warming below 2°, both socioeconomic sufficiency and energy system transformation play an indispensable and complementary role. The figure shows projected cumulative emissions and temperature rise of the core scenarios, where Persistent Inequality and Productivist Convergence come with Slow Decarbonization and Sustainable Convergence with Fast Decarbonization.",
     source:
-      "Interpretation. In order to reduce GHG emissions and keep warming below 2°, both socioeconomic sufficiency and energy system transformation play an indispensable and complementary role. The figure shows projected cumulative emissions and temperature rise of the core scenarios, where Persistent Inequality and Productivist Convergence come with Slow Decarbonization and Sustainable Convergence with Fast Decarbonization. Sources and series: gjp.wid.world (F5)",
+      "Sources & series: gjp.wid.world (F5)",
     number: "Figure 5",
     kind: "stacked-column",
     xKey: "scenario",
@@ -176,9 +176,9 @@ export const data = [
     title: "What Drives Emissions Down",
     subtitle: "Decomposition of Emission Reduction Drivers, 2026–2100 (GtCO2e avoided per year)",
     description:
-      "A Shapley decomposition of the difference in annual emissions between the Productivist Convergence (slow decarbonization) and Sustainable Convergence (fast decarbonization) scenarios shows that both sufficiency and the energy transition carry the load. By 2100, about 135 GtCO2e of annual emissions are avoided: labour hours reduction alone contributes 26%, the shift to immaterial consumption and changed food habits with reforestation another 18%, while electrification, clean electricity generation, low-carbon fuels, industrial processes and energy efficiency together account for the remaining 56%.",
+      "The figure shows a Shapley decomposition of the annual difference in emissions (in GtCO2e) between the Productivist Convergence - Slow Decarbonization scenario and the Sustainable Convergence - Fast Decarbonization scenario, shown here as avoided emissions. Percentage contributions over the entire 2025-2100 period: labour hours 26%, immaterial consumption 8%, food habits/reforestation 10%, electrification 10%, electricity generation 14%, primary and low-carbon fuels 16%, industrial processes and waste 10%, energy efficiency 6%.",
     source:
-      "Interpretation. The figure shows a Shapley decomposition of the annual difference in emissions (in GtCO2e) between the Productivist Convergence - Slow Decarbonization scenario and the Sustainable Convergence - Fast Decarbonization scenario, shown here as avoided emissions. Percentage contributions over the entire 2025-2100 period: labour hours 26%, immaterial consumption 8%, food habits/reforestation 10%, electrification 10%, electricity generation 14%, primary and low-carbon fuels 16%, industrial processes and waste 10%, energy efficiency 6%. Sources and series: gjp.wid.world (F6)",
+      "Sources & series: gjp.wid.world (F6)",
     number: "Figure 6",
     kind: "stacked-area",
     xKey: "year",
@@ -206,9 +206,9 @@ export const data = [
     title: "Targeted Sufficiency Can Be More Effective Than Large Uniform Degrowth",
     subtitle: "Projected Emissions & Temperature Under Fast Decarbonization (Gigatonnes GHG, Net CO2e)",
     description:
-      "Targeted sufficiency – global convergence to €60,000 per capita GDP by 2100 together with sectoral change (consumption shift to immaterial sectors, changed food habits and implied reforestation) – leads to 1.8°C of warming in 2100. That is less than the 1.9°C associated with a large uniform degrowth to €15,000 for all without structural transformation. At every income target, sectoral change roughly halves cumulative emissions: structural transformation matters more than the income level alone.",
+      "Targeted sufficiency, i.e. global convergence of all countries to 60k Euros 2025 PPP in per capita GDP by 2100, together with sectoral change, leads to 1.8°C temperature rise in 2100, i.e. less than the 1.9°C associated to large uniform degrowth (15k for all in 2100) but no structural change. Corresponding temperatures without sectoral change: 60k 2.2°C, 45k 2.1°C, 30k 2.0°C, 15k 1.9°C; with sectoral change: 1.8°C, 1.7°C, 1.7°C, 1.5°C.",
     source:
-      "Interpretation. Targeted sufficiency, i.e. global convergence of all countries to 60k Euros 2025 PPP in per capita GDP by 2100, together with sectoral change, leads to 1.8°C temperature rise in 2100, i.e. less than the 1.9°C associated to large uniform degrowth (15k for all in 2100) but no structural change. Corresponding temperatures without sectoral change: 60k 2.2°C, 45k 2.1°C, 30k 2.0°C, 15k 1.9°C; with sectoral change: 1.8°C, 1.7°C, 1.7°C, 1.5°C. Sources and series: gjp.wid.world (F7)",
+      "Sources & series: gjp.wid.world (F7)",
     number: "Figure 7",
     kind: "grouped-bar",
     xKey: "target",
@@ -227,9 +227,9 @@ export const data = [
     title: "The Global Justice Platform",
     subtitle: "How the Global Justice Fund Collects, Invests and Redistributes",
     description:
-      "The key element of the Global Justice Platform is the Global Justice Fund, which collects revenues from a global wealth tax and a global income tax. These revenues are invested and yield returns through a World Sovereign Fund, an active portfolio of sustainable assets. The Global Justice Fund distributes country dividends, allocated to each country on an equal per-capita basis, to finance massive investments in climate, infrastructure, education and health.",
+      "The key element of the Global Justice Platform is the Global Justice Fund, which collects revenues from a global wealth tax and a global income tax, which are then invested and yield returns through a World Sovereign Fund, an active portfolio of sustainable assets. The Global Justice Fund distributes country dividends to finance massive investments in climate, infrastructure, education and health.",
     source:
-      "Interpretation. The key element of the Global Justice Platform is the Global Justice Fund, which collects revenues from a global wealth tax and a global income tax, which are then invested and yield returns through a World Sovereign Fund, an active portfolio of sustainable assets. The Global Justice Fund distributes country dividends to finance massive investments in climate, infrastructure, education and health. Sources and series: gjp.wid.world (F8)",
+      "Sources & series: gjp.wid.world (F8)",
     number: "Figure 8",
     kind: "diagram",
     data: [],
@@ -238,9 +238,9 @@ export const data = [
     title: "A World Sovereign Fund to Reorient Investment",
     subtitle: "World Capital Stock as % of World GDP, 1980–2100",
     description:
-      "The key institution of the Global Justice Platform is a Global Justice Fund, collecting revenues from a global wealth tax and a global income tax, invested through a World Sovereign Fund – an active portfolio of sustainable assets. The World Sovereign Fund stabilizes its assets at about 60% of world GDP over 2030-2100, roughly 10% of the world capital stock. Initial accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the wealth tax on billionaires and centimillionaires, while private wealth declines from around 470% to 420% of world GDP.",
+      "The World Sovereign Fund is set to stabilize its assets at about 60% of world GDP over the 2030-2100 period, i.e. about 10% of the world capital stock. Initial asset accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the global wealth tax on very top wealth holders (billionaires and centimillionaires).",
     source:
-      "Interpretation. The World Sovereign Fund is set to stabilize its assets at about 60% of world GDP over the 2030-2100 period, i.e. about 10% of the world capital stock. Initial asset accumulation in 2026-2035 is made possible by reinvesting a large part of global tax revenue, especially the global wealth tax on very top wealth holders (billionaires and centimillionaires). Sources and series: gjp.wid.world (F9)",
+      "Sources & series: gjp.wid.world (F9)",
     number: "Figure 9",
     kind: "stacked-area",
     xKey: "year",
@@ -276,9 +276,9 @@ export const data = [
     title: "The Global Justice Fund Dwarfs Existing Development Aid",
     subtitle: "Annual Budget as % of World GDP",
     description:
-      "Global Justice Fund expenditures average 10.3% of world GDP per year over 2026-2060, consisting of country dividends (5.7%, allocated on an equal per-capita basis) and gross investment flows accumulating into the World Sovereign Fund (4.6%). This vastly exceeds total development aid – about 0.3% of world GDP in 2025 – and the combined budget of the UN, IMF and World Bank, which amounts to just 0.1% of world GDP including all annual disbursements.",
+      "GJF expenditures make 10.3% of world GDP per year on average over 2026-2060. GJF expenses consist of country dividends (allocated to each country on an equal per-capita basis) and gross investment flows accumulating into the World Sovereign Fund (WSF). This vastly exceeds total development aid (ODA, 0.3% of world GDP in 2025) or the combined budget of UN, IMF and WB (0.1% of world GDP in 2025).",
     source:
-      "Interpretation. GJF expenditures make 10.3% of world GDP per year on average over 2026-2060. GJF expenses consist of country dividends (allocated to each country on an equal per-capita basis) and gross investment flows accumulating into the World Sovereign Fund (WSF). This vastly exceeds total development aid (ODA, 0.3% of world GDP in 2025) or the combined budget of UN, IMF and WB (0.1% of world GDP in 2025). Sources & series: gjp.wid.world (F10)",
+      "Sources & series: gjp.wid.world (F10)",
     number: "Figure 10",
     kind: "bar",
     xKey: "item",
@@ -296,9 +296,9 @@ export const data = [
     title: "Financing Sustainable Convergence via Country Dividends",
     subtitle: "Country Dividends 2026–2100, % of World GDP",
     description:
-      "Country dividends are allocated to each country on an equal per-capita basis and are used to finance climate investment and education and health expenditure. They represent 5-8% of world GDP on average over 2030-2050, peaking at 9.2% in the mid-2030s before settling at 2.2% by 2100. The split into climate investments, health and education shown here is illustrative – each country decides its own allocation.",
+      "Country dividends are allocated to each country on an equal per-capita basis and are used to finance climate investment and education and health expenditure. They represent about 5-8% of world GDP on average over the 2030-2050, with the same geographical distribution as the world population. The split of country dividends into climate investments, health expenditures and education expenditures is illustrative and to be decided by each country themselves.",
     source:
-      "Interpretation. Country dividends are allocated to each country on an equal per-capita basis and are used to finance climate investment and education and health expenditure. They represent about 5-8% of world GDP on average over the 2030-2050, with the same geographical distribution as the world population. The split of country dividends into climate investments, health expenditures and education expenditures is illustrative and to be decided by each country themselves. Sources and series: gjp.wid.world (F11)",
+      "Sources & series: gjp.wid.world (F11)",
     number: "Figure 11",
     kind: "stacked-area",
     xKey: "year",
@@ -329,9 +329,9 @@ export const data = [
     title: "Towards Global Equality of Opportunities: Education",
     subtitle: "Education Expenditure per Capita, 2025 Euros PPP",
     description:
-      "In 2025, per capita expenditure on education varies from €209 in Sub-Saharan Africa to €4,141 in North America/Oceania – a 1:20 gap, even larger when measured per child. In the Global Justice scenario, all countries converge to €8,400 in per capita education expenditure by 2100, financed in the poorest regions largely through country dividends from the Global Justice Fund.",
+      "In 2025, per capita expenditure in education varies from 209 Euros in Sub-Saharan Africa to 4141 Euros in North America/Oceania (all amounts in PPP 2025 Euros). Gaps are even larger if we look at per children expenditure. In the global justice scenario, all countries are projected to converge to 8400 Euros in per capita expenditure by 2100.",
     source:
-      "Interpretation. In 2025, per capita expenditure in education varies from 209 Euros in Sub-Saharan Africa to 4141 Euros in North America/Oceania (all amounts in PPP 2025 Euros). Gaps are even larger if we look at per children expenditure. In the global justice scenario, all countries are projected to converge to 8400 Euros in per capita expenditure by 2100. Sources & series: gjp.wid.world (F12)",
+      "Sources & series: gjp.wid.world (F12)",
     number: "Figure 12",
     kind: "bar",
     xKey: "region",
@@ -354,9 +354,9 @@ export const data = [
     title: "Combining Between-Country & Within-Country Inequality Compression",
     subtitle: "Global Income Shares in Total Post-Tax Income, 1800–2100",
     description:
-      "According to the Global Justice Platform, the share of the top 10% highest incomes in total post-tax world income declines from 52% in 2025 to 18% in 2100, while the share of the global bottom 50% rises from 8% to 38% and the middle 40% edges up from 40% to 44%. These changes combine between-country income convergence with within-country compression, in line with long-run trends observed in Nordic Europe.",
+      "According to the Global Justice Platform, the share of the top 10% highest incomes in total posttax income in the world is projected to decline from 52% in 2025 to 18% in 2100. The share of the global bottom 50% in posttax income is projected to increase from 8% in 2025 to 38% in 2100, and for the middle 40% from 40% today to 44% in 2100.",
     source:
-      "Interpretation. According to the Global Justice Platform, the share of the top 10% highest incomes in total posttax income in the world is projected to decline from 52% in 2025 to 18% in 2100. The share of the global bottom 50% in posttax income is projected to increase from 8% in 2025 to 38% in 2100, and for the middle 40% from 40% today to 44% in 2100. Sources and series: gjp.wid.world (F13)",
+      "Sources & series: gjp.wid.world (F13)",
     number: "Figure 13",
     kind: "line",
     xKey: "year",
@@ -391,9 +391,9 @@ export const data = [
     title: "The Rise of the Bottom 50%",
     subtitle: "World Bottom 50% Wealth Share by Region, 1800–2100",
     description:
-      "The share of the bottom 50% of wealth holders in total personal wealth is projected to increase from 2% in 2025 to 30% in 2100 – a fifteen-fold rise. The regional composition in 2100 follows the regional shares of global population, because average wealth and wealth distributions equalize between countries: Sub-Saharan Africa and South/South-East Asia together account for about two thirds of the bottom-50% total by then.",
+      "According to the Global Justice Platform, the share of the bottom 50% wealth holders in total personal wealth is projected to increase from 2% in 2025 to 30% in 2100. The country composition in 2100 follows the regional shares in global population in 2100 because average wealth and wealth distributions equalize between countries.",
     source:
-      "Interpretation. According to the Global Justice Platform, the share of the bottom 50% wealth holders in total personal wealth is projected to increase from 2% in 2025 to 30% in 2100. The country composition in 2100 follows the regional shares in global population in 2100 because average wealth and wealth distributions equalize between countries. Sources and series: gjp.wid.world (F14)",
+      "Sources & series: gjp.wid.world (F14)",
     number: "Figure 14",
     kind: "stacked-area",
     xKey: "year",
@@ -431,9 +431,9 @@ export const data = [
     title: "The Rise and Fall of the Billionaire Class",
     subtitle: "World Top 0.001% Wealth Share by Region, 1800–2100",
     description:
-      "The share of the top 0.001% wealth holders in total personal wealth – roughly the billionaire class, about 80,000 individuals with average wealth around €500 million in 2025 – is projected to decrease from 6.4% in 2025 to 0.05% in 2100. Historically this share was dominated by Europe in the 19th century and by North America in the 20th; the rapid decline after 2026 is driven by the global wealth tax on billionaires and centimillionaires that funds the Global Justice Fund.",
+      "According to the Global Justice Platform, the share of the top 0.001% highest wealth holders in total personal wealth is projected to decrease from 6.4% in 2025 to 0.05% in 2100. In 2025, the group of the top 0.001% corresponds approximately to the group of billionaires (about 80 thousand individuals with average per capita wealth around 500 million Euros).",
     source:
-      "Interpretation. According to the Global Justice Platform, the share of the top 0.001% highest wealth holders in total personal wealth is projected to decrease from 6.4% in 2025 to 0.05% in 2100. In 2025, the group of the top 0.001% corresponds approximately to the group of billionaires (about 80 thousand individuals with average per capita wealth around 500 million Euros). Sources and series: gjp.wid.world (F15)",
+      "Sources & series: gjp.wid.world (F15)",
     number: "Figure 15",
     kind: "stacked-area",
     xKey: "year",
@@ -478,9 +478,9 @@ export const data = [
     title: "Large Majorities Benefit from Higher Income in All Regions",
     subtitle: "Population Shares by Monetary Income Growth, 2025–2100",
     description:
-      "Large majorities of the population in every region benefit from rising monetary income between 2025 and 2100. At the world level, 89% of the population double their income or more, 7% gain between 20% and 100%, 2% gain up to 20%, and only 2% face an income decline. The fraction facing a decline rises to significantly higher levels in the richest regions – 6% in Europe and 14% in North America/Oceania – while in Sub-Saharan Africa and South/South-East Asia virtually everyone at least doubles their income.",
+      "According to the Global Justice Platform, large majorities of the population in every region benefit from rising monetary income between 2025 and 2100. At the world level, 89% of the population double their income or more, 7% increase their income between 20% and 100%, 2% by 0-20% and 2% face an income decline.",
     source:
-      "Interpretation. According to the Global Justice Platform, large majorities of the population in every region benefit from rising monetary income between 2025 and 2100. At the world level, 89% of the population double their income or more, 7% increase their income between 20% and 100%, 2% by 0-20% and 2% face an income decline. Sources and series: gjp.wid.world (F16)",
+      "Sources & series: gjp.wid.world (F16)",
     number: "Figure 16",
     kind: "stacked-column",
     xKey: "region",
@@ -507,9 +507,9 @@ export const data = [
     title: "From Global Plutocracy to One Person-One Vote",
     subtitle: "Voting Rights Relative to Population Share at the IMF, 1945–2100",
     description:
-      "In 2025, countries in Europe and North America/Oceania have 4x more votes at the IMF than their share in global population, while countries in South & South-East Asia and Sub-Saharan Africa have about 1/4 of their global population share in IMF voting rights. The Global Justice Platform envisions a transition from the current IMF formula to a per-capita allocation of voting rights, either immediately or at the latest by 2050 via a gradual transition – after which every region's voting power matches its population share.",
+      "In 2025, countries in Europe and North America/Oceania had 4x more votes at the IMF than their share in global population, while countries in South & South-East Asia and Sub-Saharan Africa have about 1/4 of their global population share in IMF voting rights. The Global Justice Platform envisions a transition from the current IMF formula to a per-capita allocation of voting rights, either immediately (the best solution in our view) and at the latest by 2050 (via a gradual transition).",
     source:
-      "Interpretation. In 2025, countries in Europe and North America/Oceania had 4x more votes at the IMF than their share in global population, while countries in South & South-East Asia and Sub-Saharan Africa have about 1/4 of their global population share in IMF voting rights. The Global Justice Platform envisions a transition from the current IMF formula to a per-capita allocation of voting rights, either immediately (the best solution in our view) and at the latest by 2050 (via a gradual transition). Sources and series: gjp.wid.world (F17)",
+      "Sources & series: gjp.wid.world (F17)",
     number: "Figure 17",
     kind: "line",
     xKey: "year",
@@ -558,9 +558,9 @@ export const data = [
     title: "North-South Transfers Are Smaller Than Colonial and Climate Damages",
     subtitle: "Annual Transfers 2026–2100, % of World GDP",
     description:
-      "The North-South transfers induced by the Global Justice Fund – the extra wealth and income taxes paid, and lower country dividends received, by Europe and North America/Oceania – represent about 0.8% of world GDP on average between 2026 and 2100. This is significantly smaller than the roughly 3.2% of world GDP per year that would be required to compensate for the cumulated colonial and climate damages imposed by Europe and North America/Oceania between 1800 and 2025, including slavery damages (1.5%), other colonial damages (0.9%) and climate damages (0.8%).",
+      "The North-South transfers induced by the Global Justice Fund (i.e. the extra wealth and income taxes paid and lower country dividends received by Europe and North America/Oceania) represent about 0.8% of world GDP on average between 2026 and 2100. This is significantly smaller than the corresponding annual transfers which should have been paid over the same period in order to compensate for the cumulated colonial and climate damages imposed by Europe and North America/Oceania between 1800 and 2025.",
     source:
-      "Interpretation. The North-South transfers induced by the Global Justice Fund (i.e. the extra wealth and income taxes paid and lower country dividends received by Europe and North America/Oceania) represent about 0.8% of world GDP on average between 2026 and 2100. This is significantly smaller than the corresponding annual transfers which should have been paid over the same period in order to compensate for the cumulated colonial and climate damages imposed by Europe and North America/Oceania between 1800 and 2025. Sources and series: gjp.wid.world (F18)",
+      "Sources & series: gjp.wid.world (F18)",
     number: "Figure 18",
     kind: "bar",
     xKey: "item",

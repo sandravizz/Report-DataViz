@@ -1,9 +1,10 @@
 <script>
-  import { BarChart, defaultChartPadding } from "layerchart";
+  import { BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { tickLabelProps, legendProps } from "$lib/chart-theme";
+  import { tickLabelProps, legendProps, legendPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
+  let innerWidth = $state(1024);
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
@@ -15,6 +16,8 @@
   }
 </script>
 
+<svelte:window bind:innerWidth />
+
 <BarChart
   data={pair.data}
   x={pair.xKey}
@@ -23,7 +26,7 @@
   seriesLayout="stack"
   legend={{ placement: "bottom" }}
   tooltipContext={false}
-  padding={pair.series.length > 4 ? defaultChartPadding({ legend: true, bottom: 44 }) : undefined}
+  padding={legendPadding(pair.series.length, innerWidth)}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0 },
     xAxis: {

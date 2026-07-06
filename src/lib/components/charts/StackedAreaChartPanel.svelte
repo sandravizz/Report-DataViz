@@ -1,13 +1,16 @@
 <script>
-  import { AreaChart, defaultChartPadding } from "layerchart";
+  import { AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { tickLabelProps, legendProps } from "$lib/chart-theme";
+  import { tickLabelProps, legendProps, legendPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
+  let innerWidth = $state(1024);
 
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 </script>
+
+<svelte:window bind:innerWidth />
 
 <AreaChart
   data={pair.data}
@@ -16,7 +19,7 @@
   seriesLayout="stack"
   legend={{ placement: "bottom" }}
   tooltipContext={false}
-  padding={pair.series.length > 4 ? defaultChartPadding({ legend: true, bottom: 44 }) : undefined}
+  padding={legendPadding(pair.series.length, innerWidth)}
   props={{
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
     xAxis: { tickLength: 0, format: formatYear, tickLabelProps },

@@ -1,9 +1,10 @@
 <script>
-  import { BarChart, defaultChartPadding } from "layerchart";
+  import { BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { tickLabelProps, legendProps } from "$lib/chart-theme";
+  import { tickLabelProps, legendProps, legendPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
+  let innerWidth = $state(1024);
 
   function wrapLabel(label) {
     const words = String(label).split(" ");
@@ -12,6 +13,8 @@
     return `${words.slice(0, mid).join(" ")}\n${words.slice(mid).join(" ")}`;
   }
 </script>
+
+<svelte:window bind:innerWidth />
 
 <BarChart
   data={pair.data}
@@ -22,9 +25,7 @@
   axis="x"
   legend={{ placement: "bottom" }}
   tooltipContext={false}
-  padding={pair.series.length > 4
-    ? defaultChartPadding({ axis: "x", legend: true, bottom: 44 })
-    : undefined}
+  padding={legendPadding(pair.series.length, innerWidth, { axis: "x" })}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0, radius: 3 },
     xAxis: {

@@ -26,7 +26,7 @@
         tabindex="0"
         role="button"
         aria-label="Table of Contents"
-        class="btn btn-ghost font-sans text-sm font-normal"
+        class="btn btn-ghost -ml-2 px-2 font-sans text-sm font-normal sm:ml-0 sm:px-4"
       >
         <svg
           class="h-5 w-5 sm:hidden"
@@ -52,7 +52,7 @@
       </div>
       <ul
         tabindex="-1"
-        class="dropdown-content menu z-50 mt-2 max-h-[70vh] w-80 max-w-[calc(100vw-2rem)] flex-nowrap overflow-y-auto rounded-box border border-base-content/10 bg-base-100 p-2 font-sans shadow-lg"
+        class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-100 p-2 font-sans shadow-lg"
       >
         {#each links as link (link.href)}
           <li>

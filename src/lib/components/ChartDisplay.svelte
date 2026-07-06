@@ -9,10 +9,10 @@
   let { pairs, activeIndex } = $props();
 </script>
 
-<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-20 lg:left-[43%] lg:w-200">
+<div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
   {#each pairs as pair, i (pair.title)}
     <div
-      class="absolute inset-0 transition-opacity duration-500 ease-[ease]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100svh-7.5rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
     >
@@ -22,11 +22,11 @@
       <div class="mb-2 text-xl font-sans font-medium text-base-content">
         {pair.title}
       </div>
-      <div class="mb-6 font-sans text-sm text-base-content">
+      <div class="mb-4 font-sans text-sm text-base-content lg:mb-6">
         {pair.subtitle}
       </div>
 
-      <div class="flex h-[52vh] gap-6 lg:h-134">
+      <div class="flex min-h-0 flex-1 gap-6">
         {#if pair.kind === "bar"}
           <BarChartPanelHorizontal {pair} />
         {:else if pair.kind === "line"}
@@ -42,7 +42,7 @@
         {/if}
       </div>
 
-      <div class="mt-6 font-sans text-xs text-base-content/50">
+      <div class="mt-3 font-sans text-xs text-base-content lg:mt-6">
         {pair.source}
       </div>
     </div>
