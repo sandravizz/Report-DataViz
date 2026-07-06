@@ -22,21 +22,37 @@
 >
   <div class="flex items-center justify-between px-6 py-3">
     <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost font-sans text-sm font-normal">
-        Table of Contents
+      <div
+        tabindex="0"
+        role="button"
+        aria-label="Table of Contents"
+        class="btn btn-ghost font-sans text-sm font-normal"
+      >
         <svg
-          class="h-4 w-4"
+          class="h-5 w-5 sm:hidden"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
+        <span class="hidden items-center gap-2 sm:flex">
+          Table of Contents
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+          </svg>
+        </span>
       </div>
       <ul
         tabindex="-1"
-        class="dropdown-content menu z-50 mt-2 w-80 rounded-box border border-base-content/10 bg-base-100 p-2 font-sans shadow-lg"
+        class="dropdown-content menu z-50 mt-2 max-h-[70vh] w-80 max-w-[calc(100vw-2rem)] flex-nowrap overflow-y-auto rounded-box border border-base-content/10 bg-base-100 p-2 font-sans shadow-lg"
       >
         {#each links as link (link.href)}
           <li>
@@ -48,7 +64,7 @@
 
     <a
       href="#top"
-      class="whitespace-nowrap font-sans text-lg font-semibold text-base-content hover:opacity-70"
+      class="max-w-36 text-right font-sans text-xs leading-tight font-semibold tracking-wide text-base-content hover:opacity-70 sm:max-w-none sm:text-lg sm:tracking-normal sm:whitespace-nowrap"
     >
       GLOBAL JUSTICE REPORT
     </a>

@@ -19,7 +19,7 @@
   xRange={({ width }) => [0, width]}
   orientation="horizontal"
   axis="y"
-  tooltipContext={false}
+  tooltipContext={true}
   grid={false}
   labels
   padding={defaultChartPadding({ left: 90, right: 40 })}
