@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { circleCallout, textCallout } from "../annotation-presets.js";
+import { circleCallout, projectionRange, textCallout } from "../annotation-presets.js";
 
 export default {
   title: "The Rise and Fall of the Billionaire Class",
@@ -21,6 +21,9 @@ export default {
     { key: "Russia/Central Asia", value: "russiaCentralAsia", color: palette[9] },
     { key: "East Asia", value: "eastAsia", color: palette[0] },
     { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
+  ],
+  rangeAnnotations: [
+    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
   annotations: [
     circleCallout({

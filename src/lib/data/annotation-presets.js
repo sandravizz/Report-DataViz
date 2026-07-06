@@ -48,14 +48,18 @@ export function projectionRule({ x, label = "Projection →" }) {
   };
 }
 
-// Hatched range band over the projected years.
-export function projectionRange({ x, label = "Projection" }) {
+// Hatched range band over the projected years. The label sits just above the
+// plot at the band's left edge ("Projection →"), matching projectionRule so
+// both markers read identically; pass placement/props overrides for bands
+// used as value highlights instead.
+export function projectionRange({ x, label = "Projection →", ...annotation }) {
   return {
     x,
     pattern: projectionPattern,
     label,
-    labelPlacement: "top",
-    labelYOffset: 14,
-    props: { label: mutedLabel },
+    labelPlacement: "top-left",
+    labelYOffset: -4,
+    props: { label: { ...mutedLabel, textAnchor: "start", verticalAnchor: "end", dx: 6 } },
+    ...annotation,
   };
 }

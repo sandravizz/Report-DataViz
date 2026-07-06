@@ -1,4 +1,4 @@
-import { circleCallout, mutedLabel, dashedRule } from "../annotation-presets.js";
+import { circleCallout, mutedLabel, dashedRule, projectionRange } from "../annotation-presets.js";
 
 export default {
   title: "From Global Plutocracy to One Person-One Vote",
@@ -23,6 +23,9 @@ export default {
     { key: "Russia/Central Asia", value: "russiaCentralAsia", color: "#9A919E" },
     { key: "East Asia", value: "eastAsia", color: "#847B88" },
     { key: "South/South-East Asia", value: "southSoutheastAsia", color: "#E58A70" },
+  ],
+  rangeAnnotations: [
+    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
   lineAnnotations: [
     {

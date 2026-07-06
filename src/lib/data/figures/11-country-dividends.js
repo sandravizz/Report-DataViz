@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { projectionRange } from "../annotation-presets.js";
+import { mutedLabel, projectionRange } from "../annotation-presets.js";
 
 export default {
   title: "Financing Sustainable Convergence via Country Dividends",
@@ -18,7 +18,16 @@ export default {
     { key: "Climate Investments", value: "climate", color: palette[3] },
   ],
   rangeAnnotations: [
-    projectionRange({ x: [new Date(2030, 0, 1), new Date(2050, 0, 1)], label: "≈5–8% of world GDP" }),
+    // Value highlight, not a projection marker (the whole chart is projected):
+    // label centered over the band, floating above the plot like the
+    // "Projection →" labels on other figures.
+    projectionRange({
+      x: [new Date(2030, 0, 1), new Date(2050, 0, 1)],
+      label: "≈5–8% of world GDP",
+      labelPlacement: "top",
+      labelYOffset: -4,
+      props: { label: { ...mutedLabel, verticalAnchor: "end" } },
+    }),
   ],
   data: [
     { year: new Date(2026, 0, 1), education: 0, health: 0, climate: 0 },
