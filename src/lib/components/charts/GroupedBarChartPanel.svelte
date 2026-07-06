@@ -25,7 +25,7 @@
   axis="x"
   legend={{ placement: "bottom-left" }}
   rule={false}
-  tooltipContext={false}
+  tooltipContext={true}
   padding={legendPadding(pair.series.length, innerWidth, { axis: "x" })}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0, radius: 3 },

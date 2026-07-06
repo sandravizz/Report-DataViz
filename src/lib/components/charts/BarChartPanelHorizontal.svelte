@@ -46,6 +46,13 @@
       ...tickLabelProps,
       format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,
     },
+    tooltip: {
+      item: {
+        label: "",
+        color: null,
+        format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,
+      },
+    },
   }}
 />
 

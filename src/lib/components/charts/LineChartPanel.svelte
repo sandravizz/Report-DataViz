@@ -21,7 +21,7 @@
   yDomain={pair.yDomain}
   legend={{ placement: "bottom-left" }}
   rule={false}
-  tooltipContext={false}
+  tooltipContext={true}
   padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     spline: { strokeWidth: 2.5 },
