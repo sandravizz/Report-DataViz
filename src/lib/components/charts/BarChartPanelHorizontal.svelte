@@ -20,7 +20,7 @@
   xRange={({ width }) => [0, width]}
   orientation="horizontal"
   axis="y"
-  tooltipContext={true}
+  tooltipContext={false}
   grid={false}
   rule={false}
   labels

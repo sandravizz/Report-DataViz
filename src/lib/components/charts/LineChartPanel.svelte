@@ -46,7 +46,7 @@
   yDomain={pair.yDomain}
   legend={pair.lineEndLabels ? false : { placement: "bottom-left" }}
   rule={false}
-  tooltipContext={true}
+  tooltipContext={false}
   padding={pair.lineEndLabels
     ? defaultChartPadding({ ...yLabelPadding, right: 80 })
     : legendPadding(pair.series.length, innerWidth, yLabelPadding)}

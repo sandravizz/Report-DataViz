@@ -26,7 +26,7 @@
   seriesLayout="stack"
   legend={{ placement: "bottom-left" }}
   rule={false}
-  tooltipContext={true}
+  tooltipContext={false}
   padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0 },
