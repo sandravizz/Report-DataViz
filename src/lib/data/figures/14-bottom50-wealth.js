@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { annotationLabel } from "../annotation-presets.js";
+import { circleCallout } from "../annotation-presets.js";
 
 export default {
   title: "The Rise of the Bottom 50%",
@@ -23,31 +23,23 @@ export default {
     { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
   ],
   annotations: [
-    {
+    circleCallout({
       x: new Date(2025, 0, 1),
       y: 2,
-      r: 10,
       label: "Only 2% of world wealth in 2025",
       labelPlacement: "top-left",
       labelXOffset: 10,
       labelYOffset: 16,
-      props: {
-        circle: { stroke: "#2A2659", fill: "none" },
-        label: { ...annotationLabel, textAnchor: "end" },
-      },
-    },
-    {
+      labelProps: { textAnchor: "end" },
+    }),
+    circleCallout({
       x: new Date(2100, 0, 1),
       y: 30,
-      r: 10,
       label: "30% by 2100",
       labelPlacement: "left",
       labelXOffset: 14,
-      props: {
-        circle: { stroke: "#2A2659", fill: "none" },
-        label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle" },
-      },
-    },
+      labelProps: { textAnchor: "end", verticalAnchor: "middle" },
+    }),
   ],
   data: [
     { year: new Date(1800, 0, 1), europe: 0.3, northAmericaOceania: 0.05, latinAmerica: 0.15, middleEastNorthAfrica: 0.3, subSaharanAfrica: 0.6, russiaCentralAsia: 0.3, eastAsia: 1.6, southSoutheastAsia: 2.2 },

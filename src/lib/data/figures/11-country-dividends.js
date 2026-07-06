@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { mutedLabel, projectionPattern } from "../annotation-presets.js";
+import { projectionRange } from "../annotation-presets.js";
 
 export default {
   title: "Financing Sustainable Convergence via Country Dividends",
@@ -18,14 +18,7 @@ export default {
     { key: "Climate Investments", value: "climate", color: palette[3] },
   ],
   rangeAnnotations: [
-    {
-      x: [new Date(2030, 0, 1), new Date(2050, 0, 1)],
-      pattern: projectionPattern,
-      label: "≈5–8% of world GDP",
-      labelPlacement: "top",
-      labelYOffset: 14,
-      props: { label: mutedLabel },
-    },
+    projectionRange({ x: [new Date(2030, 0, 1), new Date(2050, 0, 1)], label: "≈5–8% of world GDP" }),
   ],
   data: [
     { year: new Date(2026, 0, 1), education: 0, health: 0, climate: 0 },

@@ -1,4 +1,4 @@
-import { annotationLabel, mutedLabel, dashedRule } from "../annotation-presets.js";
+import { circleCallout, mutedLabel, dashedRule } from "../annotation-presets.js";
 
 export default {
   title: "From Global Plutocracy to One Person-One Vote",
@@ -38,19 +38,15 @@ export default {
     },
   ],
   annotations: [
-    {
+    circleCallout({
       x: new Date(2050, 0, 1),
       y: 100,
-      r: 10,
       label: "One person, one vote by 2050",
       labelPlacement: "bottom-right",
       labelXOffset: 6,
       labelYOffset: 14,
-      props: {
-        circle: { stroke: "#2A2659", fill: "none" },
-        label: { ...annotationLabel, textAnchor: "start" },
-      },
-    },
+      labelProps: { textAnchor: "start" },
+    }),
   ],
   data: [
     { year: new Date(1945, 0, 1), europe: 225, northAmericaOceania: 470, latinAmerica: 175, middleEastNorthAfrica: 47, subSaharanAfrica: 26, russiaCentralAsia: null, eastAsia: 26, southSoutheastAsia: 22 },

@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { invertedLabel, mutedLabel, dashedRule } from "../annotation-presets.js";
+import { projectionRule, textCallout } from "../annotation-presets.js";
 
 export default {
   title: "A World Sovereign Fund to Reorient Investment",
@@ -18,23 +18,17 @@ export default {
     { key: "Private Wealth", value: "privateWealth", color: palette[0] },
   ],
   lineAnnotations: [
-    {
-      x: new Date(2026, 0, 1),
-      label: "Fund launches →",
-      labelPlacement: "top",
-      labelYOffset: 4,
-      props: { line: dashedRule, label: { ...mutedLabel, textAnchor: "start", dx: 6 } },
-    },
+    projectionRule({ x: new Date(2026, 0, 1), label: "Fund launches →" }),
   ],
   annotations: [
-    {
+    textCallout({
       x: new Date(2095, 0, 1),
       y: 30,
-      r: 0,
+      inverted: true,
       label: "Stabilizes at ~60% of world GDP",
       labelPlacement: "left",
-      props: { label: { ...invertedLabel, textAnchor: "end" } },
-    },
+      labelProps: { textAnchor: "end" },
+    }),
   ],
   data: [
     { year: new Date(1980, 0, 1), wsf: 0, publicWealth: 94, privateWealth: 242 },

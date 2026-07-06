@@ -1,6 +1,6 @@
 <script>
   import { page } from "$app/state";
-  import { data } from "$lib/data/data";
+  import { data } from "$lib/data/index.js";
 
   const meta = {
     title: "Interactive Report Design by SandraViz",

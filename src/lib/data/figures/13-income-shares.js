@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { annotationLabel, mutedLabel, projectionPattern } from "../annotation-presets.js";
+import { circleCallout, projectionRange } from "../annotation-presets.js";
 
 export default {
   title: "Combining Between-Country & Within-Country Inequality Compression",
@@ -14,29 +14,20 @@ export default {
   valueSuffix: "%",
   lineEndLabels: true,
   rangeAnnotations: [
-    {
-      x: [new Date(2025, 0, 1), new Date(2100, 0, 1)],
-      pattern: projectionPattern,
-      label: "Projection",
-      labelPlacement: "top",
-      labelYOffset: 14,
-      props: { label: mutedLabel },
-    },
+    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
   annotations: [
-    {
+    circleCallout({
       x: new Date(2050, 0, 1),
       y: 28,
-      r: 12,
+      filled: true,
+      color: palette[3],
       label: "Bottom 50% overtakes the top 10% around 2050",
       labelPlacement: "bottom-left",
       labelXOffset: 30,
       labelYOffset: 30,
       link: { type: "swoop" },
-      props: {
-        circle: { stroke: palette[3], fill: palette[3], fillOpacity: 0.2 },
-        label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-      },
+      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
       // Narrow viewports: the one-line label is wider than the space left of
       // the point, so wrap it to 2 lines in the open region below-left of
       // the intersection. Text truncates at `width` unless truncate is
@@ -46,7 +37,7 @@ export default {
         labelYOffset: 36,
         props: { label: { width: 180, truncate: false } },
       },
-    },
+    }),
   ],
   series: [
     { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: palette[5] },

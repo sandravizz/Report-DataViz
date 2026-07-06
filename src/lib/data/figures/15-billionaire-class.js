@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { annotationLabel } from "../annotation-presets.js";
+import { circleCallout, textCallout } from "../annotation-presets.js";
 
 export default {
   title: "The Rise and Fall of the Billionaire Class",
@@ -23,28 +23,23 @@ export default {
     { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
   ],
   annotations: [
-    {
+    circleCallout({
       x: new Date(2025, 0, 1),
       y: 6.4,
-      r: 10,
       label: "Peak: 6.4% in 2025",
       labelPlacement: "left",
       labelXOffset: 14,
-      props: {
-        circle: { stroke: "#2A2659", fill: "none" },
-        label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle" },
-      },
-    },
-    {
+      labelProps: { textAnchor: "end", verticalAnchor: "middle" },
+    }),
+    textCallout({
       x: new Date(2050, 0, 1),
       y: 0.17,
-      r: 0,
       label: "Nearly zero by 2050",
       labelPlacement: "top-right",
       labelXOffset: 6,
       labelYOffset: 10,
-      props: { label: { ...annotationLabel, textAnchor: "start" } },
-    },
+      labelProps: { textAnchor: "start" },
+    }),
   ],
   data: [
     { year: new Date(1800, 0, 1), europe: 3.4, northAmericaOceania: 0.05, latinAmerica: 0.1, middleEastNorthAfrica: 0.15, subSaharanAfrica: 0.05, russiaCentralAsia: 0.05, eastAsia: 1.4, southSoutheastAsia: 0.1 },
