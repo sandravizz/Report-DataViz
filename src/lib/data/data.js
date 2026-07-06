@@ -47,6 +47,36 @@ export const data = [
       { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[4] },
       { key: "World", value: "world", color: palette[5] },
     ],
+    annotations: [
+      {
+        x: new Date(2025, 0, 1),
+        y: 2100,
+        r: 12,
+        label: "2,100 hours in 2025",
+        labelPlacement: "right",
+        labelXOffset: 30,
+        labelYOffset: 10,
+        link: { type: "beveled", radius: 15, sweep: "vertical-horizontal" },
+        props: {
+          circle: { stroke: palette[5], fill: palette[5], fillOpacity: 0.2 },
+          label: { fill: "#2A2659", class: "text-xs font-light", textAnchor: "start", verticalAnchor: "middle", dx: 4 },
+        },
+      },
+      {
+        x: new Date(2100, 0, 1),
+        y: 1000,
+        r: 12,
+        label: "1,000 hours by 2100",
+        labelPlacement: "bottom-left",
+        labelXOffset: 30,
+        labelYOffset: 20,
+        link: { type: "swoop" },
+        props: {
+          circle: { stroke: palette[5], fill: palette[5], fillOpacity: 0.2 },
+          label: { fill: "#2A2659", class: "text-xs font-light", textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+        },
+      },
+    ],
     data: [
       { year: new Date(1800, 0, 1), europe: 3100, northAmericaOceania: 3150, latinAmerica: 3050, middleEastNorthAfrica: 3200, subSaharanAfrica: 3120, russiaCentralAsia: 3350, eastAsia: 3180, southSoutheastAsia: 3220, world: 3180 },
       { year: new Date(1820, 0, 1), europe: 3200, northAmericaOceania: 3180, latinAmerica: 3080, middleEastNorthAfrica: 3220, subSaharanAfrica: 3150, russiaCentralAsia: 3350, eastAsia: 3200, southSoutheastAsia: 3160, world: 3200 },
@@ -348,10 +378,11 @@ export const data = [
     kind: "line",
     xKey: "year",
     valueSuffix: "%",
+    lineEndLabels: true,
     series: [
-      { key: "Share of Top 10%", value: "top10", color: palette[5] },
-      { key: "Share of Middle 40%", value: "middle40", color: palette[2] },
-      { key: "Share of Bottom 50%", value: "bottom50", color: palette[3] },
+      { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: palette[5] },
+      { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: palette[2] },
+      { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: palette[3] },
     ],
     data: [
       { year: new Date(1800, 0, 1), top10: 50, middle40: 35, bottom50: 15 },
