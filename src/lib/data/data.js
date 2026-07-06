@@ -109,8 +109,8 @@ export const data = [
     series: [
       { key: "Domestic labour (women)", value: "domesticWomen", color: palette[2] },
       { key: "Domestic labour (men)", value: "domesticMen", color: palette[4] },
-      { key: "Economic labour (women)", value: "economicWomen", color: palette[5] },
-      { key: "Economic labour (men)", value: "economicMen", color: palette[3] },
+      { key: "Economic labour (women)", value: "economicWomen", color: "#2E86B5" },
+      { key: "Economic labour (men)", value: "economicMen", color: palette[5] },
     ],
     data: [
       { year: new Date(1800, 0, 1), domesticWomen: 990, domesticMen: 210, economicWomen: 800, economicMen: 1320 },

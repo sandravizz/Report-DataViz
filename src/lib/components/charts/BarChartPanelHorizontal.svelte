@@ -8,9 +8,6 @@
   let { pair } = $props();
 
   const hasPerRowColor = $derived(pair.data.every((d) => d.color));
-
-  // Width of the category-label gutter left of the bars. Labels are
-  // left-aligned at the container edge (dx cancels the gutter), Datawrapper-style.
   const labelGutter = 90;
 </script>
 
@@ -28,7 +25,9 @@
   rule={false}
   labels
   padding={defaultChartPadding({ left: labelGutter, right: 40 })}
-  {...hasPerRowColor ? { c: pair.xKey, cRange: pair.data.map((d) => d.color) } : {}}
+  {...hasPerRowColor
+    ? { c: pair.xKey, cRange: pair.data.map((d) => d.color) }
+    : {}}
   series={[
     {
       key: pair.subtitle,
@@ -40,7 +39,11 @@
   props={{
     yAxis: {
       ...yAxisProps,
-      tickLabelProps: { ...tickLabelProps, textAnchor: "start", dx: -labelGutter },
+      tickLabelProps: {
+        ...tickLabelProps,
+        textAnchor: "start",
+        dx: -labelGutter,
+      },
     },
     labels: {
       ...tickLabelProps,
@@ -55,4 +58,3 @@
     },
   }}
 />
-

@@ -11,6 +11,15 @@ export const legendProps = {
   classes: { items: "flex-wrap" },
 };
 
+// Stacked charts: hovering a legend item must not highlight its area/column
+// (the legend click-to-toggle stays active). Returning a non-nullish value
+// stops Legend from falling back to its built-in highlight handlers.
+export const stackedLegendProps = {
+  ...legendProps,
+  onpointerenter: () => false,
+  onpointerleave: () => false,
+};
+
 // Numeric y tick labels are wider than the default 20px left gutter; give
 // those charts enough room that the labels stay inside the chart container,
 // so the legend and plot stay flush with the title/subtitle/source.

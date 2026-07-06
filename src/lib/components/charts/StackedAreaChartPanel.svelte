@@ -1,7 +1,7 @@
 <script>
   import { AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -25,6 +25,6 @@
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
     xAxis: { ...xAxisProps, format: formatYear },
     yAxis: { ...yAxisProps, format: formatValue },
-    legend: legendProps,
+    legend: stackedLegendProps,
   }}
 />

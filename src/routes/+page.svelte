@@ -1,5 +1,12 @@
 <script>
+  import { page } from "$app/state";
   import { data } from "$lib/data/data";
+
+  const meta = {
+    title: "Interactive Report Design by SandraViz",
+    description:
+      "A scrollytelling report with animated charts — interactive report design by SandraViz. Want your report like this? Get in touch at sandraviz.com.",
+  };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
   import Landing from "$lib/components/Landing.svelte";
@@ -125,6 +132,20 @@
     },
   ];
 </script>
+
+<svelte:head>
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={meta.title} />
+  <meta property="og:description" content={meta.description} />
+  <meta property="og:url" content={page.url.origin + page.url.pathname} />
+  <meta property="og:image" content="{page.url.origin}/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={meta.title} />
+  <meta name="twitter:description" content={meta.description} />
+  <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
+</svelte:head>
 
 <Header />
 

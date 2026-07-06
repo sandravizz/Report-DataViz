@@ -14,6 +14,20 @@
     ? 'translate-y-0 opacity-100'
     : 'pointer-events-none translate-y-full opacity-0'}"
 >
+  <p class="text-sm text-base-content/70">
+    Interactive report design by
+    <a
+      href="https://sandraviz.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link link-hover font-medium text-base-content">SandraViz</a
+    >
+    —
+    <a href="mailto:hello@sandraviz.com" class="link link-hover font-medium text-base-content"
+      >want your report like this? &rarr;</a
+    >
+  </p>
+
   <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-base-content/50">
     <span>
       &copy; {new Date().getFullYear()}
