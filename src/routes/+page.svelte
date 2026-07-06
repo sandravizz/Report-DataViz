@@ -10,70 +10,10 @@
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
   import Landing from "$lib/components/Landing.svelte";
-  // import Hero from "$lib/components/Hero.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
   // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
   const sections = [
-    // {
-    //   id: "at-a-glance",
-    //   title: "Global Justice by 2100 at a Glance",
-    //   items: [
-    //     {
-    //       label: "Equality between countries",
-    //       text: "Average per capita monthly gross national income (PPP Euros 2025) rises to 5,000 Euros in all countries by 2100. Today, it ranges from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania (a 16-fold gap).",
-    //     },
-    //     {
-    //       label: "Less work, more emancipation",
-    //       text: "Annual labour hours per employed person fall from about 2,100 hours today to about 1,000 hours by 2100, continuing the historical trend toward shorter working time.",
-    //     },
-    //     {
-    //       label: "Education and health for all",
-    //       text: "Per capita education spending rises to 8,400 Euros per year across all countries in 2100. Today, it ranges from 210 to 4,140 Euros. Health spending rises to 14,400 euros. Today it ranges from 110 Euros to 8,300 Euros. The share of global working hours devoted to education and health rises from 11% today to 43% in 2100.",
-    //     },
-    //     {
-    //       label: "Full gender equality",
-    //       text: "Women and men converge on equal amounts of economic and domestic labour and on equal average pay.",
-    //     },
-    //     {
-    //       label: "A world below 2 °C",
-    //       text: "Warming reaches 1.8°C under sustainable convergence and fast decarbonization, against over 4°C under persistent inequality and slow decarbonization (current policies).",
-    //     },
-    //     {
-    //       label: "Inequality compression",
-    //       text: "The income scale is compressed to 1 to 5, and the wealth scale to 1 to 10. This represents a major compression of global income inequality, on a scale similar to the reduction achieved in Western and Nordic Europe over the 20th century.",
-    //     },
-    //     {
-    //       label: "Wealth redistribution",
-    //       text: "The bottom 50% global wealth share rises from 2% to 30% (×15), while the top 0.001% share (billionaire class) falls from 6% to 0.05% (÷100) – a striking redistribution.",
-    //     },
-    //     {
-    //       label: "Global Justice Fund",
-    //       text: "Annual expenditures (including country dividends and investment flows) reach 10.3% of world GDP per year on average over the 2026-2060 period. In comparison, current official development aid and the combined budgets of the UN, IMF, and World Bank account for less than 0.4% of world GDP. This is justified by the fact that new climate investments alone will represent 3-4% of world GDP per year in the coming decades and will need to be supplemented by a big push in education and health expenditures to foster global convergence.",
-    //     },
-    //     {
-    //       label: "World Sovereign Fund",
-    //       text: "An active portfolio of sustainable assets reaching 10% of the world capital stock (or equivalently, to 60% of the world GDP). Initial asset accumulation comes from reinvesting a large part of global wealth and income tax revenues over the 2026-2035 period.",
-    //     },
-    //     {
-    //       label: "Global wealth & income taxes",
-    //       text: "A global wealth tax (rising from 0% at 10 times the world average wealth to 20% per year on billionaires) and a global income tax (rising to 90% at the very top), both targeting around 1% of the world population.",
-    //     },
-    //     {
-    //       label: "Large majority benefit in every region",
-    //       text: "About 89% of the world will double their monetary income between 2026 and 2100; over 95% gain in the global South, and between 85–95% in the global North. Over 99% of the population is better off when the valuation of leisure and planetary habitability is included.",
-    //     },
-    //     {
-    //       label: "From global plutocracy to global democracy",
-    //       text: "All inhabitants of the world have equal political voice in the Global Justice Fund and the new international order. Currently, Europe & North America/Oceania have 4x as many votes at the IMF and World Bank as their population share, while Sub-Saharan Africa and South & South-East Asia have 4x fewer votes than their population share.",
-    //     },
-    //     {
-    //       label: "End of exorbitant privileges",
-    //       text: "The creation of an International Clearing Union and a new international currency to put an end to exorbitant privileges, i.e. the fact that rich countries benefit from higher returns on their foreign assets than what they pay on their foreign debt, thereby receiving a financial transfer from poor countries (0.6-0.8% of world GDP per year on average over 2000-2025 period, about twice as much as total development aid).",
-    //     },
-    //   ],
-    //   charts: [],
-    // },
     {
       id: "ensuring-equality",
       title: "Ensuring Equality and Prosperity for All",
@@ -152,11 +92,9 @@
 <div id="top">
   <Landing />
 
-  <!-- <Hero /> -->
-
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <section id={section.id} class="h-[200vh] font-sans text-base-content">
+    <section id={section.id} class="h-[140vh] font-sans text-base-content">
       <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
         <div class="flex min-h-full">
           <div class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200">
@@ -165,16 +103,6 @@
               <p class="mt-4 text-lg leading-relaxed text-base-content/80">
                 {section.intro}
               </p>
-            {/if}
-            {#if section.items}
-              <ul class="mt-4 space-y-4 text-lg leading-relaxed text-base-content/80">
-                {#each section.items as item (item.label)}
-                  <li>
-                    <strong class="text-base-content">{item.label}:</strong>
-                    {item.text}
-                  </li>
-                {/each}
-              </ul>
             {/if}
           </div>
         </div>

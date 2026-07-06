@@ -58,7 +58,7 @@
   let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
 </script>
 
-<div bind:this={containerEl} style:height="{(pairs.length - 1) * 120 + 200}vh">
+<div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} />

@@ -1,6 +1,5 @@
 <script>
   const links = [
-    { href: "#at-a-glance", label: "Global Justice by 2100 at a Glance" },
     { href: "#ensuring-equality", label: "Ensuring Equality and Prosperity for All" },
     { href: "#working-less", label: "Working Less, Achieving Gender Equality" },
     { href: "#staying-below-2c", label: "Staying Below 2 °C" },
