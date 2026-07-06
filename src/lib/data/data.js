@@ -1,5 +1,13 @@
 import { palette } from "$lib/colors";
 
+// Shared styles for explanatory annotations (Datawrapper-style: dark ink for
+// labels, muted dashed rules for projection dividers, hatch for projections).
+const annotationLabel = { fill: "#2A2659", class: "text-xs font-light" };
+const invertedLabel = { fill: "#FEFCFD", class: "text-xs font-light" };
+const mutedLabel = { fill: "#736B82", class: "text-xs font-light" };
+const dashedRule = { stroke: "#736B82", strokeDasharray: "4 3", strokeWidth: 1 };
+const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
+
 export const data = [
   {
     title: "Large Gaps in Average Monthly Income Between Regions",
@@ -14,15 +22,15 @@ export const data = [
     yKey: "v",
     valuePrefix: "€",
     data: [
-      { region: "Sub-Saharan\nAfrica", v: 290, color: palette[5] },
-      { region: "South &\nSouth-East\nAsia", v: 720, color: palette[4] },
-      { region: "Latin America", v: 1250, color: palette[4] },
-      { region: "Middle East &\nNorth Africa", v: 1370, color: palette[4] },
+      { region: "Sub-Saharan\nAfrica", v: 290, color: palette[3] },
+      { region: "South &\nSouth-East\nAsia", v: 720, color: palette[6] },
+      { region: "Latin America", v: 1250, color: palette[6] },
+      { region: "Middle East &\nNorth Africa", v: 1370, color: palette[6] },
       { region: "World", v: 1410, color: palette[4] },
-      { region: "East Asia", v: 1830, color: palette[4] },
-      { region: "Russia/\nCentral Asia", v: 1950, color: palette[4] },
-      { region: "Europe", v: 3590, color: palette[4] },
-      { region: "North America/\nOceania", v: 4590, color: palette[5] },
+      { region: "East Asia", v: 1830, color: palette[6] },
+      { region: "Russia/\nCentral Asia", v: 1950, color: palette[6] },
+      { region: "Europe", v: 3590, color: palette[6] },
+      { region: "North America/\nOceania", v: 4590, color: palette[3] },
       { region: "All Countries\nin 2100", v: 5000, color: palette[5] },
     ],
   },
@@ -37,15 +45,25 @@ export const data = [
     kind: "line",
     xKey: "year",
     series: [
-      { key: "Europe", value: "europe", color: palette[4] },
-      { key: "North America/Oceania", value: "northAmericaOceania", color: palette[4] },
-      { key: "Latin America", value: "latinAmerica", color: palette[4] },
-      { key: "Middle East/North Africa", value: "middleEastNorthAfrica", color: palette[4] },
-      { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: palette[4] },
-      { key: "Russia/Central Asia", value: "russiaCentralAsia", color: palette[4] },
-      { key: "East Asia", value: "eastAsia", color: palette[4] },
-      { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[4] },
+      { key: "Europe", value: "europe", color: palette[6] },
+      { key: "North America/Oceania", value: "northAmericaOceania", color: palette[6] },
+      { key: "Latin America", value: "latinAmerica", color: palette[6] },
+      { key: "Middle East/North Africa", value: "middleEastNorthAfrica", color: palette[6] },
+      { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: palette[6] },
+      { key: "Russia/Central Asia", value: "russiaCentralAsia", color: palette[6] },
+      { key: "East Asia", value: "eastAsia", color: palette[6] },
+      { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[6] },
       { key: "World", value: "world", color: palette[5] },
+    ],
+    rangeAnnotations: [
+      {
+        x: [new Date(2025, 0, 1), new Date(2100, 0, 1)],
+        pattern: projectionPattern,
+        label: "Projection",
+        labelPlacement: "top",
+        labelYOffset: 14,
+        props: { label: mutedLabel },
+      },
     ],
     annotations: [
       {
@@ -60,6 +78,14 @@ export const data = [
         props: {
           circle: { stroke: palette[5], fill: palette[5], fillOpacity: 0.2 },
           label: { fill: "#2A2659", class: "text-xs font-light", textAnchor: "start", verticalAnchor: "middle", dx: 4 },
+        },
+        // Narrow viewports: "right" runs off-screen (2025 sits at ~75% of the
+        // x-axis), so point upward into the empty area above the line bundle.
+        mobile: {
+          labelPlacement: "top",
+          labelXOffset: 0,
+          labelYOffset: 32,
+          props: { label: { textAnchor: "middle", verticalAnchor: "end", dx: 0 } },
         },
       },
       {
@@ -107,10 +133,29 @@ export const data = [
     kind: "stacked-area",
     xKey: "year",
     series: [
-      { key: "Domestic labour (women)", value: "domesticWomen", color: palette[2] },
-      { key: "Domestic labour (men)", value: "domesticMen", color: palette[4] },
-      { key: "Economic labour (women)", value: "economicWomen", color: "#2E86B5" },
-      { key: "Economic labour (men)", value: "economicMen", color: palette[5] },
+      { key: "Domestic labour (women)", value: "domesticWomen", color: "#E58A70" },
+      { key: "Economic labour (women)", value: "economicWomen", color: "#C04A3C" },
+      { key: "Domestic labour (men)", value: "domesticMen", color: "#4BA3D3" },
+      { key: "Economic labour (men)", value: "economicMen", color: "#20719E" },
+    ],
+    lineAnnotations: [
+      {
+        x: new Date(2025, 0, 1),
+        label: "Projection →",
+        labelPlacement: "top",
+        labelYOffset: 4,
+        props: { line: dashedRule, label: { ...mutedLabel, textAnchor: "start", dx: 6 } },
+      },
+    ],
+    annotations: [
+      {
+        x: new Date(2098, 0, 1),
+        y: 1420,
+        r: 0,
+        label: "Equal hours by 2100",
+        labelPlacement: "left",
+        props: { label: { ...invertedLabel, textAnchor: "end" } },
+      },
     ],
     data: [
       { year: new Date(1800, 0, 1), domesticWomen: 990, domesticMen: 210, economicWomen: 800, economicMen: 1320 },
@@ -143,14 +188,33 @@ export const data = [
     xKey: "year",
     valueSuffix: "%",
     series: [
-      { key: "Food", value: "food", color: palette[2] },
-      { key: "Housing, Construction", value: "housing", color: palette[0] },
-      { key: "Manufacturing", value: "manufacturing", color: palette[3] },
-      { key: "Energy", value: "energy", color: palette[4] },
-      { key: "Transport", value: "transport", color: palette[9] },
-      { key: "Education/Health", value: "educationHealth", color: palette[5] },
-      { key: "Leisure/Culture", value: "leisureCulture", color: palette[6] },
-      { key: "Other Services", value: "otherServices", color: palette[1] },
+      { key: "Food", value: "food", color: "#C9BFBA" },
+      { key: "Housing, Construction", value: "housing", color: "#B5A8A2" },
+      { key: "Manufacturing", value: "manufacturing", color: "#A19590" },
+      { key: "Energy", value: "energy", color: "#8D827D" },
+      { key: "Transport", value: "transport", color: "#78706B" },
+      { key: "Education/Health", value: "educationHealth", color: "#20719E" },
+      { key: "Leisure/Culture", value: "leisureCulture", color: "#4BA3D3" },
+      { key: "Other Services", value: "otherServices", color: "#9CC7E0" },
+    ],
+    lineAnnotations: [
+      {
+        x: new Date(2026, 0, 1),
+        label: "Projection →",
+        labelPlacement: "top",
+        labelYOffset: 4,
+        props: { line: dashedRule, label: { ...mutedLabel, textAnchor: "start", dx: 6 } },
+      },
+    ],
+    annotations: [
+      {
+        x: new Date(2090, 0, 1),
+        y: 50,
+        r: 0,
+        label: "Education & health: 43% by 2100",
+        labelPlacement: "left",
+        props: { label: { ...invertedLabel, textAnchor: "end" } },
+      },
     ],
     data: [
       { year: new Date(1800, 0, 1), food: 71, housing: 5, manufacturing: 8, energy: 2, transport: 3, educationHealth: 4, leisureCulture: 4, otherServices: 3 },
@@ -182,6 +246,20 @@ export const data = [
       { key: "CO2", value: "co2", color: "#2E86B5" },
       { key: "Other GHG", value: "otherGhg", color: palette[5] },
     ],
+    annotations: [
+      {
+        x: "Sustainable Convergence (1.8°C)",
+        y: 1076,
+        r: 6,
+        label: "Only pathway below 2°C",
+        labelPlacement: "top",
+        labelYOffset: 14,
+        props: {
+          circle: { stroke: "#2A2659", fill: "none" },
+          label: annotationLabel,
+        },
+      },
+    ],
     data: [
       { scenario: "Persistent Inequality (4.8°C)", co2: 5285, otherGhg: 2006 },
       { scenario: "Productivist Convergence (4.9°C)", co2: 5374, otherGhg: 2087 },
@@ -209,6 +287,16 @@ export const data = [
       { key: "Industrial processes and waste", value: "industrialProcesses", color: "#F2CD8F" },
       { key: "Energy efficiency", value: "energyEfficiency", color: "#F7E3B5" },
     ],
+    annotations: [
+      {
+        x: new Date(2095, 0, 1),
+        y: 15,
+        r: 0,
+        label: "Fewer labour hours: 26% of avoided emissions",
+        labelPlacement: "left",
+        props: { label: { ...invertedLabel, textAnchor: "end" } },
+      },
+    ],
     data: [
       { year: new Date(2025, 0, 1), labourHours: 0, immaterialConsumption: 0, foodReforestation: 0, electrification: 0, electricityGeneration: 0, lowCarbonFuels: 0, industrialProcesses: 0, energyEfficiency: 0 },
       { year: new Date(2030, 0, 1), labourHours: 5.7, immaterialConsumption: 1.8, foodReforestation: 2.2, electrification: 2.2, electricityGeneration: 3.1, lowCarbonFuels: 3.5, industrialProcesses: 2.2, energyEfficiency: 1.3 },
@@ -230,8 +318,8 @@ export const data = [
     kind: "grouped-bar",
     xKey: "target",
     series: [
-      { key: "withoutChange", label: "Without sectoral change", color: "#2E86B5" },
-      { key: "withChange", label: "With sectoral change", color: palette[0] },
+      { key: "withoutChange", label: "Without sectoral change", color: palette[6] },
+      { key: "withChange", label: "With sectoral change", color: "#20719E" },
     ],
     data: [
       { target: "60k euros", withoutChange: 1945, withChange: 1075 },
@@ -266,6 +354,25 @@ export const data = [
       { key: "World Sovereign Fund", value: "wsf", color: palette[3] },
       { key: "Public Wealth (non-WSF)", value: "publicWealth", color: palette[6] },
       { key: "Private Wealth", value: "privateWealth", color: palette[0] },
+    ],
+    lineAnnotations: [
+      {
+        x: new Date(2026, 0, 1),
+        label: "Fund launches →",
+        labelPlacement: "top",
+        labelYOffset: 4,
+        props: { line: dashedRule, label: { ...mutedLabel, textAnchor: "start", dx: 6 } },
+      },
+    ],
+    annotations: [
+      {
+        x: new Date(2095, 0, 1),
+        y: 30,
+        r: 0,
+        label: "Stabilizes at ~60% of world GDP",
+        labelPlacement: "left",
+        props: { label: { ...invertedLabel, textAnchor: "end" } },
+      },
     ],
     data: [
       { year: new Date(1980, 0, 1), wsf: 0, publicWealth: 94, privateWealth: 242 },
@@ -303,9 +410,9 @@ export const data = [
     valueSuffix: "%",
     data: [
       { item: "GJF Annual Expenditures\n(2026–2060)", v: 10.3, color: palette[3] },
-      { item: "incl. Country\nDividends", v: 5.7, color: palette[4] },
-      { item: "incl. WSF\nInvestment Flows", v: 4.6, color: palette[2] },
-      { item: "Total Development\nAid (2025)", v: 0.3, color: palette[5] },
+      { item: "incl. Country\nDividends", v: 5.7, color: "#E58A70" },
+      { item: "incl. WSF\nInvestment Flows", v: 4.6, color: "#EFB5AA" },
+      { item: "Total Development\nAid (2025)", v: 0.3, color: palette[9] },
       { item: "Total Budget\nUN-IMF-WB (2025)", v: 0.1, color: palette[9] },
     ],
   },
@@ -324,6 +431,16 @@ export const data = [
       { key: "Education", value: "education", color: palette[5] },
       { key: "Health", value: "health", color: palette[2] },
       { key: "Climate Investments", value: "climate", color: palette[3] },
+    ],
+    rangeAnnotations: [
+      {
+        x: [new Date(2030, 0, 1), new Date(2050, 0, 1)],
+        pattern: projectionPattern,
+        label: "≈5–8% of world GDP",
+        labelPlacement: "top",
+        labelYOffset: 14,
+        props: { label: mutedLabel },
+      },
     ],
     data: [
       { year: new Date(2026, 0, 1), education: 0, health: 0, climate: 0 },
@@ -355,16 +472,16 @@ export const data = [
     yKey: "v",
     valuePrefix: "€",
     data: [
-      { region: "Sub-Saharan\nAfrica", v: 209, color: palette[5] },
-      { region: "South & South-East\nAsia", v: 425, color: palette[2] },
-      { region: "Middle East\n& North Africa", v: 790, color: palette[5] },
-      { region: "World", v: 897, color: palette[7] },
-      { region: "East Asia", v: 921, color: palette[2] },
-      { region: "Russia/\nCentral Asia", v: 921, color: palette[2] },
-      { region: "Latin America", v: 958, color: palette[4] },
-      { region: "Europe", v: 2237, color: palette[3] },
-      { region: "North America/\nOceania", v: 4141, color: palette[4] },
-      { region: "All Countries\nin 2100", v: 8400, color: palette[7] },
+      { region: "Sub-Saharan\nAfrica", v: 209, color: palette[3] },
+      { region: "South & South-East\nAsia", v: 425, color: palette[6] },
+      { region: "Middle East\n& North Africa", v: 790, color: palette[6] },
+      { region: "World", v: 897, color: palette[4] },
+      { region: "East Asia", v: 921, color: palette[6] },
+      { region: "Russia/\nCentral Asia", v: 921, color: palette[6] },
+      { region: "Latin America", v: 958, color: palette[6] },
+      { region: "Europe", v: 2237, color: palette[6] },
+      { region: "North America/\nOceania", v: 4141, color: palette[3] },
+      { region: "All Countries\nin 2100", v: 8400, color: palette[5] },
     ],
   },
   {
@@ -382,7 +499,36 @@ export const data = [
     rangeAnnotations: [
       {
         x: [new Date(2025, 0, 1), new Date(2100, 0, 1)],
-        pattern: { size: 8, lines: { rotate: -45, opacity: 0.2 } },
+        pattern: projectionPattern,
+        label: "Projection",
+        labelPlacement: "top",
+        labelYOffset: 14,
+        props: { label: mutedLabel },
+      },
+    ],
+    annotations: [
+      {
+        x: new Date(2050, 0, 1),
+        y: 28,
+        r: 12,
+        label: "Bottom 50% overtakes the top 10% around 2050",
+        labelPlacement: "bottom-left",
+        labelXOffset: 30,
+        labelYOffset: 30,
+        link: { type: "swoop" },
+        props: {
+          circle: { stroke: palette[3], fill: palette[3], fillOpacity: 0.2 },
+          label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+        },
+        // Narrow viewports: the one-line label is wider than the space left of
+        // the point, so wrap it to 2 lines in the open region below-left of
+        // the intersection. Text truncates at `width` unless truncate is
+        // explicitly disabled — only then does `width` word-wrap.
+        mobile: {
+          labelXOffset: 20,
+          labelYOffset: 36,
+          props: { label: { width: 180, truncate: false } },
+        },
       },
     ],
     series: [
@@ -432,6 +578,33 @@ export const data = [
       { key: "East Asia", value: "eastAsia", color: palette[0] },
       { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
     ],
+    annotations: [
+      {
+        x: new Date(2025, 0, 1),
+        y: 2,
+        r: 10,
+        label: "Only 2% of world wealth in 2025",
+        labelPlacement: "top-left",
+        labelXOffset: 10,
+        labelYOffset: 16,
+        props: {
+          circle: { stroke: "#2A2659", fill: "none" },
+          label: { ...annotationLabel, textAnchor: "end" },
+        },
+      },
+      {
+        x: new Date(2100, 0, 1),
+        y: 30,
+        r: 10,
+        label: "30% by 2100",
+        labelPlacement: "left",
+        labelXOffset: 14,
+        props: {
+          circle: { stroke: "#2A2659", fill: "none" },
+          label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle" },
+        },
+      },
+    ],
     data: [
       { year: new Date(1800, 0, 1), europe: 0.3, northAmericaOceania: 0.05, latinAmerica: 0.15, middleEastNorthAfrica: 0.3, subSaharanAfrica: 0.6, russiaCentralAsia: 0.3, eastAsia: 1.6, southSoutheastAsia: 2.2 },
       { year: new Date(1850, 0, 1), europe: 0.25, northAmericaOceania: 0.05, latinAmerica: 0.15, middleEastNorthAfrica: 0.25, subSaharanAfrica: 0.5, russiaCentralAsia: 0.25, eastAsia: 1.3, southSoutheastAsia: 1.75 },
@@ -472,6 +645,30 @@ export const data = [
       { key: "East Asia", value: "eastAsia", color: palette[0] },
       { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
     ],
+    annotations: [
+      {
+        x: new Date(2025, 0, 1),
+        y: 6.4,
+        r: 10,
+        label: "Peak: 6.4% in 2025",
+        labelPlacement: "left",
+        labelXOffset: 14,
+        props: {
+          circle: { stroke: "#2A2659", fill: "none" },
+          label: { ...annotationLabel, textAnchor: "end", verticalAnchor: "middle" },
+        },
+      },
+      {
+        x: new Date(2050, 0, 1),
+        y: 0.17,
+        r: 0,
+        label: "Nearly zero by 2050",
+        labelPlacement: "top-right",
+        labelXOffset: 6,
+        labelYOffset: 10,
+        props: { label: { ...annotationLabel, textAnchor: "start" } },
+      },
+    ],
     data: [
       { year: new Date(1800, 0, 1), europe: 3.4, northAmericaOceania: 0.05, latinAmerica: 0.1, middleEastNorthAfrica: 0.15, subSaharanAfrica: 0.05, russiaCentralAsia: 0.05, eastAsia: 1.4, southSoutheastAsia: 0.1 },
       { year: new Date(1820, 0, 1), europe: 3.6, northAmericaOceania: 0.1, latinAmerica: 0.1, middleEastNorthAfrica: 0.15, subSaharanAfrica: 0.05, russiaCentralAsia: 0.05, eastAsia: 1.5, southSoutheastAsia: 0.1 },
@@ -510,10 +707,10 @@ export const data = [
     xKey: "region",
     valueSuffix: "%",
     series: [
-      { key: "Income Decline", value: "decline", color: palette[3] },
-      { key: "0-20% Income Increase", value: "small", color: palette[0] },
-      { key: "20-100% Income Increase", value: "medium", color: "#5F7E60" },
-      { key: "More than 100% Income Increase", value: "large", color: palette[2] },
+      { key: "Income Decline", value: "decline", color: "#C04A3C" },
+      { key: "0-20% Income Increase", value: "small", color: palette[6] },
+      { key: "20-100% Income Increase", value: "medium", color: palette[2] },
+      { key: "More than 100% Income Increase", value: "large", color: "#3E5A40" },
     ],
     data: [
       { region: "World", decline: 2, small: 2, medium: 7, large: 89 },
@@ -542,14 +739,42 @@ export const data = [
     yTicks: [13, 25, 50, 100, 200, 400, 800],
     valueSuffix: "%",
     series: [
-      { key: "Europe", value: "europe", color: palette[3] },
-      { key: "North America/Oceania", value: "northAmericaOceania", color: palette[4] },
-      { key: "Latin America", value: "latinAmerica", color: palette[6] },
-      { key: "Middle East/North Africa", value: "middleEastNorthAfrica", color: palette[1] },
-      { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: palette[5] },
-      { key: "Russia/Central Asia", value: "russiaCentralAsia", color: palette[9] },
-      { key: "East Asia", value: "eastAsia", color: palette[0] },
-      { key: "South/South-East Asia", value: "southSoutheastAsia", color: palette[2] },
+      { key: "Europe", value: "europe", color: "#20719E" },
+      { key: "North America/Oceania", value: "northAmericaOceania", color: "#4BA3D3" },
+      { key: "Latin America", value: "latinAmerica", color: "#C6BEC7" },
+      { key: "Middle East/North Africa", value: "middleEastNorthAfrica", color: "#B0A7B2" },
+      { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: "#C04A3C" },
+      { key: "Russia/Central Asia", value: "russiaCentralAsia", color: "#9A919E" },
+      { key: "East Asia", value: "eastAsia", color: "#847B88" },
+      { key: "South/South-East Asia", value: "southSoutheastAsia", color: "#E58A70" },
+    ],
+    lineAnnotations: [
+      {
+        y: 100,
+        label: "Parity: votes match population share",
+        labelPlacement: "top-left",
+        labelXOffset: 4,
+        labelYOffset: 6,
+        props: {
+          line: dashedRule,
+          label: { ...mutedLabel, textAnchor: "start" },
+        },
+      },
+    ],
+    annotations: [
+      {
+        x: new Date(2050, 0, 1),
+        y: 100,
+        r: 10,
+        label: "One person, one vote by 2050",
+        labelPlacement: "bottom-right",
+        labelXOffset: 6,
+        labelYOffset: 14,
+        props: {
+          circle: { stroke: "#2A2659", fill: "none" },
+          label: { ...annotationLabel, textAnchor: "start" },
+        },
+      },
     ],
     data: [
       { year: new Date(1945, 0, 1), europe: 225, northAmericaOceania: 470, latinAmerica: 175, middleEastNorthAfrica: 47, subSaharanAfrica: 26, russiaCentralAsia: null, eastAsia: 26, southSoutheastAsia: 22 },
@@ -591,11 +816,11 @@ export const data = [
     yKey: "v",
     valueSuffix: "%",
     data: [
-      { item: "GJF North-South\nTransfers", v: 0.8, color: palette[5] },
+      { item: "GJF North-South\nTransfers", v: 0.8, color: "#20719E" },
       { item: "Reparation for\nColonial & Climate", v: 3.2, color: palette[3] },
-      { item: "incl. Slavery\nDamages", v: 1.5, color: palette[4] },
-      { item: "incl. Other Colonial\nDamages", v: 0.9, color: palette[6] },
-      { item: "incl. Climate\nDamages", v: 0.8, color: palette[2] },
+      { item: "incl. Slavery\nDamages", v: 1.5, color: "#E58A70" },
+      { item: "incl. Other Colonial\nDamages", v: 0.9, color: "#EFB5AA" },
+      { item: "incl. Climate\nDamages", v: 0.8, color: "#EFB5AA" },
     ],
   },
 ];

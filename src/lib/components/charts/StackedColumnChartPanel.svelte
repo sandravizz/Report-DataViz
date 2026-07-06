@@ -1,7 +1,7 @@
 <script>
-  import { BarChart } from "layerchart";
+  import { AnnotationPoint, BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -34,4 +34,10 @@
     yAxis: { ...yAxisProps, format: formatValue },
     legend: stackedLegendProps,
   }}
-/>
+>
+  {#snippet aboveMarks()}
+    {#each resolveAnnotations(pair.annotations ?? [], innerWidth) as annotation, i (i)}
+      <AnnotationPoint {...annotation} />
+    {/each}
+  {/snippet}
+</BarChart>

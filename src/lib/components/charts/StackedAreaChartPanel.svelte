@@ -1,7 +1,7 @@
 <script>
-  import { AreaChart } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -27,4 +27,18 @@
     yAxis: { ...yAxisProps, format: formatValue },
     legend: stackedLegendProps,
   }}
-/>
+>
+  {#snippet belowMarks()}
+    {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
+      <AnnotationRange {...annotation} />
+    {/each}
+  {/snippet}
+  {#snippet aboveMarks()}
+    {#each pair.lineAnnotations ?? [] as annotation, i (i)}
+      <AnnotationLine {...annotation} />
+    {/each}
+    {#each resolveAnnotations(pair.annotations ?? [], innerWidth) as annotation, i (i)}
+      <AnnotationPoint {...annotation} />
+    {/each}
+  {/snippet}
+</AreaChart>

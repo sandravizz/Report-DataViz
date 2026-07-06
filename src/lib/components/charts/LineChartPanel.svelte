@@ -1,8 +1,8 @@
 <script>
-  import { AnnotationPoint, AnnotationRange, LineChart, defaultChartPadding } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, LineChart, defaultChartPadding } from "layerchart";
   import { scaleLog } from "d3-scale";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding, resolveAnnotations } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -31,7 +31,9 @@
         })
       : []
   );
-  const annotations = $derived([...(pair.annotations ?? []), ...endLabelAnnotations]);
+  const annotations = $derived(
+    resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
+  );
 </script>
 
 <svelte:window bind:innerWidth />
@@ -58,6 +60,9 @@
   {#snippet belowMarks()}
     {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
       <AnnotationRange {...annotation} />
+    {/each}
+    {#each pair.lineAnnotations ?? [] as annotation, i (i)}
+      <AnnotationLine {...annotation} />
     {/each}
   {/snippet}
   {#snippet aboveMarks()}

@@ -25,6 +25,25 @@ export const stackedLegendProps = {
 // so the legend and plot stay flush with the title/subtitle/source.
 export const yLabelPadding = { left: 36 };
 
+// Point annotations may carry a `mobile` override (placement, offsets, label
+// props) for narrow viewports where the desktop placement would run past the
+// plot edge; SVG text does not clip-or-wrap on its own, so reposition instead.
+export function resolveAnnotations(annotations, innerWidth) {
+  return annotations.map(({ mobile, ...annotation }) =>
+    innerWidth < 1024 && mobile
+      ? {
+          ...annotation,
+          ...mobile,
+          props: {
+            ...annotation.props,
+            ...mobile.props,
+            label: { ...annotation.props?.label, ...mobile.props?.label },
+          },
+        }
+      : annotation
+  );
+}
+
 // Bottom padding must fit the wrapped legend: on mobile items stack ~2 per
 // row, on desktop a single row (44px) is enough unless there are few series.
 export function legendPadding(seriesCount, innerWidth, extra = {}) {
