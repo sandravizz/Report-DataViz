@@ -34,6 +34,9 @@ export default {
       labelXOffset: 10,
       labelYOffset: 16,
       labelProps: { textAnchor: "end" },
+         mobile: {
+        props: { label: { truncate: false, width: 100 } },
+      },
     }),
     circleCallout({
       x: new Date(2100, 0, 1),
@@ -42,6 +45,9 @@ export default {
       labelPlacement: "left",
       labelXOffset: 14,
       labelProps: { textAnchor: "end", verticalAnchor: "middle" },
+         mobile: {
+        props: { label: { truncate: false, width: 100 } },
+      },
     }),
   ],
   data: [

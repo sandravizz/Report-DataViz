@@ -3,11 +3,11 @@ import { circleCallout } from "../annotation-presets.js";
 
 export default {
   title: "Sufficiency & Energy Transition Are Complementary",
-  subtitle: "Projected Cumulative Emissions & Temperature of Core Scenarios, 2026–2100",
+  subtitle:
+    "Projected Cumulative Emissions & Temperature of Core Scenarios, 2026–2100",
   description:
     "In order to reduce GHG emissions and keep warming below 2°, both socioeconomic sufficiency and energy system transformation play an indispensable and complementary role. The figure shows projected cumulative emissions and temperature rise of the core scenarios, where Persistent Inequality and Productivist Convergence come with Slow Decarbonization and Sustainable Convergence with Fast Decarbonization.",
-  source:
-    "Sources & series: gjp.wid.world (F5)",
+  source: "Sources & series: gjp.wid.world (F5)",
   number: "Figure 5",
   kind: "stacked-column",
   xKey: "scenario",
@@ -23,6 +23,9 @@ export default {
       label: "Only pathway below 2°C",
       labelPlacement: "top",
       labelYOffset: 14,
+      mobile: {
+        props: { label: { truncate: false, width: 100 } },
+      },
     }),
   ],
   data: [
