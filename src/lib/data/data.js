@@ -379,6 +379,12 @@ export const data = [
     xKey: "year",
     valueSuffix: "%",
     lineEndLabels: true,
+    rangeAnnotations: [
+      {
+        x: [new Date(2025, 0, 1), new Date(2100, 0, 1)],
+        pattern: { size: 8, lines: { rotate: -45, opacity: 0.2 } },
+      },
+    ],
     series: [
       { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: palette[5] },
       { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: palette[2] },

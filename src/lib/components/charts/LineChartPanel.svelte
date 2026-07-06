@@ -1,5 +1,5 @@
 <script>
-  import { AnnotationPoint, LineChart, defaultChartPadding } from "layerchart";
+  import { AnnotationPoint, AnnotationRange, LineChart, defaultChartPadding } from "layerchart";
   import { scaleLog } from "d3-scale";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding } from "$lib/chart-theme";
@@ -55,6 +55,11 @@
     legend: legendProps,
   }}
 >
+  {#snippet belowMarks()}
+    {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
+      <AnnotationRange {...annotation} />
+    {/each}
+  {/snippet}
   {#snippet aboveMarks()}
     {#each annotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
