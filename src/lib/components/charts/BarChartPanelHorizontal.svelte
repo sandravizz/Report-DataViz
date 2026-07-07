@@ -13,7 +13,7 @@
   // Category labels are long; give them a generous left gutter and let them
   // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
   // so labels reflow per breakpoint instead of relying on hard \n breaks.
-  const labelGutter = $derived(innerWidth < 1024 ? 120 : 150);
+  const labelGutter = $derived(innerWidth < 1024 ? 150 : 200);
 </script>
 
 <svelte:window bind:innerWidth />
@@ -50,11 +50,11 @@
         ...tickLabelProps,
         textAnchor: "start",
         dx: -labelGutter,
-        width: labelGutter - 12,
+        width: labelGutter,
         truncate: false,
         // Axis defaults tick labels to an 11px line height, which is tighter
         // than the 12px text-xs font and makes wrapped lines overlap.
-        lineHeight: "15px",
+        lineHeight: "12px",
       },
     },
     labels: {
