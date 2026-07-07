@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -30,8 +30,8 @@
   padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0 },
-    xAxis: { ...xAxisProps, format: wrapLabel },
-    yAxis: { ...yAxisProps, format: formatValue },
+    xAxis: { ...xAxisProps, ticks: pair.xTicks, format: wrapLabel },
+    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     legend: stackedLegendProps,
   }}
 >

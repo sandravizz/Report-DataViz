@@ -29,7 +29,7 @@
   padding={legendPadding(pair.series.length, innerWidth, { axis: "x" })}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0, radius: 3 },
-    xAxis: { ...xAxisProps, format: wrapLabel },
+    xAxis: { ...xAxisProps, ticks: pair.xTicks, format: wrapLabel },
     legend: legendProps,
   }}
 />

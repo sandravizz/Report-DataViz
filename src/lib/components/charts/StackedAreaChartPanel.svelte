@@ -1,7 +1,7 @@
 <script>
   import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -23,8 +23,8 @@
   padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
-    xAxis: { ...xAxisProps, format: formatYear },
-    yAxis: { ...yAxisProps, format: formatValue },
+    xAxis: { ...xAxisProps, ticks: pair.xTicks, format: formatYear },
+    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     legend: stackedLegendProps,
   }}
 >

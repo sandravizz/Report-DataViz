@@ -13,10 +13,10 @@ export default {
   yKey: "v",
   valueSuffix: "%",
   data: [
-    { item: "GJF North-South\nTransfers", v: 0.8, color: "#20719E" },
-    { item: "Reparation for\nColonial & Climate", v: 3.2, color: palette[3] },
-    { item: "incl. Slavery\nDamages", v: 1.5, color: "#E58A70" },
-    { item: "incl. Other Colonial\nDamages", v: 0.9, color: "#EFB5AA" },
-    { item: "incl. Climate\nDamages", v: 0.8, color: "#EFB5AA" },
+    { item: "GJF North-South Transfers", v: 0.8, color: "#20719E" },
+    { item: "Reparation for Colonial & Climate", v: 3.2, color: palette[3] },
+    { item: "incl. Slavery Damages", v: 1.5, color: "#E58A70" },
+    { item: "incl. Other Colonial Damages", v: 0.9, color: "#EFB5AA" },
+    { item: "incl. Climate Damages", v: 0.8, color: "#EFB5AA" },
   ],
 };

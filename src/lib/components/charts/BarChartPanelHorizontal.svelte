@@ -7,9 +7,16 @@
 
   let { pair } = $props();
 
+  let innerWidth = $state(1024);
+
   const hasPerRowColor = $derived(pair.data.every((d) => d.color));
-  const labelGutter = 90;
+  // Category labels are long; give them a generous left gutter and let them
+  // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
+  // so labels reflow per breakpoint instead of relying on hard \n breaks.
+  const labelGutter = $derived(innerWidth < 1024 ? 120 : 150);
 </script>
+
+<svelte:window bind:innerWidth />
 
 <BarChart
   data={pair.data}
@@ -43,6 +50,11 @@
         ...tickLabelProps,
         textAnchor: "start",
         dx: -labelGutter,
+        width: labelGutter - 12,
+        truncate: false,
+        // Axis defaults tick labels to an 11px line height, which is tighter
+        // than the 12px text-xs font and makes wrapped lines overlap.
+        lineHeight: "15px",
       },
     },
     labels: {

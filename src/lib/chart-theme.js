@@ -6,9 +6,24 @@ export const tickLabelProps = { fill: "#2A2659", class: "text-xs font-light" };
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 
+// Default y-axis ticks when a figure doesn't supply its own array via
+// pair.yTicks: use the scale's own candidate ticks with 0 dropped, since the
+// plot area already sits flush against the axis there and a "0" label is
+// redundant clutter. Figures that need exact values (e.g. log scales, or a
+// deliberately included 0) pass pair.yTicks, which is used as-is instead.
+export function excludeZeroTick(scale) {
+  const candidates = typeof scale.ticks === "function" ? scale.ticks() : scale.domain();
+  return candidates.filter((tick) => tick !== 0);
+}
+
 export const legendProps = {
   class: "text-xs font-light",
-  classes: { items: "flex-wrap" },
+  classes: {
+    items: "flex-wrap gap-x-3 gap-y-1",
+    // Default swatches (16px) read as oversized next to text-xs labels,
+    // especially once several wrap across two rows on mobile.
+    swatch: "w-2.5 h-2.5",
+  },
 };
 
 // Stacked charts: hovering a legend item must not highlight its area/column
@@ -45,14 +60,13 @@ export function resolveAnnotations(annotations, innerWidth) {
 }
 
 // Bottom padding must fit the wrapped legend: on mobile items stack ~2 per
-// row, on desktop a single row (44px) is enough unless there are few series.
+// row, on desktop a single row is enough unless there are many series.
+// Passed as an explicit `bottom` (not the `legend: true` flag) because that
+// flag always adds a fixed 32px on top, which left more empty space between
+// plot and legend than the smaller swatches actually need.
+const legendGap = 12; // space between the axis and the first legend row
+const legendRowHeight = 18; // per wrapped row, sized for the 10px swatches
 export function legendPadding(seriesCount, innerWidth, extra = {}) {
-  if (innerWidth < 1024) {
-    const rows = Math.ceil(seriesCount / 2);
-    return defaultChartPadding({ ...extra, legend: true, bottom: 24 + rows * 22 });
-  }
-  if (seriesCount > 4) {
-    return defaultChartPadding({ ...extra, legend: true, bottom: 44 });
-  }
-  return defaultChartPadding({ ...extra, legend: true });
+  const rows = innerWidth < 1024 ? Math.ceil(seriesCount / 2) : seriesCount > 4 ? 2 : 1;
+  return defaultChartPadding({ ...extra, bottom: 20 + legendGap + rows * legendRowHeight });
 }

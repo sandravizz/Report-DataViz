@@ -13,10 +13,10 @@ export default {
   yKey: "v",
   valueSuffix: "%",
   data: [
-    { item: "GJF Annual Expenditures\n(2026–2060)", v: 10.3, color: palette[3] },
-    { item: "incl. Country\nDividends", v: 5.7, color: "#E58A70" },
-    { item: "incl. WSF\nInvestment Flows", v: 4.6, color: "#EFB5AA" },
-    { item: "Total Development\nAid (2025)", v: 0.3, color: palette[9] },
-    { item: "Total Budget\nUN-IMF-WB (2025)", v: 0.1, color: palette[9] },
+    { item: "GJF Annual Expenditures (2026–2060)", v: 10.3, color: palette[3] },
+    { item: "incl. Country Dividends", v: 5.7, color: "#E58A70" },
+    { item: "incl. WSF Investment Flows", v: 4.6, color: "#EFB5AA" },
+    { item: "Total Development Aid (2025)", v: 0.3, color: palette[9] },
+    { item: "Total Budget UN-IMF-WB (2025)", v: 0.1, color: palette[9] },
   ],
 };
