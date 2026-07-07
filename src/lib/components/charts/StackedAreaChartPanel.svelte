@@ -1,7 +1,7 @@
 <script>
-  import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart, defaultChartPadding } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap } from "$lib/chart-theme";
   import { annotationLabel } from "$lib/data/annotation-presets.js";
 
   let { pair } = $props();
@@ -38,13 +38,7 @@
                 circle: { fill: s.color, stroke: "none" },
                 label: annotationLabel,
               },
-              // Narrow viewports: the reserved right margin is too tight for
-              // longer names to fit on one line before running past the
-              // screen edge, so wrap instead. Text truncates at `width`
-              // unless truncate is explicitly disabled.
-              mobile: {
-                props: { label: { width: 70, truncate: false } },
-              },
+              mobile: endLabelMobileWrap,
             }));
         })()
       : []
@@ -54,9 +48,7 @@
   );
   const padding = $derived(
     pair.areaEndLabels
-      ? defaultChartPadding(
-          endLabelAnnotations.length ? { ...yLabelPadding, right: 80 } : yLabelPadding
-        )
+      ? endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
       : legendPadding(pair.series.length, innerWidth, yLabelPadding)
   );
 </script>

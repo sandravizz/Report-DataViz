@@ -59,6 +59,25 @@ export function resolveAnnotations(annotations, innerWidth) {
   );
 }
 
+// End-of-line/band labels (LineChartPanel's lineEndLabels, StackedAreaChartPanel's
+// areaEndLabels) reserve right padding for the label text in place of legend
+// rows. Mobile gets a tighter margin than desktop — screen width is already
+// scarce there, and the labels wrap instead of running wide.
+export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
+  return defaultChartPadding(
+    hasLabels ? { ...extra, right: innerWidth < 1024 ? 52 : 80 } : extra
+  );
+}
+
+// Mobile override for end-of-line/band label annotations: the reserved
+// margin is too tight for longer names on one line, so wrap instead. Also
+// pins lineHeight — Text's default line height is a flat 16px (1em resolved
+// against an assumed 16px base font, not our actual text-xs/12px), which
+// reads as oversized gaps between wrapped lines.
+export const endLabelMobileWrap = {
+  props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
+};
+
 // Bottom padding must fit the wrapped legend: on mobile items stack ~2 per
 // row, on desktop a single row is enough unless there are many series.
 // Passed as an explicit `bottom` (not the `legend: true` flag) because that
