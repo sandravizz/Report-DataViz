@@ -1,13 +1,64 @@
 <script>
-  import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart, defaultChartPadding } from "layerchart";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick } from "$lib/chart-theme";
+  import { annotationLabel } from "$lib/data/annotation-presets.js";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+
+  // With areaEndLabels the legend is dropped; series that opt in via an
+  // explicit `endLabel` get their name at the end of their band's top edge
+  // instead (that edge is already drawn, in the series color, by the area's
+  // own `line` stroke below) — same pattern as LineChartPanel's
+  // lineEndLabels, but positioned at the cumulative (stacked) value rather
+  // than the raw series value.
+  const endLabelAnnotations = $derived(
+    pair.areaEndLabels
+      ? (() => {
+          const last = pair.data[pair.data.length - 1];
+          let cumulative = 0;
+          return pair.series
+            .map((s) => {
+              cumulative += last[s.value] ?? 0;
+              return { series: s, y: cumulative };
+            })
+            .filter(({ series: s }) => s.endLabel)
+            .map(({ series: s, y }) => ({
+              x: last[pair.xKey],
+              y,
+              r: 4,
+              label: s.endLabel,
+              labelPlacement: "right",
+              labelXOffset: 8,
+              props: {
+                circle: { fill: s.color, stroke: "none" },
+                label: annotationLabel,
+              },
+              // Narrow viewports: the reserved right margin is too tight for
+              // longer names to fit on one line before running past the
+              // screen edge, so wrap instead. Text truncates at `width`
+              // unless truncate is explicitly disabled.
+              mobile: {
+                props: { label: { width: 70, truncate: false } },
+              },
+            }));
+        })()
+      : []
+  );
+  const annotations = $derived(
+    resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
+  );
+  const padding = $derived(
+    pair.areaEndLabels
+      ? defaultChartPadding(
+          endLabelAnnotations.length ? { ...yLabelPadding, right: 80 } : yLabelPadding
+        )
+      : legendPadding(pair.series.length, innerWidth, yLabelPadding)
+  );
 </script>
 
 <svelte:window bind:innerWidth />
@@ -17,10 +68,10 @@
   x={pair.xKey}
   series={pair.series}
   seriesLayout="stack"
-  legend={{ placement: "bottom-left" }}
+  legend={pair.areaEndLabels ? false : { placement: "bottom-left" }}
   rule={false}
   tooltipContext={false}
-  padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
+  {padding}
   props={{
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
     xAxis: { ...xAxisProps, ticks: pair.xTicks, format: formatYear },
@@ -37,7 +88,7 @@
     {#each pair.lineAnnotations ?? [] as annotation, i (i)}
       <AnnotationLine {...annotation} />
     {/each}
-    {#each resolveAnnotations(pair.annotations ?? [], innerWidth) as annotation, i (i)}
+    {#each annotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
     {/each}
   {/snippet}

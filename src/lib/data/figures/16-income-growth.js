@@ -8,14 +8,15 @@ export default {
   source:
     "Sources & series: gjp.wid.world (F16)",
   number: "Figure 16",
-  kind: "stacked-column",
+  kind: "stacked-bar",
   xKey: "region",
   valueSuffix: "%",
+  labelSeries: "large",
   series: [
-    { key: "Income Decline", value: "decline", color: "#C04A3C" },
-    { key: "0-20% Income Increase", value: "small", color: palette[6] },
+    { key: "More than 100% Income Increase", value: "large", color: "#557A57" },
     { key: "20-100% Income Increase", value: "medium", color: palette[2] },
-    { key: "More than 100% Income Increase", value: "large", color: "#3E5A40" },
+    { key: "0-20% Income Increase", value: "small", color: palette[6] },
+    { key: "Income Decline", value: "decline", color: "#C04A3C" },
   ],
   data: [
     { region: "World", decline: 2, small: 2, medium: 7, large: 89 },

@@ -4,6 +4,7 @@
   import GroupedBarChartPanel from "./charts/GroupedBarChartPanel.svelte";
   import StackedAreaChartPanel from "./charts/StackedAreaChartPanel.svelte";
   import StackedColumnChartPanel from "./charts/StackedColumnChartPanel.svelte";
+  import StackedBarChartPanelHorizontal from "./charts/StackedBarChartPanelHorizontal.svelte";
   import DiagramPanel from "./charts/DiagramPanel.svelte";
 
   let { pairs, activeIndex } = $props();
@@ -50,6 +51,8 @@
           <StackedAreaChartPanel {pair} />
         {:else if pair.kind === "stacked-column"}
           <StackedColumnChartPanel {pair} />
+        {:else if pair.kind === "stacked-bar"}
+          <StackedBarChartPanelHorizontal {pair} />
         {:else if pair.kind === "diagram"}
           <DiagramPanel {pair} />
         {/if}

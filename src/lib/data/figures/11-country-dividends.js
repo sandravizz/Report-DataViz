@@ -12,10 +12,11 @@ export default {
   kind: "stacked-area",
   xKey: "year",
   valueSuffix: "%",
+  areaEndLabels: true,
   series: [
-    { key: "Education", value: "education", color: palette[5] },
-    { key: "Health", value: "health", color: palette[2] },
-    { key: "Climate Investments", value: "climate", color: palette[3] },
+    { key: "Education", endLabel: "Education", value: "education", color: palette[5] },
+    { key: "Health", endLabel: "Health", value: "health", color: palette[2] },
+    { key: "Climate Investments", endLabel: "Climate Investments", value: "climate", color: palette[3] },
   ],
   rangeAnnotations: [
     // Value highlight, not a projection marker (the whole chart is projected):

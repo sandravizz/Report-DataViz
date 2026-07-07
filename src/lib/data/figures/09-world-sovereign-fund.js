@@ -11,14 +11,31 @@ export default {
   kind: "stacked-area",
   xKey: "year",
   valueSuffix: "%",
+  areaEndLabels: true,
   series: [
-    { key: "World Sovereign Fund", value: "wsf", color: palette[3] },
+    {
+      key: "World Sovereign Fund",
+      endLabel: "World Sovereign Fund",
+      value: "wsf",
+      color: palette[3],
+    },
     {
       key: "Public Wealth (non-WSF)",
+      endLabel: "Public Wealth",
       value: "publicWealth",
-      color: palette[6],
+      // palette[6] (light gray) was nearly invisible against the page
+      // background; sky blue keeps this thin band legible.
+      color: palette[5],
     },
-    { key: "Private Wealth", value: "privateWealth", color: palette[0] },
+    {
+      key: "Private Wealth",
+      endLabel: "Private Wealth",
+      value: "privateWealth",
+      // palette[0] (pale blush) was nearly invisible against the page
+      // background; lavender gray gives this dominant band real contrast
+      // without competing with the fund's coral.
+      color: palette[4],
+    },
   ],
   lineAnnotations: [
     projectionRule({ x: new Date(2026, 0, 1), label: "Fund launches →" }),

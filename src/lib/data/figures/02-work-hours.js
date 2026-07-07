@@ -10,9 +10,6 @@ export default {
   number: "Figure 2",
   kind: "line",
   xKey: "year",
-  // Only the World line (blue) stands out against the 8 grey regional
-  // lines, and it's already identified by the blue-dot callouts below —
-  // a legend listing all 9 series would be redundant and huge on mobile.
   lineEndLabels: true,
   series: [
     { key: "Europe", value: "europe", color: palette[6] },

@@ -11,35 +11,56 @@ export default {
   number: "Figure 6",
   kind: "stacked-area",
   xKey: "year",
+  areaEndLabels: true,
   series: [
-    { key: "Labour hours reduction", value: "labourHours", color: "#3E5A40" },
+    {
+      key: "Labour hours reduction",
+      endLabel: "Labour hours",
+      value: "labourHours",
+      color: "#3E5A40",
+    },
     {
       key: "Shift to immaterial consumption",
+      endLabel: "Immaterial use",
       value: "immaterialConsumption",
       color: "#5F7E60",
     },
     {
       key: "Food habits/Reforestation",
+      endLabel: "Food/reforestation",
       value: "foodReforestation",
       color: palette[2],
     },
-    { key: "Electrification", value: "electrification", color: palette[3] },
+    {
+      key: "Electrification",
+      endLabel: "Electrification",
+      value: "electrification",
+      color: palette[3],
+    },
     {
       key: "Electricity generation",
+      endLabel: "Electricity gen.",
       value: "electricityGeneration",
       color: "#E08B67",
     },
     {
       key: "Primary and low-carbon fuels",
+      endLabel: "Low-carbon fuels",
       value: "lowCarbonFuels",
       color: "#EBAF7A",
     },
     {
       key: "Industrial processes and waste",
+      endLabel: "Industrial",
       value: "industrialProcesses",
       color: "#F2CD8F",
     },
-    { key: "Energy efficiency", value: "energyEfficiency", color: "#F7E3B5" },
+    {
+      key: "Energy efficiency",
+      endLabel: "Energy efficiency",
+      value: "energyEfficiency",
+      color: "#F7E3B5",
+    },
   ],
   annotations: [
     textCallout({

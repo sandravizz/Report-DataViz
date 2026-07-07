@@ -33,6 +33,13 @@
                 circle: { fill: s.color, stroke: "none" },
                 label: { fill: s.color, class: "text-xs font-light" },
               },
+              // Narrow viewports: the reserved right margin is too tight for
+              // longer names to fit on one line before running past the
+              // screen edge, so wrap instead. Text truncates at `width`
+              // unless truncate is explicitly disabled.
+              mobile: {
+                props: { label: { width: 70, truncate: false } },
+              },
             };
           })
       : []
