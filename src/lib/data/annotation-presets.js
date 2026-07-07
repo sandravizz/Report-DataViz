@@ -38,13 +38,16 @@ export function textCallout({ inverted = false, labelProps = {}, ...annotation }
 
 // Dashed vertical rule marking where observed data ends, with a small
 // right-pointing label ("Projection →", "Fund launches →", …).
-export function projectionRule({ x, label = "Projection →" }) {
+export function projectionRule({ x, label = "Projection →", showLine = true }) {
   return {
     x,
     label,
     labelPlacement: "top",
     labelYOffset: 4,
-    props: { line: dashedRule, label: { ...mutedLabel, textAnchor: "start", dx: 6 } },
+    props: {
+      line: showLine ? dashedRule : { stroke: "none" },
+      label: { ...mutedLabel, textAnchor: "start", dx: 6 },
+    },
   };
 }
 

@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { projectionRule, textCallout } from "../annotation-presets.js";
+import { textCallout } from "../annotation-presets.js";
 
 export default {
   title: "A World Sovereign Fund to Reorient Investment",
@@ -36,9 +36,6 @@ export default {
       // without competing with the fund's coral.
       color: palette[4],
     },
-  ],
-  lineAnnotations: [
-    projectionRule({ x: new Date(2026, 0, 1), label: "Fund launches →" }),
   ],
   annotations: [
     textCallout({

@@ -1,4 +1,4 @@
-import { projectionRule, textCallout } from "../annotation-presets.js";
+import { projectionRange, textCallout } from "../annotation-presets.js";
 
 export default {
   title: "Toward Gender Equality in Work Hours by 2100",
@@ -23,7 +23,9 @@ export default {
     { key: "Domestic labour (men)", value: "domesticMen", color: "#4BA3D3" },
     { key: "Economic labour (men)", value: "economicMen", color: "#20719E" },
   ],
-  lineAnnotations: [projectionRule({ x: new Date(2025, 0, 1) })],
+  rangeAnnotations: [
+    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
+  ],
   annotations: [
     textCallout({
       x: new Date(2098, 0, 1),

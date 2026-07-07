@@ -62,6 +62,7 @@
   seriesLayout="stack"
   legend={pair.areaEndLabels ? false : { placement: "bottom-left" }}
   rule={false}
+  grid={pair.grid ?? true}
   tooltipContext={false}
   {padding}
   props={{

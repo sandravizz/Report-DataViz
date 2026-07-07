@@ -20,7 +20,9 @@ export default {
     { key: "Leisure/Culture", value: "leisureCulture", color: "#4BA3D3" },
     { key: "Other Services", value: "otherServices", color: "#9CC7E0" },
   ],
-  lineAnnotations: [projectionRule({ x: new Date(2026, 0, 1) })],
+  lineAnnotations: [
+    projectionRule({ x: new Date(2026, 0, 1), showLine: false }),
+  ],
   annotations: [
     textCallout({
       x: new Date(2092, 0, 1),

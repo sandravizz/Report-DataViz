@@ -1,5 +1,5 @@
 import { palette } from "$lib/colors";
-import { textCallout } from "../annotation-presets.js";
+import { projectionRange, textCallout } from "../annotation-presets.js";
 
 export default {
   title: "What Drives Emissions Down",
@@ -11,6 +11,8 @@ export default {
   number: "Figure 6",
   kind: "stacked-area",
   xKey: "year",
+  valueSuffix: "%",
+  grid: false,
   areaEndLabels: true,
   series: [
     {
@@ -61,6 +63,9 @@ export default {
       value: "energyEfficiency",
       color: "#F7E3B5",
     },
+  ],
+  rangeAnnotations: [
+    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
   annotations: [
     textCallout({
