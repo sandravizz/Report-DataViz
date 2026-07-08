@@ -1,0 +1,6 @@
+/* These bar/line/area charts are wide with long labels, so landscape gives
+   them more usable width than portrait would. */
+@page {
+  size: landscape;
+  margin: 0.5in;
+}

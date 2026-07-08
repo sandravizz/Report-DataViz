@@ -6,10 +6,43 @@
   import StackedColumnChartPanel from "./charts/StackedColumnChartPanel.svelte";
   import StackedBarChartPanelHorizontal from "./charts/StackedBarChartPanelHorizontal.svelte";
   import DiagramPanel from "./charts/DiagramPanel.svelte";
+  import PrintFigure from "./PrintFigure.svelte";
+  import { mount, unmount } from "svelte";
 
   let { pairs, activeIndex } = $props();
 
   let interpretationModal;
+  let printing = $state(false);
+
+  // The scrollytelling page relies on sticky/fixed/absolute positioning that
+  // prints very badly. Rather than fight that, mount a plain, print-only
+  // copy of this figure into its own top-level DOM node, hide the rest of
+  // the app for the duration of the print, then clean up once the print
+  // dialog closes (or is cancelled).
+  function printPair(pair) {
+    if (printing) return;
+    printing = true;
+
+    const appRoot = document.getElementById("app-root");
+    const host = document.createElement("div");
+    document.body.appendChild(host);
+    const instance = mount(PrintFigure, { target: host, props: { pair } });
+
+    function cleanup() {
+      unmount(instance);
+      host.remove();
+      if (appRoot) appRoot.style.display = "";
+      window.removeEventListener("afterprint", cleanup);
+      printing = false;
+    }
+
+    if (appRoot) appRoot.style.display = "none";
+    window.addEventListener("afterprint", cleanup);
+
+    // Give the chart a couple of frames to lay itself out in the new host
+    // before the browser snapshots the page for printing.
+    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+  }
 </script>
 
 <div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
@@ -24,7 +57,7 @@
           {pair.number}
         </span>
         <button
-          class="btn btn-ghost btn-xs gap-1 px-1.5 font-sans font-normal text-base-content/60"
+          class="btn btn-ghost btn-xs gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
           onclick={() => interpretationModal.showModal()}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
@@ -58,8 +91,25 @@
         {/if}
       </div>
 
-      <div class="mt-3 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6">
-        {pair.source}
+      <div
+        class="mt-3 flex flex-nowrap items-center gap-1 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6 lg:justify-between lg:gap-2"
+      >
+        <span>{pair.source}</span>
+        <button
+          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case lg:px-1.5"
+          disabled={printing}
+          onclick={() => printPair(pair)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="hidden size-3.5 lg:inline-block"
+          >
+            <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+          </svg>
+          Download as PDF
+        </button>
       </div>
     </div>
   {/each}
