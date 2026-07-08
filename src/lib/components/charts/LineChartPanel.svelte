@@ -43,7 +43,7 @@
   );
   const padding = $derived(
     pair.lineEndLabels
-      ? endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
+      ? endLabelPadding(innerWidth, endLabelAnnotations.length > 0, "end", yLabelPadding)
       : legendPadding(pair.series.length, innerWidth, yLabelPadding)
   );
 </script>

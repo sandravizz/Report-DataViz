@@ -10,31 +10,46 @@ export default {
   kind: "stacked-area",
   xKey: "year",
   valueSuffix: "%",
+  areaEndLabels: true,
   series: [
-    { key: "Food", value: "food", color: "#C9BFBA" },
-    { key: "Housing, Construction", value: "housing", color: "#B5A8A2" },
-    { key: "Manufacturing", value: "manufacturing", color: "#A19590" },
-    { key: "Energy", value: "energy", color: "#8D827D" },
-    { key: "Transport", value: "transport", color: "#78706B" },
-    { key: "Education/Health", value: "educationHealth", color: "#20719E" },
-    { key: "Leisure/Culture", value: "leisureCulture", color: "#4BA3D3" },
-    { key: "Other Services", value: "otherServices", color: "#9CC7E0" },
-  ],
-  lineAnnotations: [
-    projectionRule({ x: new Date(2026, 0, 1), showLine: false }),
-  ],
-  annotations: [
-    textCallout({
-      x: new Date(2092, 0, 1),
-      y: 60,
-      inverted: true,
-      label: "Education & health: 43% by 2100",
-      labelPlacement: "left",
-      labelProps: { textAnchor: "end" },
-      mobile: {
-        props: { label: { truncate: false, width: 90 } },
-      },
-    }),
+    { key: "Food", endLabel: "Food", value: "food", color: "#C9BFBA" },
+    {
+      key: "Housing, Construction",
+      endLabel: "Housing",
+      value: "housing",
+      color: "#B5A8A2",
+    },
+    {
+      key: "Manufacturing",
+      endLabel: "Manufacturing",
+      value: "manufacturing",
+      color: "#A19590",
+    },
+    { key: "Energy", endLabel: "Energy", value: "energy", color: "#8D827D" },
+    {
+      key: "Transport",
+      endLabel: "Transport",
+      value: "transport",
+      color: "#78706B",
+    },
+    {
+      key: "Education/Health",
+      endLabel: "Education/Health",
+      value: "educationHealth",
+      color: "#20719E",
+    },
+    {
+      key: "Leisure/Culture",
+      endLabel: "Leisure/Culture",
+      value: "leisureCulture",
+      color: "#4BA3D3",
+    },
+    {
+      key: "Other Services",
+      endLabel: "Other Services",
+      value: "otherServices",
+      color: "#9CC7E0",
+    },
   ],
   data: [
     {

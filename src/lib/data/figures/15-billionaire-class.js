@@ -15,26 +15,46 @@ export default {
   kind: "stacked-area",
   xKey: "year",
   valueSuffix: "%",
+  // Every band converges to ~0 by 2100, so there's no room for end labels
+  // there — put them at the first (1800) point instead, where the bands are
+  // actually spread out, and move the y-axis to the right to make room.
+  areaEndLabels: true,
+  endLabelPlacement: "start",
   series: [
-    { key: "Europe", value: "europe", color: palette[3] },
+    { key: "Europe", endLabel: "Europe", value: "europe", color: palette[3] },
     {
       key: "North America/Oceania",
       value: "northAmericaOceania",
       color: palette[4],
     },
-    { key: "Latin America", value: "latinAmerica", color: palette[6] },
+    {
+      key: "Latin America",
+      value: "latinAmerica",
+      color: palette[6],
+    },
     {
       key: "Middle East/North Africa",
+      endLabel: "Middle East/North Africa",
       value: "middleEastNorthAfrica",
       color: palette[1],
     },
-    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: palette[5] },
+    {
+      key: "Sub-Saharan Africa",
+      value: "subSaharanAfrica",
+      color: palette[5],
+    },
     {
       key: "Russia/Central Asia",
+
       value: "russiaCentralAsia",
       color: palette[9],
     },
-    { key: "East Asia", value: "eastAsia", color: palette[0] },
+    {
+      key: "East Asia",
+      endLabel: "East Asia",
+      value: "eastAsia",
+      color: palette[0],
+    },
     {
       key: "South/South-East Asia",
       value: "southSoutheastAsia",

@@ -35,6 +35,16 @@ export const stackedLegendProps = {
   onpointerleave: () => false,
 };
 
+// Stacked area charts: hovering a row inside the tooltip must not fade the
+// other areas either — DefaultTooltip sets context.series.highlightKey on
+// pointerenter/leave of each tooltip row, which Area reads to drop its
+// pathOpacity to 0.1 for every non-matching series. These no-ops override
+// that per-row handler (same mechanism as stackedLegendProps, applied to
+// `props.tooltip.item` instead of `props.legend`).
+export const stackedTooltipProps = {
+  item: { onpointerenter: () => {}, onpointerleave: () => {} },
+};
+
 // Numeric y tick labels are wider than the default 20px left gutter; give
 // those charts enough room that the labels stay inside the chart container,
 // so the legend and plot stay flush with the title/subtitle/source.
@@ -60,12 +70,21 @@ export function resolveAnnotations(annotations, innerWidth) {
 }
 
 // End-of-line/band labels (LineChartPanel's lineEndLabels, StackedAreaChartPanel's
-// areaEndLabels) reserve right padding for the label text in place of legend
-// rows. Mobile gets a tighter margin than desktop — screen width is already
-// scarce there, and the labels wrap instead of running wide.
-export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
+// areaEndLabels) reserve padding on whichever side hosts the label text, in
+// place of legend rows. Mobile gets a tighter margin than desktop — screen
+// width is already scarce there, and the labels wrap instead of running
+// wide. `side: "start"` is for charts that converge to nothing by the last
+// point (e.g. figure 15's billionaire share going to ~0 by 2100): labels sit
+// at the first point instead and the y-axis moves to the opposite edge, so
+// the axis gutter (yLabelPadding's usual 36px) needs to flip sides too.
+export function endLabelPadding(innerWidth, hasLabels, side = "end", extra = {}) {
+  const labelSpace = innerWidth < 1024 ? 52 : 80;
   return defaultChartPadding(
-    hasLabels ? { ...extra, right: innerWidth < 1024 ? 52 : 80 } : extra
+    side === "start"
+      ? { ...extra, left: hasLabels ? labelSpace : extra.left, right: 36 }
+      : hasLabels
+        ? { ...extra, right: labelSpace }
+        : extra
   );
 }
 
