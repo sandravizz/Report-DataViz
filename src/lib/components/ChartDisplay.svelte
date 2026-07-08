@@ -92,23 +92,18 @@
       </div>
 
       <div
-        class="mt-3 flex flex-nowrap items-center gap-1 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6 lg:justify-between lg:gap-2"
+        class="mt-3 flex flex-nowrap items-center justify-between gap-2 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6"
       >
         <span>{pair.source}</span>
         <button
-          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case lg:px-1.5"
+          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
           disabled={printing}
           onclick={() => printPair(pair)}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            class="hidden size-3.5 lg:inline-block"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
             <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
           </svg>
-          Download as PDF
+          PDF
         </button>
       </div>
     </div>
