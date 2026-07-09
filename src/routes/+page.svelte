@@ -21,8 +21,9 @@
     {
       id: "ensuring-equality",
       title: "Ensuring Equality and Prosperity for All",
-      intro: "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. There are two main reasons for this target. First, all countries in the Global South aspire to economic prosperity, and any credible framework for global climate cooperation must account for that aspiration.",
-        charts: pick("incomeGap"),
+      intro:
+        "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. There are two main reasons for this target. First, all countries in the Global South aspire to economic prosperity, and any credible framework for global climate cooperation must account for that aspiration.",
+      charts: pick("incomeGap"),
     },
     {
       id: "working-less",
@@ -55,8 +56,7 @@
     {
       id: "compressing",
       title: "Compressing the Income and Wealth Scale",
-      intro:
-        "The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution. Country-level policies (progressive taxation, minimum wages, pay-scale regulations, labour market rules, workers' representation on corporate boards) are expected to play the leading role in reshaping each country's income distribution in the long run.",
+      intro:"The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution.",
       charts: pick("incomeShares", "bottom50Wealth", "billionaireClass"),
     },
     // {
@@ -100,7 +100,9 @@
     <section id={section.id} class="h-[140vh] font-sans text-base-content">
       <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
         <div class="flex min-h-full">
-          <div class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200">
+          <div
+            class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
+          >
             <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
             {#if section.intro}
               <p class="mt-4 text-lg leading-relaxed text-base-content/80">
