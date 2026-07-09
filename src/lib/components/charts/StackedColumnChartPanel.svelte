@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -26,7 +26,7 @@
   seriesLayout="stack"
   legend={{ placement: "bottom-left" }}
   rule={false}
-  tooltipContext={false}
+  tooltipContext={desktopTooltips(innerWidth)}
   padding={legendPadding(pair.series.length, innerWidth, yLabelPadding)}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0 },

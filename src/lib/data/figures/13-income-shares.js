@@ -1,4 +1,5 @@
 import { palette } from "$lib/colors";
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 
 export default {
@@ -12,6 +13,7 @@ export default {
   kind: "line",
   xKey: "year",
   valueSuffix: "%",
+  xTicks: quarterCenturyTicks(1800, 2100),
   lineEndLabels: true,
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
@@ -21,7 +23,7 @@ export default {
       x: new Date(2050, 0, 1),
       y: 28,
       filled: true,
-      color: palette[3],
+      color: palette[4],
       label: "Bottom 50% overtakes the top 10% around 2050",
       labelPlacement: "bottom-left",
       labelXOffset: 30,
@@ -44,23 +46,27 @@ export default {
     { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: palette[2] },
     { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: palette[3] },
   ],
+  // World series from csv/13-income-shares.csv (see csv/DataF2.13a14a_1–3),
+  // sampled every 20 years plus 2025 (projection start) and key
+  // projection-era points.
   data: [
-    { year: new Date(1800, 0, 1), top10: 50, middle40: 35, bottom50: 15 },
-    { year: new Date(1820, 0, 1), top10: 51, middle40: 35, bottom50: 14 },
-    { year: new Date(1840, 0, 1), top10: 53, middle40: 34, bottom50: 13 },
-    { year: new Date(1860, 0, 1), top10: 55, middle40: 33, bottom50: 12 },
+    { year: new Date(1800, 0, 1), top10: 50, middle40: 36, bottom50: 15 },
+    { year: new Date(1820, 0, 1), top10: 50, middle40: 35, bottom50: 14 },
+    { year: new Date(1840, 0, 1), top10: 52, middle40: 35, bottom50: 13 },
+    { year: new Date(1860, 0, 1), top10: 55, middle40: 33, bottom50: 11 },
     { year: new Date(1880, 0, 1), top10: 57, middle40: 33, bottom50: 10 },
-    { year: new Date(1900, 0, 1), top10: 60, middle40: 31, bottom50: 9 },
-    { year: new Date(1920, 0, 1), top10: 56, middle40: 34, bottom50: 10 },
-    { year: new Date(1940, 0, 1), top10: 53, middle40: 38, bottom50: 9 },
-    { year: new Date(1960, 0, 1), top10: 54, middle40: 40, bottom50: 6 },
-    { year: new Date(1980, 0, 1), top10: 53, middle40: 42, bottom50: 5 },
-    { year: new Date(2000, 0, 1), top10: 58, middle40: 36, bottom50: 6 },
-    { year: new Date(2020, 0, 1), top10: 52, middle40: 40, bottom50: 8 },
-    { year: new Date(2030, 0, 1), top10: 47, middle40: 43, bottom50: 10 },
-    { year: new Date(2040, 0, 1), top10: 34, middle40: 45, bottom50: 21 },
-    { year: new Date(2050, 0, 1), top10: 28, middle40: 44, bottom50: 28 },
-    { year: new Date(2060, 0, 1), top10: 25, middle40: 45, bottom50: 30 },
+    { year: new Date(1900, 0, 1), top10: 59, middle40: 32, bottom50: 9 },
+    { year: new Date(1920, 0, 1), top10: 57, middle40: 34, bottom50: 9 },
+    { year: new Date(1940, 0, 1), top10: 53, middle40: 39, bottom50: 8 },
+    { year: new Date(1960, 0, 1), top10: 51, middle40: 41, bottom50: 7 },
+    { year: new Date(1980, 0, 1), top10: 53, middle40: 42, bottom50: 6 },
+    { year: new Date(2000, 0, 1), top10: 58, middle40: 35, bottom50: 7 },
+    { year: new Date(2020, 0, 1), top10: 51, middle40: 40, bottom50: 8 },
+    { year: new Date(2025, 0, 1), top10: 52, middle40: 40, bottom50: 8 },
+    { year: new Date(2030, 0, 1), top10: 44, middle40: 43, bottom50: 13 },
+    { year: new Date(2040, 0, 1), top10: 36, middle40: 44, bottom50: 20 },
+    { year: new Date(2050, 0, 1), top10: 27, middle40: 44, bottom50: 29 },
+    { year: new Date(2060, 0, 1), top10: 25, middle40: 45, bottom50: 31 },
     { year: new Date(2080, 0, 1), top10: 21, middle40: 44, bottom50: 35 },
     { year: new Date(2100, 0, 1), top10: 18, middle40: 44, bottom50: 38 },
   ],

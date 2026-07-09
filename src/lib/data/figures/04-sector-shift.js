@@ -1,3 +1,4 @@
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import { projectionRule, textCallout } from "../annotation-presets.js";
 
 export default {
@@ -9,6 +10,7 @@ export default {
   number: "Figure 4",
   kind: "stacked-area",
   xKey: "year",
+  xTicks: quarterCenturyTicks(1800, 2100),
   valueSuffix: "%",
   areaEndLabels: true,
   series: [

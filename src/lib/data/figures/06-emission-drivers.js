@@ -1,3 +1,4 @@
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import { palette } from "$lib/colors";
 import { projectionRange, textCallout } from "../annotation-presets.js";
 
@@ -11,6 +12,7 @@ export default {
   number: "Figure 6",
   kind: "stacked-area",
   xKey: "year",
+  xTicks: quarterCenturyTicks(2025, 2100),
   valueSuffix: "%",
   grid: false,
   areaEndLabels: true,

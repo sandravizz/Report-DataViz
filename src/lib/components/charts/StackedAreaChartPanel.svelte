@@ -1,7 +1,7 @@
 <script>
   import { AnnotationLine, AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, stackedLegendProps, stackedTooltipProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, stackedLegendProps, stackedTooltipProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
   import { annotationLabel } from "$lib/data/annotation-presets.js";
 
   let { pair } = $props();
@@ -75,11 +75,11 @@
   legend={pair.areaEndLabels ? false : { placement: "bottom-left" }}
   rule={false}
   grid={pair.grid ?? true}
-  tooltipContext={true}
+  tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     area: { fillOpacity: 0.9, line: { strokeWidth: 1 } },
-    xAxis: { ...xAxisProps, ticks: pair.xTicks, format: formatYear },
+    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
     yAxis: {
       ...yAxisProps,
       ticks: pair.yTicks ?? excludeZeroTick,

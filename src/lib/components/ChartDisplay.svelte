@@ -6,42 +6,24 @@
   import StackedColumnChartPanel from "./charts/StackedColumnChartPanel.svelte";
   import StackedBarChartPanelHorizontal from "./charts/StackedBarChartPanelHorizontal.svelte";
   import DiagramPanel from "./charts/DiagramPanel.svelte";
-  import PrintFigure from "./PrintFigure.svelte";
-  import { mount, unmount } from "svelte";
 
   let { pairs, activeIndex } = $props();
 
   let interpretationModal;
-  let printing = $state(false);
 
-  // The scrollytelling page relies on sticky/fixed/absolute positioning that
-  // prints very badly. Rather than fight that, mount a plain, print-only
-  // copy of this figure into its own top-level DOM node, hide the rest of
-  // the app for the duration of the print, then clean up once the print
-  // dialog closes (or is cancelled).
-  function printPair(pair) {
-    if (printing) return;
-    printing = true;
+  // Downloads serve pre-made screenshots from static/figures — one PNG per
+  // figure, named after the figure number ("Figure 2" → figure-2.png).
+  function figureImage(pair) {
+    return `/figures/figure-${pair.number.match(/\d+/)[0]}.png`;
+  }
 
-    const appRoot = document.getElementById("app-root");
-    const host = document.createElement("div");
-    document.body.appendChild(host);
-    const instance = mount(PrintFigure, { target: host, props: { pair } });
-
-    function cleanup() {
-      unmount(instance);
-      host.remove();
-      if (appRoot) appRoot.style.display = "";
-      window.removeEventListener("afterprint", cleanup);
-      printing = false;
-    }
-
-    if (appRoot) appRoot.style.display = "none";
-    window.addEventListener("afterprint", cleanup);
-
-    // Give the chart a couple of frames to lay itself out in the new host
-    // before the browser snapshots the page for printing.
-    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+  // The saved file gets a descriptive name derived from the figure title.
+  function downloadName(pair) {
+    const slug = `${pair.number} ${pair.title}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    return `${slug}.png`;
   }
 </script>
 
@@ -95,16 +77,16 @@
         class="mt-3 flex flex-nowrap items-center justify-between gap-2 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6"
       >
         <span>{pair.source}</span>
-        <button
+        <a
           class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
-          disabled={printing}
-          onclick={() => printPair(pair)}
+          href={figureImage(pair)}
+          download={downloadName(pair)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
             <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
           </svg>
-          PDF
-        </button>
+          PNG
+        </a>
       </div>
     </div>
   {/each}

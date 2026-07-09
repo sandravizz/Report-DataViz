@@ -1,3 +1,4 @@
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import {
   circleCallout,
   mutedLabel,
@@ -14,6 +15,7 @@ export default {
   number: "Figure 17",
   kind: "line",
   xKey: "year",
+  xTicks: quarterCenturyTicks(1945, 2100),
   yScaleType: "log",
   yDomain: [13, 800],
   yTicks: [13, 25, 50, 100, 200, 400, 800],

@@ -1,3 +1,4 @@
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import { palette } from "$lib/colors";
 import {
   circleCallout,
@@ -14,6 +15,7 @@ export default {
   number: "Figure 15",
   kind: "stacked-area",
   xKey: "year",
+  xTicks: quarterCenturyTicks(1800, 2100),
   valueSuffix: "%",
   // Every band converges to ~0 by 2100, so there's no room for end labels
   // there — put them at the first (1800) point instead, where the bands are

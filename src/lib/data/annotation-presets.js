@@ -43,10 +43,10 @@ export function projectionRule({ x, label = "Projection →", showLine = true })
     x,
     label,
     labelPlacement: "top",
-    labelYOffset: 4,
+    labelYOffset: 0,
     props: {
       line: showLine ? dashedRule : { stroke: "none" },
-      label: { ...mutedLabel, textAnchor: "start", dx: 6 },
+      label: { ...mutedLabel, textAnchor: "start", dx: 2 },
     },
   };
 }
@@ -61,8 +61,8 @@ export function projectionRange({ x, label = "Projection →", ...annotation }) 
     pattern: projectionPattern,
     label,
     labelPlacement: "top-left",
-    labelYOffset: -4,
-    props: { label: { ...mutedLabel, textAnchor: "start", verticalAnchor: "end", dx: 6 } },
+    labelYOffset: 0,
+    props: { label: { ...mutedLabel, textAnchor: "start", verticalAnchor: "end", dx: 0 } },
     ...annotation,
   };
 }

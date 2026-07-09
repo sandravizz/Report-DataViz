@@ -21,15 +21,14 @@
     {
       id: "ensuring-equality",
       title: "Ensuring Equality and Prosperity for All",
-      intro:
-        "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. Today, per capita monthly gross national income ranges from €290 in Sub-Saharan Africa to €4,590 in North America/Oceania – a 16-fold gap. By 2100, all countries converge to €5,000 per month, which implies annual growth rates of around 0-0.5% in today's richest regions and 3-4% in today's poorest – the latter comparable to East Asia's average growth over the last 75 years.",
-      charts: pick("incomeGap"),
+      intro: "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. There are two main reasons for this target. First, all countries in the Global South aspire to economic prosperity, and any credible framework for global climate cooperation must account for that aspiration.",
+        charts: pick("incomeGap"),
     },
     {
       id: "working-less",
       title: "Working Less, Achieving Gender Equality",
       intro:
-        "Productivity gains are used to reduce work rather than expand material output: annual labour hours decline from about 2,100 today to 1,000 by 2100, in line with two centuries of historical trends. Men and women converge to equal shares of economic and domestic labour with equal average pay, and the economy shifts from material sectors like food and manufacturing toward education, health, leisure and culture.",
+        "The first element of sufficiency in the Global Justice Platform is a large reduction in working hours: from about 2,100 hours to 1,000 hours per year per employed person, between 2025 and 2100 (Figure 2). As observed in historical episodes of working-time reduction, productivity growth makes such reductions possible.",
       charts: pick("workHours", "genderEquality", "sectorShift"),
     },
     // {
@@ -57,7 +56,7 @@
       id: "compressing",
       title: "Compressing the Income and Wealth Scale",
       intro:
-        "Global inequality compression is both a social justice objective and the condition for financing the transition. The top 10% income share falls from 52% to 18% while the bottom 50% rises from 8% to 38%; the bottom half of wealth holders go from owning 2% of global wealth to 30%; and the billionaire class shrinks from 6.4% of global wealth to 0.05%.",
+        "The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution. Country-level policies (progressive taxation, minimum wages, pay-scale regulations, labour market rules, workers' representation on corporate boards) are expected to play the leading role in reshaping each country's income distribution in the long run.",
       charts: pick("incomeShares", "bottom50Wealth", "billionaireClass"),
     },
     // {

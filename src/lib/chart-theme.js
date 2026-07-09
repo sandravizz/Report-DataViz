@@ -6,6 +6,29 @@ export const tickLabelProps = { fill: "#2A2659", class: "text-xs font-light" };
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 
+// X ticks for year axes: every 25 years on the quarter-century grid
+// (1800, 1825, … 2100), so a tick and its gridline always land on 2025,
+// where the projection bands start. Start years off the grid (e.g. 1980)
+// snap up to the next grid year.
+export function quarterCenturyTicks(startYear, endYear) {
+  const ticks = [];
+  for (let y = Math.ceil(startYear / 25) * 25; y <= endYear; y += 25) {
+    ticks.push(new Date(y, 0, 1));
+  }
+  return ticks;
+}
+
+// On mobile the quarter-century ticks crowd the narrow x axis, so keep only
+// the half-century years (1800, 1850, … 2100). Short-range charts (e.g.
+// figure 6's 2025–2100) would be left with fewer than three ticks that way,
+// so they keep the full quarter-century set instead. Same <1024 mobile
+// threshold as the layout's lg: breakpoint.
+export function halfCenturyTicksOnMobile(ticks, innerWidth) {
+  if (!ticks || innerWidth >= 1024) return ticks;
+  const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
+  return halved.length >= 3 ? halved : ticks;
+}
+
 // Default y-axis ticks when a figure doesn't supply its own array via
 // pair.yTicks: use the scale's own candidate ticks with 0 dropped, since the
 // plot area already sits flush against the axis there and a "0" label is
@@ -14,6 +37,14 @@ export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLa
 export function excludeZeroTick(scale) {
   const candidates = typeof scale.ticks === "function" ? scale.ticks() : scale.domain();
   return candidates.filter((tick) => tick !== 0);
+}
+
+// Tooltips are desktop-only: on mobile viewports the tooltip interaction is
+// buggy (tap-triggered tooltips misbehave on touch), so every chart passes
+// this as its `tooltipContext` instead of a hardcoded boolean. Same <1024
+// mobile threshold as the layout's lg: breakpoint and the helpers below.
+export function desktopTooltips(innerWidth) {
+  return innerWidth >= 1024;
 }
 
 export const legendProps = {

@@ -1,14 +1,14 @@
 # Interactive Report Template
 
-A template for turning written reports into interactive, visualization-first web experiences. Not a replacement for the PDF, but a different path alongside it — both formats have their reasons to exist. Here, the reader moves through the content while animated charts bring the data to life, with a special focus on the visualizations themselves. Every figure also has a PDF download button, bridging the two formats from a single source.
+A template for turning written reports into interactive, visualization-first web experiences. Not a replacement for the PDF, but a different path alongside it — both formats have their reasons to exist. Here, the reader moves through the content while animated charts bring the data to life, with a special focus on the visualizations themselves. Every figure also has a PNG download button, bridging the two formats from a single source.
 
-As a showcase, this template presents [*The Global Justice Report*](https://globaljusticeproject.wid.world/global-justice-report/) — a quantified plan for reconciling global socioeconomic equality with planetary habitability through 2100. Animated charts step through data on income and wealth inequality, decarbonization, human development, humanitarian aid, and political representation.
+As a showcase, this template presents a small selection of figures from [*The Global Justice Report*](https://globaljusticeproject.wid.world/global-justice-report/) — a quantified plan for reconciling global socioeconomic equality with planetary habitability through 2100. It is not the complete report, just a few of its charts used to demonstrate the format: animated figures stepping through data on income and wealth inequality, decarbonization, and human development.
 
 ## Tech Stack
 
 - [SvelteKit](https://kit.svelte.dev/) (Svelte 5, runes mode)
 - [Tailwind CSS](https://tailwindcss.com/) + [daisyUI](https://daisyui.com/)
-- [LayerChart](https://next.layerchart.com/) + [D3](https://d3js.org/) for charts (bar, stacked bar, grouped bar, stacked column, stacked area, line, plus a diagram panel)
+- [LayerChart Next](https://next.layerchart.com/) + [D3](https://d3js.org/) for charts (bar, stacked bar, grouped bar, stacked column, stacked area, line, plus a diagram panel)
 - [Vite](https://vitejs.dev/)
 - [Vercel Web Analytics](https://vercel.com/analytics)
 
@@ -35,11 +35,10 @@ src/
   lib/
     components/
       charts/               # one panel component per chart type
-      ChartDisplay.svelte   # sticky chart column + PDF download button
+      ChartDisplay.svelte   # sticky chart column + PNG download button
       ScrollySection.svelte # ties scroll position to chart transitions
       ScrollColumn.svelte   # scrolling text column
       DescriptionColumn.svelte
-      PrintFigure.svelte    # print-only figure layout for the PDF export
       Landing.svelte        # landing / cover section
       Header.svelte
       Footer.svelte
@@ -51,9 +50,10 @@ src/
     chart-theme.js          # shared LayerChart theming
     scroll-animation.js
   routes/                   # SvelteKit pages
-  styles/                   # Tailwind, fonts, base styles, print styles
+  styles/                   # Tailwind, fonts, base styles
 docs/                       # explainer notes (e.g. sticky-scroll mechanics)
 static/                     # cover and og images
+  figures/                  # pre-made figure screenshots served by the PNG button
 ```
 
 ## Working with Figures
@@ -75,6 +75,8 @@ export const data = [
 
 Figure numbers are hardcoded per figure file, so hiding one does not renumber the others.
 
-## PDF Download
+## PNG Download
 
-Every visualization has a PDF button. Because the scrollytelling layout (sticky/fixed positioning) prints badly, the figure is mounted into a standalone print-only layout (`PrintFigure.svelte`) reusing the same chart panel components, and exported via the browser's print dialog (save as PDF).
+Every visualization has a PNG button that downloads a pre-made screenshot from `static/figures/`. The files are named after the figure number — `figure-1.png`, `figure-2.png`, `figure-13.png` — so when a chart changes, replace the matching screenshot in that folder. The downloaded file is automatically renamed to a descriptive slug (e.g. `figure-2-using-productivity-gains-to-reduce-work-hours.png`).
+
+Live DOM-to-image capture was tried and abandoned: `html2canvas` cannot parse the `oklch()` colors Tailwind v4/daisyUI 5 use, and `modern-screenshot` mis-renders LayerChart's nested-`<svg>` text labels (they rely on `overflow: visible` with negative offsets, which the foreignObject clone clips/displaces — cutting off axis labels).

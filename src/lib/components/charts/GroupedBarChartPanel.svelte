@@ -1,7 +1,7 @@
 <script>
   import { BarChart } from "layerchart";
   import { scaleBand } from "d3-scale";
-  import { xAxisProps, legendProps, legendPadding } from "$lib/chart-theme";
+  import { xAxisProps, legendProps, legendPadding, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -25,7 +25,7 @@
   axis="x"
   legend={{ placement: "bottom-left" }}
   rule={false}
-  tooltipContext={false}
+  tooltipContext={desktopTooltips(innerWidth)}
   padding={legendPadding(pair.series.length, innerWidth, { axis: "x" })}
   props={{
     bars: { insets: { x: 4 }, strokeWidth: 0, radius: 3 },

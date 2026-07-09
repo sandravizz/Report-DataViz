@@ -3,7 +3,7 @@
   import { scaleBand, scaleLinear } from "d3-scale";
   import { max } from "d3-array";
   import { palette } from "$lib/colors";
-  import { tickLabelProps, yAxisProps } from "$lib/chart-theme";
+  import { tickLabelProps, yAxisProps, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
 
@@ -27,7 +27,7 @@
   xRange={({ width }) => [0, width]}
   orientation="horizontal"
   axis="y"
-  tooltipContext={false}
+  tooltipContext={desktopTooltips(innerWidth)}
   grid={false}
   rule={false}
   labels

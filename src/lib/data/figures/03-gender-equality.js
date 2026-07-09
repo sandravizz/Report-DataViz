@@ -1,3 +1,4 @@
+import { quarterCenturyTicks } from "$lib/chart-theme";
 import { projectionRange, textCallout } from "../annotation-presets.js";
 
 export default {
@@ -9,6 +10,7 @@ export default {
   number: "Figure 3",
   kind: "stacked-area",
   xKey: "year",
+  xTicks: quarterCenturyTicks(1800, 2100),
   series: [
     {
       key: "Domestic labour (women)",

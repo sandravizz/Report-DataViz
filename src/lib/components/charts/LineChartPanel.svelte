@@ -2,7 +2,7 @@
   import { AnnotationLine, AnnotationPoint, AnnotationRange, LineChart } from "layerchart";
   import { scaleLog } from "d3-scale";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, legendProps, legendPadding, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -58,13 +58,15 @@
   yDomain={pair.yDomain}
   legend={pair.lineEndLabels ? false : { placement: "bottom-left" }}
   rule={false}
-  tooltipContext={false}
+  tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     spline: { strokeWidth: 2.5 },
-    xAxis: { ...xAxisProps, ticks: pair.xTicks, format: formatYear },
+    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
     yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     legend: legendProps,
+    // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%").
+    tooltip: pair.valueSuffix ? { item: { format: formatValue } } : undefined,
   }}
 >
   {#snippet belowMarks()}
