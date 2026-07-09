@@ -19,23 +19,27 @@ import incomeGrowth from "./figures/16-income-growth.js";
 import votingRights from "./figures/17-voting-rights.js";
 import northSouthTransfers from "./figures/18-north-south-transfers.js";
 
-export const data = [
+// Figures are picked by name in +page.svelte. Comment one out here to hide it
+// everywhere — the page skips names that are missing from this map.
+export const figures = {
   incomeGap,
   workHours,
-  genderEquality,
-  sectorShift,
-  emissionsScenarios,
-  emissionDrivers,
-  targetedSufficiency,
-  platformDiagram,
-  worldSovereignFund,
-  fundVsAid,
-  countryDividends,
-  educationSpending,
+  //genderEquality,
+  // sectorShift,
+  // emissionsScenarios,
+  // emissionDrivers,
+  // targetedSufficiency,
+  // platformDiagram,
+  // worldSovereignFund,
+  // fundVsAid,
+  // countryDividends,
+  // educationSpending,
   incomeShares,
-  bottom50Wealth,
-  billionaireClass,
-  incomeGrowth,
-  votingRights,
-  northSouthTransfers,
-];
+  //bottom50Wealth,
+  //billionaireClass,
+  //incomeGrowth,
+  //votingRights,
+  //northSouthTransfers
+};
+
+export const data = Object.values(figures);

@@ -1,5 +1,5 @@
-<title>Global Justice Report — UI Wireframe</title>
-<meta name="description" content="Structural wireframe of the Dual Wave Text Animation scrollytelling report: header, hero, the repeating pinned-scroll section pattern, and footer." />
+<title>Data-Driven Report Template — UI Wireframe</title>
+<meta name="description" content="Structural wireframe of a dynamic, data-driven scrollytelling report template: header, hero, the repeating pinned-scroll section pattern, and footer." />
 <style>
   :root{
     --paper:#f2f3f6;
@@ -67,10 +67,10 @@
     line-height:1.5;
   }
 
-  .wrap{ max-width:1180px; margin:0 auto; padding:56px 28px 120px; }
+  .wrap{ max-width:900px; margin:0 auto; padding:28px 24px 36px; }
 
   /* ---- title block ---- */
-  .titleblock{ margin-bottom:48px; }
+  .titleblock{ margin-bottom:22px; }
   .eyebrow{
     font-family:var(--mono);
     font-size:11px;
@@ -82,34 +82,34 @@
   }
   .eyebrow::before{ content:""; width:16px; height:1px; background:var(--accent); }
   h1{
-    font-size:clamp(28px,3.4vw,40px);
+    font-size:clamp(19px,2.4vw,24px);
     font-weight:650;
     letter-spacing:-0.01em;
-    margin:0 0 8px;
+    margin:0 0 6px;
     text-wrap:balance;
   }
-  .sub{ color:var(--ink-soft); font-size:15px; max-width:62ch; margin:0; }
+  .sub{ color:var(--ink-soft); font-size:12.5px; max-width:70ch; margin:0; }
   .filepath{ font-family:var(--mono); font-size:12.5px; color:var(--ink-soft); }
 
   /* ---- legend ---- */
   .legend{
-    display:flex; flex-wrap:wrap; gap:18px;
-    margin-top:28px; padding-top:20px;
+    display:flex; flex-wrap:wrap; gap:14px;
+    margin-top:12px; padding-top:10px;
     border-top:1px solid var(--line-soft);
   }
-  .legend-item{ display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); }
-  .swatch{ width:13px; height:13px; border-radius:3px; flex:none; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; color:var(--ink-soft); }
+  .swatch{ width:11px; height:11px; border-radius:3px; flex:none; }
   .swatch.fixed{ background:var(--accent-soft); border:1.5px solid var(--accent); }
   .swatch.sticky{ background:var(--fill); border:1.5px dashed var(--line); }
   .swatch.scroll{ background:var(--redline-soft); border:1.5px solid var(--redline); }
   .swatch.static{ background:var(--fill); border:1px solid var(--line-soft); }
 
   /* ---- region block shell ---- */
-  .region{ position:relative; margin:0 0 40px; }
+  .region{ position:relative; margin:0 0 18px; }
   .region-label{
     display:flex; align-items:baseline; gap:10px;
-    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
-    color:var(--ink); margin-bottom:10px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink); margin-bottom:6px;
   }
   .region-label .path{ color:var(--ink-soft); text-transform:none; letter-spacing:0; font-size:11px; }
   .tag{
@@ -129,29 +129,29 @@
   .box.dashed{ border-style:dashed; }
 
   .annot{
-    font-family:var(--mono); font-size:11px; color:var(--ink-soft);
-    margin-top:8px; padding-left:16px; border-left:2px solid var(--line-soft);
+    font-family:var(--mono); font-size:10px; color:var(--ink-soft);
+    margin-top:5px; padding-left:12px; border-left:2px solid var(--line-soft);
   }
   .annot b{ color:var(--ink); font-weight:600; }
   .annot.redline{ border-left-color:var(--redline); color:var(--redline); }
 
   /* ---- header wireframe ---- */
-  .hd{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; }
+  .hd{ display:flex; align-items:center; justify-content:space-between; padding:8px 14px; }
   .pill{
-    font-family:var(--mono); font-size:11px; color:var(--ink-soft);
-    border:1px solid var(--line); border-radius:20px; padding:6px 12px;
+    font-family:var(--mono); font-size:10px; color:var(--ink-soft);
+    border:1px solid var(--line); border-radius:20px; padding:4px 10px;
     display:flex; align-items:center; gap:6px;
   }
-  .pill::after{ content:"▾"; font-size:9px; }
-  .hd .brand{ font-family:var(--mono); font-size:12px; letter-spacing:.06em; font-weight:600; }
+  .pill::after{ content:"▾"; font-size:8px; }
+  .hd .brand{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; font-weight:600; }
 
   /* ---- landing wireframe ---- */
-  .landing{ display:grid; grid-template-columns:1fr 1fr; gap:32px; padding:36px 28px; align-items:center; }
+  .landing{ display:grid; grid-template-columns:1fr 1fr; gap:24px; padding:16px 18px; align-items:center; }
   @media (max-width:720px){ .landing{ grid-template-columns:1fr; } }
-  .landing h2{ font-size:26px; font-weight:650; margin:0 0 10px; text-wrap:balance; }
-  .landing p{ color:var(--ink-soft); font-size:15px; margin:0; }
+  .landing h2{ font-size:16px; font-weight:650; margin:0 0 6px; text-wrap:balance; }
+  .landing p{ color:var(--ink-soft); font-size:12px; margin:0; }
   .imgph{
-    aspect-ratio:4/3; border-radius:5px; background:
+    aspect-ratio:16/5; border-radius:5px; background:
       repeating-linear-gradient(45deg, var(--fill), var(--fill) 8px, transparent 8px, transparent 16px);
     border:1px solid var(--line-soft);
     display:flex; align-items:center; justify-content:center;
@@ -159,10 +159,10 @@
   }
 
   /* ---- intro panel wireframe ---- */
-  .intro-panel{ padding:44px 28px; }
+  .intro-panel{ padding:16px 18px; }
   .intro-panel .lines{ max-width:640px; }
-  .intro-panel h3{ font-size:19px; font-weight:650; margin:0 0 10px; }
-  .ph-line{ height:9px; border-radius:3px; background:var(--fill); margin:7px 0; }
+  .intro-panel h3{ font-size:14px; font-weight:650; margin:0 0 8px; }
+  .ph-line{ height:7px; border-radius:3px; background:var(--fill); margin:5px 0; }
   .ph-line.w90{ width:96%; } .ph-line.w80{ width:82%; } .ph-line.w60{ width:64%; } .ph-line.w40{ width:42%; }
 
   /* ---- scrolly stage wireframe ---- */
@@ -170,65 +170,69 @@
     display:grid;
     grid-template-columns:0.9fr 1.6fr 1fr;
     gap:0;
-    min-height:300px;
   }
   @media (max-width:820px){ .stage{ grid-template-columns:1fr; } }
-  .rail{ padding:22px 18px; position:relative; }
+  .rail{ padding:12px 14px; position:relative; }
   .rail.left{ border-right:1px dashed var(--line-soft); }
   .rail.right{ border-left:1px dashed var(--line-soft); }
-  .rail-title{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); letter-spacing:.05em; text-transform:uppercase; margin-bottom:14px; }
+  .rail-title{ font-family:var(--mono); font-size:9.5px; color:var(--ink-soft); letter-spacing:.05em; text-transform:uppercase; margin-bottom:8px; }
   .num-item{
-    font-family:var(--mono); font-size:12.5px; padding:9px 0; color:var(--ink-soft);
+    font-family:var(--mono); font-size:11px; padding:5px 0; color:var(--ink-soft);
     transition:none;
   }
-  .num-item.active{ color:var(--ink); font-weight:650; font-size:14px; }
+  .num-item.active{ color:var(--ink); font-weight:650; font-size:12px; }
   .rail.right .num-item{ text-align:right; }
 
-  .chart-stage{ padding:22px 20px; border-left:1px dashed var(--line-soft); border-right:1px dashed var(--line-soft); }
+  .chart-stage{ padding:12px 14px; border-left:1px dashed var(--line-soft); border-right:1px dashed var(--line-soft); }
   @media (max-width:820px){ .chart-stage{ border-left:none; border-right:none; border-top:1px dashed var(--line-soft); border-bottom:1px dashed var(--line-soft); } }
-  .figno{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
-  .chart-title{ font-size:15px; font-weight:650; margin:0 0 4px; }
-  .chart-sub{ font-size:12px; color:var(--ink-soft); margin:0 0 16px; }
+  .figno{ font-family:var(--mono); font-size:9px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
+  .chart-title{ font-size:12.5px; font-weight:650; margin:0 0 3px; }
+  .chart-sub{ font-size:10.5px; color:var(--ink-soft); margin:0 0 10px; }
   .chart-ph{
-    height:150px; border:1px solid var(--line-soft); border-radius:5px;
+    height:80px; border:1px solid var(--line-soft); border-radius:5px;
     background:var(--fill); position:relative; overflow:hidden;
-    display:flex; align-items:flex-end; gap:6px; padding:14px;
+    display:flex; align-items:flex-end; gap:5px; padding:10px;
   }
   .chart-ph i{ display:block; width:100%; background:var(--line); border-radius:2px 2px 0 0; opacity:.55; }
-  .chart-source{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); margin-top:12px; }
+  .chart-footer{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:8px; }
+  .chart-source{ font-family:var(--mono); font-size:9px; color:var(--ink-soft); }
+  .btn-chip{
+    font-family:var(--mono); font-size:9px; color:var(--ink-soft); white-space:nowrap;
+    border:1px solid var(--line); border-radius:4px; padding:2px 7px; background:var(--paper-raised);
+  }
 
-  .kind-legend{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .kind-legend{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
   .kind-chip{
-    font-family:var(--mono); font-size:10px; color:var(--ink-soft);
-    border:1px solid var(--line-soft); border-radius:4px; padding:3px 8px;
+    font-family:var(--mono); font-size:9px; color:var(--ink-soft);
+    border:1px solid var(--line-soft); border-radius:4px; padding:2px 6px;
   }
 
   /* ---- sequence table ---- */
-  .seqtable{ width:100%; border-collapse:collapse; font-size:13px; }
+  .seqtable{ width:100%; border-collapse:collapse; font-size:11px; }
   .seqtable th{
-    text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
-    color:var(--ink-soft); font-weight:500; padding:10px 14px; border-bottom:1.5px solid var(--line);
+    text-align:left; font-family:var(--mono); font-size:9.5px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:500; padding:5px 10px; border-bottom:1.5px solid var(--line);
   }
-  .seqtable td{ padding:12px 14px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+  .seqtable td{ padding:5px 10px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
   .seqtable tr:last-child td{ border-bottom:none; }
-  .seqtable .idx{ font-family:var(--mono); color:var(--accent); font-size:12px; white-space:nowrap; }
-  .seqtable .id{ font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
-  .kindtags{ display:flex; flex-wrap:wrap; gap:5px; }
-  .kindtag{ font-family:var(--mono); font-size:10px; padding:2px 6px; border-radius:4px; background:var(--fill); color:var(--ink-soft); white-space:nowrap; }
+  .seqtable .idx{ font-family:var(--mono); color:var(--accent); font-size:10.5px; white-space:nowrap; }
+  .seqtable .id{ font-family:var(--mono); font-size:10px; color:var(--ink-soft); }
+  .kindtags{ display:flex; flex-wrap:wrap; gap:4px; }
+  .kindtag{ font-family:var(--mono); font-size:9px; padding:1px 5px; border-radius:4px; background:var(--fill); color:var(--ink-soft); white-space:nowrap; }
 
   /* ---- footer wireframe ---- */
-  .ft{ display:flex; align-items:center; justify-content:center; gap:14px; padding:14px; font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
-  .dot{ width:14px; height:14px; border-radius:50%; border:1px solid var(--line); display:inline-block; }
+  .ft{ display:flex; align-items:center; justify-content:center; gap:12px; padding:8px; font-family:var(--mono); font-size:10px; color:var(--ink-soft); }
+  .dot{ width:12px; height:12px; border-radius:50%; border:1px solid var(--line); display:inline-block; }
 
   .callout{
-    font-family:var(--mono); font-size:11px; color:var(--ink-soft);
-    display:flex; gap:8px; margin-top:10px;
+    font-family:var(--mono); font-size:10px; color:var(--ink-soft);
+    display:flex; gap:8px; margin-top:8px;
   }
   .callout .marker{ color:var(--redline); flex:none; }
 
   footer.meta{
-    margin-top:56px; padding-top:20px; border-top:1px solid var(--line-soft);
-    font-family:var(--mono); font-size:11px; color:var(--ink-soft);
+    margin-top:22px; padding-top:12px; border-top:1px solid var(--line-soft);
+    font-family:var(--mono); font-size:10px; color:var(--ink-soft);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
   }
 </style>
@@ -237,7 +241,7 @@
 
   <div class="titleblock">
     <div class="eyebrow">Structural wireframe</div>
-    <h1>The Global Justice Report — page anatomy</h1>
+    <h1>Dynamic Data-Driven Report Template — page anatomy</h1>
     <p class="sub">A diagram of how <span class="filepath">src/routes/+page.svelte</span> and its components assemble into the live scrollytelling report — not the visual design, but the skeleton: what's fixed, what pins, and what crossfades as the reader scrolls.</p>
 
     <div class="legend">
@@ -304,10 +308,13 @@
           <div class="chart-ph">
             <i style="height:38%"></i><i style="height:64%"></i><i style="height:88%"></i><i style="height:70%"></i><i style="height:52%"></i>
           </div>
-          <div class="chart-source">Sources &amp; series: gjp.wid.world (F1)</div>
+          <div class="chart-footer">
+            <div class="chart-source">Sources &amp; series: gjp.wid.world (F1)</div>
+            <span class="btn-chip">↓ PDF</span>
+          </div>
           <div class="kind-legend">
             <span class="kind-chip">bar</span><span class="kind-chip">line</span><span class="kind-chip">grouped-bar</span>
-            <span class="kind-chip">stacked-area</span><span class="kind-chip">stacked-column</span><span class="kind-chip">diagram</span>
+            <span class="kind-chip">stacked-area</span><span class="kind-chip">stacked-column</span><span class="kind-chip">stacked-bar</span><span class="kind-chip">diagram</span>
           </div>
         </div>
         <div class="rail right">
@@ -320,6 +327,11 @@
       <span>ScrollySection.svelte</span> pins this whole row (<b>sticky top-0 h-screen</b>) for the height of all its figures stacked. One shared scroll listener computes
       <b>progress</b> = scroll position through the container ÷ (container height − viewport height), then <b>activeIndex</b> = round(progress × (n − 1)).
       All three panels read the same <b>activeIndex</b>: the number rail translates + fades neighbours, the chart swaps by opacity crossfade, the description crossfades in step.
+    </div>
+    <div class="annot">
+      <b>↓ PDF button</b> (every figure, next to the source line): the scrollytelling layout prints badly, so <b>ChartDisplay</b> mounts a plain-flow copy of the figure
+      (<b>PrintFigure.svelte</b>) into a standalone DOM node, hides the app root, and calls <b>window.print()</b> — save as PDF from the browser dialog.
+      On mobile an extra <b>Interpretation</b> button opens the figure's description text in a daisyUI modal (on desktop it lives in the right column).
     </div>
   </div>
 
@@ -375,7 +387,7 @@
         </tbody>
       </table>
     </div>
-    <div class="annot">18 figures total, defined one-per-file in <b>src/lib/data/figures/</b> and grouped into these 8 beats by <b>data.slice(...)</b> in <b>+page.svelte</b>.</div>
+    <div class="annot">18 figures total, defined one-per-file in <b>src/lib/data/figures/</b>, registered in the <b>data</b> array in <b>src/lib/data/index.js</b> (array order = story order; comment a line out there to temporarily hide a figure), and grouped into these 8 beats by <b>data.slice(...)</b> in <b>+page.svelte</b>.</div>
   </div>
 
   <!-- FOOTER -->
@@ -391,7 +403,7 @@
 
   <footer class="meta">
     <span>src/routes/+page.svelte · src/lib/components/*</span>
-    <span>Dual Wave Text Animation — wireframe generated 2026-07-07</span>
+    <span>Dual Wave Text Animation — wireframe updated 2026-07-09</span>
   </footer>
 
 </div>
