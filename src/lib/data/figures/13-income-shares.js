@@ -1,4 +1,4 @@
-import { palette } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { quarterCenturyTicks } from "$lib/chart-theme";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 
@@ -22,7 +22,7 @@ export default {
       x: new Date(2050, 0, 1),
       y: 28,
       filled: true,
-      color: palette[4],
+      color: colors.lavender,
       label: "Bottom 50% overtakes the top 10% around 2050",
       labelPlacement: "bottom-left",
       labelXOffset: 30,
@@ -41,9 +41,9 @@ export default {
     }),
   ],
   series: [
-    { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: palette[5] },
-    { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: palette[2] },
-    { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: palette[3] },
+    { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.sky },
+    { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.sage },
+    { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.coral },
   ],
   // World series from the report's DataF2.13a14a tables (gjp.wid.world),
   // sampled every 20 years plus 2025 (projection start) and key

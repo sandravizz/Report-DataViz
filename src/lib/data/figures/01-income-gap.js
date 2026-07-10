@@ -1,4 +1,4 @@
-import { palette } from "$lib/colors";
+import { colors } from "$lib/colors";
 
 export default {
   title: "Large Gaps in Average Monthly Income Between Regions",
@@ -13,15 +13,15 @@ export default {
   yKey: "v",
   valuePrefix: "€",
   data: [
-    { region: "Sub-Saharan Africa", v: 290, color: palette[3] },
-    { region: "South & South-East Asia", v: 720, color: palette[6] },
-    { region: "Latin America", v: 1250, color: palette[6] },
-    { region: "Middle East & North Africa", v: 1370, color: palette[6] },
-    { region: "World", v: 1410, color: palette[4] },
-    { region: "East Asia", v: 1830, color: palette[6] },
-    { region: "Russia/Central Asia", v: 1950, color: palette[6] },
-    { region: "Europe", v: 3590, color: palette[6] },
-    { region: "North America/Oceania", v: 4590, color: palette[3] },
-    { region: "All Countries in 2100", v: 5000, color: palette[5] },
+    { region: "Sub-Saharan Africa", v: 290, color: colors.coral },
+    { region: "South & South-East Asia", v: 720, color: colors.gray },
+    { region: "Latin America", v: 1250, color: colors.gray },
+    { region: "Middle East & North Africa", v: 1370, color: colors.gray },
+    { region: "World", v: 1410, color: colors.lavender },
+    { region: "East Asia", v: 1830, color: colors.gray },
+    { region: "Russia/Central Asia", v: 1950, color: colors.gray },
+    { region: "Europe", v: 3590, color: colors.gray },
+    { region: "North America/Oceania", v: 4590, color: colors.coral },
+    { region: "All Countries in 2100", v: 5000, color: colors.sky },
   ],
 };

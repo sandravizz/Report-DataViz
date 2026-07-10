@@ -3,21 +3,21 @@
 // via the factories below so every callout inherits the same styling; any
 // AnnotationPoint/Range prop can still be overridden per call.
 
-const INK = "#2A2659";
+import { ink, colors } from "$lib/colors.js";
 
-const annotationLabel = { fill: INK, class: "text-xs font-light" };
-const mutedLabel = { fill: "#736B82", class: "text-xs font-light" };
+const annotationLabel = { fill: ink, class: "text-xs font-light" };
+const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
 const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
 
 // Circled point callout. `filled` tints the ring with the series color for
 // strong emphasis; otherwise a thin ink outline. `labelProps` extends the
 // standard dark-ink label (textAnchor, dx, width, …).
-export function circleCallout({ color = INK, filled = false, labelProps = {}, ...annotation }) {
+export function circleCallout({ color = ink, filled = false, labelProps = {}, ...annotation }) {
   return {
     r: filled ? 12 : 10,
     ...annotation,
     props: {
-      circle: filled ? { stroke: color, fill: color, fillOpacity: 0.2 } : { stroke: INK, fill: "none" },
+      circle: filled ? { stroke: color, fill: color, fillOpacity: 0.2 } : { stroke: ink, fill: "none" },
       label: { ...annotationLabel, ...labelProps },
     },
   };

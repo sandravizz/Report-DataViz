@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @source '../../node_modules/layerchart/**/*.svelte';
 
-@import 'tw-animate-css';
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {

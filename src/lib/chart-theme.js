@@ -1,6 +1,7 @@
 import { defaultChartPadding } from "layerchart";
+import { ink } from "./colors.js";
 
-export const tickLabelProps = { fill: "#2A2659", class: "text-xs font-light" };
+export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };

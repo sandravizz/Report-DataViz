@@ -72,8 +72,6 @@
           </svg>
           PNG
         </a>
-       
-
       </div>
     </div>
   {/each}

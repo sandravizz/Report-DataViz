@@ -1,5 +1,5 @@
 import { quarterCenturyTicks } from "$lib/chart-theme";
-import { palette } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // Extracted from the report's DataF1.3 table (projected annual economic
@@ -20,35 +20,35 @@ export default {
   // The real legend would be eight identical gray swatches plus one blue, so
   // summarize the two groupings instead (desktop tooltips name each region).
   legendItems: [
-    { label: "World", color: palette[5] },
-    { label: "Regions", color: palette[6] },
+    { label: "World", color: colors.sky },
+    { label: "Regions", color: colors.gray },
   ],
   series: [
-    { key: "Europe", value: "europe", color: palette[6] },
+    { key: "Europe", value: "europe", color: colors.gray },
     {
       key: "North America/Oceania",
       value: "northAmericaOceania",
-      color: palette[6],
+      color: colors.gray,
     },
-    { key: "Latin America", value: "latinAmerica", color: palette[6] },
+    { key: "Latin America", value: "latinAmerica", color: colors.gray },
     {
       key: "Middle East/North Africa",
       value: "middleEastNorthAfrica",
-      color: palette[6],
+      color: colors.gray,
     },
-    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: palette[6] },
+    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: colors.gray },
     {
       key: "Russia/Central Asia",
       value: "russiaCentralAsia",
-      color: palette[6],
+      color: colors.gray,
     },
-    { key: "East Asia", value: "eastAsia", color: palette[6] },
+    { key: "East Asia", value: "eastAsia", color: colors.gray },
     {
       key: "South/South-East Asia",
       value: "southSoutheastAsia",
-      color: palette[6],
+      color: colors.gray,
     },
-    { key: "World", value: "world", color: palette[5] },
+    { key: "World", value: "world", color: colors.sky },
   ],
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
@@ -58,7 +58,7 @@ export default {
       x: new Date(2025, 0, 1),
       y: 2100,
       filled: true,
-      color: palette[5],
+      color: colors.sky,
       label: "2,100 hours in 2025",
       labelPlacement: "right",
       labelXOffset: 30,
@@ -86,7 +86,7 @@ export default {
       x: new Date(2100, 0, 1),
       y: 1000,
       filled: true,
-      color: palette[5],
+      color: colors.sky,
       label: "1,000 hours by 2100",
       labelPlacement: "bottom-left",
       labelXOffset: 30,

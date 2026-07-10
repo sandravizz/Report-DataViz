@@ -8,7 +8,7 @@ As a showcase, this template presents a small selection of figures from [*The Gl
 
 - [SvelteKit](https://kit.svelte.dev/) (Svelte 5, runes mode)
 - [Tailwind CSS](https://tailwindcss.com/) + [daisyUI](https://daisyui.com/)
-- [LayerChart Next](https://next.layerchart.com/) + [D3](https://d3js.org/) for charts (bar, stacked bar, grouped bar, stacked column, stacked area, line, plus a diagram panel)
+- [LayerChart Next](https://next.layerchart.com/) + [D3](https://d3js.org/) for charts (horizontal bar and multi-series line, with annotation presets for callouts and projection bands)
 - [Vite](https://vitejs.dev/)
 - [Vercel Web Analytics](https://vercel.com/analytics)
 
@@ -44,36 +44,27 @@ src/
       Footer.svelte
     data/
       figures/              # one file per figure (data + configuration)
-      index.js              # figure registry — array order is the story order
-      annotation-presets.js
-    colors.js               # shared chart color palette
-    chart-theme.js          # shared LayerChart theming
-    scroll-animation.js
-  routes/                   # SvelteKit pages
-  styles/                   # Tailwind, fonts, base styles
-docs/                       # explainer notes (e.g. sticky-scroll mechanics)
+      index.js              # figure registry — figures are picked by name in +page.svelte
+      annotation-presets.js # shared callout / projection-band styling
+    colors.js               # single source for chart colors (ink + named series colors)
+    chart-theme.js          # shared LayerChart theming (axes, ticks, tooltips, label helpers)
+    scroll-animation.js     # opacity/scale curves for the scrolling figure list
+  routes/                   # SvelteKit pages — +page.svelte defines the story sections
+  styles/                   # Tailwind, fonts, daisyUI theme
+docs/                       # explainer notes (sticky-scroll mechanics, upstream bug reports)
 static/                     # cover and og images
   figures/                  # pre-made figure screenshots served by the PNG button
 ```
 
 ## Working with Figures
 
-Each figure lives in its own file in `src/lib/data/figures/` — a plain object with title, subtitle, description, source, figure number, chart `kind`, and the data itself. All figures are registered in `src/lib/data/index.js`, and the order of that array is the order they appear in the story.
+Each figure lives in its own file in `src/lib/data/figures/` — a plain object with title, subtitle, description, source, figure number, chart `kind` (`"bar"` or `"line"`), and the data itself (inline, or parsed from a CSV in `figures/csv/` via `parse-csv.js`). All figures are registered by name in `src/lib/data/index.js`; the story itself is assembled in `src/routes/+page.svelte`, where each section (title + intro text) lists the figures it shows in its `charts` array.
 
-**To add a figure:** copy an existing file in `src/lib/data/figures/`, adjust it, and add it to the array in `index.js`.
+**To add a figure:** copy an existing file in `src/lib/data/figures/`, adjust it, register it in `index.js`, and add it to a section's `charts` in `+page.svelte`.
 
-**To temporarily hide a figure:** comment out its line in the `data` array in `index.js` — no need to touch the figure file or its import:
+**To temporarily hide a figure:** comment out its entry in the section's `charts` array in `+page.svelte` — no need to touch the figure file or the registry. Figure numbers are hardcoded per figure file, so hiding one does not renumber the others.
 
-```js
-export const data = [
-  incomeGap,
-  // workHours,   ← hidden, remove the // to reactivate
-  genderEquality,
-  ...
-];
-```
-
-Figure numbers are hardcoded per figure file, so hiding one does not renumber the others.
+Chart colors come from `src/lib/colors.js` — named series colors (`colors.sky`, `colors.coral`, …) plus the shared `ink` used for axis and annotation text. Shared axis/tooltip/label behavior lives in `src/lib/chart-theme.js`, and reusable annotation styling (circled callouts, hatched projection bands) in `src/lib/data/annotation-presets.js`.
 
 ## PNG Download
 
