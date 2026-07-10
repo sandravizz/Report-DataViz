@@ -4,38 +4,41 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: globaljustice --default;
+  themes: findevlab --default;
 }
 
+/* FDL corporate colors (brand guidelines pp. 8-9). Base surfaces are white plus
+   tints of the primary teal #709899 (the guidelines sanction 75%/50% tints);
+   #e2eaeb is the section background FDL's own website uses. */
 @plugin "daisyui/theme" {
-  name: 'globaljustice';
+  name: 'findevlab';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
-  --color-base-100: #f4ddd6;
-  --color-base-200: #efccc2;
-  --color-base-300: #e9bcae;
-  --color-base-content: #2a2659;
-  --color-primary: #2a2659;
-  --color-primary-content: #f4ddd6;
-  --color-secondary: #736b82;
-  --color-secondary-content: #f4ddd6;
-  --color-accent: #d86858;
-  --color-accent-content: #f4ddd6;
-  --color-neutral: #3a2526;
-  --color-neutral-content: #f4ddd6;
-  --color-info: #61c1eb;
-  --color-info-content: #2a2659;
-  --color-success: #97af98;
-  --color-success-content: #2a2659;
-  --color-warning: #d86858;
-  --color-warning-content: #2a2659;
-  --color-error: #3a2526;
-  --color-error-content: #f4ddd6;
+  --color-base-100: #ffffff;
+  --color-base-200: #e2eaeb;
+  --color-base-300: #b7cbcc;
+  --color-base-content: #395966;
+  --color-primary: #395966;
+  --color-primary-content: #ffffff;
+  --color-secondary: #709899;
+  --color-secondary-content: #ffffff;
+  --color-accent: #c24c2c;
+  --color-accent-content: #ffffff;
+  --color-neutral: #5e6d68;
+  --color-neutral-content: #ffffff;
+  --color-info: #709899;
+  --color-info-content: #ffffff;
+  --color-success: #618e78;
+  --color-success-content: #ffffff;
+  --color-warning: #e9be72;
+  --color-warning-content: #395966;
+  --color-error: #c24c2c;
+  --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Geist', sans-serif;
+  --font-sans: 'Barlow', sans-serif;
+  --font-display: 'Kapra Neue Expanded', 'Barlow', sans-serif;
 }
-

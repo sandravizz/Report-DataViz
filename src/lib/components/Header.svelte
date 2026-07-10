@@ -58,9 +58,9 @@
 
     <a
       href="#top"
-      class="max-w-36 text-right font-sans text-xs leading-tight font-semibold tracking-wide text-base-content hover:opacity-70 sm:max-w-none sm:text-lg sm:tracking-normal sm:whitespace-nowrap"
+      class="max-w-36 text-right font-display text-xs leading-tight font-semibold tracking-wide text-base-content hover:opacity-70 sm:max-w-none sm:text-lg sm:tracking-normal sm:whitespace-nowrap"
     >
-      GLOBAL JUSTICE REPORT
+      IDA 2030: CLIFF OR NO CLIFF?
     </a>
   </div>
 </header>

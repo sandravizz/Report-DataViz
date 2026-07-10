@@ -1,1 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+/* FDL brand fonts (brand guidelines, Avril 2022):
+   - Kapra Neue Expanded — display/headline face (typography basis of the logo),
+     self-hosted woff2 files taken from findevlab.org, in static/fonts/.
+   - Barlow — print & web text face, loaded from Google Fonts like FDL's own site. */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-ThinExpanded.woff2') format('woff2');
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-ExtraLightExpanded.woff2') format('woff2');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-LightExpanded.woff2') format('woff2');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-RegularExpanded.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-RegularExpandedItalic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-MediumExpanded.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-SemiBoldExpanded.woff2') format('woff2');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Kapra Neue Expanded';
+	src: url('/fonts/KapraNeue-BoldExpanded.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
