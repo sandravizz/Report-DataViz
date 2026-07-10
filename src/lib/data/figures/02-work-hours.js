@@ -18,6 +18,12 @@ export default {
   xKey: "year",
   xTicks: quarterCenturyTicks(1800, 2100),
   lineEndLabels: true,
+  // The real legend would be eight identical gray swatches plus one blue, so
+  // summarize the two groupings instead (desktop tooltips name each region).
+  legendItems: [
+    { label: "World", color: palette[5] },
+    { label: "Regions", color: palette[6] },
+  ],
   series: [
     { key: "Europe", value: "europe", color: palette[6] },
     {

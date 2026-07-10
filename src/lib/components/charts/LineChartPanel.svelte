@@ -50,6 +50,7 @@
 
 <svelte:window bind:innerWidth />
 
+{#snippet chart()}
 <LineChart
   data={pair.data}
   x={pair.xKey}
@@ -83,3 +84,28 @@
     {/each}
   {/snippet}
 </LineChart>
+{/snippet}
+
+{#if pair.legendItems}
+  <!-- Manual legend for charts whose real series list would make a useless
+       legend (e.g. figure 2's eight identical gray region lines): the figure
+       supplies a few {label, color} entries that summarize the groupings.
+       Rendered below the plot like the built-in bottom-left legend, with the
+       same text size and swatch scale; pl-9 matches yLabelPadding's 36px
+       axis gutter so the swatches align with the plot's left edge. -->
+  <div class="flex min-w-0 flex-1 flex-col">
+    <div class="min-h-0 flex-1">
+      {@render chart()}
+    </div>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+      {#each pair.legendItems as item (item.label)}
+        <div class="flex items-center gap-1.5">
+          <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
+          <span>{item.label}</span>
+        </div>
+      {/each}
+    </div>
+  </div>
+{:else}
+  {@render chart()}
+{/if}
