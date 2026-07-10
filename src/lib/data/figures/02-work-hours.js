@@ -2,9 +2,9 @@ import { quarterCenturyTicks } from "$lib/chart-theme";
 import { palette } from "$lib/colors";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-// Extracted from "DataF1.3-Table 1.csv" (projected annual economic labour
-// hours, SC scenario) — year + the 9 region columns, thousands separators
-// stripped. Note: DataF1.2 is per-capita GDP, not this figure's data.
+// Extracted from the report's DataF1.3 table (projected annual economic
+// labour hours, SC scenario) — year + the 9 region columns, thousands
+// separators stripped.
 import csv from "./csv/02-work-hours.csv?raw";
 
 export default {
@@ -17,7 +17,6 @@ export default {
   kind: "line",
   xKey: "year",
   xTicks: quarterCenturyTicks(1800, 2100),
-  lineEndLabels: true,
   // The real legend would be eight identical gray swatches plus one blue, so
   // summarize the two groupings instead (desktop tooltips name each region).
   legendItems: [

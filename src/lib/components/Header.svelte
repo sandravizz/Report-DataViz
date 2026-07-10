@@ -2,12 +2,7 @@
   const links = [
     { href: "#ensuring-equality", label: "Ensuring Equality and Prosperity for All" },
     { href: "#working-less", label: "Working Less, Achieving Gender Equality" },
-    // { href: "#staying-below-2c", label: "Staying Below 2 °C" },
-    // { href: "#building-platform", label: "Building the Global Justice Platform" },
-    // { href: "#funding", label: "Funding It at the Right Scale" },
     { href: "#compressing", label: "Compressing the Income and Wealth Scale" },
-    // { href: "#coalitions", label: "Building National and Global Coalitions" },
-    // { href: "#democratic-world-order", label: "Building a Democratic World Order" },
   ];
 
   function closeDropdown(event) {

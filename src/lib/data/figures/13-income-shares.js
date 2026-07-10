@@ -14,7 +14,6 @@ export default {
   xKey: "year",
   valueSuffix: "%",
   xTicks: quarterCenturyTicks(1800, 2100),
-  lineEndLabels: true,
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
@@ -46,7 +45,7 @@ export default {
     { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: palette[2] },
     { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: palette[3] },
   ],
-  // World series from csv/13-income-shares.csv (see csv/DataF2.13a14a_1–3),
+  // World series from the report's DataF2.13a14a tables (gjp.wid.world),
   // sampled every 20 years plus 2025 (projection start) and key
   // projection-era points.
   data: [

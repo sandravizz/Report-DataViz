@@ -2,14 +2,12 @@
   import { BarChart, defaultChartPadding } from "layerchart";
   import { scaleBand, scaleLinear } from "d3-scale";
   import { max } from "d3-array";
-  import { palette } from "$lib/colors";
   import { tickLabelProps, yAxisProps, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
 
   let innerWidth = $state(1024);
 
-  const hasPerRowColor = $derived(pair.data.every((d) => d.color));
   // Category labels are long; give them a generous left gutter and let them
   // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
   // so labels reflow per breakpoint instead of relying on hard \n breaks.
@@ -32,14 +30,12 @@
   rule={false}
   labels
   padding={defaultChartPadding({ left: labelGutter, right: 40 })}
-  {...hasPerRowColor
-    ? { c: pair.xKey, cRange: pair.data.map((d) => d.color) }
-    : {}}
+  c={pair.xKey}
+  cRange={pair.data.map((d) => d.color)}
   series={[
     {
       key: pair.subtitle,
       value: pair.yKey,
-      color: hasPerRowColor ? undefined : palette[9],
       props: { insets: { y: 0 }, strokeWidth: 0 },
     },
   ]}
@@ -59,13 +55,13 @@
     },
     labels: {
       ...tickLabelProps,
-      format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,
+      format: (d) => `${pair.valuePrefix ?? ""}${d}`,
     },
     tooltip: {
       item: {
         label: "",
         color: null,
-        format: (d) => `${pair.valuePrefix ?? ""}${d}${pair.valueSuffix ?? ""}`,
+        format: (d) => `${pair.valuePrefix ?? ""}${d}`,
       },
     },
   }}

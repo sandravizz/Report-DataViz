@@ -19,10 +19,10 @@ export function quarterCenturyTicks(startYear, endYear) {
 }
 
 // On mobile the quarter-century ticks crowd the narrow x axis, so keep only
-// the half-century years (1800, 1850, … 2100). Short-range charts (e.g.
-// figure 6's 2025–2100) would be left with fewer than three ticks that way,
-// so they keep the full quarter-century set instead. Same <1024 mobile
-// threshold as the layout's lg: breakpoint.
+// the half-century years (1800, 1850, … 2100). Short-range charts would be
+// left with fewer than three ticks that way, so they keep the full
+// quarter-century set instead. Same <1024 mobile threshold as the layout's
+// lg: breakpoint.
 export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   if (!ticks || innerWidth >= 1024) return ticks;
   const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
@@ -46,35 +46,6 @@ export function excludeZeroTick(scale) {
 export function desktopTooltips(innerWidth) {
   return innerWidth >= 1024;
 }
-
-export const legendProps = {
-  class: "text-xs font-light",
-  classes: {
-    items: "flex-wrap gap-x-3 gap-y-1",
-    // Default swatches (16px) read as oversized next to text-xs labels,
-    // especially once several wrap across two rows on mobile.
-    swatch: "w-2.5 h-2.5",
-  },
-};
-
-// Stacked charts: hovering a legend item must not highlight its area/column
-// (the legend click-to-toggle stays active). Returning a non-nullish value
-// stops Legend from falling back to its built-in highlight handlers.
-export const stackedLegendProps = {
-  ...legendProps,
-  onpointerenter: () => false,
-  onpointerleave: () => false,
-};
-
-// Stacked area charts: hovering a row inside the tooltip must not fade the
-// other areas either — DefaultTooltip sets context.series.highlightKey on
-// pointerenter/leave of each tooltip row, which Area reads to drop its
-// pathOpacity to 0.1 for every non-matching series. These no-ops override
-// that per-row handler (same mechanism as stackedLegendProps, applied to
-// `props.tooltip.item` instead of `props.legend`).
-export const stackedTooltipProps = {
-  item: { onpointerenter: () => {}, onpointerleave: () => {} },
-};
 
 // Numeric y tick labels are wider than the default 20px left gutter; give
 // those charts enough room that the labels stay inside the chart container,
@@ -100,26 +71,16 @@ export function resolveAnnotations(annotations, innerWidth) {
   );
 }
 
-// End-of-line/band labels (LineChartPanel's lineEndLabels, StackedAreaChartPanel's
-// areaEndLabels) reserve padding on whichever side hosts the label text, in
-// place of legend rows. Mobile gets a tighter margin than desktop — screen
-// width is already scarce there, and the labels wrap instead of running
-// wide. `side: "start"` is for charts that converge to nothing by the last
-// point (e.g. figure 15's billionaire share going to ~0 by 2100): labels sit
-// at the first point instead and the y-axis moves to the opposite edge, so
-// the axis gutter (yLabelPadding's usual 36px) needs to flip sides too.
-export function endLabelPadding(innerWidth, hasLabels, side = "end", extra = {}) {
+// End-of-line labels (LineChartPanel's series end labels) reserve padding on
+// the right. Mobile gets a tighter margin than desktop —
+// screen width is already scarce there, and the labels wrap instead of
+// running wide.
+export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
   const labelSpace = innerWidth < 1024 ? 52 : 80;
-  return defaultChartPadding(
-    side === "start"
-      ? { ...extra, left: hasLabels ? labelSpace : extra.left, right: 36 }
-      : hasLabels
-        ? { ...extra, right: labelSpace }
-        : extra
-  );
+  return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
 }
 
-// Mobile override for end-of-line/band label annotations: the reserved
+// Mobile override for end-of-line label annotations: the reserved
 // margin is too tight for longer names on one line, so wrap instead. Also
 // pins lineHeight — Text's default line height is a flat 16px (1em resolved
 // against an assumed 16px base font, not our actual text-xs/12px), which
@@ -127,15 +88,3 @@ export function endLabelPadding(innerWidth, hasLabels, side = "end", extra = {})
 export const endLabelMobileWrap = {
   props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
 };
-
-// Bottom padding must fit the wrapped legend: on mobile items stack ~2 per
-// row, on desktop a single row is enough unless there are many series.
-// Passed as an explicit `bottom` (not the `legend: true` flag) because that
-// flag always adds a fixed 32px on top, which left more empty space between
-// plot and legend than the smaller swatches actually need.
-const legendGap = 12; // space between the axis and the first legend row
-const legendRowHeight = 18; // per wrapped row, sized for the 10px swatches
-export function legendPadding(seriesCount, innerWidth, extra = {}) {
-  const rows = innerWidth < 1024 ? Math.ceil(seriesCount / 2) : seriesCount > 4 ? 2 : 1;
-  return defaultChartPadding({ ...extra, bottom: 20 + legendGap + rows * legendRowHeight });
-}
