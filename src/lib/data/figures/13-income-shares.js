@@ -4,7 +4,7 @@ import { circleCallout, projectionRange } from "../annotation-presets.js";
 
 export default {
   title: "Combining Between-Country & Within-Country Inequality Compression",
-  subtitle: "Global Income Shares in Total Post-Tax Income, 1800–2100",
+  subtitle: "Global Income Shares in Post-Tax Income, 1800–2100",
   description:
     "According to the Global Justice Platform, the share of the top 10% highest incomes in total posttax income in the world is projected to decline from 52% in 2025 to 18% in 2100. The share of the global bottom 50% in posttax income is projected to increase from 8% in 2025 to 38% in 2100, and for the middle 40% from 40% today to 44% in 2100.",
   source:
