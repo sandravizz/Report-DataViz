@@ -1,102 +1,92 @@
-import { quarterCenturyTicks } from "$lib/chart-theme";
-import { colors } from "$lib/colors";
+import { colors, fdl } from "$lib/colors";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-// Extracted from the report's DataF1.3 table (projected annual economic
-// labour hours, SC scenario) — year + the 9 region columns, thousands
-// separators stripped.
-import csv from "./csv/02-work-hours.csv?raw";
+// From the IDA_GIZ_KAdequacyModel presentation (slide 15), exact series from
+// the chart's data table, rounded to 2 decimals. The CSV codes each row as
+// replenishment period + year within it ("IDA18-2"); every period has three
+// yearly values except IDA19, which was shortened to two when IDA20 was
+// advanced a year as part of the COVID response.
+import csv from "./csv/02-ida-objective.csv?raw";
+
+// First fiscal year of each replenishment period, used to place the period
+// codes on the chart's (hidden) fiscal-year time axis: IDA17 FY15-17,
+// IDA18 FY18-20, IDA19 FY21-22, IDA20 FY23-25, IDA21 FY26-28, IDA22 FY29-31.
+const periodStartYears = {
+  IDA17: 2015,
+  IDA18: 2018,
+  IDA19: 2021,
+  IDA20: 2023,
+  IDA21: 2026,
+  IDA22: 2029,
+};
+
+const periodByStartYear = Object.fromEntries(
+  Object.entries(periodStartYears).map(([period, year]) => [year, period])
+);
+
+const data = parseFigureCsv(csv).map((row) => {
+  const [period, seq] = row.period.split("-");
+  return { ...row, year: new Date(periodStartYears[period] + +seq - 1, 0, 1) };
+});
 
 export default {
-  title: "Using Productivity Gains to Reduce Work Hours",
-  subtitle: "Average Annual Labour Hours per Employed Individual, 1800–2100",
+  title: "The Objective: Maintaining IDA's Disbursement Pace",
+  subtitle: "IDA Disbursements by Financing Window, USD Billion, IDA17–IDA22",
   description:
-    "In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation).",
-  source: "Sources & series: gjp.wid.world (F2)",
+    "The IDA ambition is maintaining an overall disbursement pace similar to the past 10 years. The IDA cliff is flat or declining disbursements.",
+  source: "Sources & series: to be confirmed",
   number: "Figure 2",
   kind: "line",
   xKey: "year",
-  xTicks: quarterCenturyTicks(1800, 2100),
-  // The real legend would be eight identical gray swatches plus one blue, so
-  // summarize the two groupings instead (desktop tooltips name each region).
-  legendItems: [
-    { label: "World", color: colors.sky },
-    { label: "Regions", color: colors.gray },
-  ],
-  series: [
-    { key: "Europe", value: "europe", color: colors.gray },
-    {
-      key: "North America/Oceania",
-      value: "northAmericaOceania",
-      color: colors.gray,
-    },
-    { key: "Latin America", value: "latinAmerica", color: colors.gray },
-    {
-      key: "Middle East/North Africa",
-      value: "middleEastNorthAfrica",
-      color: colors.gray,
-    },
-    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: colors.gray },
-    {
-      key: "Russia/Central Asia",
-      value: "russiaCentralAsia",
-      color: colors.gray,
-    },
-    { key: "East Asia", value: "eastAsia", color: colors.gray },
-    {
-      key: "South/South-East Asia",
-      value: "southSoutheastAsia",
-      color: colors.gray,
-    },
-    { key: "World", value: "world", color: colors.sky },
-  ],
+  xTicks: Object.values(periodStartYears).map((y) => new Date(y, 0, 1)),
+  xTickFormat: (d) => periodByStartYear[d.getFullYear()] ?? "",
+  // The x axis is really period-year codes, not calendar years, so the
+  // tooltip header shows e.g. "IDA19 · Year 2" instead of the fiscal year.
+  tooltipHeaderFormat: (d) => {
+    const row = data.find((r) => r.year.getTime() === d.getTime());
+    return row ? row.period.replace("-", " · Year ") : "";
+  },
   rangeAnnotations: [
-    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
+    projectionRange({ x: [new Date(2026, 0, 1), new Date(2031, 0, 1)] }),
   ],
+  // Placeholder callout — to be refined once we decide what to emphasize.
   annotations: [
     circleCallout({
-      x: new Date(2025, 0, 1),
-      y: 2100,
+      x: new Date(2026, 0, 1),
+      y: 15.15,
       filled: true,
-      color: colors.sky,
-      label: "2,100 hours in 2025",
-      labelPlacement: "right",
-      labelXOffset: 30,
-      labelYOffset: 10,
-      link: { type: "beveled", radius: 15, sweep: "vertical-horizontal" },
-      labelProps: { textAnchor: "start", verticalAnchor: "middle", dx: 4 },
-      // Narrow viewports: "right" runs off-screen (2025 sits at ~75% of the
-      // x-axis), so point upward into the empty area above the line bundle.
-      mobile: {
-        labelPlacement: "top",
-        labelXOffset: 0,
-        labelYOffset: 32,
-        props: {
-          label: {
-            textAnchor: "middle",
-            verticalAnchor: "end",
-            dx: 0,
-            truncate: false,
-            width: 100,
-          },
-        },
-      },
-    }),
-    circleCallout({
-      x: new Date(2100, 0, 1),
-      y: 1000,
-      filled: true,
-      color: colors.sky,
-      label: "1,000 hours by 2100",
-      labelPlacement: "bottom-left",
-      labelXOffset: 30,
-      labelYOffset: 20,
+      color: fdl.slate,
+      label: "The ambition: sustain the pace of the past decade",
+      labelPlacement: "top-left",
+      labelXOffset: 24,
+      labelYOffset: 28,
       link: { type: "swoop" },
       labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
       mobile: {
-        props: { label: { truncate: false, width: 100 } },
+        props: { label: { width: 150, truncate: false } },
       },
     }),
   ],
-  data: parseFigureCsv(csv),
+  series: [
+    {
+      key: "Concessional loans",
+      endLabel: "Concessional",
+      value: "concessional",
+      color: fdl.slate,
+    },
+    {
+      key: "Blended loans",
+      endLabel: "Blended",
+      value: "blended",
+      color: colors.sage,
+    },
+    { key: "Grants", endLabel: "Grants", value: "grants", color: colors.sky },
+    {
+      key: "Non-concessional loans",
+      endLabel: "Non-concessional",
+      value: "nonconcessional",
+      color: colors.coral,
+    },
+  ],
+  data,
 };

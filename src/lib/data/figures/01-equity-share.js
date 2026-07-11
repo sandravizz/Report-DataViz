@@ -1,27 +1,25 @@
 import { colors } from "$lib/colors";
+import { parseFigureCsv } from "./parse-csv.js";
+// From the IDA_GIZ_KAdequacyModel presentation (slide 10): IDA balance sheet
+// in USD billion, read off the slide's bar labels (values there in USD
+// million). Liabilities + equity sum to total assets, so the stack's height
+// traces the balance sheet total.
+import csv from "./csv/01-equity-share.csv?raw";
 
 export default {
-  title: "Large Gaps in Average Monthly Income Between Regions",
-  subtitle: "Monthly Gross National Disposable Income, 2025 Euros PPP",
+  title: "Equity's Share Is Large… but Declining",
+  subtitle: "IDA Balance Sheet: Equity and Liabilities, USD Billion, 2017–2025",
   description:
-    "The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. Incomes are projected to reach 5,000 Euros in all countries by 2100.",
-  source:
-    "Sources & series: gjp.wid.world (F1)",
+    "IDA's assets are financed mostly by equity, but equity's share is declining: from 80% of the balance sheet in 2017 (89% in 2018) to 73% in 2025, as liabilities grew from USD 39 billion to USD 77 billion.",
+  source: "Sources & series: to be confirmed",
   number: "Figure 1",
-  kind: "bar",
-  xKey: "region",
-  yKey: "v",
-  valuePrefix: "€",
-  data: [
-    { region: "Sub-Saharan Africa", v: 290, color: colors.coral },
-    { region: "South & South-East Asia", v: 720, color: colors.gray },
-    { region: "Latin America", v: 1250, color: colors.gray },
-    { region: "Middle East & North Africa", v: 1370, color: colors.gray },
-    { region: "World", v: 1410, color: colors.lavender },
-    { region: "East Asia", v: 1830, color: colors.gray },
-    { region: "Russia/Central Asia", v: 1950, color: colors.gray },
-    { region: "Europe", v: 3590, color: colors.gray },
-    { region: "North America/Oceania", v: 4590, color: colors.coral },
-    { region: "All Countries in 2100", v: 5000, color: colors.sky },
+  kind: "bar-stacked",
+  xKey: "year",
+  // Stack order: first series sits at the bottom, matching the slide
+  // (liabilities below, equity on top).
+  series: [
+    { key: "Liabilities", value: "liabilities", color: colors.coral },
+    { key: "Equity", value: "equity", color: colors.sage },
   ],
+  data: parseFigureCsv(csv),
 };

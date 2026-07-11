@@ -12,27 +12,29 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
+  // Sections follow the IDA_GIZ_KAdequacyModel presentation's narrative:
+  // IDA's growth, financing that growth, and IDA's future.
   const sections = [
     {
-      id: "ensuring-equality",
-      title: "Ensuring Equality and Prosperity for All",
+      id: "financing-ida",
+      title: "Financing IDA's Growth",
       intro:
-        "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. There are two main reasons for this target. First, all countries in the Global South aspire to economic prosperity, and any credible framework for global climate cooperation must account for that aspiration.",
-      charts: [figures.incomeGap],
+        "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figure 1).",
+      charts: [figures.equityShare],
     },
     {
-      id: "working-less",
-      title: "Working Less, Achieving Gender Equality",
+      id: "the-objective",
+      title: "IDA's Future: Cliff or No Cliff?",
       intro:
-        "The first element of sufficiency in the Global Justice Platform is a large reduction in working hours: from about 2,100 hours to 1,000 hours per year per employed person, between 2025 and 2100 (Figure 2). As observed in historical episodes of working-time reduction, productivity growth makes such reductions possible.",
-      charts: [figures.workHours],
+        "The ambition for IDA is to maintain an overall disbursement pace similar to the past 10 years. The alternative — the IDA cliff — is flat or declining disbursements (Figure 2).",
+      charts: [figures.idaObjective],
     },
     {
-      id: "compressing",
-      title: "Compressing the Income and Wealth Scale",
-      intro:"The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution.",
-      charts: [figures.incomeShares],
+      id: "largest-fund",
+      title: "The Largest Fund for Poor Countries",
+      intro:
+        "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 3).",
+      charts: [figures.idaLoans],
     },
   ];
 </script>

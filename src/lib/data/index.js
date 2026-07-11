@@ -1,12 +1,12 @@
 // One figure per file. To add a figure: copy an existing file in ./figures,
 // register it here, and add it to a section's `charts` in +page.svelte —
 // the sections there define the story order.
-import incomeGap from "./figures/01-income-gap.js";
-import workHours from "./figures/02-work-hours.js";
-import incomeShares from "./figures/13-income-shares.js";
+import equityShare from "./figures/01-equity-share.js";
+import idaObjective from "./figures/02-ida-objective.js";
+import idaLoans from "./figures/03-ida-loans.js";
 
 export const figures = {
-  incomeGap,
-  workHours,
-  incomeShares,
+  equityShare,
+  idaObjective,
+  idaLoans,
 };

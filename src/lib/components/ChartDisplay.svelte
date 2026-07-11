@@ -1,5 +1,6 @@
 <script>
   import BarChartPanelHorizontal from "./charts/BarChartPanelHorizontal.svelte";
+  import BarChartPanelStacked from "./charts/BarChartPanelStacked.svelte";
   import LineChartPanel from "./charts/LineChartPanel.svelte";
 
   let { pairs, activeIndex } = $props();
@@ -53,6 +54,8 @@
       <div class="flex min-h-0 flex-1 gap-6">
         {#if pair.kind === "bar"}
           <BarChartPanelHorizontal {pair} />
+        {:else if pair.kind === "bar-stacked"}
+          <BarChartPanelStacked {pair} />
         {:else if pair.kind === "line"}
           <LineChartPanel {pair} />
         {/if}

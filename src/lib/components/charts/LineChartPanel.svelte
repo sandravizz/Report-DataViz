@@ -18,7 +18,9 @@
     pair.series
       .filter((s) => s.endLabel)
       .map((s) => {
-        const last = pair.data[pair.data.length - 1];
+        // A series can end before the x-domain does (null cells in the CSV),
+        // so anchor its label to its own last observation, not the last row.
+        const last = pair.data.findLast((d) => d[s.value] != null);
         return {
           x: last[pair.xKey],
           y: last[s.value],
@@ -55,10 +57,20 @@
   {padding}
   props={{
     spline: { strokeWidth: 2.5 },
-    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
+    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? formatYear },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%").
-    tooltip: pair.valueSuffix ? { item: { format: formatValue } } : undefined,
+    // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
+    // figures whose x values aren't plain years (e.g. figure 2's IDA period
+    // codes) override the header via `tooltipHeaderFormat`.
+    tooltip:
+      pair.valueSuffix || pair.tooltipHeaderFormat
+        ? {
+            ...(pair.valueSuffix && { item: { format: formatValue } }),
+            ...(pair.tooltipHeaderFormat && {
+              header: { format: pair.tooltipHeaderFormat },
+            }),
+          }
+        : undefined,
   }}
 >
   {#snippet belowMarks()}

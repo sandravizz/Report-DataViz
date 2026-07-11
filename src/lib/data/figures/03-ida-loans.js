@@ -1,72 +1,70 @@
 import { colors } from "$lib/colors";
-import { quarterCenturyTicks } from "$lib/chart-theme";
-import { circleCallout, projectionRange } from "../annotation-presets.js";
+import { circleCallout } from "../annotation-presets.js";
+import { parseFigureCsv } from "./parse-csv.js";
+// From the IDA_GIZ_KAdequacyModel presentation (slide 4): IDA's share of all
+// disbursements to eligible countries and IDA grants as a share of all grants
+// received, in % (Grants / IDA has no 2024 observation yet).
+import csv from "./csv/03-ida-loans.csv?raw";
 
 export default {
-  title: "Combining Between-Country & Within-Country Inequality Compression",
-  subtitle: "Global Income Shares in Total Post-Tax Income, 1800–2100",
+  title: "The Largest Fund for Poor Countries",
+  subtitle:
+    "IDA Share of All Disbursements and Grants Received by Eligible Countries, 2008–2024",
   description:
-    "According to the Global Justice Platform, the share of the top 10% highest incomes in total posttax income in the world is projected to decline from 52% in 2025 to 18% in 2100. The share of the global bottom 50% in posttax income is projected to increase from 8% in 2025 to 38% in 2100, and for the middle 40% from 40% today to 44% in 2100.",
-  source:
-    "Sources & series: gjp.wid.world (F13)",
-  number: "Figure 13",
+    "IDA loans represent 40% of all disbursements to eligible countries. Its grants represent ~20% of all grants received.",
+  source: "Sources & series: to be confirmed",
+  number: "Figure 3",
   kind: "line",
   xKey: "year",
   valueSuffix: "%",
-  xTicks: quarterCenturyTicks(1800, 2100),
-  rangeAnnotations: [
-    projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
-  ],
+  xTicks: [2008, 2012, 2016, 2020, 2024].map((y) => new Date(y, 0, 1)),
+  // Placeholder callouts on the latest points, mirroring the slide's two key
+  // statements — to be refined once we decide what to emphasize.
   annotations: [
     circleCallout({
-      x: new Date(2050, 0, 1),
-      y: 28,
+      x: new Date(2024, 0, 1),
+      y: 40.35,
       filled: true,
-      color: colors.lavender,
-      label: "Bottom 50% overtakes the top 10% around 2050",
-      labelPlacement: "bottom-left",
-      labelXOffset: 30,
-      labelYOffset: 30,
+      color: colors.sky,
+      label: "Back above 40% of disbursements in 2024",
+      labelPlacement: "top-left",
+      labelXOffset: 20,
+      labelYOffset: 24,
       link: { type: "swoop" },
       labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-      // Narrow viewports: the one-line label is wider than the space left of
-      // the point, so wrap it to 2 lines in the open region below-left of
-      // the intersection. Text truncates at `width` unless truncate is
-      // explicitly disabled — only then does `width` word-wrap.
       mobile: {
-        labelXOffset: 20,
-        labelYOffset: 36,
-        props: { label: { width: 180, truncate: false } },
+        props: { label: { width: 160, truncate: false } },
+      },
+    }),
+    circleCallout({
+      x: new Date(2022, 0, 1),
+      y: 21.62,
+      filled: true,
+      color: colors.sage,
+      label: "Grants reach ~20% of all grants received",
+      labelPlacement: "bottom-left",
+      labelXOffset: 24,
+      labelYOffset: 24,
+      link: { type: "swoop" },
+      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+      mobile: {
+        props: { label: { width: 160, truncate: false } },
       },
     }),
   ],
   series: [
-    { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.sky },
-    { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.sage },
-    { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.coral },
+    {
+      key: "Share of disbursements",
+      endLabel: "Share of disbursements",
+      value: "disbursements",
+      color: colors.sky,
+    },
+    {
+      key: "Grants / IDA",
+      endLabel: "Grants / IDA",
+      value: "grants",
+      color: colors.sage,
+    },
   ],
-  // World series from the report's DataF2.13a14a tables (gjp.wid.world),
-  // sampled every 20 years plus 2025 (projection start) and key
-  // projection-era points.
-  data: [
-    { year: new Date(1800, 0, 1), top10: 50, middle40: 36, bottom50: 15 },
-    { year: new Date(1820, 0, 1), top10: 50, middle40: 35, bottom50: 14 },
-    { year: new Date(1840, 0, 1), top10: 52, middle40: 35, bottom50: 13 },
-    { year: new Date(1860, 0, 1), top10: 55, middle40: 33, bottom50: 11 },
-    { year: new Date(1880, 0, 1), top10: 57, middle40: 33, bottom50: 10 },
-    { year: new Date(1900, 0, 1), top10: 59, middle40: 32, bottom50: 9 },
-    { year: new Date(1920, 0, 1), top10: 57, middle40: 34, bottom50: 9 },
-    { year: new Date(1940, 0, 1), top10: 53, middle40: 39, bottom50: 8 },
-    { year: new Date(1960, 0, 1), top10: 51, middle40: 41, bottom50: 7 },
-    { year: new Date(1980, 0, 1), top10: 53, middle40: 42, bottom50: 6 },
-    { year: new Date(2000, 0, 1), top10: 58, middle40: 35, bottom50: 7 },
-    { year: new Date(2020, 0, 1), top10: 51, middle40: 40, bottom50: 8 },
-    { year: new Date(2025, 0, 1), top10: 52, middle40: 40, bottom50: 8 },
-    { year: new Date(2030, 0, 1), top10: 44, middle40: 43, bottom50: 13 },
-    { year: new Date(2040, 0, 1), top10: 36, middle40: 44, bottom50: 20 },
-    { year: new Date(2050, 0, 1), top10: 27, middle40: 44, bottom50: 29 },
-    { year: new Date(2060, 0, 1), top10: 25, middle40: 45, bottom50: 31 },
-    { year: new Date(2080, 0, 1), top10: 21, middle40: 44, bottom50: 35 },
-    { year: new Date(2100, 0, 1), top10: 18, middle40: 44, bottom50: 38 },
-  ],
+  data: parseFigureCsv(csv),
 };
