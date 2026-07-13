@@ -23,6 +23,24 @@ export function circleCallout({ color = ink, filled = false, labelProps = {}, ..
   };
 }
 
+// Leader-line callout (Datawrapper-style): no circle, just a thin muted line
+// from the anchor to the label — the same connector language as the stacked
+// charts' direct series labels. `r` sets how far from the anchor the line
+// starts (pass ~half the bar width so it leaves from the bar's edge);
+// labelXOffset/labelYOffset set the line's length and angle. The text is
+// nudged 4px off the line's end on the side the placement points to.
+export function lineCallout({ labelProps = {}, lineProps = {}, ...annotation }) {
+  const dx = annotation.labelPlacement?.includes("left") ? -4 : 4;
+  return {
+    link: { stroke: colors.lavender, ...lineProps },
+    ...annotation,
+    props: {
+      circle: { r: 0, stroke: "none", fill: "none" },
+      label: { dx, ...annotationLabel, ...labelProps },
+    },
+  };
+}
+
 // Hatched range band over the projected years. The label sits just above the
 // plot at the band's left edge ("Projection →"); pass placement/props
 // overrides for bands used as value highlights instead.

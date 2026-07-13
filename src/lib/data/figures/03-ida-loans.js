@@ -13,7 +13,7 @@ export default {
   description:
     "IDA loans represent 40% of all disbursements to eligible countries. Its grants represent ~20% of all grants received.",
   source: "Sources & series: to be confirmed",
-  number: "Figure 3",
+  number: "Figure 4",
   kind: "line",
   xKey: "year",
   valueSuffix: "%",

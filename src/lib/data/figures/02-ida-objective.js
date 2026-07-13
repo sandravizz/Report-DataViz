@@ -35,7 +35,7 @@ export default {
   description:
     "The IDA ambition is maintaining an overall disbursement pace similar to the past 10 years. The IDA cliff is flat or declining disbursements.",
   source: "Sources & series: to be confirmed",
-  number: "Figure 2",
+  number: "Figure 3",
   kind: "line",
   xKey: "year",
   xTicks: Object.values(periodStartYears).map((y) => new Date(y, 0, 1)),

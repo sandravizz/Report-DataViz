@@ -7,13 +7,10 @@
 
   let interpretationModal;
 
-  // Downloads serve pre-made screenshots from static/figures — one PNG per
-  // figure, named after the figure number ("Figure 2" → figure-2.png).
   function figureImage(pair) {
     return `/figures/figure-${pair.number.match(/\d+/)[0]}.png`;
   }
 
-  // The saved file gets a descriptive name derived from the figure title.
   function downloadName(pair) {
     const slug = `${pair.number} ${pair.title}`
       .toLowerCase()
@@ -47,7 +44,7 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-8 font-sans text-xs text-base-content lg:mb-6 lg:text-sm">
+      <div class="mb-10 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
         {pair.subtitle}
       </div>
 
