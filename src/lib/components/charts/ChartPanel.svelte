@@ -5,6 +5,7 @@
   import BarChartPanelStacked from "./BarChartPanelStacked.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
   import AreaChartPanel from "./AreaChartPanel.svelte";
+  import AreaChartPanelOverlap from "./AreaChartPanelOverlap.svelte";
   import AreaChartPanelStacked from "./AreaChartPanelStacked.svelte";
 
   let { pair } = $props();
@@ -18,6 +19,8 @@
   <LineChartPanel {pair} />
 {:else if pair.kind === "area"}
   <AreaChartPanel {pair} />
+{:else if pair.kind === "area-overlap"}
+  <AreaChartPanelOverlap {pair} />
 {:else if pair.kind === "area-stacked"}
   <AreaChartPanelStacked {pair} />
 {/if}

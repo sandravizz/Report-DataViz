@@ -38,7 +38,7 @@
       title: "The Largest Fund for Poor Countries",
       intro:
         "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
-      charts: [figures.idaLoans],
+      charts: [figures.idaLoans, figures.idaLoansArea],
     },
   ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
 
