@@ -1,62 +1,50 @@
-import { colors, fdl } from "$lib/colors";
-import { circleCallout, projectionRange } from "../annotation-presets.js";
-import { parseFigureCsv } from "./parse-csv.js";
-// From the IDA_GIZ_KAdequacyModel presentation (slide 15), exact series from
-// the chart's data table, rounded to 2 decimals. The CSV codes each row as
-// replenishment period + year within it ("IDA18-2"); every period has three
-// yearly values except IDA19, which was shortened to two when IDA20 was
-// advanced a year as part of the COVID response.
-import csv from "./csv/02-ida-objective.csv?raw";
+import { colors, iea } from "$lib/colors";
+import { circleCallout } from "../annotation-presets.js";
 
-// First fiscal year of each replenishment period, used to place the period
-// codes on the chart's (hidden) fiscal-year time axis: IDA17 FY15-17,
-// IDA18 FY18-20, IDA19 FY21-22, IDA20 FY23-25, IDA21 FY26-28, IDA22 FY29-31.
-const periodStartYears = {
-  IDA17: 2015,
-  IDA18: 2018,
-  IDA19: 2021,
-  IDA20: 2023,
-  IDA21: 2026,
-  IDA22: 2029,
+// From the IEA report "Ensuring a Skilled Renewable Energy and Energy
+// Efficiency Workforce" (2026), p. 10: global energy workforce growth indexed
+// to 2019 = 100. Values read off the published chart, to be replaced with the
+// exact series if the client supplies the data table.
+const years = [2019, 2020, 2021, 2022, 2023, 2024];
+const seriesValues = {
+  solar: [100, 97.5, 121, 137, 151, 160],
+  wind: [100, 97.5, 106, 113, 120.5, 124],
+  grids: [100, 99.5, 101, 104, 107, 110],
+  efficiency: [100, 97, 99, 101, 103, 106],
 };
 
-const periodByStartYear = Object.fromEntries(
-  Object.entries(periodStartYears).map(([period, year]) => [year, period])
-);
-
-const data = parseFigureCsv(csv).map((row) => {
-  const [period, seq] = row.period.split("-");
-  return { ...row, year: new Date(periodStartYears[period] + +seq - 1, 0, 1) };
-});
+const data = years.map((year, i) => ({
+  year: new Date(year, 0, 1),
+  solar: seriesValues.solar[i],
+  wind: seriesValues.wind[i],
+  grids: seriesValues.grids[i],
+  efficiency: seriesValues.efficiency[i],
+}));
 
 export default {
-  title: "The Objective: Maintaining IDA's Disbursement Pace",
-  subtitle: "IDA Disbursements by Financing Window, USD Billion, IDA17–IDA22",
+  title: "Solar PV Leads the Energy Workforce Boom",
+  subtitle:
+    "Global Energy Workforce Growth in Renewable Energy, Grids and Energy Efficiency, Index (2019 = 100), 2019–2024",
   description:
-    "The IDA ambition is maintaining an overall disbursement pace similar to the past 10 years. The IDA cliff is flat or declining disbursements.",
-  source: "Sources & series: to be confirmed",
+    "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
+  source:
+    "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
   number: "Figure 3",
   kind: "line",
   xKey: "year",
-  xTicks: Object.values(periodStartYears).map((y) => new Date(y, 0, 1)),
-  xTickFormat: (d) => periodByStartYear[d.getFullYear()] ?? "",
-  // The x axis is really period-year codes, not calendar years, so the
-  // tooltip header shows e.g. "IDA19 · Year 2" instead of the fiscal year.
-  tooltipHeaderFormat: (d) => {
-    const row = data.find((r) => r.year.getTime() === d.getTime());
-    return row ? row.period.replace("-", " · Year ") : "";
-  },
-  rangeAnnotations: [
-    projectionRange({ x: [new Date(2026, 0, 1), new Date(2031, 0, 1)] }),
-  ],
+  xTicks: years.map((y) => new Date(y, 0, 1)),
+  xTickFormat: (d) => d.getFullYear(),
+  // Index chart: the axis starts at the 90 baseline like the IEA original,
+  // not at 0.
+  yDomain: [90, 170],
   // Placeholder callout — to be refined once we decide what to emphasize.
   annotations: [
     circleCallout({
-      x: new Date(2026, 0, 1),
-      y: 15.15,
+      x: new Date(2024, 0, 1),
+      y: 160,
       filled: true,
-      color: fdl.slate,
-      label: "The ambition: sustain the pace of the past decade",
+      color: colors.sky,
+      label: "Solar PV jobs up 60% since 2019",
       labelPlacement: "top-left",
       labelXOffset: 24,
       labelYOffset: 28,
@@ -68,24 +56,14 @@ export default {
     }),
   ],
   series: [
+    { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: colors.sky },
+    { key: "Wind", endLabel: "Wind", value: "wind", color: iea.purple },
+    { key: "Grids", endLabel: "Grids", value: "grids", color: iea.royal },
     {
-      key: "Concessional loans",
-      endLabel: "Concessional",
-      value: "concessional",
-      color: fdl.slate,
-    },
-    {
-      key: "Blended loans",
-      endLabel: "Blended",
-      value: "blended",
+      key: "Energy efficiency",
+      endLabel: "Energy efficiency",
+      value: "efficiency",
       color: colors.sage,
-    },
-    { key: "Grants", endLabel: "Grants", value: "grants", color: colors.sky },
-    {
-      key: "Non-concessional loans",
-      endLabel: "Non-concessional",
-      value: "nonconcessional",
-      color: colors.coral,
     },
   ],
   data,

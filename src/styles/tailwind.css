@@ -4,41 +4,42 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: findevlab --default;
+  themes: iea --default;
 }
 
-/* FDL corporate colors (brand guidelines pp. 8-9). Base surfaces are white plus
-   tints of the primary teal #709899 (the guidelines sanction 75%/50% tints);
-   #e2eaeb is the section background FDL's own website uses. */
+/* IEA corporate colors (derived from iea.org site CSS — see docs/iea-brand.md).
+   Black text on white, grey surfaces #f3f3f3 / #e6e6e6, and the signature
+   electric blue #0044ff as primary (#002999 is its hover/pressed shade).
+   Status colors follow the site's own label/alert components. */
 @plugin "daisyui/theme" {
-  name: 'findevlab';
+  name: 'iea';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #e2eaeb;
-  --color-base-300: #b7cbcc;
-  --color-base-content: #395966;
-  --color-primary: #395966;
+  --color-base-200: #f3f3f3;
+  --color-base-300: #e6e6e6;
+  --color-base-content: #000000;
+  --color-primary: #0044ff;
   --color-primary-content: #ffffff;
-  --color-secondary: #709899;
-  --color-secondary-content: #ffffff;
-  --color-accent: #c24c2c;
-  --color-accent-content: #ffffff;
-  --color-neutral: #5e6d68;
+  --color-secondary: #49d3ff;
+  --color-secondary-content: #000000;
+  --color-accent: #ff754b;
+  --color-accent-content: #000000;
+  --color-neutral: #6f6f6f;
   --color-neutral-content: #ffffff;
-  --color-info: #709899;
-  --color-info-content: #ffffff;
-  --color-success: #618e78;
-  --color-success-content: #ffffff;
-  --color-warning: #e9be72;
-  --color-warning-content: #395966;
-  --color-error: #c24c2c;
+  --color-info: #49d3ff;
+  --color-info-content: #000000;
+  --color-success: #68f394;
+  --color-success-content: #000000;
+  --color-warning: #fff45a;
+  --color-warning-content: #000000;
+  --color-error: #e34946;
   --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Barlow', sans-serif;
-  --font-display: 'Kapra Neue Expanded', 'Barlow', sans-serif;
+  --font-sans: 'Graphik', Arial, sans-serif;
+  --font-display: 'Graphik', Arial, sans-serif;
 }

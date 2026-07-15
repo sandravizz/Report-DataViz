@@ -67,6 +67,7 @@
 <LineChart
   data={pair.data}
   x={pair.xKey}
+  yDomain={pair.yDomain}
   series={pair.series}
   legend={false}
   rule={false}

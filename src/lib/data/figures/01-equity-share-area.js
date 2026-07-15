@@ -1,4 +1,4 @@
-import { fdl } from "$lib/colors";
+import { iea } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // Identical to 01-equity-share.js in every way except the mark: the same
@@ -31,8 +31,8 @@ export default {
   percent: true,
   xKey: "year",
   series: [
-    { key: "Equity", value: "equityShare", color: fdl.camel },
-    { key: "Liabilities", value: "liabilitiesShare", color: "#e2e7d4" },
+    { key: "Equity", value: "equityShare", color: iea.teal },
+    { key: "Liabilities", value: "liabilitiesShare", color: iea.grayLight },
   ],
   // Circled point on the equity/liabilities boundary at the last observation
   // (same emphasis mark as figures 3 and 4), with the label floating up into
@@ -42,7 +42,7 @@ export default {
       x: last.year,
       y: last.equityShare,
       filled: true,
-      color: fdl.camel,
+      color: iea.teal,
       link: { type: "swoop" },
       label: `Equity share declined by ${declinePp}pp since its ${peak.year.getFullYear()} peak`,
       labelPlacement: "left",

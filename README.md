@@ -1,8 +1,8 @@
-# IDA 2030: Cliff or No Cliff? — Interactive Report
+# Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce — Interactive Report
 
 An interactive, visualization-first web version of a written report. Not a replacement for the PDF, but a different path alongside it — both formats have their reasons to exist. Here, the reader moves through the content while animated charts bring the data to life, with a special focus on the visualizations themselves. Every figure also has a PNG download button, bridging the two formats from a single source.
 
-This edition presents *IDA 2030: Cliff or no cliff?* by Mathilde Barras, Martin Kessler, and Stephen Paduano at the [Finance for Development Lab (FDL)](https://findevlab.org). The figures step through IDA's balance-sheet growth, the declining equity share financing that growth, the disbursement outlook through 2030 (cliff or no cliff), and IDA's role as the largest source of concessional finance for the world's poorest countries. Client-facing notes — open questions from the kickoff meeting and the FDL brand guidelines — live in `docs/`.
+This edition presents *[Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce](https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce)* (June 2026, CC BY 4.0) by the [International Energy Agency (IEA)](https://www.iea.org) — employment trends, skills needs, and gaps across renewables, grids, and energy efficiency. The IEA brand setup (colors, Graphik font, logo) is already applied; the figures and narrative still carry the previous edition's IDA data until the new report's data is swapped in. Client-facing notes — the IEA brand derivation — live in `docs/`.
 
 ## Tech Stack
 
@@ -51,8 +51,8 @@ src/
     scroll-animation.js     # opacity/scale curves for the scrolling figure list
   routes/                   # SvelteKit pages — +page.svelte defines the story sections
   styles/                   # Tailwind, fonts, daisyUI theme
-docs/                       # client notes (kickoff meeting, FDL brand guidelines) + explainer notes
-static/                     # cover and og images, FDL logo
+docs/                       # client notes (IEA brand setup) + explainer notes
+static/                     # cover and og images, IEA logo, Graphik fonts
   figures/                  # pre-made figure screenshots served by the PNG button
 ```
 

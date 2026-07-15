@@ -1,19 +1,19 @@
 // Overlapping-area variant of 03-ida-loans.js (Datawrapper-style): the same
 // two IDA shares drawn as areas from the baseline — NOT stacked — with the
-// emphasis flipped to the lower share. Grants carry the strong camel wash,
-// disbursements recede to a light teal context band (the same strong/pale
+// emphasis flipped to the lower share. Grants carry the strong teal wash,
+// disbursements recede to a light blue context band (the same strong/pale
 // pairing as the equity/liabilities figure), so the grants catch-up since
 // 2018 is the story the eye lands on. The line version stays untouched.
-import { fdl, tint } from "$lib/colors";
+import { iea, tint } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 import csv from "./csv/03-ida-loans.csv?raw";
 
 const rows = parseFigureCsv(csv);
 
-// Disbursements keep their teal identity from the line figure, dimmed to the
-// brand-sanctioned 75% white tint; grants keep their camel at full strength.
-const tealMuted = tint(fdl.teal, 0.75);
+// Disbursements keep their blue identity from the line figure, dimmed to a
+// 75% white tint; grants keep their teal at full strength.
+const blueMuted = tint(iea.blue, 0.75);
 
 // Annotation facts computed from the data: grants' share at its peak vs the
 // 2018 low point ("more than doubled"), disbursements' latest value.
@@ -45,7 +45,7 @@ export default {
       x: grantsPeak.year,
       y: grantsPeak.grants,
       filled: true,
-      color: fdl.camel,
+      color: iea.teal,
       label: `Doubled since ${grantsBase.year.getFullYear()}`,
       labelPlacement: "top-left",
       labelXOffset: 16,
@@ -80,7 +80,7 @@ export default {
       key: "Share of disbursements",
       endLabel: "Share of disbursements",
       value: "disbursements",
-      color: tealMuted,
+      color: blueMuted,
       fillOpacity: 0.12,
       lineWidth: 2,
     },
@@ -88,7 +88,7 @@ export default {
       key: "Grants / IDA",
       endLabel: "Grants / IDA",
       value: "grants",
-      color: fdl.camel,
+      color: iea.teal,
       fillOpacity: 0.35,
       lineWidth: 2.5,
     },

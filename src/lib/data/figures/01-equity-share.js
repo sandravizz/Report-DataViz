@@ -1,4 +1,4 @@
-import { fdl } from "$lib/colors";
+import { iea } from "$lib/colors";
 import { lineCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // From the IDA_GIZ_KAdequacyModel presentation (slide 10): IDA balance sheet
@@ -36,12 +36,12 @@ export default {
   percent: true,
   xKey: "year",
   // Stack order: first series sits at the bottom. Equity carries the story,
-  // so it sits at the bottom in the dark slate; liabilities de-emphasized
-  // in gray on top. Series point at the share fields so the tooltip reports
+  // so it sits at the bottom in the strong teal; liabilities de-emphasized
+  // in light gray on top. Series point at the share fields so the tooltip reports
   // percentages (the 100% layout renders the same either way).
   series: [
-    { key: "Equity", value: "equityShare", color: fdl.camel },
-    { key: "Liabilities", value: "liabilitiesShare", color: "#e2e7d4" },
+    { key: "Equity", value: "equityShare", color: iea.teal },
+    { key: "Liabilities", value: "liabilitiesShare", color: iea.grayLight },
   ],
   data: rows,
 };
