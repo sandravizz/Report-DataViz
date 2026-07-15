@@ -1,7 +1,6 @@
 <script>
-  import BarChartPanelHorizontal from "./charts/BarChartPanelHorizontal.svelte";
-  import BarChartPanelStacked from "./charts/BarChartPanelStacked.svelte";
-  import LineChartPanel from "./charts/LineChartPanel.svelte";
+  import ChartPanel from "./charts/ChartPanel.svelte";
+  import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
 
   let { pairs, activeIndex } = $props();
 
@@ -21,7 +20,9 @@
 </script>
 
 <div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
-  {#each pairs as pair, i (pair.title)}
+  <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
+       title, so titles are no longer unique. -->
+  {#each pairs as pair, i (i)}
     <div
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
@@ -49,12 +50,10 @@
       </div>
 
       <div class="flex min-h-0 flex-1 gap-6">
-        {#if pair.kind === "bar"}
-          <BarChartPanelHorizontal {pair} />
-        {:else if pair.kind === "bar-stacked"}
-          <BarChartPanelStacked {pair} />
-        {:else if pair.kind === "line"}
-          <LineChartPanel {pair} />
+        {#if pair.kind === "double"}
+          <DoubleChartPanel {pair} />
+        {:else}
+          <ChartPanel {pair} />
         {/if}
       </div>
 

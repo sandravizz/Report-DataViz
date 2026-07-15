@@ -1,14 +1,11 @@
 import { fdl } from "$lib/colors";
-import { lineCallout } from "../annotation-presets.js";
+import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-// From the IDA_GIZ_KAdequacyModel presentation (slide 10): IDA balance sheet
-// in USD billion, read off the slide's bar labels (values there in USD
-// million). Liabilities + equity sum to total assets, so the stack's height
-// traces the balance sheet total.
+// Identical to 01-equity-share.js in every way except the mark: the same
+// 100% stacked composition rendered as a stacked area instead of stacked
+// bars, so the two figures can be compared back to back.
 import csv from "./csv/01-equity-share.csv?raw";
 
-// Shares computed up front so the callout below can state the peak→last
-// decline straight from the data instead of hardcoding it.
 const rows = parseFigureCsv(csv).map((d) => {
   const total = d.liabilities + d.equity;
   return {
@@ -30,18 +27,40 @@ export default {
     "IDA's assets are financed mostly by equity, but equity's share is declining: from 80% of the balance sheet in 2017 (89% in 2018) to 73% in 2025, as liabilities grew from USD 39 billion to USD 77 billion.",
   source: "Sources & series: to be confirmed",
   number: "Figure 2",
-  kind: "bar-stacked",
-  // 100% stacked: bars normalized per year, y axis in percent; the tooltip
-  // still reports the underlying USD billion values and their total.
+  kind: "area-stacked",
   percent: true,
   xKey: "year",
-  // Stack order: first series sits at the bottom. Equity carries the story,
-  // so it sits at the bottom in the dark slate; liabilities de-emphasized
-  // in gray on top. Series point at the share fields so the tooltip reports
-  // percentages (the 100% layout renders the same either way).
   series: [
     { key: "Equity", value: "equityShare", color: fdl.camel },
     { key: "Liabilities", value: "liabilitiesShare", color: "#e2e7d4" },
+  ],
+  // Circled point on the equity/liabilities boundary at the last observation
+  // (same emphasis mark as figures 3 and 4), with the label floating up into
+  // the liabilities band.
+  annotations: [
+    circleCallout({
+      x: last.year,
+      y: last.equityShare,
+      filled: true,
+      color: fdl.camel,
+      link: { type: "swoop" },
+      label: `Equity share declined by ${declinePp}pp since its ${peak.year.getFullYear()} peak`,
+      labelPlacement: "left",
+      labelXOffset: 70,
+      labelYOffset: -70,
+      labelProps: {
+        textAnchor: "middle",
+        verticalAnchor: "top",
+        width: 140,
+        truncate: false,
+        lineHeight: "14px",
+      },
+      mobile: {
+        labelXOffset: 10,
+        labelYOffset: -36,
+        props: { label: { width: 100, lineHeight: "13px" } },
+      },
+    }),
   ],
   data: rows,
 };

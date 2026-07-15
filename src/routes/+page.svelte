@@ -14,29 +14,38 @@
 
   // Sections follow the IDA_GIZ_KAdequacyModel presentation's narrative:
   // IDA's growth, financing that growth, and IDA's future.
+  // Ids are assigned automatically (chapter-1, chapter-2, ...) below.
   const sections = [
     {
-      id: "financing-ida",
       title: "Financing IDA's Growth",
       intro:
         "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figures 1 and 2).",
-      charts: [figures.balanceSheetTotal, figures.equityShare],
+      charts: [
+        figures.balanceSheetTotal,
+        figures.balanceSheetTotalArea,
+        figures.equityShare,
+        figures.equityShareArea,
+        figures.balanceEquityDouble,
+      ],
     },
     {
-      id: "the-objective",
       title: "IDA's Future: Cliff or No Cliff?",
       intro:
         "The ambition for IDA is to maintain an overall disbursement pace similar to the past 10 years. The alternative — the IDA cliff — is flat or declining disbursements (Figure 3).",
       charts: [figures.idaObjective],
     },
     {
-      id: "largest-fund",
       title: "The Largest Fund for Poor Countries",
       intro:
         "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
       charts: [figures.idaLoans],
     },
-  ];
+  ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
+
+  const tocLinks = sections.map((section) => ({
+    href: `#${section.id}`,
+    label: section.title,
+  }));
 </script>
 
 <svelte:head>
@@ -53,7 +62,7 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
-<Header />
+<Header links={tocLinks} />
 
 <div id="top">
   <Landing />

@@ -1,9 +1,5 @@
 <script>
-  const links = [
-    { href: "#ensuring-equality", label: "Ensuring Equality and Prosperity for All" },
-    { href: "#working-less", label: "Working Less, Achieving Gender Equality" },
-    { href: "#compressing", label: "Compressing the Income and Wealth Scale" },
-  ];
+  let { links = [] } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
