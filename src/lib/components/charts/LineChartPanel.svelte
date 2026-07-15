@@ -1,10 +1,27 @@
 <script>
-  import { AnnotationPoint, AnnotationRange, LineChart } from "layerchart";
+  import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
+  import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
+
+  // FT-style line treatment: monotone smoothing (rounds corners without
+  // overshooting the data) plus round joins/caps. Each line is drawn twice in
+  // the marks snippet below — a surface-colored casing under the colored
+  // stroke — so crossings read as "in front of" instead of spaghetti.
+  const lineStyle = {
+    curve: curveMonotoneX,
+    strokeWidth: 2.5,
+    "stroke-linejoin": "round",
+    "stroke-linecap": "round",
+  };
+  const casingStyle = {
+    ...lineStyle,
+    stroke: "var(--color-base-100)",
+    strokeWidth: 6.5,
+  };
 
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
@@ -56,7 +73,6 @@
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    spline: { strokeWidth: 2.5 },
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? formatYear },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
     // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
@@ -73,6 +89,12 @@
         : undefined,
   }}
 >
+  {#snippet marks({ context })}
+    {#each context.series.visibleSeries as s (s.key)}
+      <Spline seriesKey={s.key} {...casingStyle} />
+      <Spline seriesKey={s.key} {...lineStyle} />
+    {/each}
+  {/snippet}
   {#snippet belowMarks()}
     {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
       <AnnotationRange {...annotation} />
