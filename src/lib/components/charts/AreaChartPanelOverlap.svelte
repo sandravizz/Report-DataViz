@@ -3,7 +3,7 @@
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -22,48 +22,34 @@
 
   // Datawrapper-style overlapping areas (layerchart's default series layout —
   // NOT stacked): every series is drawn from the baseline, so where they
-  // overlap the washes blend. Unlike AreaChartPanel, emphasis is per series:
-  // each entry can set `fillOpacity` and `lineWidth` so one share carries a
-  // strong wash while the background series stays a light context band. List
-  // the de-emphasized series first — later series paint on top.
+  // overlap the washes blend. All washes use the shared theme opacity —
+  // de-emphasis comes from the series *color* (a muted tint) and a thinner
+  // `lineWidth`, not from a weaker fill. List the de-emphasized series first —
+  // later series paint on top.
   const areaStyle = (s) => ({
     curve: curveMonotoneX,
-    fillOpacity: s.fillOpacity ?? 0.1,
+    fillOpacity: areaFillOpacity,
     line: { curve: curveMonotoneX, strokeWidth: s.lineWidth ?? 2.5 },
   });
 
   // Same end-label convention as LineChartPanel: series opt in via `endLabel`
   // and get their name at the last observation instead of a legend.
   const endLabelAnnotations = $derived(
-    pair.series
-      .filter((s) => s.endLabel)
-      .map((s) => {
-        const last = pair.data.findLast((d) => d[s.value] != null);
-        return {
-          x: last[pair.xKey],
-          y: last[s.value],
-          r: 4,
-          label: s.endLabel,
-          labelPlacement: "right",
-          labelXOffset: 8,
-          props: {
-            circle: { fill: s.color, stroke: "none" },
-            label: { fill: s.color, class: "text-xs font-light" },
-          },
-          mobile: endLabelMobileWrap,
-        };
-      })
+    pair.series.filter((s) => s.endLabel).map((s) => endLabelAnnotation(s, pair))
   );
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
   );
+  // Figures without end labels can still reserve extra padding via
+  // pair.padding (e.g. room for a callout ring anchored on the plot's edge).
   const padding = $derived(
-    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
+    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, { ...yLabelPadding, ...pair.padding })
   );
 </script>
 
 <svelte:window bind:innerWidth />
 
+{#snippet chart()}
 <AreaChart
   data={pair.data}
   x={pair.xKey}
@@ -105,3 +91,26 @@
     {/each}
   {/snippet}
 </AreaChart>
+{/snippet}
+
+{#if pair.legendItems}
+  <!-- Manual legend below the plot, same markup as LineChartPanel's: figures
+       that name their series here instead of via endLabel supply {label,
+       color} entries. pl-9 matches yLabelPadding's 36px axis gutter so the
+       swatches align with the plot's left edge. -->
+  <div class="flex min-w-0 flex-1 flex-col">
+    <div class="min-h-0 flex-1">
+      {@render chart()}
+    </div>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+      {#each pair.legendItems as item (item.label)}
+        <div class="flex items-center gap-1.5">
+          <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
+          <span>{item.label}</span>
+        </div>
+      {/each}
+    </div>
+  </div>
+{:else}
+  {@render chart()}
+{/if}

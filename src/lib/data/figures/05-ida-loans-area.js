@@ -37,14 +37,13 @@ export default {
   // axis still ends there and the disbursements callout names it).
   xTicks: [2008, 2012, 2016, 2020, 2023, 2024].map((y) => new Date(y, 0, 1)),
   xTicksMobile: [2008, 2012, 2016, 2020, 2023].map((y) => new Date(y, 0, 1)),
-  // The emphasized grants callout circles the 2022 peak, the de-emphasized
-  // disbursements get a plain ring at their latest point. Labels are short
-  // one-liners sitting just off their rings, tied on with a short swoop.
+  // The grants callout circles the 2022 peak, the disbursements callout their
+  // latest point — each ring in its own series' color, same style. Labels are
+  // short one-liners sitting just off their rings, tied on with a short swoop.
   annotations: [
     circleCallout({
       x: grantsPeak.year,
       y: grantsPeak.grants,
-      filled: true,
       color: fdl.camel,
       label: `Doubled since ${grantsBase.year.getFullYear()}`,
       labelPlacement: "top-left",
@@ -61,6 +60,8 @@ export default {
     circleCallout({
       x: lastDisb.year,
       y: lastDisb.disbursements,
+      // Full-strength teal, not the muted area tint — the ring needs to read.
+      color: fdl.teal,
       label: "Back above 40%",
       labelPlacement: "top-left",
       labelXOffset: 12,
@@ -81,7 +82,9 @@ export default {
       endLabel: "Share of disbursements",
       value: "disbursements",
       color: tealMuted,
-      fillOpacity: 0.12,
+      // The muted tint is too light to read as type; the label keeps the
+      // teal identity at full strength.
+      endLabelColor: fdl.teal,
       lineWidth: 2,
     },
     {
@@ -89,7 +92,6 @@ export default {
       endLabel: "Grants / IDA",
       value: "grants",
       color: fdl.camel,
-      fillOpacity: 0.35,
       lineWidth: 2.5,
     },
   ],

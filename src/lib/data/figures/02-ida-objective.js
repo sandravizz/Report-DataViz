@@ -54,7 +54,6 @@ export default {
     circleCallout({
       x: new Date(2026, 0, 1),
       y: 15.15,
-      filled: true,
       color: fdl.slate,
       label: "The ambition: sustain the pace of the past decade",
       labelPlacement: "top-left",

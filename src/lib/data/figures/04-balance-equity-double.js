@@ -72,10 +72,8 @@ const equityCallout = {
 
 const balancePanel = {
   ...balanceSheetTotalArea,
-  // Half-height plots want a sparser axis, a stronger area wash, and the
-  // repositioned callout.
+  // Half-height plots want a sparser axis and the repositioned callout.
   yTicks: [100, 200, 300],
-  fillOpacity: 0.20,
   annotations: [balanceCallout],
   rangeAnnotations: [highlightBand],
   lineAnnotations: [{ ...connectorRule, extendBottom: 100 }],

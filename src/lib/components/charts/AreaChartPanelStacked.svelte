@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, AreaChart, Labels } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity } from "$lib/chart-theme";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
@@ -75,8 +75,8 @@
     <!-- pair.percent switches to a 100% stacked layout, mirroring the
          stacked bar panel: bands normalized per x (stackExpand), y axis
          0–100%, tooltip keeps the raw values. Bands are a translucent wash
-         under a full-color 2.5px top line, same treatment as the plain area
-         panel; figures can adjust the wash via pair.fillOpacity. -->
+         under a full-color 2.5px top line, same shared theme opacity as the
+         plain area panel. -->
     <AreaChart
       data={pair.data}
       x={pair.xKey}
@@ -88,7 +88,7 @@
       {padding}
       props={{
         area: {
-          fillOpacity: pair.fillOpacity ?? 0.35,
+          fillOpacity: areaFillOpacity,
           line: { strokeWidth: 2.5 },
         },
         xAxis: { ...xAxisProps, format: formatYear },

@@ -3,6 +3,11 @@ import { ink } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
+// Every line-over-area chart draws its wash at the same strength: the line
+// does the reading, the fill only signals amount. All area components read
+// this — never hardcode a fill opacity in a component or figure.
+export const areaFillOpacity = 0.5;
+
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
@@ -89,3 +94,26 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 export const endLabelMobileWrap = {
   props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
 };
+
+// The end-of-line label annotation itself, shared by every panel that names
+// series at their last observation instead of a legend. Dot and text wear the
+// series color; a series whose color is too light to read as type (e.g. a
+// muted tint) passes `endLabelColor` with a full-strength step of the same
+// hue. A series can end before the x-domain does (null cells in the CSV), so
+// the label anchors to its own last observation, not the last row.
+export function endLabelAnnotation(s, pair) {
+  const last = pair.data.findLast((d) => d[s.value] != null);
+  return {
+    x: last[pair.xKey],
+    y: last[s.value],
+    r: 4,
+    label: s.endLabel,
+    labelPlacement: "right",
+    labelXOffset: 8,
+    props: {
+      circle: { fill: s.color, stroke: "none" },
+      label: { fill: s.endLabelColor ?? s.color, class: "text-xs font-light" },
+    },
+    mobile: endLabelMobileWrap,
+  };
+}

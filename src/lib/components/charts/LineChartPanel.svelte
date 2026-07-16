@@ -2,15 +2,11 @@
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  // FT-style line treatment: monotone smoothing (rounds corners without
-  // overshooting the data) plus round joins/caps. Each line is drawn twice in
-  // the marks snippet below — a surface-colored casing under the colored
-  // stroke — so crossings read as "in front of" instead of spaghetti.
   const lineStyle = {
     curve: curveMonotoneX,
     strokeWidth: 2.5,
@@ -32,26 +28,7 @@
   // de-emphasized background lines) get neither — charts where the series
   // list would make a useless legend supply `legendItems` below instead.
   const endLabelAnnotations = $derived(
-    pair.series
-      .filter((s) => s.endLabel)
-      .map((s) => {
-        // A series can end before the x-domain does (null cells in the CSV),
-        // so anchor its label to its own last observation, not the last row.
-        const last = pair.data.findLast((d) => d[s.value] != null);
-        return {
-          x: last[pair.xKey],
-          y: last[s.value],
-          r: 4,
-          label: s.endLabel,
-          labelPlacement: "right",
-          labelXOffset: 8,
-          props: {
-            circle: { fill: s.color, stroke: "none" },
-            label: { fill: s.color, class: "text-xs font-light" },
-          },
-          mobile: endLabelMobileWrap,
-        };
-      })
+    pair.series.filter((s) => s.endLabel).map((s) => endLabelAnnotation(s, pair))
   );
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)

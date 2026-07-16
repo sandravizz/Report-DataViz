@@ -41,7 +41,6 @@ export default {
     circleCallout({
       x: last.year,
       y: last.equityShare,
-      filled: true,
       color: fdl.camel,
       link: { type: "swoop" },
       label: `Equity share declined by ${declinePp}pp since its ${peak.year.getFullYear()} peak`,

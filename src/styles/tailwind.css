@@ -19,7 +19,8 @@
   --color-base-100: #ffffff;
   --color-base-200: #e2eaeb;
   --color-base-300: #b7cbcc;
-  --color-base-content: #395966;
+  /* Black text, matching findevlab.org's article pages (.style_page p is #000). */
+  --color-base-content: #000000;
   --color-primary: #395966;
   --color-primary-content: #ffffff;
   --color-secondary: #709899;
@@ -33,7 +34,7 @@
   --color-success: #618e78;
   --color-success-content: #ffffff;
   --color-warning: #e9be72;
-  --color-warning-content: #395966;
+  --color-warning-content: #000000;
   --color-error: #c24c2c;
   --color-error-content: #ffffff;
 }

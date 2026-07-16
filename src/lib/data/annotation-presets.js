@@ -9,15 +9,16 @@ const annotationLabel = { fill: ink, class: "text-xs font-light" };
 const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
 const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
 
-// Circled point callout. `filled` tints the ring with the series color for
-// strong emphasis; otherwise a thin ink outline. `labelProps` extends the
-// standard dark-ink label (textAnchor, dx, width, …).
-export function circleCallout({ color = ink, filled = false, labelProps = {}, ...annotation }) {
+// Circled point callout — one style everywhere: the ring wears the color of
+// the series it highlights (stroke + translucent fill), the connector and
+// label stay dark ink. Pass `color` as the highlighted series' color;
+// `labelProps` extends the standard dark-ink label (textAnchor, dx, width, …).
+export function circleCallout({ color = ink, labelProps = {}, ...annotation }) {
   return {
-    r: filled ? 12 : 10,
+    r: 12,
     ...annotation,
     props: {
-      circle: filled ? { stroke: color, fill: color, fillOpacity: 0.2 } : { stroke: ink, fill: "none" },
+      circle: { stroke: color, fill: color, fillOpacity: 0.2 },
       label: { ...annotationLabel, ...labelProps },
     },
   };

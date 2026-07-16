@@ -24,7 +24,6 @@ export default {
     circleCallout({
       x: new Date(2024, 0, 1),
       y: 40.35,
-      filled: true,
       color: colors.sky,
       label: "Back above 40% of disbursements in 2024",
       labelPlacement: "top-left",
@@ -39,7 +38,6 @@ export default {
     circleCallout({
       x: new Date(2022, 0, 1),
       y: 21.62,
-      filled: true,
       color: colors.sage,
       label: "Grants reach ~20% of all grants received",
       labelPlacement: "bottom-left",

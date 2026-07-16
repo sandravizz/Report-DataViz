@@ -34,12 +34,11 @@ export default {
     circleCallout({
       x: last.year,
       y: last.total,
-      filled: true,
       color: colors.sky,
       link: { type: "swoop" },
       label: `Biggest yearly growth: +USD ${growth} billion`,
       labelPlacement: "left",
-      labelXOffset: -24,
+      labelXOffset: 60,
       labelYOffset: 8,
       labelProps: {
         textAnchor: "end",

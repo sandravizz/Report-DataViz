@@ -27,8 +27,10 @@ export function tint(hex, pct) {
   return `#${[r, g, b].map((c) => mix(c).toString(16).padStart(2, "0")).join("")}`;
 }
 
-// Axis ticks and annotation labels.
-export const ink = fdl.slate;
+// Axis ticks and annotation labels. Black, not brand slate: FDL's own site
+// (findevlab.org article pages) sets running text in #000, so all general
+// text — in and around the charts — follows it. Slate stays a series color.
+export const ink = "#000000";
 
 // Series colors, keyed by role (key names kept from report v1 so existing
 // figures re-skin without edits). gray de-emphasizes background series,

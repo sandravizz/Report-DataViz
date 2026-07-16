@@ -21,10 +21,10 @@
       intro:
         "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figures 1 and 2).",
       charts: [
-        figures.balanceSheetTotal,
+        // figures.balanceSheetTotal,
         figures.balanceSheetTotalArea,
         figures.equityShare,
-        figures.equityShareArea,
+        // figures.equityShareArea,
         figures.balanceEquityDouble,
       ],
     },
@@ -38,7 +38,10 @@
       title: "The Largest Fund for Poor Countries",
       intro:
         "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
-      charts: [figures.idaLoans, figures.idaLoansArea],
+      charts: [
+        //figures.idaLoans,
+        figures.idaLoansArea,
+        figures.idaLoansAreaLegend],
     },
   ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
 
