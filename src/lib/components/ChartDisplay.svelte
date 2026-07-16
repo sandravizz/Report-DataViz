@@ -6,8 +6,11 @@
 
   let interpretationModal;
 
+  // Placeholder until the real per-figure exports land (only figures 1, 2 and
+  // 13 exist in static/figures, the rest would 404). Restore then:
+  // `/figures/figure-${pair.number.match(/\d+/)[0]}.png`
   function figureImage(pair) {
-    return `/figures/figure-${pair.number.match(/\d+/)[0]}.png`;
+    return "/cover.jpg";
   }
 
   function downloadName(pair) {
@@ -15,7 +18,7 @@
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
-    return `${slug}.png`;
+    return `${slug}.jpg`;
   }
 </script>
 
@@ -45,7 +48,15 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-10 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
+      <!-- The double figure pulls its half-height plots closer to the
+           subtitles so each plot gets the reclaimed height; single figures
+           keep the roomier gap. The double gap still fits its two-line band
+           label, which overhangs the plot top by ~26px. -->
+      <div
+        class="{pair.kind === 'double'
+          ? 'mb-7 lg:mb-8'
+          : 'mb-10 lg:mb-12'} font-sans text-xs text-base-content lg:text-sm"
+      >
         {pair.subtitle}
       </div>
 

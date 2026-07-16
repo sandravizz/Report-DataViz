@@ -3,9 +3,9 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Interactive Report Design by SandraViz",
+    title: "IDA 2030: Cliff or no cliff? — An Interactive Report",
     description:
-      "A scrollytelling report with animated charts — interactive report design by SandraViz. Want your report like this? Get in touch at sandraviz.com.",
+      "An interactive report by the Finance for Development Lab on IDA's growth, its financing, and whether disbursements face a cliff by 2030. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -40,7 +40,7 @@
         "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
       charts: [
         //figures.idaLoans,
-        figures.idaLoansArea,
+        //figures.idaLoansArea,
         figures.idaLoansAreaLegend],
     },
   ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
@@ -56,13 +56,13 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/og-image.jpg" />
+  <meta property="og:image" content="{page.url.origin}/og-image-fdl.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
+  <meta name="twitter:image" content="{page.url.origin}/og-image-fdl.jpg" />
 </svelte:head>
 
 <Header links={tocLinks} />

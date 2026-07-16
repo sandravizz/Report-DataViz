@@ -16,8 +16,8 @@
 >
   <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-base-content/50">
     <span>
-      &copy; {new Date().getFullYear()}
-      <a href="#top" class="link link-hover text-base-content">SandraViz.com</a>
+      &copy; {new Date().getFullYear()} · Web development &amp; data visualization by
+      <a href="https://sandraviz.com" target="_blank" rel="noopener" class="link link-hover text-base-content">SandraViz</a>
     </span>
     <span aria-hidden="true">·</span>
     <div class="flex gap-3">

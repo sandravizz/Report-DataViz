@@ -12,7 +12,7 @@
 <div class="flex min-h-0 min-w-0 flex-1 flex-col">
   {#each pair.panels as panel, i (i)}
     {#if i > 0}
-      <div class="mt-6 mb-10 font-sans text-xs text-base-content lg:mt-8 lg:mb-12 lg:text-sm">
+      <div class="mt-6 mb-6 font-sans text-xs text-base-content lg:mt-8 lg:mb-7 lg:text-sm">
         {panel.subtitle}
       </div>
     {/if}

@@ -27,16 +27,20 @@
           class="link-hover underline-offset-4">Finance for Development Lab</a
         >
       </p>
+      <!-- Placeholder publication date until the client confirms the real one. -->
+      <p class="mt-6 text-base text-base-content/60 sm:text-lg">September 1, 2026</p>
     </div>
 
-    <!-- Placeholder cover: white FDL logo on the brand slate, per the guidelines'
-         logo-on-background rules. Final cover image is an open client question
-         (docs/fdl-client-meeting.md). -->
-    <div class="relative flex aspect-16/10 w-full items-center justify-center bg-primary">
+    <!-- Interim cover: lone figure on Preikestolen (CC0, via Wikimedia Commons:
+         File:Preikestolen (Unsplash).jpg — public domain, no attribution needed).
+         Final cover image is an open client question (docs/fdl-client-meeting.md). -->
+    <!-- The edge feathering (mask-x/y) dissolves the photo's hard rectangle into
+         the white page, echoing the transparent cover of the previous report. -->
+    <div class="aspect-16/10 w-full">
       <img
-        src="/fdl-logo-white.svg"
-        alt="FDL – Finance for Development Lab"
-        class="w-3/5"
+        src="/cover.jpg"
+        alt="A lone person standing at the edge of the Preikestolen cliff, high above a fjord"
+        class="mask-x-from-80% mask-y-from-80% h-full w-full object-cover"
       />
     </div>
   </div>

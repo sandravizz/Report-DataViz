@@ -1,46 +1,39 @@
-// FT-style double figure (experiment): the two area figures stacked in one
-// figure block — the balance-sheet total on top, the equity/liabilities share
-// below it, each keeping its own headline and subtitle, with one shared
-// source line. The source configs are reused with overrides scoped to the
-// double context: the standalone versions are untouched.
 import { projectionRange } from "../annotation-presets.js";
+import { ink } from "$lib/colors.js";
 import balanceSheetTotalArea from "./00-balance-sheet-total-area.js";
 import equityShareArea from "./01-equity-share-area.js";
 
 // Shared 2024→2025 highlight across both plots: the same hatched band as the
-// projection ranges (unlabeled — the callouts do the explaining), plus one
-// vertical rule at 2024 that runs through both charts so the region reads as
-// a single event spanning the whole figure. Each chart draws its own rule
-// segment with a 100px overshoot toward the other; together the overshoots
-// cover the axis-labels + subtitle gap between the plots (~104–124px), and
-// the overlap is invisible because both charts share the same x geometry.
+// projection ranges, but instead of the muted "Projection →" tag each band
+// carries the finding itself as its top label (dark ink, right-aligned at the
+// band's right edge so it grows into the plot). The point callouts of the
+// standalone figures are dropped — the band label does the explaining. Each
+// chart also draws its own vertical rule at 2024, confined to its own plot.
 const highlightX = [new Date(2024, 0, 1), new Date(2025, 0, 1)];
-const highlightBand = projectionRange({ x: highlightX, label: null });
 const connectorRule = { x: highlightX[0] };
 
-// At half height the original callout offsets collide with the marks and the
-// 2024 rule, so both callouts are repositioned: labels right-aligned ending
-// well left of the rule (one year step is ~110–130px on desktop), so neither
-// text crosses the highlight band. The top chart keeps the full standalone
-// label; the bottom swaps in a short last-year decline computed from the data
-// (the standalone's "since its 2018 peak" line is too long at half height).
-const balanceCallout = {
-  ...balanceSheetTotalArea.annotations[0],
-  labelXOffset: 150,
-  labelYOffset: 0,
-  props: {
-    ...balanceSheetTotalArea.annotations[0].props,
-    label: {
-      ...balanceSheetTotalArea.annotations[0].props.label,
-      width: 260,
-    },
-  },
-  mobile: {
-    labelXOffset: 48,
-    labelYOffset: 8,
-    props: { label: { width: 100, lineHeight: "13px" } },
+const highlightLabel = {
+  label: {
+    fill: ink,
+    class: "text-xs font-light",
+    textAnchor: "end",
+    verticalAnchor: "end",
+    dx: 0,
   },
 };
+
+// Both band labels are short forms computed from the data (the standalones'
+// full sentences are too long for a band label). The top one is compact —
+// "bn" not "billion", since the subtitle right below already spells out the
+// unit — adds the relative growth, and wraps to two lines: `width` forces
+// the break after "growth", so the amount gets its own line.
+const balanceRows = balanceSheetTotalArea.data;
+const balancePrev = balanceRows[balanceRows.length - 2];
+const balanceLast = balanceRows[balanceRows.length - 1];
+const growthBn = Math.round(balanceLast.total - balancePrev.total);
+const growthPct = Math.round(
+  ((balanceLast.total - balancePrev.total) / balancePrev.total) * 100
+);
 
 const shareRows = equityShareArea.data;
 const sharePrev = shareRows[shareRows.length - 2];
@@ -49,34 +42,34 @@ const lastYearDeclinePp = Math.round(
   (sharePrev.equityShare - shareLast.equityShare) * 100
 );
 
-const equityCallout = {
-  ...equityShareArea.annotations[0],
-  label: `Declined by ${lastYearDeclinePp}pp`,
-  labelXOffset: 150,
-  labelYOffset: -35,
+const balanceBand = projectionRange({
+  x: highlightX,
+  label: `Biggest yearly growth +USD ${growthBn} bn (+${growthPct}%)`,
+  labelPlacement: "top-right",
   props: {
-    ...equityShareArea.annotations[0].props,
     label: {
-      ...equityShareArea.annotations[0].props.label,
-      textAnchor: "end",
-      verticalAnchor: "middle",
-      width: 160,
+      ...highlightLabel.label,
+      width: 140,
+      truncate: false,
+      lineHeight: "13px",
     },
   },
-  mobile: {
-    labelXOffset: 48,
-    labelYOffset: -24,
-    props: { label: { width: 110, lineHeight: "13px" } },
-  },
-};
+});
+
+const equityBand = projectionRange({
+  x: highlightX,
+  label: `Declined by ${lastYearDeclinePp}pp`,
+  labelPlacement: "top-right",
+  props: highlightLabel,
+});
 
 const balancePanel = {
   ...balanceSheetTotalArea,
-  // Half-height plots want a sparser axis and the repositioned callout.
+  // Half-height plots want a sparser axis; no point callouts here.
   yTicks: [100, 200, 300],
-  annotations: [balanceCallout],
-  rangeAnnotations: [highlightBand],
-  lineAnnotations: [{ ...connectorRule, extendBottom: 100 }],
+  annotations: [],
+  rangeAnnotations: [balanceBand],
+  lineAnnotations: [connectorRule],
 };
 
 const equityPanel = {
@@ -88,13 +81,14 @@ const equityPanel = {
   directLabels: false,
   barLabels: undefined,
   yTicks: [0.25, 0.5, 0.75, 1],
-  annotations: [equityCallout],
-  rangeAnnotations: [highlightBand],
-  lineAnnotations: [{ ...connectorRule, extendTop: 100 }],
+  annotations: [],
+  rangeAnnotations: [equityBand],
+  lineAnnotations: [connectorRule],
 };
 
 export default {
-  title: balanceSheetTotalArea.title,
+  // One title carrying both panels' messages, in figure 2's ellipsis style.
+  title: "IDA's Balance Sheet Keeps Growing… but Equity's Share Is Declining",
   subtitle: balanceSheetTotalArea.subtitle,
   description: `${balanceSheetTotalArea.description} ${equityShareArea.description}`,
   source: balanceSheetTotalArea.source,
