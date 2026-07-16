@@ -48,7 +48,9 @@ export default {
         lineHeight: "14px",
       },
       mobile: {
-        labelXOffset: -14,
+        // Positive offset pushes the label left, clear of the r=12 ring —
+        // a negative one lands the text anchor inside the circle.
+        labelXOffset: 24,
         labelYOffset: 10,
         props: { label: { width: 100, lineHeight: "13px" } },
       },

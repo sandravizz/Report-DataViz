@@ -44,7 +44,7 @@ const lastYearDeclinePp = Math.round(
 
 const balanceBand = projectionRange({
   x: highlightX,
-  label: `Biggest yearly growth +USD ${growthBn} bn (+${growthPct}%)`,
+  label: `Biggest yearly growth by ${growthPct}pp`,
   labelPlacement: "top-right",
   props: {
     label: {

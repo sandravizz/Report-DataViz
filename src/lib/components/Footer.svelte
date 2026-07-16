@@ -14,13 +14,18 @@
     ? 'translate-y-0 opacity-100'
     : 'pointer-events-none translate-y-full opacity-0'}"
 >
-  <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-base-content/50">
-    <span>
-      &copy; {new Date().getFullYear()} · Web development &amp; data visualization by
+  <!-- On phones the one-line credit is wider than the viewport and wraps
+       mid-sentence, so it stacks: credit line on top, © year + icons in a
+       second row. From sm up everything joins the original single row. -->
+  <div class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-base-content/50 sm:flex-row sm:flex-wrap sm:gap-x-3 sm:gap-y-1">
+    <span class="text-center">
+      <span class="hidden sm:inline">&copy; {new Date().getFullYear()} · </span>Web development &amp; data visualization by
       <a href="https://sandraviz.com" target="_blank" rel="noopener" class="link link-hover text-base-content">SandraViz</a>
     </span>
-    <span aria-hidden="true">·</span>
-    <div class="flex gap-3">
+    <span aria-hidden="true" class="hidden sm:inline">·</span>
+    <div class="flex items-center gap-3">
+      <span class="sm:hidden">&copy; {new Date().getFullYear()}</span>
+      <span aria-hidden="true" class="sm:hidden">·</span>
       <a
         href="https://github.com/sandravizz"
         target="_blank"

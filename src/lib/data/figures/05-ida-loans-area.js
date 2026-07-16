@@ -70,7 +70,9 @@ export default {
       labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
       mobile: {
         labelXOffset: 8,
-        labelYOffset: 12,
+        // 2024 sits near the top of the y domain, so the label rides lower
+        // than on desktop to stay inside the plot.
+        labelYOffset: 4,
         props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
       },
     }),

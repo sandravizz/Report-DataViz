@@ -67,6 +67,15 @@
     resolveAnnotations([...(pair.annotations ?? []), ...directLabelAnnotations], innerWidth)
   );
   const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPadding));
+
+  // The narrow mobile axis has no room for a year under every bar: label
+  // every other band, counting back from the last bar so the latest year
+  // always keeps its label. Desktop labels every band as before.
+  const xTicks = $derived(
+    innerWidth < 1024
+      ? (scale) => scale.domain().filter((_, i, all) => (all.length - 1 - i) % 2 === 0)
+      : undefined
+  );
 </script>
 
 <svelte:window bind:innerWidth />
@@ -91,7 +100,7 @@
       {padding}
       props={{
         bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, format: formatYear },
+        xAxis: { ...xAxisProps, ticks: xTicks, format: formatYear },
         yAxis: {
           ...yAxisProps,
           ticks: excludeZeroTick,
