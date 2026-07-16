@@ -19,7 +19,7 @@
        second row. From sm up everything joins the original single row. -->
   <div class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-base-content/50 sm:flex-row sm:flex-wrap sm:gap-x-3 sm:gap-y-1">
     <span class="text-center">
-      <span class="hidden sm:inline">&copy; {new Date().getFullYear()} · </span>Web development &amp; data visualization by
+      <span class="hidden sm:inline">&copy; {new Date().getFullYear()} · </span>Web development &amp; data visualization<br class="sm:hidden" /> by
       <a href="https://sandraviz.com" target="_blank" rel="noopener" class="link link-hover text-base-content">SandraViz</a>
     </span>
     <span aria-hidden="true" class="hidden sm:inline">·</span>

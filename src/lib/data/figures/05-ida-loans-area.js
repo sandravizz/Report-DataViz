@@ -71,8 +71,9 @@ export default {
       mobile: {
         labelXOffset: 8,
         // 2024 sits near the top of the y domain, so the label rides lower
-        // than on desktop to stay inside the plot.
-        labelYOffset: 4,
+        // than on desktop to stay inside the plot — negative pulls it down
+        // to roughly level with the ring.
+        labelYOffset: -4,
         props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
       },
     }),
