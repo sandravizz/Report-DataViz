@@ -66,6 +66,16 @@ Each figure lives in its own file in `src/lib/data/figures/` — a plain object 
 
 Chart colors come from `src/lib/colors.js` — named series colors (`colors.sky`, `colors.coral`, …) plus the shared `ink` used for axis and annotation text. Shared axis/tooltip/label behavior lives in `src/lib/chart-theme.js`, and reusable annotation styling (circled callouts, hatched projection bands) in `src/lib/data/annotation-presets.js`.
 
+### Line Chart Style: Casing at Overlaps
+
+Line charts use the overlap treatment known from Financial Times / Economist charts: every line is drawn twice — a wider stroke in the page background color underneath ("casing"), then the colored 2.5px line on top. Where lines cross, the casing of the upper line cuts a clean gap through the one below, so intersections read as *in front of / behind* instead of a spaghetti tangle. The same casing also gives lines a clean margin where they pass over the hatched projection bands.
+
+On top of that, lines use `curveMonotoneX` smoothing (rounds corners without ever overshooting a data value) and round joins/caps.
+
+![Line casing at overlaps](docs/line-chart-overlap.png)
+
+All of this lives in one place, `src/lib/components/charts/LineChartPanel.svelte`: the `lineStyle` / `casingStyle` constants and the `marks` snippet that renders the two strokes per series. Tuning knobs: casing width is `casingStyle.strokeWidth` (6.5 = 2px halo per side), and removing the `curve` property brings back straight segments while keeping the casing.
+
 ## PNG Download
 
 Every visualization has a PNG button that downloads a pre-made screenshot from `static/figures/`. The files are named after the figure number — `figure-1.png`, `figure-2.png`, `figure-13.png` so when a chart changes, replace the matching screenshot in that folder. The downloaded file is automatically renamed to a descriptive slug (e.g. `figure-2-using-productivity-gains-to-reduce-work-hours.png`).
