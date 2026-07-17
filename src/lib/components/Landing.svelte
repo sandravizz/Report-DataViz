@@ -26,7 +26,7 @@
           class="link-hover underline-offset-4">International Energy Agency</a
         >
       </p>
-      <p class="mt-6 text-base text-base-content/60 sm:text-lg">June 13, 2026</p>
+      <p class="mt-6 text-base text-base-content/60 sm:text-lg">June 30, 2026</p>
     </div>
 
     <!-- Cover: the report page's own hero photo (wind farm in the ocean and on

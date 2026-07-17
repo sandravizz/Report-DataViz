@@ -1,6 +1,6 @@
 # Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce — Interactive Report
 
-**Live report: [iea-report.vercel.app](https://iea-report.vercel.app/)**
+**Live report: [iea-one.vercel.app](https://iea-one.vercel.app/)**
 
 An interactive, visualization-first web version of a written report, created from the [International Energy Agency (IEA)](https://www.iea.org) analysis. Not a replacement for the PDF, but a different path alongside it — both formats have their reasons to exist. Here, the reader moves through the content while animated charts bring the data to life, with a special focus on the visualizations themselves. Every figure also has a PNG download button, bridging the two formats from a single source.
 
