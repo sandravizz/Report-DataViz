@@ -1,1 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+/* Global Justice Project site fonts:
+   - Satoshi — the body/nav face globaljusticeproject.wid.world uses, loaded
+     from Fontshare with the exact URL their pages use (variable font,
+     normal + italic). Headings there are Satoshi bold, so no separate
+     display face is needed. */
+
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@1,2&display=swap');

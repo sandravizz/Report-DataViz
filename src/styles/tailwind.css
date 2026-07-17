@@ -7,6 +7,12 @@
   themes: globaljustice --default;
 }
 
+/* Colors lifted from globaljusticeproject.wid.world's theme CSS, except the
+   surfaces: #f4ddd6 is this report's original pink (kept on purpose, also
+   behind the header and footer), with the original #efccc2/#e9bcae as its
+   darker tints. #362e4f is the GJP logo purple; #00371f the dark green of
+   their nav indicator bar; #fbedf5 the pink of their chapter table of
+   contents. */
 @plugin "daisyui/theme" {
   name: 'globaljustice';
   default: true;
@@ -16,26 +22,26 @@
   --color-base-100: #f4ddd6;
   --color-base-200: #efccc2;
   --color-base-300: #e9bcae;
-  --color-base-content: #2a2659;
-  --color-primary: #2a2659;
-  --color-primary-content: #f4ddd6;
-  --color-secondary: #736b82;
-  --color-secondary-content: #f4ddd6;
-  --color-accent: #d86858;
-  --color-accent-content: #f4ddd6;
-  --color-neutral: #3a2526;
-  --color-neutral-content: #f4ddd6;
-  --color-info: #61c1eb;
-  --color-info-content: #2a2659;
-  --color-success: #97af98;
-  --color-success-content: #2a2659;
-  --color-warning: #d86858;
-  --color-warning-content: #2a2659;
-  --color-error: #3a2526;
-  --color-error-content: #f4ddd6;
+  --color-base-content: #000000;
+  --color-primary: #362e4f;
+  --color-primary-content: #ffffff;
+  --color-secondary: #00371f;
+  --color-secondary-content: #ffffff;
+  --color-accent: #fbedf5;
+  --color-accent-content: #000000;
+  --color-neutral: #1d1d1b;
+  --color-neutral-content: #ffffff;
+  --color-info: #e2f3f6;
+  --color-info-content: #000000;
+  --color-success: #337357;
+  --color-success-content: #ffffff;
+  --color-warning: #ffcc00;
+  --color-warning-content: #000000;
+  --color-error: #cc0000;
+  --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Geist', sans-serif;
+  --font-sans: 'Satoshi', sans-serif;
+  --font-display: 'Satoshi', sans-serif;
 }
-

@@ -1,7 +1,6 @@
-// Single source for every color used inside the charts. The daisyUI theme in
-// src/styles/tailwind.css repeats some of these as semantic UI tokens
-// (ink = base-content/primary, lavender = secondary, coral = accent,
-// sky = info, sage = success).
+// Single source for every color used inside the charts, independent of the
+// daisyUI UI theme in src/styles/tailwind.css (which follows the Global
+// Justice Project site's palette).
 
 // Axis ticks and annotation labels.
 export const ink = "#2A2659";

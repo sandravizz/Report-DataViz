@@ -35,6 +35,11 @@
       charts: [figures.incomeShares],
     },
   ];
+
+  const tocLinks = sections.map((section) => ({
+    href: `#${section.id}`,
+    label: section.title,
+  }));
 </script>
 
 <svelte:head>
@@ -51,7 +56,7 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
-<Header />
+<Header links={tocLinks} />
 
 <div id="top">
   <Landing />
