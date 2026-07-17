@@ -7,10 +7,6 @@
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  // FT-style line treatment: monotone smoothing (rounds corners without
-  // overshooting the data) plus round joins/caps. Each line is drawn twice in
-  // the marks snippet below — a surface-colored casing under the colored
-  // stroke — so crossings read as "in front of" instead of spaghetti.
   const lineStyle = {
     curve: curveMonotoneX,
     strokeWidth: 2.5,
@@ -76,9 +72,6 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? formatYear },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
-    // figures whose x values aren't plain years (e.g. figure 2's IDA period
-    // codes) override the header via `tooltipHeaderFormat`.
     tooltip:
       pair.valueSuffix || pair.tooltipHeaderFormat
         ? {

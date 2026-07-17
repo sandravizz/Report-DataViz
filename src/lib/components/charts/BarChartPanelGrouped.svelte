@@ -15,9 +15,7 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-  // Category labels here are region names, not years — wrap them into the
-  // band instead of truncating. The width tracks the band: ~100px bands on
-  // the desktop column's fixed 800px, ~40px on a phone.
+
   const labelWidth = $derived(innerWidth < 1024 ? 40 : 90);
 
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));

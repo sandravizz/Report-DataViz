@@ -1,11 +1,6 @@
 import { colors, iea } from "$lib/colors";
 import { lineCallout } from "../annotation-presets.js";
 
-// From the IEA report "Ensuring a Skilled Renewable Energy and Energy
-// Efficiency Workforce" (2026), p. 6: average annual change of the renewable
-// energy, grids and energy efficiency workforce vs the economy-wide workforce
-// by region, 2019-2024. Values read off the published chart, to be replaced
-// with the exact series if the client supplies the data table.
 const data = [
   { region: "India", clean: 6.0, economy: 3.2 },
   { region: "China", clean: 4.3, economy: -0.1 },
@@ -29,24 +24,6 @@ export default {
   kind: "bar-grouped",
   xKey: "region",
   valueSuffix: "%",
-  annotations: [
-    // Interpretation callout (not report text): India leads on both measures.
-    lineCallout({
-      x: "India",
-      y: 6.0,
-      r: 8,
-      label: "In India clean energy jobs grew almost twice as fast as the economy-wide workforce",
-      labelPlacement: "top-right",
-      labelXOffset: 26,
-      labelYOffset: 10,
-      labelProps: { textAnchor: "start", verticalAnchor: "middle", width: 220, truncate: false },
-      mobile: {
-        labelXOffset: 12,
-        labelYOffset: 6,
-        props: { label: { width: 130, lineHeight: "13px" } },
-      },
-    }),
-  ],
   series: [
     {
       key: "Renewable energy, grids and energy efficiency",
