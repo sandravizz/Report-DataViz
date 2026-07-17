@@ -51,6 +51,14 @@ tints via `tint(hex, pct)` in `src/lib/colors.js` mirror the site's own
   `static/iea-logo-white.svg` (for the blue/dark backgrounds), extracted from
   the inline SVG sprite on iea.org (`#icon--logo`, viewBox 0 0 80 36).
 
+## Header socials
+
+The report header carries the IEA's six social profiles with their own icon
+glyphs, both taken from the iea.org footer (SVG sprite), in the footer's
+order: YouTube, LinkedIn, Bluesky, Facebook, Instagram, X. The site sizes
+them unevenly on purpose (20px vs 18px) and inks them in the grey `#6f6f6f`
+(= `neutral`); both carried over in `src/lib/components/Header.svelte`.
+
 ## Where the theme lives
 
 - `src/styles/tailwind.css` — daisyUI theme `iea` (semantic UI tokens)

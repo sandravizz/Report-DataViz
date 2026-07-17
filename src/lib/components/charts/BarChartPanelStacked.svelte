@@ -8,7 +8,9 @@
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatYear = timeFormat("%Y");
+  // Figures with scenario bars ("2035 STEPS") pass their own xTickFormat;
+  // plain time-series columns keep the year default.
+  const formatYear = pair.xTickFormat ?? timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
   // Direct labels instead of a legend on desktop (Datawrapper stacked-column

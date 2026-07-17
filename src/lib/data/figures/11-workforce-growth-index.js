@@ -29,7 +29,7 @@ export default {
     "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
   source:
     "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
-  number: "Figure 3",
+  number: "Figure 2",
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
