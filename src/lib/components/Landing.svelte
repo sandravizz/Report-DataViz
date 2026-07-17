@@ -26,16 +26,18 @@
           class="link-hover underline-offset-4">International Energy Agency</a
         >
       </p>
+      <p class="mt-6 text-base text-base-content/60 sm:text-lg">June 13, 2026</p>
     </div>
 
-    <!-- Placeholder cover: white IEA logo on the signature electric blue.
-         Final cover image is an open client question (the report page uses an
-         offshore wind farm photo). -->
-    <div class="relative flex aspect-16/10 w-full items-center justify-center bg-primary">
+    <!-- Cover: the report page's own hero photo (wind farm in the ocean and on
+         land at the dike, NL — via iea.imgix.net). -->
+    <!-- The edge feathering (mask-x/y) dissolves the photo's hard rectangle into
+         the white page, same treatment as the previous edition's cover. -->
+    <div class="aspect-16/10 w-full">
       <img
-        src="/iea-logo-white.svg"
-        alt="IEA – International Energy Agency"
-        class="w-2/5"
+        src="/cover.jpg"
+        alt="Wind turbines standing in the ocean and along a dike between green fields"
+        class="mask-x-from-80% mask-y-from-80% h-full w-full object-cover"
       />
     </div>
   </div>

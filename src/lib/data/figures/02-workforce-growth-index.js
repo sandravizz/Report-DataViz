@@ -21,15 +21,26 @@ const data = years.map((year, i) => ({
   efficiency: seriesValues.efficiency[i],
 }));
 
-export default {
-  title: "Solar PV Leads the Energy Workforce Boom",
+const allSeries = [
+  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: colors.sky },
+  { key: "Wind", endLabel: "Wind", value: "wind", color: iea.purple },
+  { key: "Grids", endLabel: "Grids", value: "grids", color: iea.royal },
+  {
+    key: "Energy efficiency",
+    endLabel: "Energy efficiency",
+    value: "efficiency",
+    color: colors.sage,
+  },
+];
+
+// Shared scaffold for the four reveal steps: same data, axes and subtitle, so
+// only the visible lines (and the step's own title/description) change while
+// scrolling.
+const base = {
   subtitle:
     "Global Energy Workforce Growth in Renewable Energy, Grids and Energy Efficiency, Index (2019 = 100), 2019–2024",
-  description:
-    "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
   source:
     "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
-  number: "Figure 2",
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
@@ -37,34 +48,75 @@ export default {
   // Index chart: the axis starts at the 90 baseline like the IEA original,
   // not at 0.
   yDomain: [90, 170],
-  // Placeholder callout — to be refined once we decide what to emphasize.
-  annotations: [
-    circleCallout({
-      x: new Date(2024, 0, 1),
-      y: 160,
-      filled: true,
-      color: colors.sky,
-      label: "Solar PV jobs up 60% since 2019",
-      labelPlacement: "top-left",
-      labelXOffset: 24,
-      labelYOffset: 28,
-      link: { type: "swoop" },
-      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-      mobile: {
-        props: { label: { width: 150, truncate: false } },
-      },
-    }),
-  ],
-  series: [
-    { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: colors.sky },
-    { key: "Wind", endLabel: "Wind", value: "wind", color: iea.purple },
-    { key: "Grids", endLabel: "Grids", value: "grids", color: iea.royal },
-    {
-      key: "Energy efficiency",
-      endLabel: "Energy efficiency",
-      value: "efficiency",
-      color: colors.sage,
-    },
-  ],
   data,
 };
+
+// Each step shows `values` and flags `newValue` with `drawIn`, which
+// LineChartPanel animates left-to-right when the step becomes active.
+const stepSeries = (newValue, values) =>
+  allSeries
+    .filter((s) => values.includes(s.value))
+    .map((s) => ({ ...s, drawIn: s.value === newValue }));
+
+// Experiment: figure 2 as a cumulative reveal — one line, then two, three and
+// finally all four, so each sector enters the story on its own step. Each
+// step is a full figure object (own number/title/description); ScrollySection
+// crossfades between them like any other chart sequence, and the `drawIn`
+// flag set by stepSeries() above makes LineChartPanel draw the new line
+// left-to-right on activation. Full write-up: docs/scrolly-line-draw-in.md.
+export const workforceGrowthIndexSteps = [
+  {
+    ...base,
+    number: "Figure 2a",
+    title: "Energy Efficiency Jobs Grew Only Modestly",
+    description:
+      "Energy efficiency employment grew just 6% between 2019 and 2024 — a shallow dip in 2020 followed by a slow, steady recovery.",
+    series: stepSeries("efficiency", ["efficiency"]),
+  },
+  {
+    ...base,
+    number: "Figure 2b",
+    title: "Grid Employment Edged Slightly Ahead",
+    description:
+      "Grid employment barely dipped in 2020 and grew 10% by 2024 — a touch faster than energy efficiency, but still in the slow lane.",
+    series: stepSeries("grids", ["grids", "efficiency"]),
+  },
+  {
+    ...base,
+    number: "Figure 2c",
+    title: "Wind Pulled Clearly Ahead of the Pack",
+    description:
+      "Wind employment grew 24% between 2019 and 2024, clearly outpacing grids (+10%) and energy efficiency (+6%) after the 2020 dip.",
+    series: stepSeries("wind", ["wind", "grids", "efficiency"]),
+  },
+  {
+    ...base,
+    number: "Figure 2d",
+    title: "Solar PV Leads the Energy Workforce Boom",
+    description:
+      "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
+    series: stepSeries("solar", ["solar", "wind", "grids", "efficiency"]),
+    // Placeholder callout — to be refined once we decide what to emphasize.
+    annotations: [
+      circleCallout({
+        x: new Date(2024, 0, 1),
+        y: 160,
+        filled: true,
+        color: colors.sky,
+        label: "Solar PV jobs up 60% since 2019",
+        labelPlacement: "top-left",
+        labelXOffset: 24,
+        labelYOffset: 28,
+        link: { type: "swoop" },
+        labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+        mobile: {
+          props: { label: { width: 150, truncate: false } },
+        },
+      }),
+    ],
+  },
+];
+
+// The full four-line chart stays the canonical "Figure 2" for anything that
+// wants a single figure.
+export default workforceGrowthIndexSteps[workforceGrowthIndexSteps.length - 1];

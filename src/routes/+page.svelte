@@ -3,9 +3,9 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Interactive Report Design by SandraViz",
+    title: "Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce — An Interactive Report",
     description:
-      "A scrollytelling report with animated charts — interactive report design by SandraViz. Want your report like this? Get in touch at sandraviz.com.",
+      "An interactive report by the International Energy Agency on employment trends and skills needs across renewable energy, grids and energy efficiency. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -36,7 +36,7 @@
         "In 2024, the power sector became the largest energy sector employer with 22.6 million workers, which includes generation (fossil, renewable and nuclear) and grids (transmission, distribution and storage). Power generation employment specifically, which in our definition excludes grids, grew at an annual average growth rate of 5.1% between 2019 and 2024, and reached 14.2 million workers, while grid employment grew by 1.9% on average, and reached 8.5 million workers.",
         "Employment in renewable energy, grids and energy efficiency grew at a steady pace between 2019 and 2024, averaging 2.8% per annum, apart from 2020 when the Covid-19 pandemic disrupted markets and slowed activity. In 2024, almost 40% of energy workers were employed in these areas.",
       ],
-      charts: [figures.workforceGrowthIndex],
+      charts: figures.workforceGrowthIndexSteps,
     },
     {
       title:

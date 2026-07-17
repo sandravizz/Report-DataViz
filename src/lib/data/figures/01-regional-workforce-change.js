@@ -1,5 +1,4 @@
 import { colors, iea } from "$lib/colors";
-import { lineCallout } from "../annotation-presets.js";
 
 const data = [
   { region: "India", clean: 6.0, economy: 3.2 },
@@ -21,16 +20,19 @@ export default {
   source:
     "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
   number: "Figure 1",
-  kind: "bar-grouped",
+  kind: "bar-horizontal",
   xKey: "region",
   valueSuffix: "%",
+  // Grouped bars position each series on a band scale keyed by `key`, so
+  // `key` must be the data field; the display name goes in `label` (used by
+  // the legend and tooltip).
   series: [
     {
-      key: "Renewable energy, grids and energy efficiency",
-      value: "clean",
+      key: "clean",
+      label: "Renewable energy, grids and energy efficiency",
       color: colors.sky,
     },
-    { key: "Economy-wide", value: "economy", color: iea.gray },
+    { key: "economy", label: "Economy-wide", color: iea.gray },
   ],
   data,
 };

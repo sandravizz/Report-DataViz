@@ -2,7 +2,7 @@
   import ChartPanel from "./charts/ChartPanel.svelte";
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
 
-  let { pairs, activeIndex } = $props();
+  let { pairs, activeIndex, inView = true } = $props();
 
   let interpretationModal;
 
@@ -53,7 +53,10 @@
         {#if pair.kind === "double"}
           <DoubleChartPanel {pair} />
         {:else}
-          <ChartPanel {pair} />
+          <!-- `active` tells the panel it is the current scrolly step (and
+               the section is actually on screen) — line charts use it to
+               trigger the draw-in animation of series flagged `drawIn`. -->
+          <ChartPanel {pair} active={i === activeIndex && inView} />
         {/if}
       </div>
 

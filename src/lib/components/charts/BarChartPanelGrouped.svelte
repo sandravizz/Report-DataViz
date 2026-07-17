@@ -66,7 +66,7 @@
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
-          <span>{item.key}</span>
+          <span>{item.label ?? item.key}</span>
         </div>
       {/each}
     </div>

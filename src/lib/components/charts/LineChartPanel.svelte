@@ -4,8 +4,26 @@
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
-  let { pair } = $props();
+  let { pair, active = false } = $props();
   let innerWidth = $state(1024);
+
+  // Scrolly draw-in: series flagged `drawIn` on the figure get their line
+  // drawn left-to-right (and their end label / callouts faded in afterwards)
+  // each time their step becomes the active one. All panels stay mounted and
+  // crossfade, so this is driven by toggling classes on `active`, not by
+  // mount transitions.
+  const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
+  const revealClass = $derived(
+    active ? "lc-draw-reveal lc-draw-reveal-active" : "lc-draw-reveal"
+  );
+  const drawProps = (key) =>
+    pair.series.find((s) => s.key === key)?.drawIn
+      ? {
+          // pathLength=1 normalizes the path so dasharray/dashoffset 1 span it.
+          pathLength: 1,
+          class: active ? "lc-line-draw lc-line-draw-active" : "lc-line-draw",
+        }
+      : {};
 
   const lineStyle = {
     curve: curveMonotoneX,
@@ -34,6 +52,8 @@
         // A series can end before the x-domain does (null cells in the CSV),
         // so anchor its label to its own last observation, not the last row.
         const last = pair.data.findLast((d) => d[s.value] != null);
+        // A drawn-in series' label waits for the line to finish drawing.
+        const reveal = s.drawIn ? revealClass : undefined;
         return {
           x: last[pair.xKey],
           y: last[s.value],
@@ -42,16 +62,20 @@
           labelPlacement: "right",
           labelXOffset: 8,
           props: {
-            circle: { fill: s.color, stroke: "none" },
-            label: { fill: s.color, class: "text-xs font-light" },
+            circle: { fill: s.color, stroke: "none", class: reveal },
+            label: {
+              fill: s.color,
+              class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
+            },
           },
           mobile: endLabelMobileWrap,
         };
       })
   );
-  const annotations = $derived(
-    resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
+  const calloutAnnotations = $derived(
+    resolveAnnotations(pair.annotations ?? [], innerWidth)
   );
+  const endAnnotations = $derived(resolveAnnotations(endLabelAnnotations, innerWidth));
   const padding = $derived(
     endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
   );
@@ -85,8 +109,9 @@
 >
   {#snippet marks({ context })}
     {#each context.series.visibleSeries as s (s.key)}
-      <Spline seriesKey={s.key} {...casingStyle} />
-      <Spline seriesKey={s.key} {...lineStyle} />
+      {@const draw = drawProps(s.key)}
+      <Spline seriesKey={s.key} {...casingStyle} {...draw} />
+      <Spline seriesKey={s.key} {...lineStyle} {...draw} />
     {/each}
   {/snippet}
   {#snippet belowMarks()}
@@ -95,7 +120,14 @@
     {/each}
   {/snippet}
   {#snippet aboveMarks()}
-    {#each annotations as annotation, i (i)}
+    <!-- Figure-level callouts wait for the draw-in on steps that have one;
+         end labels handle their reveal per-series via their own classes. -->
+    <g class={hasDrawIn ? revealClass : undefined}>
+      {#each calloutAnnotations as annotation, i (i)}
+        <AnnotationPoint {...annotation} />
+      {/each}
+    </g>
+    {#each endAnnotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
     {/each}
   {/snippet}
@@ -125,3 +157,33 @@
 {:else}
   {@render chart()}
 {/if}
+
+<style>
+  /* Draw-in for scrolly reveal steps. With pathLength=1 the dash pattern spans
+     the whole line, so animating dashoffset 1 → 0 wipes it in from the left.
+     On leaving a step the reset must wait out ChartDisplay's 500ms panel
+     crossfade — the outgoing panel is still visible, and an instant snap
+     would make the already-drawn line blink out mid-fade. The 0s/500ms
+     transition holds the line drawn until the panel is gone, then snaps the
+     offset back so the animation replays on the next visit. */
+  :global(path.lc-line-draw) {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0s 500ms;
+  }
+  :global(path.lc-line-draw-active) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1300ms cubic-bezier(0.65, 0, 0.35, 1) 250ms;
+  }
+  /* Labels/callouts tied to a drawn-in line fade in once the draw finishes.
+     Same hold as the line above: stay visible through the panel crossfade,
+     then snap to 0 once the panel is hidden. */
+  :global(.lc-draw-reveal) {
+    opacity: 0;
+    transition: opacity 0s 500ms;
+  }
+  :global(.lc-draw-reveal-active) {
+    opacity: 1;
+    transition: opacity 450ms ease 1350ms;
+  }
+</style>
