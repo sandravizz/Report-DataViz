@@ -3,7 +3,9 @@
   // top), TOC dropdown and their social profiles right. Not a copy of the
   // full iea.org header — per the brief it borrows only the logo, the social
   // icons and Graphik. The report title lives in the landing hero, not here.
-  let { links = [] } = $props();
+  // `abstract` is an optional snippet; when given, an "Abstract" dropdown
+  // appears next to the TOC with the snippet as its panel content.
+  let { links = [], abstract } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -75,12 +77,35 @@
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
+      {#if abstract}
+        <div class="dropdown dropdown-end">
+          <div
+            tabindex="0"
+            role="button"
+            aria-label="Abstract"
+            class="cursor-pointer px-2 py-2 font-sans text-sm decoration-primary decoration-2 underline-offset-8 outline-none hover:underline sm:px-4"
+          >
+            Abstract
+          </div>
+          <div
+            tabindex="-1"
+            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-100 p-6 font-sans shadow-lg"
+          >
+            <div
+              class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80"
+            >
+              {@render abstract()}
+            </div>
+          </div>
+        </div>
+      {/if}
+
       <div class="dropdown dropdown-end">
         <div
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="btn btn-ghost px-2 font-sans text-sm font-normal sm:px-4"
+          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-primary decoration-2 underline-offset-8 outline-none hover:underline sm:px-4"
         >
           <svg
             class="h-5 w-5 sm:hidden"

@@ -1,5 +1,5 @@
 <script>
-  import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
+  import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
@@ -9,19 +9,52 @@
 
   // Scrolly draw-in: series flagged `drawIn` on the figure get their line
   // drawn left-to-right (and their end label / callouts faded in afterwards)
-  // each time their step becomes the active one. All panels stay mounted and
-  // crossfade, so this is driven by toggling classes on `active`, not by
+  // the first time their step becomes the active one. All panels stay mounted
+  // and crossfade, so this is driven by toggling classes on `active`, not by
   // mount transitions.
+  //
+  // The animation is one-shot per page load: once a step has been visited,
+  // `played` flips on leaving it and every later visit (e.g. scrolling back
+  // up) shows the finished state — line drawn, labels and diff band visible —
+  // with no replay. `played` is set in the effect's cleanup, not its body, so
+  // the first activation keeps its animating classes for its whole duration.
   const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
+  let played = $state(false);
+  $effect(() => {
+    if (!active) return;
+    return () => {
+      played = true;
+    };
+  });
   const revealClass = $derived(
-    active ? "lc-draw-reveal lc-draw-reveal-active" : "lc-draw-reveal"
+    played
+      ? "lc-draw-reveal lc-draw-reveal-done"
+      : active
+        ? "lc-draw-reveal lc-draw-reveal-active"
+        : "lc-draw-reveal"
+  );
+  const drawClass = $derived(
+    played
+      ? "lc-line-draw lc-line-draw-done"
+      : active
+        ? "lc-line-draw lc-line-draw-active"
+        : "lc-line-draw"
+  );
+  // The diff band waits a beat longer than the labels: it fades in only after
+  // the line has visibly landed, on its own delay (see lc-band-reveal below).
+  const bandRevealClass = $derived(
+    played
+      ? "lc-band-reveal lc-band-reveal-done"
+      : active
+        ? "lc-band-reveal lc-band-reveal-active"
+        : "lc-band-reveal"
   );
   const drawProps = (key) =>
     pair.series.find((s) => s.key === key)?.drawIn
       ? {
           // pathLength=1 normalizes the path so dasharray/dashoffset 1 span it.
           pathLength: 1,
-          class: active ? "lc-line-draw lc-line-draw-active" : "lc-line-draw",
+          class: drawClass,
         }
       : {};
 
@@ -72,6 +105,35 @@
         };
       })
   );
+  // The diff band's percentage label: plain text (no circle, no leader line)
+  // in the band's own color, anchored at the band's right edge and pulled
+  // inward so it sits inside the fill, vertically centered in the gap.
+  const diffBandAnnotations = $derived(
+    pair.diffBand
+      ? resolveAnnotations(
+          [
+            {
+              x: pair.diffBand.labelX,
+              y: pair.diffBand.labelY,
+              r: 0,
+              label: pair.diffBand.label,
+              labelPlacement: "left",
+              labelXOffset: 8,
+              props: {
+                circle: { r: 0, stroke: "none", fill: "none" },
+                label: {
+                  fill: pair.diffBand.color,
+                  textAnchor: "end",
+                  verticalAnchor: "middle",
+                  class: "text-xs font-medium",
+                },
+              },
+            },
+          ],
+          innerWidth
+        )
+      : []
+  );
   const calloutAnnotations = $derived(
     resolveAnnotations(pair.annotations ?? [], innerWidth)
   );
@@ -108,7 +170,11 @@
   }}
 >
   {#snippet marks({ context })}
-    {#each context.series.visibleSeries as s (s.key)}
+    <!-- Draw-in figures list series in tooltip order (final value, largest
+         first) while the steps introduce them in the reverse order — so
+         rendering the list reversed paints each step's newly drawn line last,
+         on top of every line already on screen. -->
+    {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
       <Spline seriesKey={s.key} {...casingStyle} {...draw} />
       <Spline seriesKey={s.key} {...lineStyle} {...draw} />
@@ -118,12 +184,33 @@
     {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
       <AnnotationRange {...annotation} />
     {/each}
+    {#if pair.diffBand}
+      <!-- Transparent fill between the step's new line and the previous
+           step's line, revealed together with the labels once the draw-in
+           lands. Sits below the lines so their casings still separate them
+           from the fill. -->
+      <Area
+        y0={pair.diffBand.y0}
+        y1={pair.diffBand.y1}
+        curve={curveMonotoneX}
+        fill={pair.diffBand.color}
+        fillOpacity={0.3}
+        class={bandRevealClass}
+      />
+    {/if}
   {/snippet}
   {#snippet aboveMarks()}
     <!-- Figure-level callouts wait for the draw-in on steps that have one;
          end labels handle their reveal per-series via their own classes. -->
     <g class={hasDrawIn ? revealClass : undefined}>
       {#each calloutAnnotations as annotation, i (i)}
+        <AnnotationPoint {...annotation} />
+      {/each}
+    </g>
+    <!-- The band's label appears together with the band, on its later delay,
+         not with the other callouts. -->
+    <g class={bandRevealClass}>
+      {#each diffBandAnnotations as annotation, i (i)}
         <AnnotationPoint {...annotation} />
       {/each}
     </g>
@@ -161,29 +248,42 @@
 <style>
   /* Draw-in for scrolly reveal steps. With pathLength=1 the dash pattern spans
      the whole line, so animating dashoffset 1 → 0 wipes it in from the left.
-     On leaving a step the reset must wait out ChartDisplay's 500ms panel
-     crossfade — the outgoing panel is still visible, and an instant snap
-     would make the already-drawn line blink out mid-fade. The 0s/500ms
-     transition holds the line drawn until the panel is gone, then snaps the
-     offset back so the animation replays on the next visit. */
+     The animation is one-shot: leaving the step swaps `-active` for `-done`,
+     which pins the drawn state with no transition — the line neither blinks
+     out during the panel crossfade nor replays when the reader scrolls back. */
   :global(path.lc-line-draw) {
     stroke-dasharray: 1 1;
     stroke-dashoffset: 1;
-    transition: stroke-dashoffset 0s 500ms;
   }
   :global(path.lc-line-draw-active) {
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 1300ms cubic-bezier(0.65, 0, 0.35, 1) 250ms;
   }
-  /* Labels/callouts tied to a drawn-in line fade in once the draw finishes.
-     Same hold as the line above: stay visible through the panel crossfade,
-     then snap to 0 once the panel is hidden. */
+  :global(path.lc-line-draw-done) {
+    stroke-dashoffset: 0;
+  }
+  /* Labels, callouts and the diff band tied to a drawn-in line fade in once
+     the draw finishes; `-done` shows them instantly on revisits. */
   :global(.lc-draw-reveal) {
     opacity: 0;
-    transition: opacity 0s 500ms;
   }
   :global(.lc-draw-reveal-active) {
     opacity: 1;
     transition: opacity 450ms ease 1350ms;
+  }
+  :global(.lc-draw-reveal-done) {
+    opacity: 1;
+  }
+  /* The diff band (fill + its label) waits ~600ms after the line lands
+     (draw ends at 250ms delay + 1300ms duration = 1550ms) before fading in. */
+  :global(.lc-band-reveal) {
+    opacity: 0;
+  }
+  :global(.lc-band-reveal-active) {
+    opacity: 1;
+    transition: opacity 450ms ease 2150ms;
+  }
+  :global(.lc-band-reveal-done) {
+    opacity: 1;
   }
 </style>

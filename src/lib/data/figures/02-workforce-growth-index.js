@@ -39,8 +39,7 @@ const allSeries = [
 const base = {
   subtitle:
     "Global Energy Workforce Growth in Renewable Energy, Grids and Energy Efficiency, Index (2019 = 100), 2019–2024",
-  source:
-    "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
+  source: "Source: IEA 2026",
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
@@ -57,6 +56,26 @@ const stepSeries = (newValue, values) =>
   allSeries
     .filter((s) => values.includes(s.value))
     .map((s) => ({ ...s, drawIn: s.value === newValue }));
+
+// Difference band between the step's new line and the previous step's line:
+// a transparent fill in the new line's color, revealed once its draw-in
+// finishes, with the 2024 gap written inside the band. On an index chart
+// (2019 = 100) that gap is the difference between the two sectors' growth in
+// percentage points, so the label reads e.g. "+14%". The band lives on its
+// step's panel only, so it fades away with the panel crossfade when the
+// reader moves on.
+const diffBand = (upperValue, lowerValue) => {
+  const last = data[data.length - 1];
+  const gap = Math.round(last[upperValue] - last[lowerValue]);
+  return {
+    y1: upperValue,
+    y0: lowerValue,
+    color: allSeries.find((s) => s.value === upperValue).color,
+    label: `+${gap}%`,
+    labelX: last.year,
+    labelY: (last[upperValue] + last[lowerValue]) / 2,
+  };
+};
 
 // Experiment: figure 2 as a cumulative reveal — one line, then two, three and
 // finally all four, so each sector enters the story on its own step. Each
@@ -80,6 +99,7 @@ export const workforceGrowthIndexSteps = [
     description:
       "Grid employment barely dipped in 2020 and grew 10% by 2024 — a touch faster than energy efficiency, but still in the slow lane.",
     series: stepSeries("grids", ["grids", "efficiency"]),
+    diffBand: diffBand("grids", "efficiency"),
   },
   {
     ...base,
@@ -88,6 +108,7 @@ export const workforceGrowthIndexSteps = [
     description:
       "Wind employment grew 24% between 2019 and 2024, clearly outpacing grids (+10%) and energy efficiency (+6%) after the 2020 dip.",
     series: stepSeries("wind", ["wind", "grids", "efficiency"]),
+    diffBand: diffBand("wind", "grids"),
   },
   {
     ...base,
@@ -96,6 +117,8 @@ export const workforceGrowthIndexSteps = [
     description:
       "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
     series: stepSeries("solar", ["solar", "wind", "grids", "efficiency"]),
+    // Solar vs wind is the widest gap of the sequence — the payoff band.
+    diffBand: diffBand("solar", "wind"),
     // Placeholder callout — to be refined once we decide what to emphasize.
     annotations: [
       circleCallout({

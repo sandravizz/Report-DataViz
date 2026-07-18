@@ -1,8 +1,7 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding } from "$lib/chart-theme";
-  import { lineCallout } from "$lib/data/annotation-presets.js";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, endLabelMobileWrap } from "$lib/chart-theme";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
@@ -13,12 +12,14 @@
   const formatYear = pair.xTickFormat ?? timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-  // Direct labels instead of a legend on desktop (Datawrapper stacked-column
-  // guidance, mirrored in the dataviz skill's stacked-bars reference): each
-  // series is named beside its segment on the last bar, so reading order and
-  // stack order agree with no legend eye travel. Mobile keeps the bottom
-  // legend — the narrow viewport has no right margin to spare.
-  const directLabelsActive = $derived(pair.series.length > 1 && innerWidth >= 1024);
+  // Direct labels instead of a legend, on every viewport (Datawrapper
+  // stacked-column guidance, mirrored in the dataviz skill's stacked-bars
+  // reference, plus the house rule that end labels never collapse into a
+  // bottom legend on mobile): each series is named beside its segment on the
+  // last bar in its own series color, mirroring the line charts' end labels.
+  // The x offset is set at render time from the actual band width so the
+  // label starts just over the bar's right edge on every figure.
+  const directLabelsActive = $derived(pair.series.length > 1);
 
   const directLabelAnnotations = $derived.by(() => {
     if (!directLabelsActive) return [];
@@ -28,21 +29,27 @@
     return pair.series.map((s) => {
       const mid = cum + last[s.value] / 2;
       cum += last[s.value];
-      // Datawrapper-style connector: a thin muted leader line from the bar's
-      // edge to the label instead of free-floating text.
-      return lineCallout({
+      return {
         x: last[pair.xKey],
         // Segment midpoint of the last bar; stackExpand normalizes to 0–1,
         // so percent charts divide the running position by the bar total.
         y: pair.percent ? mid / total : mid,
-        // Half a band (~30px at the desktop column's fixed 800px) plus a
-        // 2px gap starts the line just off the last bar's right edge.
-        r: 32,
+        r: 0,
         label: s.key,
         labelPlacement: "right",
-        labelXOffset: 22,
-        labelProps: { verticalAnchor: "middle" },
-      });
+        props: {
+          circle: { r: 0, stroke: "none", fill: "none" },
+          // Labels wear the series color by default; figures whose segments
+          // are shades of one hue (e.g. the region ramp) pass
+          // `directLabelFill` to ink them all uniformly instead.
+          label: {
+            fill: pair.directLabelFill ?? s.color,
+            verticalAnchor: "middle",
+            class: "text-xs font-light",
+          },
+        },
+        mobile: endLabelMobileWrap,
+      };
     });
   });
 
@@ -65,79 +72,64 @@
     })
   );
 
-  const annotations = $derived(
-    resolveAnnotations([...(pair.annotations ?? []), ...directLabelAnnotations], innerWidth)
-  );
+  const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
+  const directLabels = $derived(resolveAnnotations(directLabelAnnotations, innerWidth));
   const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPadding));
 </script>
 
 <svelte:window bind:innerWidth />
 
-<!-- The built-in legend overlays the plot area (and the x axis), so render
-     the same manual bottom legend as LineChartPanel's legendItems block:
-     below the plot, pl-9 matching yLabelPadding's axis gutter. -->
-<div class="flex min-w-0 flex-1 flex-col">
-  <div class="min-h-0 flex-1">
-    <!-- pair.percent switches to a 100% stacked layout: bars are normalized
-         per band (d3's stackOffsetExpand) and the y axis reads 0–100%, while
-         the tooltip keeps the raw values plus their total. -->
-    <BarChart
-      data={pair.data}
-      x={pair.xKey}
-      series={pair.series}
-      seriesLayout={pair.percent ? "stackExpand" : "stack"}
-      bandPadding={pair.bandPadding ?? 0.2}
-      legend={false}
-      rule={false}
-      tooltipContext={desktopTooltips(innerWidth)}
-      {padding}
-      props={{
-        bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, format: formatYear },
-        yAxis: {
-          ...yAxisProps,
-          ticks: excludeZeroTick,
-          format: pair.percent ? "percentRound" : formatValue,
-        },
-        tooltip: pair.percent
-          ? // Series carry share values; a total row (always 100%) is noise.
-            { item: { format: "percentRound" }, hideTotal: true }
-          : pair.valueSuffix
-            ? { item: { format: formatValue } }
-            : undefined,
-      }}
-    >
-      {#snippet aboveMarks()}
-        <!-- placement="middle" honors the custom y accessor as-is; the dy
-             lifts bottom-anchored numbers ~a line height into the bar. -->
-        {#each barLabels as bl (bl.series)}
-          <Labels
-            seriesKey={bl.series}
-            y={bl.y}
-            value={bl.value}
-            placement="middle"
-            dy={bl.position === "bottom" ? -12 : 0}
-            fill={bl.fill ?? ink}
-            class="text-xs font-semibold"
-          />
-        {/each}
-        {#each annotations as annotation, i (i)}
-          <AnnotationPoint {...annotation} />
-        {/each}
-      {/snippet}
-    </BarChart>
-  </div>
-  <!-- A single series needs no legend — the subtitle already names it. On
-       desktop the direct labels above replace the legend entirely; the legend
-       only renders as the mobile fallback. -->
-  {#if pair.series.length > 1 && !directLabelsActive}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
-      {#each pair.series as item (item.key)}
-        <div class="flex items-center gap-1.5">
-          <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
-          <span>{item.key}</span>
-        </div>
-      {/each}
-    </div>
-  {/if}
-</div>
+<!-- pair.percent switches to a 100% stacked layout: bars are normalized
+     per band (d3's stackOffsetExpand) and the y axis reads 0–100%, while
+     the tooltip keeps the raw values plus their total. -->
+<BarChart
+  data={pair.data}
+  x={pair.xKey}
+  series={pair.series}
+  seriesLayout={pair.percent ? "stackExpand" : "stack"}
+  bandPadding={pair.bandPadding ?? 0.2}
+  legend={false}
+  rule={false}
+  tooltipContext={desktopTooltips(innerWidth)}
+  {padding}
+  props={{
+    bars: { strokeWidth: 0 },
+    xAxis: { ...xAxisProps, format: formatYear },
+    yAxis: {
+      ...yAxisProps,
+      ticks: excludeZeroTick,
+      format: pair.percent ? "percentRound" : formatValue,
+    },
+    tooltip: pair.percent
+      ? // Series carry share values; a total row (always 100%) is noise.
+        { item: { format: "percentRound" }, hideTotal: true }
+      : pair.valueSuffix
+        ? { item: { format: formatValue } }
+        : undefined,
+  }}
+>
+  {#snippet aboveMarks({ context })}
+    <!-- placement="middle" honors the custom y accessor as-is; the dy
+         lifts bottom-anchored numbers ~a line height into the bar. -->
+    {#each barLabels as bl (bl.series)}
+      <Labels
+        seriesKey={bl.series}
+        y={bl.y}
+        value={bl.value}
+        placement="middle"
+        dy={bl.position === "bottom" ? -12 : 0}
+        fill={bl.fill ?? ink}
+        class="text-xs font-semibold"
+      />
+    {/each}
+    {#each annotations as annotation, i (i)}
+      <AnnotationPoint {...annotation} />
+    {/each}
+    <!-- The label's anchor is the last band's center; offsetting by half the
+         band width plus a small gap starts the text just clear of the bar's
+         right edge, whatever the figure's band count. -->
+    {#each directLabels as annotation, i (i)}
+      <AnnotationPoint {...annotation} labelXOffset={context.xScale.bandwidth() / 2 + 6} />
+    {/each}
+  {/snippet}
+</BarChart>

@@ -1,5 +1,4 @@
-import { colors, iea } from "$lib/colors";
-import { circleCallout } from "../annotation-presets.js";
+import { iea, ink, tint } from "$lib/colors";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
 // Efficiency Workforce" (2026), p. 14: global renewable energy, grids and
@@ -34,40 +33,24 @@ export default {
     "Global Renewable Energy, Grids and Energy Efficiency Workforce by Region, Million Workers, 2019–2024",
   description:
     "China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024.",
-  source:
-    "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
+  source: "Source: IEA 2026",
   number: "Figure 4",
   kind: "bar-stacked",
   xKey: "year",
-  annotations: [
-    circleCallout({
-      x: new Date(2024, 0, 1),
-      // Midpoint of China's 2024 segment, the story's subject on the baseline.
-      y: 5,
-      filled: true,
-      color: colors.sky,
-      label: "About 10 million people in China in 2024",
-      labelPlacement: "top-left",
-      labelXOffset: 40,
-      labelYOffset: 40,
-      link: { type: "swoop" },
-      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4, width: 180, truncate: false },
-      mobile: {
-        labelXOffset: 20,
-        labelYOffset: 30,
-        props: { label: { width: 110, lineHeight: "13px" } },
-      },
-    }),
-  ],
-  // China carries the story, so it sits on the shared baseline in the
-  // featured blue; the merged "Rest of world" closes the stack in the muted
-  // gray the brand reserves for de-emphasized series.
+  // The sector palette (Figures 2, 3 and 5) is the report's color code, so
+  // the regions deliberately don't get hues of their own: the whole stack is
+  // shades of the IEA electric blue, just distinct enough that each new
+  // segment reads at a glance. China carries the story, so it sits on the
+  // shared baseline in the full blue, fading upward to the merged "Rest of
+  // world". With one hue the segment colors can't carry the labels, so
+  // `directLabelFill` inks every end label black instead.
+  directLabelFill: ink,
   series: [
-    { key: "China", value: "china", color: colors.sky },
-    { key: "Europe", value: "europe", color: iea.royal },
-    { key: "India", value: "india", color: colors.sage },
-    { key: "North America", value: "northAmerica", color: iea.purple },
-    { key: "Rest of world", value: "rest", color: iea.gray },
+    { key: "China", value: "china", color: iea.blue },
+    { key: "Europe", value: "europe", color: tint(iea.blue, 0.75) },
+    { key: "India", value: "india", color: tint(iea.blue, 0.55) },
+    { key: "North America", value: "northAmerica", color: tint(iea.blue, 0.4) },
+    { key: "Rest of world", value: "rest", color: tint(iea.blue, 0.25) },
   ],
   data,
 };

@@ -18,10 +18,11 @@ const powerPanel = {
   xTickFormat: scenarioTickFormat,
   bandPadding: 0.4,
   // Grids is the biggest employer and the biggest mover (+25%), so it takes
-  // the shared baseline and the featured blue.
+  // the shared baseline. Each sector wears the same hue as in Figures 2 and
+  // 3: grids royal, solar the electric blue, wind purple.
   series: [
-    { key: "Grids", value: "grids", color: colors.sky },
-    { key: "Solar PV", value: "solar", color: iea.royal },
+    { key: "Grids", value: "grids", color: iea.royal },
+    { key: "Solar PV", value: "solar", color: colors.sky },
     { key: "Wind", value: "wind", color: iea.purple },
   ],
   data: [
@@ -54,8 +55,7 @@ export default {
     "Global Renewable Energy, Grids and Energy Efficiency Workforce by Sector in the STEPS, Million Workers, 2024–2035 — Power Sector",
   description:
     "Renewable energy, grids and energy efficiency employment rises from around 30 million jobs in 2024 to approximately 35 million by 2035 requiring efforts to attract more people to the energy sector and to train them.",
-  source:
-    "Source: IEA (2026), Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce, CC BY 4.0",
+  source: "Source: IEA 2026",
   number: "Figure 5",
   kind: "double",
   panels: [powerPanel, efficiencyPanel],

@@ -12,9 +12,17 @@ A multi-line chart enters the story one line at a time. Each scroll step is a
 full figure (own number, title, and description in the scrolly columns), but
 the chart underneath appears continuous: lines already on screen carry over
 through the normal crossfade without re-animating, while the step's *new* line
-wipes in from the left over ~1.3s. Once the line arrives, its end label — and
-any figure-level callout on that step — fades in. Scrolling to a step replays
-its animation every time, in both scroll directions.
+wipes in from the left over ~1.3s — always painted **on top of** the lines
+already there. Once the line arrives, its end label, any figure-level callout,
+and the step's **difference band** (a transparent fill between the new line
+and the previous step's line, with the gap written inside it) fade in. Moving
+to the next step takes the band away with the panel crossfade before the next
+line draws.
+
+The animation is **one-shot per page load**: the first visit to a step plays
+the draw-in; every later visit — most importantly scrolling back up — shows
+the finished state instantly (line drawn, labels and band visible), with no
+replay.
 
 ## The two halves
 
@@ -34,7 +42,20 @@ series: stepSeries("grids", ["grids", "efficiency"]),
 ```
 
 `drawIn: true` is the whole contract between content and mechanism: a series
-with the flag animates, everything else renders normally. The steps array is
+with the flag animates, everything else renders normally. A step may also
+carry a `diffBand` — the transparent gap fill between its new line and the
+previous step's line:
+
+```js
+// { y1, y0, color, label, labelX, labelY } — built by a small helper in the
+// figure file from the last data row, so the label (the 2024 gap, in
+// percentage points of growth on this index chart) stays in sync with data.
+diffBand: diffBand("wind", "grids"),
+```
+
+The band is filled with the new line's color at 0.3 opacity, revealed on its
+own delay a beat after the labels, and lives only on its own step's panel, so
+it disappears with the crossfade when the reader moves on. The steps array is
 registered in `src/lib/data/index.js` and used directly as a section's
 `charts` in `+page.svelte` — to ScrollySection it is just a sequence of
 figures, like any other chapter. See
@@ -80,17 +101,22 @@ Details that make it look right:
   `line-chart-casing.md`); both the background-colored casing stroke and the
   colored line get the same classes, so the casing never wipes over the lines
   underneath ahead of its own line.
-- **Labels wait for the line.** The drawn-in series' end label/dot, and any
-  figure-level callout on a draw-in step, are held at opacity 0
-  (`lc-draw-reveal`) and fade in after the draw completes.
-- **Leaving a step resets only after the crossfade.** The panels crossfade
-  over 500ms, so the outgoing panel is still visible when it loses `active` —
-  an instant reset would make its drawn line (and revealed labels) blink out
-  mid-fade while the incoming panel's copy is still faint. The base
-  `lc-line-draw` / `lc-draw-reveal` rules therefore carry a `0s 500ms`
-  transition: the drawn state holds through the fade, then snaps back
-  invisibly, ready to replay on the next visit. If the crossfade duration in
-  `ChartDisplay.svelte` ever changes, change this hold to match.
+- **The new line paints on top.** Draw-in figures list series in tooltip
+  order (largest final value first) while the steps introduce them in the
+  reverse order, so the marks snippet renders the list reversed — each step's
+  newly drawn line lands above every line already on screen.
+- **Labels wait for the line.** The drawn-in series' end label/dot and any
+  figure-level callout are held at opacity 0 (`lc-draw-reveal`) and fade in
+  after the draw completes. The diff band and its label use a separate class
+  pair (`lc-band-reveal`) with a longer delay, so the band appears a beat
+  after the line has landed rather than the instant it finishes.
+- **The animation plays once.** A `played` flag flips in the `$effect`
+  cleanup when a step loses `active` (cleanup, not body, so the first
+  activation keeps its animating classes for its full duration). From then on
+  the panel wears `-done` classes — dashoffset 0 and opacity 1 with no
+  transition — so the drawn state holds through the outgoing crossfade
+  instead of blinking out, and scrolling back to the step shows the finished
+  chart with no replay.
 
 ## Tuning knobs
 
@@ -101,7 +127,8 @@ All in the `<style>` block at the bottom of `LineChartPanel.svelte`:
 | Draw duration | `lc-line-draw-active` transition | 1300ms |
 | Draw start delay | same transition (3rd value) | 250ms |
 | Label/callout fade delay | `lc-draw-reveal-active` transition | 1350ms |
-| Reset hold on leaving | base `lc-line-draw` / `lc-draw-reveal` transitions | 500ms (= panel crossfade) |
+| Band + band-label fade delay | `lc-band-reveal-active` transition | 2150ms |
+| Band fill opacity | `Area` in `LineChartPanel.svelte` | 0.3 |
 
 Keep the fade delay ≈ draw delay + draw duration so labels land right after
 the line does. The `inView` threshold (0.7 × viewport height) is in
