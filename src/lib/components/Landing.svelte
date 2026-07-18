@@ -28,7 +28,7 @@
     <!-- Title block centered in the space above the abstract box. -->
     <div class="flex flex-1 flex-col items-center justify-center text-center">
       <h1
-        class="max-w-4xl font-display text-4xl leading-tight font-semibold text-balance sm:text-5xl lg:text-6xl"
+        class="max-w-4xl font-display text-3xl leading-tight font-semibold text-balance sm:text-5xl lg:text-6xl"
       >
         Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce
       </h1>
