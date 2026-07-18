@@ -5,8 +5,41 @@
   import ConnectorRule from "./ConnectorRule.svelte";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
-  let { pair } = $props();
+  let { pair, active = false } = $props();
   let innerWidth = $state(1024);
+
+  // Scrolly draw-in, same convention as the IEA report's LineChartPanel:
+  // series flagged `drawIn` on the figure get wiped in left-to-right (line
+  // and area wash together, via an animated clip inset) the first time their
+  // step becomes the active one, with callouts fading in afterwards. All
+  // panels stay mounted and crossfade, so this is driven by toggling classes
+  // on `active`, not by mount transitions.
+  //
+  // One-shot per page load: `played` flips in the effect's cleanup (i.e. on
+  // leaving the step), so the first activation keeps its animating classes
+  // for its whole duration and every later visit shows the finished state.
+  const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
+  let played = $state(false);
+  $effect(() => {
+    if (!active) return;
+    return () => {
+      played = true;
+    };
+  });
+  const wipeClass = $derived(
+    played
+      ? "ac-area-wipe ac-area-wipe-done"
+      : active
+        ? "ac-area-wipe ac-area-wipe-active"
+        : "ac-area-wipe"
+  );
+  const revealClass = $derived(
+    played
+      ? "ac-draw-reveal ac-draw-reveal-done"
+      : active
+        ? "ac-draw-reveal ac-draw-reveal-active"
+        : "ac-draw-reveal"
+  );
 
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
@@ -74,7 +107,12 @@
 >
   {#snippet marks({ context })}
     {#each context.series.visibleSeries as s (s.key)}
-      <Area seriesKey={s.key} {...areaStyle(pair.series.find((p) => p.key === s.key) ?? s)} />
+      {@const spec = pair.series.find((p) => p.key === s.key) ?? s}
+      <!-- Drawn-in series get their line and area wash wiped in together via
+           the animated clip on the wrapping group. -->
+      <g class={spec.drawIn ? wipeClass : undefined}>
+        <Area seriesKey={s.key} {...areaStyle(spec)} />
+      </g>
     {/each}
   {/snippet}
   {#snippet belowMarks()}
@@ -83,12 +121,16 @@
     {/each}
   {/snippet}
   {#snippet aboveMarks()}
-    {#each pair.lineAnnotations ?? [] as annotation, i (i)}
-      <ConnectorRule {...annotation} />
-    {/each}
-    {#each annotations as annotation, i (i)}
-      <AnnotationPoint {...annotation} />
-    {/each}
+    <!-- On draw-in steps every callout waits for the wipe to land, then
+         fades in; figures without drawIn render them immediately. -->
+    <g class={hasDrawIn ? revealClass : undefined}>
+      {#each pair.lineAnnotations ?? [] as annotation, i (i)}
+        <ConnectorRule {...annotation} />
+      {/each}
+      {#each annotations as annotation, i (i)}
+        <AnnotationPoint {...annotation} />
+      {/each}
+    </g>
   {/snippet}
 </AreaChart>
 {/snippet}
@@ -114,3 +156,36 @@
 {:else}
   {@render chart()}
 {/if}
+
+<style>
+  /* Left-to-right wipe for scrolly reveal steps: the clip inset animates from
+     hiding the whole series group to revealing it, so the line and its area
+     wash sweep in together (the area-chart counterpart of LineChartPanel's
+     dashoffset draw on the IEA report). One-shot: leaving the step swaps
+     `-active` for `-done`, which pins the revealed state with no transition —
+     the series neither blinks out during the panel crossfade nor replays when
+     the reader scrolls back. */
+  :global(g.ac-area-wipe) {
+    clip-path: inset(0 100% 0 0);
+  }
+  :global(g.ac-area-wipe-active) {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1300ms cubic-bezier(0.65, 0, 0.35, 1) 250ms;
+  }
+  :global(g.ac-area-wipe-done) {
+    clip-path: inset(0 0 0 0);
+  }
+  /* Callouts tied to a drawn-in series fade in once the wipe finishes
+     (wipe ends at 250ms delay + 1300ms duration); `-done` shows them
+     instantly on revisits. */
+  :global(.ac-draw-reveal) {
+    opacity: 0;
+  }
+  :global(.ac-draw-reveal-active) {
+    opacity: 1;
+    transition: opacity 450ms ease 1350ms;
+  }
+  :global(.ac-draw-reveal-done) {
+    opacity: 1;
+  }
+</style>

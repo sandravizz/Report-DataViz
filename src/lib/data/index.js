@@ -10,6 +10,7 @@ import idaLoans from "./figures/03-ida-loans.js";
 import balanceEquityDouble from "./figures/04-balance-equity-double.js";
 import idaLoansArea from "./figures/05-ida-loans-area.js";
 import idaLoansAreaLegend from "./figures/06-ida-loans-area-legend.js";
+import { idaLoansAreaSteps } from "./figures/07-ida-loans-area-steps.js";
 
 export const figures = {
   balanceSheetTotal,
@@ -20,5 +21,6 @@ export const figures = {
   idaLoans,
   idaLoansArea,
   idaLoansAreaLegend,
+  idaLoansAreaSteps,
   balanceEquityDouble,
 };

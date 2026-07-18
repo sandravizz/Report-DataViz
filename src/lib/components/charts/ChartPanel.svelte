@@ -8,7 +8,9 @@
   import AreaChartPanelOverlap from "./AreaChartPanelOverlap.svelte";
   import AreaChartPanelStacked from "./AreaChartPanelStacked.svelte";
 
-  let { pair } = $props();
+  // `active` = this panel is the current scrolly step. Passed through from
+  // ChartDisplay; only panels with draw-in behavior consume it.
+  let { pair, active = false } = $props();
 </script>
 
 {#if pair.kind === "bar"}
@@ -20,7 +22,7 @@
 {:else if pair.kind === "area"}
   <AreaChartPanel {pair} />
 {:else if pair.kind === "area-overlap"}
-  <AreaChartPanelOverlap {pair} />
+  <AreaChartPanelOverlap {pair} {active} />
 {:else if pair.kind === "area-stacked"}
   <AreaChartPanelStacked {pair} />
 {/if}

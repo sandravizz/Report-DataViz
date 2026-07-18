@@ -41,7 +41,10 @@
       charts: [
         //figures.idaLoans,
         //figures.idaLoansArea,
-        figures.idaLoansAreaLegend],
+        //figures.idaLoansAreaLegend,
+        // Scrolly reveal: each of the two shares wipes in on its own step.
+        ...figures.idaLoansAreaSteps,
+      ],
     },
   ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
 

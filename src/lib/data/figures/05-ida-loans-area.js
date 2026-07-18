@@ -21,6 +21,49 @@ const grantsPeak = rows.reduce((a, b) => ((b.grants ?? 0) > (a.grants ?? 0) ? b 
 const grantsBase = rows.find((d) => d.year.getFullYear() === 2018);
 const lastDisb = rows.findLast((d) => d.disbursements != null);
 
+// The two callouts are named exports so the scrolly steps variant
+// (07-ida-loans-area-steps.js) can hand each series its own ring on the step
+// that introduces it. The grants callout circles the 2022 peak, the
+// disbursements callout their latest point — each ring in its own series'
+// color, same style. Labels are short one-liners sitting just off their
+// rings, tied on with a short swoop.
+export const grantsCallout = circleCallout({
+  x: grantsPeak.year,
+  y: grantsPeak.grants,
+  color: fdl.camel,
+  label: `Doubled since ${grantsBase.year.getFullYear()}`,
+  labelPlacement: "top-left",
+  labelXOffset: 16,
+  labelYOffset: 20,
+  link: { type: "swoop" },
+  labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+  mobile: {
+    labelXOffset: 10,
+    labelYOffset: 16,
+    props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
+  },
+});
+export const disbursementsCallout = circleCallout({
+  x: lastDisb.year,
+  y: lastDisb.disbursements,
+  // Full-strength teal, not the muted area tint — the ring needs to read.
+  color: fdl.teal,
+  label: "Back above 40%",
+  labelPlacement: "top-left",
+  labelXOffset: 12,
+  labelYOffset: 16,
+  link: { type: "swoop" },
+  labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
+  mobile: {
+    labelXOffset: 8,
+    // 2024 sits near the top of the y domain, so the label rides lower
+    // than on desktop to stay inside the plot — negative pulls it down
+    // to roughly level with the ring.
+    labelYOffset: -4,
+    props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
+  },
+});
+
 export default {
   title: "IDA Grants Reach a Fifth of All Grants Received",
   subtitle:
@@ -37,47 +80,7 @@ export default {
   // axis still ends there and the disbursements callout names it).
   xTicks: [2008, 2012, 2016, 2020, 2023, 2024].map((y) => new Date(y, 0, 1)),
   xTicksMobile: [2008, 2012, 2016, 2020, 2023].map((y) => new Date(y, 0, 1)),
-  // The grants callout circles the 2022 peak, the disbursements callout their
-  // latest point — each ring in its own series' color, same style. Labels are
-  // short one-liners sitting just off their rings, tied on with a short swoop.
-  annotations: [
-    circleCallout({
-      x: grantsPeak.year,
-      y: grantsPeak.grants,
-      color: fdl.camel,
-      label: `Doubled since ${grantsBase.year.getFullYear()}`,
-      labelPlacement: "top-left",
-      labelXOffset: 16,
-      labelYOffset: 20,
-      link: { type: "swoop" },
-      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-      mobile: {
-        labelXOffset: 10,
-        labelYOffset: 16,
-        props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
-      },
-    }),
-    circleCallout({
-      x: lastDisb.year,
-      y: lastDisb.disbursements,
-      // Full-strength teal, not the muted area tint — the ring needs to read.
-      color: fdl.teal,
-      label: "Back above 40%",
-      labelPlacement: "top-left",
-      labelXOffset: 12,
-      labelYOffset: 16,
-      link: { type: "swoop" },
-      labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-      mobile: {
-        labelXOffset: 8,
-        // 2024 sits near the top of the y domain, so the label rides lower
-        // than on desktop to stay inside the plot — negative pulls it down
-        // to roughly level with the ring.
-        labelYOffset: -4,
-        props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
-      },
-    }),
-  ],
+  annotations: [grantsCallout, disbursementsCallout],
   // Background series first — later series paint on top of it.
   series: [
     {

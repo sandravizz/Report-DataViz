@@ -54,6 +54,12 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
+  // The first pair is "active" (activeIndex 0) even while the section is still
+  // below the fold — gate draw-in animations on the section actually being on
+  // screen so they don't play unseen before the user arrives.
+  let inView = $derived(
+    scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
+  );
   let centerOffset = $derived(vh / 2 - ITEM_H / 2);
   let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
 </script>
@@ -61,7 +67,7 @@
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
-    <ChartDisplay {pairs} {activeIndex} />
+    <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>
