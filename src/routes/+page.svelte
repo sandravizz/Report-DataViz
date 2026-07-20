@@ -53,7 +53,7 @@
         "Global energy employment in renewable energy, grids and energy efficiency increased by 3% in 2024 (year-on-year) with the strongest growth in EMDE. Employment growth has varied from region to region, with some countries seeing job creation linked to national energy initiatives and dedicated investment, while others have experienced job losses or employment stagnation linked to a number of constraints such as high production costs and the high cost of capital. As countries change their national energy mixes, energy transitions will impact employment needs in different energy subsectors.",
         "China’s renewable energy, grids and energy efficiency sectors saw sustained job growth between 2019 and 2024, averaging over 4% per year, far outpacing economy-wide employment growth which fell to just below zero over the same period. China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024. China also remains the dominant global solar PV sector employer, employing 60% of the global workforce.",
       ],
-      charts: [figures.workforceByRegion],
+      charts: [figures.workforceByRegionA, figures.workforceByRegionB],
     },
     {
       title:
@@ -89,34 +89,37 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
-<Header links={tocLinks}>
-  <!-- Abstract of the report, verbatim (CC BY 4.0), shown in the header's
-       "Abstract" dropdown. -->
-  {#snippet abstract()}
-    <p>
-      This report examines employment trends, skills needs, and skills gaps
-      across renewable energy, grids, and energy efficiency. It highlights the
-      increased demand for skilled workers in these sectors and the need to
-      address skilled labour shortages. The report identifies barriers which
-      are currently hindering energy education and training. It also discusses
-      policy measures aimed at attracting more people to the renewable energy
-      and energy efficiency sectors and providing them with the necessary
-      training.
-    </p>
-    <p>
-      The report includes new IEA analysis on online job postings in renewable
-      energy and energy efficiency, and IEA modelling on energy employment
-      from 2024 as the last full year of data available at the time of
-      publication. The analysis also draws from stakeholder input from two
-      in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
-      IEA and the European Commission and the results from three IEA surveys
-      conducted in 2025 with over 700 respondents: the
-      <em>IEA Industry Employment Survey</em>,
-      <em>IEA Labour Employment Survey</em> and
-      <em>IEA Educators&rsquo; Employment Survey</em>.
-    </p>
-  {/snippet}
-</Header>
+<Header links={tocLinks} />
+
+<!-- Abstract of the report, verbatim (CC BY 4.0). The Header component still
+     supports an "Abstract" dropdown via an optional `abstract` snippet prop —
+     pass it back in (`<Header links={tocLinks}>{#snippet abstract()}...`) to
+     bring it back. Kept here, unused, so the text isn't lost.
+{#snippet abstract()}
+  <p>
+    This report examines employment trends, skills needs, and skills gaps
+    across renewable energy, grids, and energy efficiency. It highlights the
+    increased demand for skilled workers in these sectors and the need to
+    address skilled labour shortages. The report identifies barriers which
+    are currently hindering energy education and training. It also discusses
+    policy measures aimed at attracting more people to the renewable energy
+    and energy efficiency sectors and providing them with the necessary
+    training.
+  </p>
+  <p>
+    The report includes new IEA analysis on online job postings in renewable
+    energy and energy efficiency, and IEA modelling on energy employment
+    from 2024 as the last full year of data available at the time of
+    publication. The analysis also draws from stakeholder input from two
+    in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
+    IEA and the European Commission and the results from three IEA surveys
+    conducted in 2025 with over 700 respondents: the
+    <em>IEA Industry Employment Survey</em>,
+    <em>IEA Labour Employment Survey</em> and
+    <em>IEA Educators&rsquo; Employment Survey</em>.
+  </p>
+{/snippet}
+-->
 
 <div id="top">
   <Landing />

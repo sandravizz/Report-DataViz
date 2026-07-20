@@ -5,6 +5,7 @@
   import BarChartPanelHorizontal from "./BarChartPanelHorizontal.svelte";
   import BarChartPanelStacked from "./BarChartPanelStacked.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
+  import LineChartPanelMultiples from "./LineChartPanelMultiples.svelte";
 
   // `active` = this panel is the current scrolly step. Passed through from
   // ScrollySection (via ChartDisplay); only LineChartPanel consumes it, for
@@ -20,4 +21,6 @@
   <BarChartPanelStacked {pair} />
 {:else if pair.kind === "line"}
   <LineChartPanel {pair} {active} />
+{:else if pair.kind === "line-multiples"}
+  <LineChartPanelMultiples {pair} />
 {/if}

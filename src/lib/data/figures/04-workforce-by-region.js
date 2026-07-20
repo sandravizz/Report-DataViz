@@ -27,14 +27,16 @@ const data = years.map((year, i) => ({
   rest: seriesValues.rest[i],
 }));
 
-export default {
+// Figure 4a: the stacked column, unchanged — China's share of the whole
+// regional stack.
+export const workforceByRegionA = {
   title: "China Employs a Third of the Global Clean Energy Workforce",
   subtitle:
-    "Global Renewable Energy, Grids and Energy Efficiency Workforce by Region, Million Workers, 2019–2024",
+    "Energy Workforce by Region, Million Workers, 2019–2024",
   description:
     "China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024.",
   source: "Source: IEA 2026",
-  number: "Figure 4",
+  number: "Figure 4a",
   kind: "bar-stacked",
   xKey: "year",
   // The sector palette (Figures 2, 3 and 5) is the report's color code, so
@@ -54,3 +56,40 @@ export default {
   ],
   data,
 };
+
+// Figure 4b: same data, one small-multiple line chart per region — each
+// region's own trajectory, side by side, instead of everyone's share of one
+// stack. "Rest of world" is a merged catch-all bucket rather than a real
+// region (see note above), so it's left out here; the other four are the
+// report's actual geographies. Order follows the size of each region's 2024
+// workforce, same as the stack in Figure 4a.
+export const workforceByRegionB = {
+  title: "China and India Keep Climbing While Europe and North America Flatten Out",
+  subtitle:
+    "Energy Workforce by Region, Million Workers, 2019–2024",
+  description:
+    "China and India's clean energy workforces grew steadily between 2019 and 2024, while Europe's stayed flat and North America's edged up only slightly.",
+  source: "Source: IEA 2026",
+  number: "Figure 4b",
+  kind: "line-multiples",
+  xKey: "year",
+  xTicks: [years[0], years[years.length - 1]].map((y) => new Date(y, 0, 1)),
+  // Shared y domain across all four panels — deliberately not auto-scaled per
+  // panel, so a flat line in Europe reads as genuinely flat (not stretched to
+  // fill its own axis) against China's actual climb. Explicit ticks (rather
+  // than the default d3 step) keep the same four gridlines on every panel.
+  yDomain: [2, 10],
+  yTicks: [2, 4, 6, 8, 10],
+  data,
+  // Colors are the report's validated line-mark set (see colors.js) — each
+  // panel is its own single-line chart, so there's no cross-panel legend to
+  // keep straight; the label above each panel already names the region.
+  panels: [
+    { label: "China", value: "china", color: iea.blue },
+    { label: "Europe", value: "europe", color: iea.teal },
+    { label: "North America", value: "northAmerica", color: iea.purple },
+    { label: "India", value: "india", color: iea.coral },
+  ],
+};
+
+export default workforceByRegionA;

@@ -7,7 +7,10 @@ import workforceGrowthIndex, {
   workforceGrowthIndexSteps,
 } from "./figures/02-workforce-growth-index.js";
 import southeastAsiaSteps from "./figures/03-southeast-asia-steps.js";
-import workforceByRegion from "./figures/04-workforce-by-region.js";
+import {
+  workforceByRegionA,
+  workforceByRegionB,
+} from "./figures/04-workforce-by-region.js";
 import workforceBySectorSteps from "./figures/05-workforce-by-sector-steps.js";
 
 export const figures = {
@@ -15,6 +18,7 @@ export const figures = {
   workforceGrowthIndex,
   workforceGrowthIndexSteps,
   southeastAsiaSteps,
-  workforceByRegion,
+  workforceByRegionA,
+  workforceByRegionB,
   workforceBySectorSteps,
 };

@@ -35,8 +35,12 @@ export function halfCenturyTicksOnMobile(ticks, innerWidth) {
 // plot area already sits flush against the axis there and a "0" label is
 // redundant clutter. Figures that need exact values (e.g. log scales, or a
 // deliberately included 0) pass pair.yTicks, which is used as-is instead.
-export function excludeZeroTick(scale) {
-  const candidates = typeof scale.ticks === "function" ? scale.ticks() : scale.domain();
+// `count` is forwarded to `scale.ticks()` as-is, so callers that want a
+// specific step (paired with a matching `yNice` count on the scale, e.g. 5
+// for "5, 10, 15…" / "0.5, 1, 1.5…" spacing) can pass it; omitted, it's
+// d3's own default tick count.
+export function excludeZeroTick(scale, count) {
+  const candidates = typeof scale.ticks === "function" ? scale.ticks(count) : scale.domain();
   return candidates.filter((tick) => tick !== 0);
 }
 
@@ -52,6 +56,25 @@ export function desktopTooltips(innerWidth) {
 // those charts enough room that the labels stay inside the chart container,
 // so the legend and plot stay flush with the title/subtitle/source.
 export const yLabelPadding = { left: 36 };
+
+// Word-formatted y tick labels ("1.5 million") run wider than the plain
+// numeric gutter above, so charts using formatMillions() below get extra
+// left padding to keep the longest tick ("10 million" etc.) from clipping.
+export const yLabelPaddingWide = { left: 64 };
+
+// Report figures store worker counts pre-scaled to millions (e.g. 1.5 =
+// 1.5 million), so the y-axis domain is already the "actual" unit — this
+// just spells out the magnitude on the tick label itself ("1.5 million",
+// "500 thousand") instead of leaving readers to infer it from the subtitle.
+export function formatMillions(d) {
+  if (d === 0) return "0";
+  if (Math.abs(d) >= 1) {
+    const millions = Math.round(d * 10) / 10;
+    return `${Number.isInteger(millions) ? millions : millions.toFixed(1)} million`;
+  }
+  const thousands = Math.round(d * 1000);
+  return `${thousands.toLocaleString()} thousand`;
+}
 
 // Point annotations may carry a `mobile` override (placement, offsets, label
 // props) for narrow viewports where the desktop placement would run past the
@@ -71,6 +94,13 @@ export function resolveAnnotations(annotations, innerWidth) {
       : annotation
   );
 }
+
+// Halo behind every end/direct label: a same-color-as-background text stroke
+// so a label stays legible wherever it lands — most notably over a hatched
+// projection band, but just as true over a gridline or another series. Text
+// already paints its stroke under its fill (paint-order: stroke, set
+// globally on .lc-text-svg), so this reads as a tight halo, not an outline.
+export const endLabelHalo = { stroke: "var(--color-base-100)", strokeWidth: 8 };
 
 // End-of-line labels (LineChartPanel's series end labels) reserve padding on
 // the right. Mobile gets a tighter margin than desktop —

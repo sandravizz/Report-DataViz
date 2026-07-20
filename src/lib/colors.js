@@ -35,6 +35,15 @@ export function tint(hex, pct) {
   return `#${[r, g, b].map((c) => mix(c).toString(16).padStart(2, "0")).join("")}`;
 }
 
+// Black-mixed shade, the inverse of tint() above: darkens a fills-only brand
+// color enough to serve as legible direct-label text (the bright IEA hues
+// are 1.5-1.7:1 on white — fine for a fill, unreadable as small text).
+export function shade(hex, pct) {
+  const mix = (c) => Math.round(c * pct);
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return `#${[r, g, b].map((c) => mix(c).toString(16).padStart(2, "0")).join("")}`;
+}
+
 // Axis ticks and annotation labels — IEA text is plain black.
 export const ink = "#000000";
 
@@ -48,3 +57,8 @@ export const colors = {
   sky: iea.blue,
   gray: iea.gray,
 };
+
+// Darker variant of mint, for series that direct-label a mint segment (e.g.
+// heat pumps in Figure 5) — the segment fill and its label share this shade
+// instead of the unreadably-light brand mint.
+export const mintDark = shade(iea.mint, 0.6);

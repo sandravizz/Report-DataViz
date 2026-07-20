@@ -1,4 +1,5 @@
 import { colors, iea } from "$lib/colors";
+import { projectionRange } from "$lib/data/annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
 // Efficiency Workforce" (2026), p. 11: Southeast Asia's workforce by sector in
@@ -30,9 +31,14 @@ export default {
   // wears the same hue across the line chart and this stack.
   series: [
     { key: "Efficiency", value: "efficiency", color: colors.sage },
-    { key: "Grids", value: "grids", color: iea.royal },
-    { key: "Wind", value: "wind", color: iea.purple },
-    { key: "Solar PV", value: "solar", color: colors.sky },
+    { key: "Grids", value: "grids", color: iea.purple },
+    { key: "Wind", value: "wind", color: iea.royal },
+    { key: "Solar PV", value: "solar", color: iea.coral },
   ],
   data,
+  // 2035 is the STEPS projection, not an observation — same hatched
+  // "Projection" band as Figure 5's 2035 bars.
+  rangeAnnotations: [
+    projectionRange({ x: [new Date(2035, 0, 1), new Date(2035, 0, 1)], label: "Projection" }),
+  ],
 };

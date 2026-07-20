@@ -22,9 +22,9 @@ const data = years.map((year, i) => ({
 }));
 
 const allSeries = [
-  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: colors.sky },
-  { key: "Wind", endLabel: "Wind", value: "wind", color: iea.purple },
-  { key: "Grids", endLabel: "Grids", value: "grids", color: iea.royal },
+  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: iea.coral },
+  { key: "Wind", endLabel: "Wind", value: "wind", color: iea.royal },
+  { key: "Grids", endLabel: "Grids", value: "grids", color: iea.purple },
   {
     key: "Energy efficiency",
     endLabel: "Energy efficiency",
@@ -125,7 +125,7 @@ export const workforceGrowthIndexSteps = [
         x: new Date(2024, 0, 1),
         y: 160,
         filled: true,
-        color: colors.sky,
+        color: iea.coral,
         label: "Solar PV jobs up 60% since 2019",
         labelPlacement: "top-left",
         labelXOffset: 24,

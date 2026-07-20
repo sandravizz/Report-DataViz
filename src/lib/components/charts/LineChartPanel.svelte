@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -97,6 +97,7 @@
           props: {
             circle: { fill: s.color, stroke: "none", class: reveal },
             label: {
+              ...endLabelHalo,
               fill: s.color,
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },

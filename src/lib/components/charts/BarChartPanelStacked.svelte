@@ -1,8 +1,8 @@
 <script>
-  import { AnnotationPoint, BarChart, Labels } from "layerchart";
+  import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, endLabelMobileWrap } from "$lib/chart-theme";
-  import { ink } from "$lib/colors";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, yLabelPaddingWide, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo } from "$lib/chart-theme";
+  import { ink, colors } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -10,7 +10,30 @@
   // Figures with scenario bars ("2035 STEPS") pass their own xTickFormat;
   // plain time-series columns keep the year default.
   const formatYear = pair.xTickFormat ?? timeFormat("%Y");
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+
+  // Every bar-stacked figure's values are workers in millions, but spelling
+  // "million" out on every tick is noisy repetition. Instead only the
+  // topmost tick carries the unit ("14 million"); the rest render as bare
+  // numbers, the way a chart labeled "in millions" would read. yTicks()
+  // records the topmost value as a side effect each time the axis asks for
+  // its tick list, so formatValue (called once per tick, value only — no
+  // index) knows which one to spell out.
+  //
+  // The 5-count here is paired with `yNice={5}` below on <BarChart>: nice(5)
+  // rounds the domain to a multiple of the step ticks(5) will land on, so
+  // the axis reads in clean 5-unit steps ("5, 10, 15, 20") or, for the
+  // smaller figures, 0.5-unit steps ("0.5, 1, 1.5, 2") — rather than
+  // whatever odd increment d3's default tick count picks.
+  let maxYTick = 0;
+  const yTicks = (scale) => {
+    const vals = excludeZeroTick(scale, pair.percent ? undefined : 5);
+    if (vals.length) maxYTick = Math.max(...vals);
+    return vals;
+  };
+  const formatValue = (d) => {
+    const label = d === maxYTick ? formatMillions(d) : String(Math.round(d * 1e6) / 1e6);
+    return `${label}${pair.valueSuffix ?? ""}`;
+  };
 
   // Direct labels instead of a legend, on every viewport (Datawrapper
   // stacked-column guidance, mirrored in the dataviz skill's stacked-bars
@@ -43,6 +66,7 @@
           // are shades of one hue (e.g. the region ramp) pass
           // `directLabelFill` to ink them all uniformly instead.
           label: {
+            ...endLabelHalo,
             fill: pair.directLabelFill ?? s.color,
             verticalAnchor: "middle",
             class: "text-xs font-light",
@@ -72,9 +96,74 @@
     })
   );
 
+  // Bar total, above every bar — not a segment value but the full stack's
+  // sum. Same visual language as the projection band's "Projection" label
+  // (text-xs font-light, left-aligned, flush with the bar's top-left corner)
+  // but inked black like every other direct label instead of that label's
+  // muted gray. Percent charts report the share each series carries, not an
+  // absolute count, so their total is a fixed, uninformative 100% — skipped.
+  //
+  // Spelling out "million"/"thousand" on every bar read as noisy repetition
+  // (same call the y-axis ticks already made) — only the last bar, the
+  // figure's headline number, carries the unit; earlier bars are bare
+  // numbers, rounded to one decimal at most — summing floating-point series
+  // values (e.g. 9.1 + 5.0 + 2.8 + 3.3 + 7.42) otherwise surfaces the raw
+  // addition noise as two or more decimal places.
+  const round1 = (n) => Math.round(n * 10) / 10;
+  const totalLabels = $derived.by(() => {
+    if (pair.percent) return [];
+    const lastIndex = pair.data.length - 1;
+    return pair.data.map((d, i) => {
+      const total = pair.series.reduce((sum, s) => sum + d[s.value], 0);
+      const rounded = round1(total);
+      const label = i === lastIndex ? formatMillions(total) : String(rounded);
+      return {
+        x: d[pair.xKey],
+        y: total,
+        r: 0,
+        label: `${label}${pair.valueSuffix ?? ""}`,
+        labelPlacement: "top",
+        props: {
+          circle: { r: 0, stroke: "none", fill: "none" },
+          // dy nudges the default -2 down closer to the bar's top edge.
+          label: { fill: ink, textAnchor: "start", dy: 2, class: "text-xs font-light" },
+        },
+      };
+    });
+  });
+
+  // Growth arrow (opt-in via pair.growthArrow): a rounded connector from the
+  // first bar's total to the last bar's total, labeled with the absolute
+  // gain — figures whose title promises a headline number (e.g. "5.6
+  // million more jobs") shouldn't leave readers to subtract the two totals
+  // themselves to find it on the chart. Lifted clear of both bars' own total
+  // labels in the template below, where the pixel scales are available.
+  const growthArrow = $derived.by(() => {
+    if (!pair.growthArrow || pair.percent || pair.data.length < 2) return null;
+    const sumRow = (d) => pair.series.reduce((sum, s) => sum + d[s.value], 0);
+    const round1 = (n) => Math.round(n * 10) / 10;
+    const first = pair.data[0];
+    const last = pair.data[pair.data.length - 1];
+    const firstTotal = sumRow(first);
+    const lastTotal = sumRow(last);
+    return {
+      x: first[pair.xKey],
+      y: firstTotal,
+      targetX: last[pair.xKey],
+      targetY: lastTotal,
+      // Same rounding as the bars' own total labels, so the printed gain
+      // always matches the difference between the two printed totals.
+      label: `+${round1(round1(lastTotal) - round1(firstTotal))}`,
+    };
+  });
+
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
   const directLabels = $derived(resolveAnnotations(directLabelAnnotations, innerWidth));
-  const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPadding));
+  // Percent charts keep the narrow numeric gutter ("100%"); word-formatted
+  // million/thousand labels need the wider one so the longest tick doesn't clip.
+  const padding = $derived(
+    endLabelPadding(innerWidth, directLabelsActive, pair.percent ? yLabelPadding : yLabelPaddingWide)
+  );
 </script>
 
 <svelte:window bind:innerWidth />
@@ -88,6 +177,7 @@
   series={pair.series}
   seriesLayout={pair.percent ? "stackExpand" : "stack"}
   bandPadding={pair.bandPadding ?? 0.2}
+  yNice={pair.percent ? undefined : 5}
   legend={false}
   rule={false}
   tooltipContext={desktopTooltips(innerWidth)}
@@ -97,7 +187,7 @@
     xAxis: { ...xAxisProps, format: formatYear },
     yAxis: {
       ...yAxisProps,
-      ticks: excludeZeroTick,
+      ticks: yTicks,
       format: pair.percent ? "percentRound" : formatValue,
     },
     tooltip: pair.percent
@@ -108,6 +198,13 @@
         : undefined,
   }}
 >
+  {#snippet belowMarks()}
+    <!-- Hatched projection band (e.g. a scenario year like "2035 STEPS")
+         drawn behind the bars, full plot height, over that band's column. -->
+    {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
+      <AnnotationRange {...annotation} />
+    {/each}
+  {/snippet}
   {#snippet aboveMarks({ context })}
     <!-- placement="middle" honors the custom y accessor as-is; the dy
          lifts bottom-anchored numbers ~a line height into the bar. -->
@@ -131,5 +228,47 @@
     {#each directLabels as annotation, i (i)}
       <AnnotationPoint {...annotation} labelXOffset={context.xScale.bandwidth() / 2 + 6} />
     {/each}
+    <!-- AnnotationPoint auto-centers a band-scale x, so the offset here pulls
+         the anchor back by half the bandwidth to flush the label's left edge
+         with the bar's left edge, same as the projection band's label edge. -->
+    {#each totalLabels as annotation, i (i)}
+      <AnnotationPoint {...annotation} labelXOffset={-(context.xScale.bandwidth() / 2)} />
+    {/each}
+    {#if growthArrow}
+      <!-- Short hop that lives entirely in the gap between the two bars —
+           from the first bar's right edge to the last bar's left edge, not
+           bar-center to bar-center — so it reads as a beat between the bars
+           rather than a banner across the whole chart. Both ends are lifted
+           clear of the bars' own total labels ("14.3"/"16.4"); the label
+           floats centered above the arc's peak. Same muted gray as the
+           "Projection" band's own label, so the two annotations read as one
+           family. Raw Link/Text (not AnnotationPoint) for full control over
+           where the label lands, independent of the arrow's endpoints. -->
+      {@const lift = -6}
+      {@const sourceX = context.xScale(growthArrow.x) + context.xScale.bandwidth()}
+      {@const sourceY = context.yScale(growthArrow.y) - lift}
+      {@const targetX = context.xScale(growthArrow.targetX)}
+      {@const targetY = context.yScale(growthArrow.targetY) - lift}
+      <Link
+        x1={sourceX}
+        y1={sourceY}
+        x2={targetX}
+        y2={targetY}
+        type="swoop"
+        stroke={colors.lavender}
+        strokeWidth={1.5}
+        fill="none"
+        markerEnd={{ type: "triangle", size: 7 }}
+      />
+      <Text
+        value={growthArrow.label}
+        x={(sourceX + targetX) / 2 - 20}
+        y={Math.min(sourceY, targetY) + 4}
+        textAnchor="middle"
+        verticalAnchor="end"
+        fill={colors.lavender}
+        class="text-xs font-light"
+      />
+    {/if}
   {/snippet}
 </BarChart>
