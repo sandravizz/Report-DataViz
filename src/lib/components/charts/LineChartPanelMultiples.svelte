@@ -10,18 +10,12 @@
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips } from "$lib/chart-theme";
-  import { iea } from "$lib/colors";
 
   // Same <1024 mobile threshold as the rest of the report (desktopTooltips,
   // the grid's column breakpoints below). Below it every panel is stacked
   // full-width, so there's no "first panel"/"last panel" left to carry axis
   // numbers — all four rely on the start/end point labels only.
   const isMobile = (width) => width < 1024;
-
-  // Muted, gridline-weight gray instead of the report's usual black axis
-  // ink: now that every line carries its own start/end value labels, the
-  // y-axis numbers are a faint reference, not the primary readout.
-  const mutedTickLabelProps = { fill: iea.grayText, class: "text-xs font-light" };
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -51,16 +45,9 @@
   // labels are the only readout there.
   function yAxisConfig(index, count, width) {
     if (isMobile(width)) return { ...yAxisProps, ticks: pair.yTicks, format: () => "" };
-    if (index === 0)
-      return { ...yAxisProps, ticks: pair.yTicks, format: formatValue, tickLabelProps: mutedTickLabelProps };
+    if (index === 0) return { ...yAxisProps, ticks: pair.yTicks, format: formatValue };
     if (index === count - 1)
-      return {
-        ...yAxisProps,
-        ticks: pair.yTicks,
-        format: formatValue,
-        tickLabelProps: mutedTickLabelProps,
-        placement: "right",
-      };
+      return { ...yAxisProps, ticks: pair.yTicks, format: formatValue, placement: "right" };
     return { ...yAxisProps, ticks: pair.yTicks, format: () => "" };
   }
 
@@ -88,7 +75,7 @@
       labelYOffset: 2,
       props: {
         circle: { fill: panel.color, stroke: "none" },
-        label: { ...endLabelHalo, fill: panel.color, class: "text-xs font-light" },
+        label: { ...endLabelHalo(innerWidth), fill: panel.color, class: "text-xs font-light" },
       },
     }));
   }
@@ -96,7 +83,7 @@
 
 <svelte:window bind:innerWidth />
 
-<div class="grid h-full min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+<div class="grid h-full min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-1 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
   {#each pair.panels as panel, i (panel.label)}
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col">
       <!-- Desktop only: the name sits above the chart, same as every other

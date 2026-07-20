@@ -1,6 +1,6 @@
 <script>
   import { BarChart, defaultChartPadding } from "layerchart";
-  import { tickLabelProps, yAxisProps, desktopTooltips } from "$lib/chart-theme";
+  import { tickLabelProps, yAxisProps, mutedTickLabelProps, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
 
@@ -37,7 +37,7 @@
         yAxis: {
           ...yAxisProps,
           tickLabelProps: {
-            ...tickLabelProps,
+            ...mutedTickLabelProps,
             textAnchor: "start",
             dx: -labelGutter,
             width: labelGutter,

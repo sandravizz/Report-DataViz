@@ -1,11 +1,17 @@
 import { defaultChartPadding } from "layerchart";
-import { ink } from "./colors.js";
+import { ink, iea } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
+// Axis numbers are a reference, not the primary readout (series are
+// direct-labeled), so both axes get the same muted gray as the "Projection"
+// band label instead of the report's usual black ink. Data labels (bar
+// totals, value-on-bar text, etc.) keep using `tickLabelProps` above.
+export const mutedTickLabelProps = { fill: iea.grayText, class: "text-xs font-light" };
+
 // No tick marks and no axis rule line, on any axis of any chart.
-export const xAxisProps = {  tickLength: 10, tickMarks: false, rule: false, tickLabelProps };
-export const yAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps };
+export const xAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
+export const yAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
 
 // X ticks for year axes: every 25 years on the quarter-century grid
 // (1800, 1825, … 2100), so a tick and its gridline always land on 2025,
@@ -73,7 +79,7 @@ export function formatMillions(d) {
     return `${Number.isInteger(millions) ? millions : millions.toFixed(1)} million`;
   }
   const thousands = Math.round(d * 1000);
-  return `${thousands.toLocaleString()} thousand`;
+  return `${thousands.toLocaleString()}K`;
 }
 
 // Point annotations may carry a `mobile` override (placement, offsets, label
@@ -100,7 +106,36 @@ export function resolveAnnotations(annotations, innerWidth) {
 // projection band, but just as true over a gridline or another series. Text
 // already paints its stroke under its fill (paint-order: stroke, set
 // globally on .lc-text-svg), so this reads as a tight halo, not an outline.
-export const endLabelHalo = { stroke: "var(--color-base-100)", strokeWidth: 8 };
+// Mobile's smaller text and tighter layouts read the desktop width as a
+// bloated blob rather than a halo, so it's scaled down there.
+export function endLabelHalo(innerWidth) {
+  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
+}
+
+// Stacked bar charts put the y-axis tick labels inside the plot, over the
+// gridlines, instead of in a reserved left-hand gutter — on mobile a "1
+// million" label has nowhere to go if it has to live outside the chart.
+// textAnchor flips from the axis default ("end", sitting left of the axis
+// line) to "start" with a small positive dx, so the label starts right at
+// the axis line and reads into the chart; the halo keeps it legible over a
+// gridline or a bar it happens to land on.
+export function yAxisPropsInline(innerWidth) {
+  return {
+    ...yAxisProps,
+    tickLabelProps: {
+      ...mutedTickLabelProps,
+      textAnchor: "start",
+      verticalAnchor: "end",
+      dx: 4,
+      dy: -3,
+      ...endLabelHalo(innerWidth),
+    },
+  };
+}
+
+// Left padding only needs to clear the SVG edge now that labels live inside
+// the plot rather than needing gutter width sized to the longest tick.
+export const yLabelPaddingInline = { left: 8 };
 
 // End-of-line labels (LineChartPanel's series end labels) reserve padding on
 // the right. Mobile gets a tighter margin than desktop —

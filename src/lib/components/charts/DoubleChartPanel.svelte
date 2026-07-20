@@ -13,10 +13,12 @@
   {#each pair.panels as panel, i (i)}
     {#if i > 0}
       <div class="mt-6 mb-10 font-sans text-xs text-base-content lg:mt-8 lg:mb-12 lg:text-sm">
-        {panel.subtitle}
+        <span class:hidden={panel.hideOnMobile} class:lg:inline={panel.hideOnMobile}>
+          {panel.subtitle}
+        </span>
       </div>
     {/if}
-    <div class="flex min-h-0 flex-1">
+    <div class="flex min-h-0 flex-1" class:mt-6={i === 0} class:lg:mt-0={i === 0}>
       <ChartPanel pair={panel} />
     </div>
   {/each}

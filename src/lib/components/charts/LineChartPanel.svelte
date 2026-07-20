@@ -97,7 +97,7 @@
           props: {
             circle: { fill: s.color, stroke: "none", class: reveal },
             label: {
-              ...endLabelHalo,
+              ...endLabelHalo(innerWidth),
               fill: s.color,
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },
@@ -129,6 +129,11 @@
                   class: "text-xs font-medium",
                 },
               },
+              // The band sits right where the end-of-line labels land at the
+              // last x value, and mobile's narrower plot brings its midpoint
+              // label close enough to crowd them — nudge it down, clear of
+              // the series line above it.
+              mobile: { labelYOffset: 8 },
             },
           ],
           innerWidth

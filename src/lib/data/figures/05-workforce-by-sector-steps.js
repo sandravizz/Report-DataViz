@@ -49,6 +49,9 @@ const powerPanel = {
   // The title's headline gain ("5.6 million more jobs") splits across both
   // panels; each panel's own arrow shows its share of that total.
   growthArrow: true,
+  // The "Power Sector" subtitle is redundant on mobile — the efficiency
+  // panel above has no label either, so the pair reads as one figure.
+  hideOnMobile: true,
 };
 
 const efficiencyPanel = {

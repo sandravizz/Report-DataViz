@@ -6,8 +6,20 @@
 
   let interpretationModal;
 
+  const figureFiles = {
+    "Figure 1": "Figure1.png",
+    "Figure 2a": "Figure2.png",
+    "Figure 2b": "Figure2.png",
+    "Figure 2c": "Figure2.png",
+    "Figure 2d": "Figure2.png",
+    "Figure 3": "Figure3.png",
+    "Figure 4a": "Figure4a.png",
+    "Figure 4b": "Figure4b.png",
+    "Figure 5": "Figure5.png",
+  };
+
   function figureImage(pair) {
-    return `/figures/figure-${pair.number.match(/\d+/)[0]}.png`;
+    return `/figures/${figureFiles[pair.number]}`;
   }
 
   function downloadName(pair) {
@@ -45,7 +57,7 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-10 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
+      <div class="mb-6 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
         {pair.subtitle}
       </div>
 

@@ -39,6 +39,11 @@ export const workforceByRegionA = {
   number: "Figure 4a",
   kind: "bar-stacked",
   xKey: "year",
+  // Mobile drops the y axis entirely — the stack's direct end labels and
+  // per-bar totals already carry every value the ticks would, and at mobile
+  // width the inline labels (see yAxisPropsInline) crowd the "Rest of world"
+  // end label and the topmost bars.
+  hideYAxisMobile: true,
   // The sector palette (Figures 2, 3 and 5) is the report's color code, so
   // the regions deliberately don't get hues of their own: the whole stack is
   // shades of the IEA electric blue, just distinct enough that each new
@@ -83,7 +88,11 @@ export const workforceByRegionB = {
   data,
   // Colors are the report's validated line-mark set (see colors.js) — each
   // panel is its own single-line chart, so there's no cross-panel legend to
-  // keep straight; the label above each panel already names the region.
+  // keep straight; the label above each panel already names the region. This
+  // does reuse hues that Figures 2, 3 and 5 use as a fixed sector code
+  // (teal/purple/coral = Efficiency/Grids/Solar), but a same-family blue ramp
+  // read as too flat to tell apart at a glance — legibility here wins over
+  // avoiding the cross-figure hue overlap.
   panels: [
     { label: "China", value: "china", color: iea.blue },
     { label: "Europe", value: "europe", color: iea.teal },

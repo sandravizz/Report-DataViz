@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, yLabelPaddingWide, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo } from "$lib/chart-theme";
+  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo } from "$lib/chart-theme";
   import { ink, colors } from "$lib/colors";
 
   let { pair } = $props();
@@ -26,7 +26,10 @@
   // whatever odd increment d3's default tick count picks.
   let maxYTick = 0;
   const yTicks = (scale) => {
-    const vals = excludeZeroTick(scale, pair.percent ? undefined : 5);
+    // Most figures take the scale's own 5-step candidates; a figure can
+    // instead pass its own array (e.g. to drop a tick that always lands
+    // inside a bar and never gets a visible gridline of its own).
+    const vals = pair.yTicks ?? excludeZeroTick(scale, pair.percent ? undefined : 5);
     if (vals.length) maxYTick = Math.max(...vals);
     return vals;
   };
@@ -66,7 +69,7 @@
           // are shades of one hue (e.g. the region ramp) pass
           // `directLabelFill` to ink them all uniformly instead.
           label: {
-            ...endLabelHalo,
+            ...endLabelHalo(innerWidth),
             fill: pair.directLabelFill ?? s.color,
             verticalAnchor: "middle",
             class: "text-xs font-light",
@@ -109,6 +112,10 @@
   // numbers, rounded to one decimal at most — summing floating-point series
   // values (e.g. 9.1 + 5.0 + 2.8 + 3.3 + 7.42) otherwise surfaces the raw
   // addition noise as two or more decimal places.
+  // Sub-million bars are the exception: rounding e.g. 0.95 to one decimal
+  // gives "1", which reads as an exact whole million and collides with the
+  // "1" gridline — formatMillions() spells those out as "950 thousand"
+  // instead, same as the last bar always does.
   const round1 = (n) => Math.round(n * 10) / 10;
   const totalLabels = $derived.by(() => {
     if (pair.percent) return [];
@@ -116,7 +123,7 @@
     return pair.data.map((d, i) => {
       const total = pair.series.reduce((sum, s) => sum + d[s.value], 0);
       const rounded = round1(total);
-      const label = i === lastIndex ? formatMillions(total) : String(rounded);
+      const label = i === lastIndex || Math.abs(total) < 1 ? formatMillions(total) : String(rounded);
       return {
         x: d[pair.xKey],
         y: total,
@@ -159,11 +166,14 @@
 
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
   const directLabels = $derived(resolveAnnotations(directLabelAnnotations, innerWidth));
-  // Percent charts keep the narrow numeric gutter ("100%"); word-formatted
-  // million/thousand labels need the wider one so the longest tick doesn't clip.
-  const padding = $derived(
-    endLabelPadding(innerWidth, directLabelsActive, pair.percent ? yLabelPadding : yLabelPaddingWide)
-  );
+  // Figures with `hideYAxisMobile` drop the y axis (ticks, labels and
+  // gridlines) below the 1024 breakpoint — the region stack's own end labels
+  // and totals already carry the values, so the inline y ticks are pure
+  // clutter once mobile's narrower plot has them landing on top of the bars.
+  const hideYAxis = $derived(pair.hideYAxisMobile && innerWidth < 1024);
+  // Y tick labels sit inside the plot now (see yAxisPropsInline), so the
+  // same narrow gutter fits every figure regardless of label width.
+  const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPaddingInline));
 </script>
 
 <svelte:window bind:innerWidth />
@@ -180,15 +190,16 @@
   yNice={pair.percent ? undefined : 5}
   legend={false}
   rule={false}
+  grid={!hideYAxis}
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     bars: { strokeWidth: 0 },
     xAxis: { ...xAxisProps, format: formatYear },
     yAxis: {
-      ...yAxisProps,
-      ticks: yTicks,
-      format: pair.percent ? "percentRound" : formatValue,
+      ...yAxisPropsInline(innerWidth),
+      ticks: hideYAxis ? [] : yTicks,
+      format: hideYAxis ? () => "" : pair.percent ? "percentRound" : formatValue,
     },
     tooltip: pair.percent
       ? // Series carry share values; a total row (always 100%) is noise.

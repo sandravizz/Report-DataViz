@@ -23,6 +23,9 @@ export default {
   number: "Figure 3",
   kind: "bar-stacked",
   xKey: "year",
+  // Default 5-step ticks would include 0.5, which always lands inside the
+  // 2015 bar (total 0.95) with no gridline space clear of it to sit in.
+  yTicks: [1, 1.5, 2],
   // The middle bar is 2024 actuals; the last is the 2035 STEPS projection.
   xTickFormat: (d) => (d.getFullYear() === 2035 ? "2035 STEPS" : String(d.getFullYear())),
   // Efficiency is the region's biggest employer and the headline's subject,
