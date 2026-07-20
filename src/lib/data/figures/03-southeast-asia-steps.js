@@ -15,7 +15,7 @@ const data = [
 export default {
   title: "Southeast Asia's Clean Energy Workforce Keeps Expanding",
   subtitle:
-    "Southeast Asia's Renewable Energy, Grids and Energy Efficiency Workforce by Sector in the STEPS, Million Workers, 2015–2035",
+    "Southeast Asia's Energy Workforce by Sector in the STEPS, Million Workers, 2015–2035",
   description:
     "In the STEPS, employment in renewable energy, grids and energy efficiency in Southeast Asia rises to 1.8 million workers by 2035.",
   source: "Source: IEA 2026",

@@ -38,7 +38,7 @@ const allSeries = [
 // scrolling.
 const base = {
   subtitle:
-    "Global Energy Workforce Growth in Renewable Energy, Grids and Energy Efficiency, Index (2019 = 100), 2019–2024",
+    "Global Energy Workforce Growth Index (2019 = 100), 2019–2024",
   source: "Source: IEA 2026",
   kind: "line",
   xKey: "year",

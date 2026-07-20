@@ -4,8 +4,8 @@ import { ink } from "./colors.js";
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
-export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
-export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
+export const xAxisProps = {  tickLength: 10, tickMarks: false, rule: false, tickLabelProps };
+export const yAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps };
 
 // X ticks for year axes: every 25 years on the quarter-century grid
 // (1800, 1825, … 2100), so a tick and its gridline always land on 2025,
@@ -77,7 +77,7 @@ export function resolveAnnotations(annotations, innerWidth) {
 // screen width is already scarce there, and the labels wrap instead of
 // running wide.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const labelSpace = innerWidth < 1024 ? 52 : 80;
+  const labelSpace = innerWidth < 1024 ? 60 : 80;
   return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
 }
 

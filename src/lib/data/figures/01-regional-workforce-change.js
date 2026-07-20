@@ -14,7 +14,7 @@ const data = [
 export default {
   title: "Clean Energy Jobs Outpace the Wider Economy",
   subtitle:
-    "Average Annual Change in Renewable Energy, Grids and Energy Efficiency Workforce and Economy-Wide Workforce by Region, 2019–2024",
+    "Average Annual Change in Workforce by Region, 2019–2024",
   description:
     "Since 2019, the energy sector added on average more than 1 million jobs annually, which marks a shift compared to the period between 2015 and 2019, when the sector created around 300 000 jobs per year on average.",
   source: "Source: IEA 2026",
