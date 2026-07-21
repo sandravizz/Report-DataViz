@@ -35,6 +35,20 @@ export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   return halved.length >= 3 ? halved : ticks;
 }
 
+// On mobile the x axis is too narrow to spell out every year in full — the
+// first tick keeps its 4-digit year for orientation, later ticks abbreviate
+// to the last two digits ("20", "21"…) since the century never changes
+// within one chart's range. Desktop always shows full years. Figures with
+// their own custom xTickFormat (e.g. scenario labels) pass that prop
+// directly instead, so this only ever applies to plain year axes.
+export function yearTickFormat(innerWidth, firstYear) {
+  return (d) => {
+    const year = d.getFullYear();
+    if (innerWidth >= 1024 || year === firstYear) return String(year);
+    return String(year % 100).padStart(2, "0");
+  };
+}
+
 // Default y-axis ticks when a figure doesn't supply its own array via
 // pair.yTicks: use the scale's own candidate ticks with 0 dropped, since the
 // plot area already sits flush against the axis there and a "0" label is
@@ -95,13 +109,24 @@ export const endLabelMobileWrap = {
   props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
 };
 
+// Halo behind every end/direct label: a same-color-as-background text stroke
+// so a label stays legible wherever it lands — most notably over a hatched
+// projection band, but just as true over a gridline or another series. Text
+// already paints its stroke under its fill (paint-order: stroke, set
+// globally on .lc-text-svg), so this reads as a tight halo, not an outline.
+// Mobile's smaller text and tighter layouts read the desktop width as a
+// bloated blob rather than a halo, so it's scaled down there.
+export function endLabelHalo(innerWidth) {
+  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
+}
+
 // The end-of-line label annotation itself, shared by every panel that names
 // series at their last observation instead of a legend. Dot and text wear the
 // series color; a series whose color is too light to read as type (e.g. a
 // muted tint) passes `endLabelColor` with a full-strength step of the same
 // hue. A series can end before the x-domain does (null cells in the CSV), so
 // the label anchors to its own last observation, not the last row.
-export function endLabelAnnotation(s, pair) {
+export function endLabelAnnotation(s, pair, innerWidth) {
   const last = pair.data.findLast((d) => d[s.value] != null);
   return {
     x: last[pair.xKey],
@@ -112,7 +137,11 @@ export function endLabelAnnotation(s, pair) {
     labelXOffset: 8,
     props: {
       circle: { fill: s.color, stroke: "none" },
-      label: { fill: s.endLabelColor ?? s.color, class: "text-xs font-light" },
+      label: {
+        ...endLabelHalo(innerWidth),
+        fill: s.endLabelColor ?? s.color,
+        class: "text-xs font-light",
+      },
     },
     mobile: endLabelMobileWrap,
   };

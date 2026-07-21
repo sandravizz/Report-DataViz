@@ -1,8 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -22,8 +21,12 @@
     strokeWidth: innerWidth < 1024 ? 4.5 : 6.5,
   });
 
-  const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Earliest year in the chart's own x domain, so the mobile year
+  // abbreviation below knows which tick to keep spelled out in full.
+  const firstTickYear = $derived(
+    (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
+  );
 
   // There is no built-in legend; series that opt in via an explicit
   // `endLabel` get their name at the end of the line instead, and right
@@ -31,7 +34,7 @@
   // de-emphasized background lines) get neither — charts where the series
   // list would make a useless legend supply `legendItems` below instead.
   const endLabelAnnotations = $derived(
-    pair.series.filter((s) => s.endLabel).map((s) => endLabelAnnotation(s, pair))
+    pair.series.filter((s) => s.endLabel).map((s) => endLabelAnnotation(s, pair, innerWidth))
   );
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
@@ -53,7 +56,7 @@
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? formatYear },
+    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
     // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
     // figures whose x values aren't plain years (e.g. figure 2's IDA period

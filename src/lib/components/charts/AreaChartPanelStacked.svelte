@@ -1,16 +1,17 @@
 <script>
   import { AnnotationPoint, AnnotationRange, AreaChart, Labels } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity, yearTickFormat } from "$lib/chart-theme";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Earliest year in the chart's own x domain, so the mobile year
+  // abbreviation below knows which tick to keep spelled out in full.
+  const firstTickYear = $derived(pair.data[0][pair.xKey].getFullYear());
 
   // Same direct-label convention as BarChartPanelStacked: on desktop each
   // series is named beside its band at the last observation instead of a
@@ -91,7 +92,7 @@
           fillOpacity: areaFillOpacity,
           line: { strokeWidth: 2.5 },
         },
-        xAxis: { ...xAxisProps, format: formatYear },
+        xAxis: { ...xAxisProps, format: yearTickFormat(innerWidth, firstTickYear) },
         yAxis: {
           ...yAxisProps,
           ticks: pair.yTicks ?? excludeZeroTick,
