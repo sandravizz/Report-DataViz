@@ -1,15 +1,16 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, yearTickFormat } from "$lib/chart-theme";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Earliest year in the chart's own x domain, so the mobile year
+  // abbreviation below knows which tick to keep spelled out in full.
+  const firstTickYear = $derived(pair.data[0][pair.xKey].getFullYear());
 
   // Direct labels instead of a legend on desktop (Datawrapper stacked-column
   // guidance, mirrored in the dataviz skill's stacked-bars reference): each
@@ -100,7 +101,7 @@
       {padding}
       props={{
         bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, ticks: xTicks, format: formatYear },
+        xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(innerWidth, firstTickYear) },
         yAxis: {
           ...yAxisProps,
           ticks: excludeZeroTick,

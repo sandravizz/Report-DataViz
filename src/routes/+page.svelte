@@ -75,11 +75,11 @@
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <section id={section.id} class="h-[140vh] font-sans text-base-content">
-      <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
-        <div class="flex min-h-full">
+    <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
+      <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:bg-base-100">
+        <div class="lg:flex lg:min-h-full">
           <div
-            class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
+            class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
           >
             <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
             {#if section.intro}
