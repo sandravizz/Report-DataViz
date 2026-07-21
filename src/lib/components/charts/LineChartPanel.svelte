@@ -71,8 +71,12 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
   // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear();
+  // abbreviation below knows which tick to keep spelled out in full. Steps
+  // swap `pair` under the same panel (see the scrolly draw-in above), so
+  // this has to stay derived rather than a one-time const.
+  const firstTickYear = $derived(
+    (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
+  );
 
   // There is no built-in legend; series that opt in via an explicit
   // `endLabel` get their name at the end of the line instead, and right

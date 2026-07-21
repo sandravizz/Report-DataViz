@@ -34,7 +34,9 @@
   const formatPoint = (d) => d.toFixed(1);
   // Earliest year in the chart's own x domain, so the mobile year
   // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear();
+  const firstTickYear = $derived(
+    (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
+  );
 
   // Desktop (all four panels in one row): only the first panel's axis
   // carries numbers on the left and only the last carries them on the right;
@@ -118,7 +120,7 @@
           tooltipContext={desktopTooltips(innerWidth)}
           padding={panelPadding(i === pair.panels.length - 1, innerWidth)}
           props={{
-            xAxis: { ...xAxisProps, ticks: pair.xTicks, format: pair.xTickFormat ?? formatYear },
+            xAxis: { ...xAxisProps, ticks: pair.xTicks, format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
             yAxis: yAxisConfig(i, pair.panels.length, innerWidth),
             tooltip: pair.valueSuffix ? { item: { format: formatValue } } : undefined,
           }}

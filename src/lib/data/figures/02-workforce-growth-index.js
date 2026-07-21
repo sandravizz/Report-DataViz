@@ -53,7 +53,6 @@ const base = {
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
-  xTickFormat: (d) => d.getFullYear(),
   // Index chart: the axis starts at the 90 baseline like the IEA original,
   // not at 0.
   yDomain: [90, 170],
