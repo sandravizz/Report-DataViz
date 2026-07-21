@@ -57,17 +57,20 @@
         }
       : {};
 
-  const lineStyle = {
+  // The FT-style white casing that separates crossing lines reads too heavy
+  // at phone plot sizes, so both the line and its halo thin down on mobile
+  // (same <1024 threshold as the rest of the chart theme).
+  const lineStyle = $derived({
     curve: curveMonotoneX,
-    strokeWidth: 2.5,
+    strokeWidth: innerWidth < 1024 ? 2 : 2.5,
     "stroke-linejoin": "round",
     "stroke-linecap": "round",
-  };
-  const casingStyle = {
+  });
+  const casingStyle = $derived({
     ...lineStyle,
     stroke: "var(--color-base-100)",
-    strokeWidth: 6.5,
-  };
+    strokeWidth: innerWidth < 1024 ? 4.5 : 6.5,
+  });
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
   // Earliest year in the chart's own x domain, so the mobile year
