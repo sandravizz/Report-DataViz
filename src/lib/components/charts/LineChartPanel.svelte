@@ -1,8 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -70,8 +69,10 @@
     strokeWidth: 6.5,
   };
 
-  const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Earliest year in the chart's own x domain, so the mobile year
+  // abbreviation below knows which tick to keep spelled out in full.
+  const firstTickYear = (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear();
 
   // There is no built-in legend; series that opt in via an explicit
   // `endLabel` get their name at the end of the line instead, and right
@@ -102,7 +103,10 @@
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },
           },
-          mobile: endLabelMobileWrap,
+          // A series can opt into its own extra mobile nudge (e.g. two lines
+          // whose end values sit close together and would otherwise overlap
+          // once labels wrap to two lines on the narrower plot).
+          mobile: { ...endLabelMobileWrap, ...s.endLabelMobile },
         };
       })
   );
@@ -162,7 +166,7 @@
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? formatYear },
+    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
     tooltip:
       pair.valueSuffix || pair.tooltipHeaderFormat

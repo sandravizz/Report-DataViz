@@ -1,15 +1,17 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo } from "$lib/chart-theme";
+  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, yearTickFormat } from "$lib/chart-theme";
   import { ink, colors } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
   // Figures with scenario bars ("2035 STEPS") pass their own xTickFormat;
-  // plain time-series columns keep the year default.
-  const formatYear = pair.xTickFormat ?? timeFormat("%Y");
+  // plain time-series columns keep the year default, abbreviated to two
+  // digits after the first tick on mobile (see yearTickFormat).
+  const formatYear = $derived(
+    pair.xTickFormat ?? yearTickFormat(innerWidth, pair.data[0][pair.xKey].getFullYear())
+  );
 
   // Every bar-stacked figure's values are workers in millions, but spelling
   // "million" out on every tick is noisy repetition. Instead only the
@@ -174,6 +176,7 @@
   // Y tick labels sit inside the plot now (see yAxisPropsInline), so the
   // same narrow gutter fits every figure regardless of label width.
   const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPaddingInline));
+  const bandPadding = $derived(responsiveBandPadding(innerWidth, pair.bandPadding ?? 0.2));
 </script>
 
 <svelte:window bind:innerWidth />
@@ -186,7 +189,8 @@
   x={pair.xKey}
   series={pair.series}
   seriesLayout={pair.percent ? "stackExpand" : "stack"}
-  bandPadding={pair.bandPadding ?? 0.2}
+  {bandPadding}
+  yDomain={pair.yDomain}
   yNice={pair.percent ? undefined : 5}
   legend={false}
   rule={false}

@@ -36,6 +36,20 @@ export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   return halved.length >= 3 ? halved : ticks;
 }
 
+// On mobile the x axis is too narrow to spell out every year in full — the
+// first tick keeps its 4-digit year for orientation, later ticks abbreviate
+// to the last two digits ("20", "21"…) since the century never changes
+// within one chart's range. Desktop always shows full years. Figures with
+// their own custom xTickFormat (e.g. "2035 STEPS" scenario labels) pass that
+// prop directly instead, so this only ever applies to plain year axes.
+export function yearTickFormat(innerWidth, firstYear) {
+  return (d) => {
+    const year = d.getFullYear();
+    if (innerWidth >= 1024 || year === firstYear) return String(year);
+    return String(year % 100).padStart(2, "0");
+  };
+}
+
 // Default y-axis ticks when a figure doesn't supply its own array via
 // pair.yTicks: use the scale's own candidate ticks with 0 dropped, since the
 // plot area already sits flush against the axis there and a "0" label is
@@ -154,3 +168,13 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 export const endLabelMobileWrap = {
   props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
 };
+
+// Stacked bar panels get extra breathing room between bars on mobile — a
+// narrow viewport otherwise crowds two-bar "before/after" panels (e.g. the
+// STEPS scenario figures), where a growth arrow and both bars' total labels
+// all sit in the gap between them. Scaled relative to the figure's own base
+// padding (not a flat add) so many-bar figures, which already read tighter
+// at any padding value, aren't compressed as aggressively as two-bar ones.
+export function responsiveBandPadding(innerWidth, base) {
+  return innerWidth < 1024 ? Math.min(base * 1.4, 0.6) : base;
+}

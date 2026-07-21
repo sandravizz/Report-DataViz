@@ -31,6 +31,12 @@ const powerPanel = {
   xKey: "year",
   xTickFormat: scenarioTickFormat,
   bandPadding: 0.4,
+  // Mobile drops the y axis entirely — the stack's direct end labels and
+  // per-bar totals already carry every value the ticks would (see Figure 4a).
+  hideYAxisMobile: true,
+  // Both panels share the same 0–25 million ceiling so their bars read at
+  // the same visual scale, rather than each auto-nicing to its own max.
+  yDomain: [0, 25],
   // Grids is the biggest employer and the biggest mover (+25%), so it takes
   // the shared baseline, unchanged. Wind then solar stack above it — the
   // same bottom-to-top order as Figures 2 and 3 — each keeping its usual
@@ -60,6 +66,12 @@ const efficiencyPanel = {
   xKey: "year",
   xTickFormat: scenarioTickFormat,
   bandPadding: 0.4,
+  // Mobile drops the y axis entirely — the stack's direct end labels and
+  // per-bar totals already carry every value the ticks would (see Figure 4a).
+  hideYAxisMobile: true,
+  // Matches the power panel's ceiling so both bars in the pair read at the
+  // same visual scale.
+  yDomain: [0, 25],
   // Heat pumps use a shaded-down mint (mintDark) instead of the brand mint
   // itself — mint is fills-only (1.5:1 on white) and was unreadable as
   // direct-label text; the darker shade fixes both the segment and its label.

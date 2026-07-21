@@ -24,12 +24,22 @@ const data = years.map((year, i) => ({
 const allSeries = [
   { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: iea.coral },
   { key: "Wind", endLabel: "Wind", value: "wind", color: iea.royal },
-  { key: "Grids", endLabel: "Grids", value: "grids", color: iea.purple },
+  {
+    key: "Grids",
+    endLabel: "Grids",
+    value: "grids",
+    color: iea.purple,
+    // Grids (110) and efficiency (106) land close together on the index
+    // scale, close enough that their two-line mobile labels overlap — nudge
+    // them apart there only.
+    endLabelMobile: { labelYOffset: -6 },
+  },
   {
     key: "Energy efficiency",
     endLabel: "Energy efficiency",
     value: "efficiency",
     color: colors.sage,
+    endLabelMobile: { labelYOffset: 6 },
   },
 ];
 

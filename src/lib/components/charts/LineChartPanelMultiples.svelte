@@ -2,14 +2,12 @@
   // Small multiples of single-line charts: each of pair.panels gets its own
   // mini LineChart (one series, no legend needed — the label above the panel
   // is the identity). A grid (not flex-wrap) so the column count is explicit
-  // per breakpoint rather than however many 224px panels happen to fit: one
-  // full-width panel per row on phones, 2x2 on tablets, all four in a row on
-  // desktop where the figure column is a fixed 800px (ChartDisplay's
-  // lg:w-200).
+  // per breakpoint rather than however many 224px panels happen to fit: 2x2
+  // on phones and tablets, all four in a row on desktop where the figure
+  // column is a fixed 800px (ChartDisplay's lg:w-200).
   import { Area, AnnotationPoint, LineChart, Spline, defaultChartPadding } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat } from "$lib/chart-theme";
 
   // Same <1024 mobile threshold as the rest of the report (desktopTooltips,
   // the grid's column breakpoints below). Below it every panel is stacked
@@ -32,9 +30,11 @@
     strokeWidth: 6.5,
   };
 
-  const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
   const formatPoint = (d) => d.toFixed(1);
+  // Earliest year in the chart's own x domain, so the mobile year
+  // abbreviation below knows which tick to keep spelled out in full.
+  const firstTickYear = (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear();
 
   // Desktop (all four panels in one row): only the first panel's axis
   // carries numbers on the left and only the last carries them on the right;
@@ -83,12 +83,12 @@
 
 <svelte:window bind:innerWidth />
 
-<div class="grid h-full min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-1 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
+<div class="grid h-full min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-1 md:gap-6 lg:grid-cols-4">
   {#each pair.panels as panel, i (panel.label)}
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col">
       <!-- Desktop only: the name sits above the chart, same as every other
            figure's panel label. Below 1024 there's no headroom to spare for
-           a separate label row (four stacked panels means every pixel of
+           a separate label row (two rows of two panels means every pixel of
            row height counts), so the name instead overlays the chart,
            centered — dead center clears both the start/end value labels
            (anchored at the plot's left/right edges) and every series' own
