@@ -3,13 +3,13 @@
 // via the factories below so every callout inherits the same styling; any
 // AnnotationPoint/Range prop can still be overridden per call.
 
-import { ink, iea, colors } from "$lib/colors.js";
+import { ink, iw, colors } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };
 const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
 const projectionPattern = {
   size: 8,
-  lines: { rotate: -45, color: iea.gray, opacity: 0.5 },
+  lines: { rotate: -45, color: iw.gray, opacity: 0.5 },
 };
 
 // Circled point callout. `filled` tints the ring with the series color for

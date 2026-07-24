@@ -1,5 +1,5 @@
 import { defaultChartPadding } from "layerchart";
-import { ink, iea } from "./colors.js";
+import { ink, iw } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
@@ -7,7 +7,7 @@ export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 // direct-labeled), so both axes get the same muted gray as the "Projection"
 // band label instead of the report's usual black ink. Data labels (bar
 // totals, value-on-bar text, etc.) keep using `tickLabelProps` above.
-export const mutedTickLabelProps = { fill: iea.grayText, class: "text-xs font-light" };
+export const mutedTickLabelProps = { fill: iw.grayText, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };

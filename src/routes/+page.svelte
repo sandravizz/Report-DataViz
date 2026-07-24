@@ -3,65 +3,41 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce — An Interactive Report",
+    title: "IW-Wohnindex Q2 2026 — An Interactive Report",
     description:
-      "An interactive report by the International Energy Agency on employment trends and skills needs across renewable energy, grids and energy efficiency. Web development and data visualization by SandraViz.",
+      "An interactive report on the IW-Wohnindex Q2 2026 (Institut der deutschen Wirtschaft): German residential property prices and listing volumes. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Chapter 1 of the IEA report "Ensuring a Skilled Renewable Energy and
-  // Energy Efficiency Workforce" (2026). Section titles and intro paragraphs
-  // are the report's own text, verbatim (CC BY 4.0) — `intro` takes an array
-  // of paragraphs. Ids are assigned automatically (chapter-1, chapter-2, ...)
-  // below.
+  // First pass: chapters 1-2 of the IW-Wohnindex Q2 2026 (IW-Report 34/2026,
+  // Institut der deutschen Wirtschaft, 20.07.2026). Section titles and intro
+  // paragraphs are the report's own text, verbatim. `intro` takes an array of
+  // paragraphs. Ids are assigned automatically (chapter-1, chapter-2, ...)
+  // below. Chapters 3-5 (regional/city breakdowns and the offer-count special
+  // section) are not built yet.
   const sections = [
     {
-      kicker:
-        "Chapter 1. Employment trends in renewable energy, grids and energy efficiency",
+      kicker: "Kapitel 1. Einleitung",
       title:
-        "Employment opportunities are growing in renewable energy, grids and energy efficiency",
+        "Der IW-Wohnindex: Kauf- und Mietpreise für Wohnimmobilien in Deutschland",
       intro: [
-        "The energy sector has become a driver of employment growth. In 2024, global energy employment grew 2.2% year-on-year, underpinned by energy infrastructure investments, nearly double the economy-wide rate of 1.3%. Since 2019, the energy sector added on average more than 1 million jobs annually, which marks a shift compared to the period between 2015 and 2019, when the sector created around 300 000 jobs per year on average.",
-        "Electricity is playing an increasingly central role in energy spending and employment. Power generation investments increased by 70% between 2015 and 2024, and employment in the sector grew 27%, driven by solar photovoltaics (PV) and wind. This shift reflects that the energy sector has entered the Age of Electricity, where electricity is increasingly central to modern economies due to rising consumption driven by industry, electric vehicles, air conditioning and data centres among other factors.",
-        "In the States Policies Scenario (STEPS) of the World Energy Outlook (WEO) 2025, labour demand in renewable energy, grids and energy efficiency reaches 35 million workers by 2035. However, the IEA Industry Employment Survey 2025 found that 66% of companies in these subsectors were already experiencing labour and skills shortages highlighting that efforts are required urgently to attract and train more workers in these sectors now.",
+        "Der vorliegende IW-Wohnindex untersucht die Entwicklung der Kauf- und Mietpreise für Wohnimmobilien in Deutschland. Der vierteljährig erscheinende Kurzreport präsentiert die Ergebnisse eines hedonischen Preisindex auf der Basis von mehreren Millionen Wohnimmobilieninseraten. Betrachtet werden dabei sowohl inserierte Kaufpreise als auch Neuvertragsmieten.",
+        "Der Report fokussiert sich regelmäßig auf die allgemeinen Preisentwicklungen auf dem Kauf- und Mietmarkt und die regionalen Auswertungen nach Regionstypen für die größten deutschen Städte. Als Sonderteil wird in dieser Ausgabe zudem die Entwicklung der Inseratszahlen näher betrachtet.",
       ],
-      charts: [figures.regionalWorkforceChange],
+      charts: [],
     },
     {
-      title: "The power sector is driving employment growth in the energy sector",
+      kicker: "Kapitel 2. Entwicklung der Wohnimmobilienpreise in Deutschland",
+      title: "Kaufpreise leicht im Plus, Mieten steigen weiter deutlich",
       intro: [
-        "In 2024, the power sector became the largest energy sector employer with 22.6 million workers, which includes generation (fossil, renewable and nuclear) and grids (transmission, distribution and storage). Power generation employment specifically, which in our definition excludes grids, grew at an annual average growth rate of 5.1% between 2019 and 2024, and reached 14.2 million workers, while grid employment grew by 1.9% on average, and reached 8.5 million workers.",
-        "Employment in renewable energy, grids and energy efficiency grew at a steady pace between 2019 and 2024, averaging 2.8% per annum, apart from 2020 when the Covid-19 pandemic disrupted markets and slowed activity. In 2024, almost 40% of energy workers were employed in these areas.",
+        "Im Kaufsegment setzt sich die Stabilisierung im zweiten Quartal 2026 fort. Gegenüber dem Vorjahresquartal verteuern sich sowohl Eigentumswohnungen als auch Ein- und Zweifamilienhäuser um 0,8 Prozent. Im Vergleich zum Vorquartal steigen die Preise für Eigentumswohnungen leicht um 0,2 Prozent, bei Ein- und Zweifamilienhäusern fällt der Zuwachs mit 1,0 Prozent etwas deutlicher aus. Insgesamt bewegen sich die Kaufpreise damit weiterhin weitgehend seitwärts, nachdem sie seit Mitte 2022 erheblich zurückgegangen waren.",
+        "Die moderate Preisentwicklung ist vor dem Hintergrund der weiterhin anspruchsvollen Finanzierungsbedingungen plausibel. Das Zinsniveau begrenzt nach wie vor die finanziellen Spielräume vieler Haushalte. Gleichzeitig spricht die zuletzt wieder leicht positive Entwicklung dafür, dass sich der Markt nach der deutlichen Preiskorrektur zunehmend stabilisiert.",
+        "Die Wohnkosten steigen damit inzwischen wieder recht kontinuierlich in beiden Marktsegmenten. Während sich die Kaufpreise bislang nur leicht erhöhen, setzen die Angebotsmieten ihren deutlich stärkeren Anstieg fort. Gegenüber dem Vorjahresquartal beträgt das Plus 4,0 Prozent, gegenüber dem Vorquartal 1,3 Prozent.",
       ],
-      charts: figures.workforceGrowthIndexSteps,
-    },
-    {
-      title:
-        "Spotlight: Renewable energy, grids and energy efficiency employment opportunities in Southeast Asia",
-      intro: [
-        "With a fast-growing population and expanding industrialisation and urbanisation, energy demand in Southeast Asia is growing rapidly and will represent 20% of the world’s global energy demand growth in the next decade. Renewable energy supply in Southeast Asia has almost tripled since 2000 reaching around 20% of the overall energy mix in 2024. In the STEPS, clean energy meets over 40% of incremental demand growth by 2035. This will in turn impact energy employment in renewable energy, grids and energy efficiency, where the region currently accounts for 5% of the global workforce. Workforce mapping and skills planning are necessary to ensure an adequately skilled labour force to meet this new demand.",
-        "In the STEPS, employment in renewable energy, grids and energy efficiency in Southeast Asia rises to 1.8 million workers by 2035. Workforce expansion is supported by policy measures, such as the ASEAN Plan of Action for Energy Cooperation (APAEC) 2026-2030, aiming to reach a 45% share of renewables in the electricity mix by 2030, as well as national strategies with renewable energy and energy efficiency targets in Indonesia, the Philippines and Malaysia.",
-      ],
-      charts: [figures.southeastAsiaSteps],
-    },
-    {
-      title: "Emerging and developing economies saw the strongest employment growth",
-      intro: [
-        "Global energy employment in renewable energy, grids and energy efficiency increased by 3% in 2024 (year-on-year) with the strongest growth in EMDE. Employment growth has varied from region to region, with some countries seeing job creation linked to national energy initiatives and dedicated investment, while others have experienced job losses or employment stagnation linked to a number of constraints such as high production costs and the high cost of capital. As countries change their national energy mixes, energy transitions will impact employment needs in different energy subsectors.",
-        "China’s renewable energy, grids and energy efficiency sectors saw sustained job growth between 2019 and 2024, averaging over 4% per year, far outpacing economy-wide employment growth which fell to just below zero over the same period. China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024. China also remains the dominant global solar PV sector employer, employing 60% of the global workforce.",
-      ],
-      charts: [figures.workforceByRegionA, figures.workforceByRegionB],
-    },
-    {
-      title:
-        "Employment in renewable energy, grids and energy efficiency rises by 5.6 million jobs by 2035 in the STEPS",
-      intro: [
-        "In the STEPS new energy employment opportunities grow through 2035 with jobs in renewable energy, grids and energy efficiency growing roughly three times faster than overall energy sector employment. As a result, renewable energy, grids and energy efficiency employment rises from around 30 million jobs in 2024 to approximately 35 million by 2035 requiring efforts to attract more people to the energy sector and to train them. Around four in ten energy workers by 2035 are employed in renewable energy, grids and energy efficiency making these sectors a major energy employment creator.",
-      ],
-      charts: [figures.workforceBySectorSteps],
+      charts: [figures.nationalIndex],
     },
   ].map((section, i) => ({
     ...section,
@@ -80,46 +56,9 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={meta.title} />
-  <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
 <Header links={tocLinks} />
-
-<!-- Abstract of the report, verbatim (CC BY 4.0). The Header component still
-     supports an "Abstract" dropdown via an optional `abstract` snippet prop —
-     pass it back in (`<Header links={tocLinks}>{#snippet abstract()}...`) to
-     bring it back. Kept here, unused, so the text isn't lost.
-{#snippet abstract()}
-  <p>
-    This report examines employment trends, skills needs, and skills gaps
-    across renewable energy, grids, and energy efficiency. It highlights the
-    increased demand for skilled workers in these sectors and the need to
-    address skilled labour shortages. The report identifies barriers which
-    are currently hindering energy education and training. It also discusses
-    policy measures aimed at attracting more people to the renewable energy
-    and energy efficiency sectors and providing them with the necessary
-    training.
-  </p>
-  <p>
-    The report includes new IEA analysis on online job postings in renewable
-    energy and energy efficiency, and IEA modelling on energy employment
-    from 2024 as the last full year of data available at the time of
-    publication. The analysis also draws from stakeholder input from two
-    in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
-    IEA and the European Commission and the results from three IEA surveys
-    conducted in 2025 with over 700 respondents: the
-    <em>IEA Industry Employment Survey</em>,
-    <em>IEA Labour Employment Survey</em> and
-    <em>IEA Educators&rsquo; Employment Survey</em>.
-  </p>
-{/snippet}
--->
 
 <div id="top">
   <Landing />
@@ -137,7 +76,7 @@
                 {section.kicker}
               </p>
             {/if}
-            <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+            <h2 class="font-display text-2xl font-bold sm:text-3xl">{section.title}</h2>
             {#each section.paragraphs as paragraph (paragraph)}
               <p class="mt-4 text-lg leading-relaxed text-base-content/80">
                 {paragraph}

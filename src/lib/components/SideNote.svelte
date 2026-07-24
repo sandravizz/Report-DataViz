@@ -27,7 +27,7 @@
         {kicker}
       </p>
     {/if}
-    <span class="mt-2 block text-xl font-semibold sm:text-2xl">{title}</span>
+    <span class="font-display mt-2 block text-xl font-bold sm:text-2xl">{title}</span>
   </summary>
   <div
     class="collapse-content space-y-4 text-lg leading-relaxed {glass

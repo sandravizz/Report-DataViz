@@ -4,33 +4,35 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: iea --default;
+  themes: iw --default;
 }
 
-/* IEA corporate colors (derived from iea.org site CSS — see docs/iea-brand.md).
-   Black text on white, grey surfaces #f3f3f3 / #e6e6e6, and the signature
-   electric blue #0044ff as primary (#002999 is its hover/pressed shade).
-   Status colors follow the site's own label/alert components. */
+/* IW (Institut der deutschen Wirtschaft) colors, taken directly from
+   iwkoeln.de's own default.css: body text #1b4160, navy #2e4964 as the
+   site's own link/`.btn--primary` color, brand blue #0069b4 (the logo mark,
+   `.btn--secondary`) and teal #106b71 (`.btn--tertiary`) as the next two
+   brand hues, amber #f59d0f as the site's own --accent-color. See
+   docs/iw-brand.md. */
 @plugin "daisyui/theme" {
-  name: 'iea';
+  name: 'iw';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f3f3f3;
-  --color-base-300: #e6e6e6;
-  --color-base-content: #000000;
-  --color-primary: #0044ff;
+  --color-base-200: #f1f4f7;
+  --color-base-300: #e9edf1;
+  --color-base-content: #1b4160;
+  --color-primary: #2e4964;
   --color-primary-content: #ffffff;
-  --color-secondary: #49d3ff;
-  --color-secondary-content: #000000;
-  --color-accent: #ff754b;
+  --color-secondary: #0069b4;
+  --color-secondary-content: #ffffff;
+  --color-accent: #f59d0f;
   --color-accent-content: #000000;
   --color-neutral: #6f6f6f;
   --color-neutral-content: #ffffff;
-  --color-info: #49d3ff;
-  --color-info-content: #000000;
+  --color-info: #106b71;
+  --color-info-content: #ffffff;
   --color-success: #68f394;
   --color-success-content: #000000;
   --color-warning: #fff45a;
@@ -40,6 +42,6 @@
 }
 
 @theme {
-  --font-sans: 'Graphik', Arial, sans-serif;
-  --font-display: 'Graphik', Arial, sans-serif;
+  --font-sans: 'Source Sans Pro', helvetica, arial, sans-serif;
+  --font-display: 'Acherus Grotesque', 'Source Sans Pro', helvetica, arial, sans-serif;
 }

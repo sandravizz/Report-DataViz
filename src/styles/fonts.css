@@ -1,38 +1,55 @@
-/* IEA brand font (from iea.org site CSS):
-   - Graphik — the IEA's single corporate face for headlines and text alike
-     (site stack: Graphik, Arial, sans-serif). Self-hosted woff2 files taken
-     from iea.org/assets/front/fonts/, in static/fonts/. The IEA site ships
-     Regular (400, + italic), Medium (500) and Semibold (600); lighter weights
-     fall back to Regular. */
+/* IW (Institut der deutschen Wirtschaft) brand fonts, self-hosted from
+   iwkoeln.de's own default.css (dist/Stylesheets/Default/default.css):
+   - Source Sans Pro — body text (site stack: Source Sans Pro, helvetica,
+     arial, sans-serif). Open-source (SIL OFL), self-hosted woff2 files taken
+     from iwkoeln.de/dist/Fonts/Default/, in static/fonts/.
+   - Acherus Grotesque — headings only, bold/black weights (site stack:
+     Acherus Grotesque, Source Sans Pro, helvetica, arial, sans-serif). */
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Regular.woff2') format('woff2');
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/source-sans-pro-v13-latin-regular.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-RegularItalic.woff2') format('woff2');
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/source-sans-pro-v13-latin-italic.woff2') format('woff2');
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Medium.woff2') format('woff2');
-	font-weight: 500;
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/source-sans-pro-v14-latin-600.woff2') format('woff2');
+	font-weight: 600;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Semibold.woff2') format('woff2');
-	font-weight: 600;
+	font-family: 'Source Sans Pro';
+	src: url('/fonts/source-sans-pro-v13-latin-700.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Acherus Grotesque';
+	src: url('/fonts/acherus_grotesque-extrabold.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Acherus Grotesque';
+	src: url('/fonts/acherus_grotesque_-_black-webfont.woff2') format('woff2');
+	font-weight: 800;
 	font-style: normal;
 	font-display: swap;
 }
