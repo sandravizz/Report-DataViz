@@ -1,4 +1,5 @@
 import { iw } from "$lib/colors";
+import { verticalRule } from "../annotation-presets.js";
 
 // From the IW-Report 34/2026 "IW-Wohnindex Q2 2026" (Institut der deutschen
 // Wirtschaft, 20.07.2026), p. 6, Figure 2-1: hedonic price index for German
@@ -44,23 +45,79 @@ const data = quarters.map(([year, q], i) => ({
   ezfh: seriesValues.ezfh[i],
 }));
 
-export default {
+// Shared scaffold for the static chart (below) and the animated reveal
+// (nationalIndexAnimatedSteps): same data, axes, title and description — only
+// which lines are visible (and whether the newest one draws in) changes.
+const base = {
   title: "Mieten steigen weiter deutlich, Kaufpreise nur moderat",
   subtitle:
     "Entwicklung der inserierten Immobilienpreise, hedonisch, Index: 2022 Q1 = 100, 2018 Q1–2026 Q2",
   description:
     "Die Angebotsmieten liegen 4,0 Prozent über dem Vorjahresquartal. Eigentumswohnungen (ETW) und Ein- und Zweifamilienhäuser (EZFH) verteuern sich dagegen nur um jeweils 0,8 Prozent — die Kaufpreise bewegen sich weitgehend seitwärts, nachdem sie seit Mitte 2022 erheblich zurückgegangen waren.",
   source: "Quelle: Institut der deutschen Wirtschaft",
-  number: "Abbildung 2-1",
   kind: "line",
   xKey: "quarter",
   xTicks: Array.from({ length: 9 }, (_, i) => new Date(2018 + i, 0, 1)),
   yDomain: [60, 130],
   yTicks: [60, 70, 80, 90, 100, 110, 120, 130],
   data,
-  series: [
-    { key: "Miete", endLabel: "Miete", value: "miete", color: iw.steel },
-    { key: "ETW", endLabel: "ETW", value: "etw", color: iw.navy },
-    { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: iw.gold },
-  ],
 };
+
+const allSeries = [
+  { key: "Miete", endLabel: "Miete", value: "miete", color: iw.steel },
+  {
+    key: "ETW",
+    endLabel: "ETW",
+    value: "etw",
+    color: iw.navy,
+    // ETW (93.4) and EZFH (92.6) end within a point of each other, close
+    // enough on this 60-130 scale that their end labels overlap — nudge ETW
+    // up clear of EZFH below it.
+    endLabelYOffset: -14,
+  },
+  { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: iw.gold },
+];
+
+// Marks the index's own base quarter (2022 Q1 = 100, per the subtitle) with a
+// dashed vertical rule, so the base period reads directly off the chart
+// rather than only from the subtitle text.
+const indexBaseRule = verticalRule({ x: new Date(2022, 0, 1), label: "2022 Q1 = 100" });
+
+export default {
+  ...base,
+  number: "Abbildung 2-1",
+  series: allSeries,
+  ruleAnnotations: [indexBaseRule],
+};
+
+// Each step shows `values` and flags `newValue` with `drawIn`, which
+// LineChartPanel animates left-to-right when the step becomes active.
+const stepSeries = (newValue, values) =>
+  allSeries
+    .filter((s) => values.includes(s.value))
+    .map((s) => ({ ...s, drawIn: s.value === newValue }));
+
+// Same chart as above, split into a 3-step scrolly reveal: rent first (the
+// report's headline line), then each purchase-price series in turn. Full
+// mechanism write-up: docs/scrolly-line-draw-in.md.
+export const nationalIndexAnimatedSteps = [
+  {
+    ...base,
+    number: "Abbildung 2-1 (animiert)",
+    series: stepSeries("miete", ["miete"]),
+  },
+  {
+    ...base,
+    number: "Abbildung 2-1 (animiert)",
+    series: stepSeries("etw", ["miete", "etw"]),
+  },
+  {
+    ...base,
+    number: "Abbildung 2-1 (animiert)",
+    series: stepSeries("ezfh", ["miete", "etw", "ezfh"]),
+    // Only the final step has all three lines on screen, so the index-base
+    // rule (see the static chart above) appears here, not on the earlier
+    // steps.
+    ruleAnnotations: [indexBaseRule],
+  },
+];

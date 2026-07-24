@@ -1,5 +1,5 @@
 <script>
-  import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
 
@@ -102,6 +102,10 @@
           label: s.endLabel,
           labelPlacement: "right",
           labelXOffset: 8,
+          // A series can nudge its own end label up/down (negative = up) when
+          // its value sits close enough to a neighboring series that the
+          // labels would otherwise overlap.
+          labelYOffset: s.endLabelYOffset ?? 0,
           props: {
             circle: { fill: s.color, stroke: "none", class: reveal },
             label: {
@@ -200,6 +204,9 @@
   {#snippet belowMarks()}
     {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
       <AnnotationRange {...annotation} />
+    {/each}
+    {#each pair.ruleAnnotations ?? [] as annotation, i (i)}
+      <AnnotationLine {...annotation} />
     {/each}
     {#if pair.diffBand}
       <!-- Transparent fill between the step's new line and the previous

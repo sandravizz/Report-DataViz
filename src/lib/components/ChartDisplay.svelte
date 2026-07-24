@@ -8,6 +8,8 @@
 
   const figureFiles = {
     "Abbildung 2-1": "Abbildung2-1.png",
+    // Same underlying chart as 2-1, just animated — reuse its static PNG.
+    "Abbildung 2-1 (animiert)": "Abbildung2-1.png",
   };
 
   function figureImage(pair) {
