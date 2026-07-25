@@ -66,7 +66,7 @@ export const colors = {
 // light brand green.
 export const mintDark = shade(brand.mint, 0.5);
 
-// IEA report chart palette — sourced from a client-picked Coolors palette
+// report chart palette — sourced from a client-picked Coolors palette
 // (charcoal/mauve/rose/tan/sage/mint/turquoise/coral), scoped to the report's
 // figures only so it doesn't reskin the rest of the sandraviz.com site, which
 // stays on `brand` above. The raw swatches read too pale/gray for data marks
