@@ -1,4 +1,4 @@
-import { colors, iea } from "$lib/colors";
+import { colors, brand } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
@@ -22,13 +22,13 @@ const data = years.map((year, i) => ({
 }));
 
 const allSeries = [
-  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: iea.coral },
-  { key: "Wind", endLabel: "Wind", value: "wind", color: iea.royal },
+  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: brand.coral },
+  { key: "Wind", endLabel: "Wind", value: "wind", color: brand.royal },
   {
     key: "Grids",
     endLabel: "Grids",
     value: "grids",
-    color: iea.purple,
+    color: brand.purple,
     // Grids (110) and efficiency (106) land close together on the index
     // scale, close enough that their two-line mobile labels overlap — nudge
     // them apart there only.
@@ -134,7 +134,7 @@ export const workforceGrowthIndexSteps = [
         x: new Date(2024, 0, 1),
         y: 160,
         filled: true,
-        color: iea.coral,
+        color: brand.coral,
         label: "Solar PV jobs up 60% since 2019",
         labelPlacement: "top-left",
         labelXOffset: 24,

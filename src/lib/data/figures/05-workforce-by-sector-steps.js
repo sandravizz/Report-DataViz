@@ -1,4 +1,4 @@
-import { colors, iea, mintDark } from "$lib/colors";
+import { colors, brand, mintDark } from "$lib/colors";
 import { projectionRange } from "$lib/data/annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
@@ -43,9 +43,9 @@ const powerPanel = {
   // hue: grids purple, wind royal, solar the brand coral (not blue — wind
   // now owns blue in this stack).
   series: [
-    { key: "Grids", value: "grids", color: iea.purple },
-    { key: "Wind", value: "wind", color: iea.royal },
-    { key: "Solar PV", value: "solar", color: iea.coral },
+    { key: "Grids", value: "grids", color: brand.purple },
+    { key: "Wind", value: "wind", color: brand.royal },
+    { key: "Solar PV", value: "solar", color: brand.coral },
   ],
   data: [
     { year: new Date(2024, 0, 1), grids: 8.5, solar: 5.0, wind: 1.7 },

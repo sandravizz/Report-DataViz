@@ -1,4 +1,4 @@
-import { colors, iea } from "$lib/colors";
+import { colors, brand } from "$lib/colors";
 import { projectionRange } from "$lib/data/annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
@@ -37,9 +37,9 @@ export default {
   // wears the same hue across the line chart and this stack.
   series: [
     { key: "Efficiency", value: "efficiency", color: colors.sage },
-    { key: "Grids", value: "grids", color: iea.purple },
-    { key: "Wind", value: "wind", color: iea.royal },
-    { key: "Solar PV", value: "solar", color: iea.coral },
+    { key: "Grids", value: "grids", color: brand.purple },
+    { key: "Wind", value: "wind", color: brand.royal },
+    { key: "Solar PV", value: "solar", color: brand.coral },
   ],
   data,
   // 2035 is the STEPS projection, not an observation — same hatched

@@ -4,42 +4,43 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: iea --default;
+  themes: sandraviz --default;
 }
 
-/* IEA corporate colors (derived from iea.org site CSS — see docs/iea-brand.md).
-   Black text on white, grey surfaces #f3f3f3 / #e6e6e6, and the signature
-   electric blue #0044ff as primary (#002999 is its hover/pressed shade).
-   Status colors follow the site's own label/alert components. */
+/* SandraViz brand colors, sampled from the landing photo (static/cover.jpg —
+   see docs/sandraviz-brand.md): warm near-black #221d18 text on white (not
+   pure black — Sandra's call), warm tan-grey surfaces #f6f2ee / #e7dfd4,
+   burnt orange #8f4d28 as primary and khaki #8a6f4f as secondary — both
+   lifted from the photo's sunset and tidal-flat tones. */
 @plugin "daisyui/theme" {
-  name: 'iea';
+  name: 'sandraviz';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f3f3f3;
-  --color-base-300: #e6e6e6;
-  --color-base-content: #000000;
-  --color-primary: #0044ff;
+  --color-base-200: #f6f2ee;
+  --color-base-300: #e7dfd4;
+  --color-base-content: #221d18;
+  --color-primary: #8f4d28;
   --color-primary-content: #ffffff;
-  --color-secondary: #49d3ff;
-  --color-secondary-content: #000000;
-  --color-accent: #ff754b;
-  --color-accent-content: #000000;
-  --color-neutral: #6f6f6f;
+  --color-secondary: #8a6f4f;
+  --color-secondary-content: #ffffff;
+  --color-accent: #b79a6e;
+  --color-accent-content: #221d18;
+  --color-neutral: #6b5a4a;
   --color-neutral-content: #ffffff;
-  --color-info: #49d3ff;
-  --color-info-content: #000000;
-  --color-success: #68f394;
-  --color-success-content: #000000;
-  --color-warning: #fff45a;
-  --color-warning-content: #000000;
-  --color-error: #e34946;
+  --color-info: #7a95a8;
+  --color-info-content: #ffffff;
+  --color-success: #6f7a4a;
+  --color-success-content: #ffffff;
+  --color-warning: #c79a4f;
+  --color-warning-content: #221d18;
+  --color-error: #b33d2e;
   --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Graphik', Arial, sans-serif;
-  --font-display: 'Graphik', Arial, sans-serif;
+  --font-sans: 'IBM Plex Sans', Arial, sans-serif;
+  --font-display: 'IBM Plex Sans', Arial, sans-serif;
 }

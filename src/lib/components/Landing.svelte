@@ -1,6 +1,6 @@
 <script>
-  // The IEA analysis page credits no individual authors — if the client wants
-  // an author line here, names (and links) still to come.
+  // No individual authors credited — if a client wants an author line here,
+  // names (and links) still to come.
   const authors = [];
 
   // Optional extra content (e.g. the abstract side note) rendered in a text
@@ -8,15 +8,18 @@
   let { children } = $props();
 </script>
 
-<!-- Full-bleed hero: the report page's own cover photo (wind farm in the ocean
-     and on land at the dike, NL — via iea.imgix.net) as background, title
-     overlaid McKinsey-style. The image runs under the fixed translucent
-     header. -->
+<!-- Full-bleed hero: two silhouetted figures on a tidal flat with wind
+     turbines at sunset (photo by ZHENYU LUO on Unsplash, free license, no
+     attribution required — chosen 2026-07-25 for the workforce + energy
+     mood), title overlaid McKinsey-style. The image runs under the fixed
+     translucent header. Source photo is portrait (2400x3600); object-position
+     keeps the turbines/figures band (~28% down the frame) in view across
+     wide desktop crops instead of the default center crop. -->
 <section class="relative flex min-h-screen flex-col font-sans">
   <img
     src="/cover.jpg"
-    alt="Wind turbines standing in the ocean and along a dike between green fields"
-    class="absolute inset-0 h-full w-full object-cover"
+    alt="Two silhouetted people on a tidal flat at sunset, with wind turbines in the distance"
+    class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
   />
   <!-- Scrim: darkens toward the bottom where the text sits, so the white
        title stays legible on the bright sky/ocean photo. -->
@@ -41,14 +44,15 @@
         </p>
       {/if}
       <p class="mt-6 text-lg text-white/90 sm:text-xl">
+        Content &amp; data:
         <a
           href="https://www.iea.org"
           target="_blank"
           rel="noopener"
-          class="link-hover underline-offset-4">International Energy Agency</a
-        >
+          class="link-hover underline-offset-4">IEA</a
+        > (2026)
       </p>
-      <p class="mt-2 text-sm text-white/75 sm:text-base">June 30, 2026 | Report</p>
+      <p class="mt-2 text-sm text-white/75 sm:text-base">Interactive design study · SandraViz</p>
     </div>
 
     <!-- Extra content (the abstract side note) overlaid at the bottom of the

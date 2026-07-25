@@ -1,37 +1,36 @@
-/* IEA brand font (from iea.org site CSS):
-   - Graphik — the IEA's single corporate face for headlines and text alike
-     (site stack: Graphik, Arial, sans-serif). Self-hosted woff2 files taken
-     from iea.org/assets/front/fonts/, in static/fonts/. The IEA site ships
-     Regular (400, + italic), Medium (500) and Semibold (600); lighter weights
-     fall back to Regular. */
+/* SandraViz brand font: IBM Plex Sans for both headings and body (Sandra's
+   call, 2026-07-25, after comparing candidates against real report copy —
+   see docs/sandraviz-brand.md). Self-hosted woff2 from Google Fonts (latin
+   subset only), in static/fonts/: Regular (400, + italic), Medium (500) and
+   Semibold (600). */
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Regular.woff2') format('woff2');
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/IBMPlexSans-Regular.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-RegularItalic.woff2') format('woff2');
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/IBMPlexSans-RegularItalic.woff2') format('woff2');
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Medium.woff2') format('woff2');
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/IBMPlexSans-Medium.woff2') format('woff2');
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Graphik';
-	src: url('/fonts/Graphik-Semibold.woff2') format('woff2');
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/IBMPlexSans-Semibold.woff2') format('woff2');
 	font-weight: 600;
 	font-style: normal;
 	font-display: swap;

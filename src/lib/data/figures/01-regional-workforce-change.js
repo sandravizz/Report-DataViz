@@ -1,4 +1,4 @@
-import { colors, iea } from "$lib/colors";
+import { colors, brand } from "$lib/colors";
 
 const data = [
   { region: "India", clean: 6.0, economy: 3.2 },
@@ -31,7 +31,7 @@ export default {
       label: "Renewable energy, grids and energy efficiency",
       color: colors.sky,
     },
-    { key: "economy", label: "Economy-wide", color: iea.gray },
+    { key: "economy", label: "Economy-wide", color: brand.gray },
   ],
   data,
 };

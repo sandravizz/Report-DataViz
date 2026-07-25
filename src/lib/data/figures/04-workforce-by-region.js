@@ -1,4 +1,4 @@
-import { iea, ink, tint } from "$lib/colors";
+import { brand, ink, tint } from "$lib/colors";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
 // Efficiency Workforce" (2026), p. 14: global renewable energy, grids and
@@ -46,18 +46,18 @@ export const workforceByRegionA = {
   hideYAxisMobile: true,
   // The sector palette (Figures 2, 3 and 5) is the report's color code, so
   // the regions deliberately don't get hues of their own: the whole stack is
-  // shades of the IEA electric blue, just distinct enough that each new
-  // segment reads at a glance. China carries the story, so it sits on the
-  // shared baseline in the full blue, fading upward to the merged "Rest of
-  // world". With one hue the segment colors can't carry the labels, so
+  // shades of the brand's signature magenta, just distinct enough that each
+  // new segment reads at a glance. China carries the story, so it sits on
+  // the shared baseline in the full hue, fading upward to the merged "Rest
+  // of world". With one hue the segment colors can't carry the labels, so
   // `directLabelFill` inks every end label black instead.
   directLabelFill: ink,
   series: [
-    { key: "China", value: "china", color: iea.blue },
-    { key: "Europe", value: "europe", color: tint(iea.blue, 0.75) },
-    { key: "India", value: "india", color: tint(iea.blue, 0.55) },
-    { key: "North America", value: "northAmerica", color: tint(iea.blue, 0.4) },
-    { key: "Rest of world", value: "rest", color: tint(iea.blue, 0.25) },
+    { key: "China", value: "china", color: brand.blue },
+    { key: "Europe", value: "europe", color: tint(brand.blue, 0.75) },
+    { key: "India", value: "india", color: tint(brand.blue, 0.55) },
+    { key: "North America", value: "northAmerica", color: tint(brand.blue, 0.4) },
+    { key: "Rest of world", value: "rest", color: tint(brand.blue, 0.25) },
   ],
   data,
 };
@@ -94,10 +94,10 @@ export const workforceByRegionB = {
   // read as too flat to tell apart at a glance — legibility here wins over
   // avoiding the cross-figure hue overlap.
   panels: [
-    { label: "China", value: "china", color: iea.blue },
-    { label: "Europe", value: "europe", color: iea.teal },
-    { label: "North America", value: "northAmerica", color: iea.purple },
-    { label: "India", value: "india", color: iea.coral },
+    { label: "China", value: "china", color: brand.blue },
+    { label: "Europe", value: "europe", color: brand.teal },
+    { label: "North America", value: "northAmerica", color: brand.purple },
+    { label: "India", value: "india", color: brand.coral },
   ],
 };
 
