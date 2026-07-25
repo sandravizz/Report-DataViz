@@ -1,4 +1,4 @@
-import { brand, ink, tint } from "$lib/colors";
+import { iea, ink } from "$lib/colors";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
 // Efficiency Workforce" (2026), p. 14: global renewable energy, grids and
@@ -35,7 +35,7 @@ export const workforceByRegionA = {
     "Energy Workforce by Region, Million Workers, 2019–2024",
   description:
     "China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024.",
-  source: "Source: IEA 2026",
+  source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 4a",
   kind: "bar-stacked",
   xKey: "year",
@@ -46,18 +46,19 @@ export const workforceByRegionA = {
   hideYAxisMobile: true,
   // The sector palette (Figures 2, 3 and 5) is the report's color code, so
   // the regions deliberately don't get hues of their own: the whole stack is
-  // shades of the brand's signature magenta, just distinct enough that each
-  // new segment reads at a glance. China carries the story, so it sits on
-  // the shared baseline in the full hue, fading upward to the merged "Rest
-  // of world". With one hue the segment colors can't carry the labels, so
-  // `directLabelFill` inks every end label black instead.
+  // `iea.regionTints`, a one-hue ordinal ramp off `iea.featured` (validated
+  // with `--ordinal`, not the categorical checks), just distinct enough that
+  // each new segment reads at a glance. China carries the story, so it sits
+  // on the shared baseline in the full hue, fading upward to the merged
+  // "Rest of world". With one hue the segment colors can't carry the
+  // labels, so `directLabelFill` inks every end label black instead.
   directLabelFill: ink,
   series: [
-    { key: "China", value: "china", color: brand.blue },
-    { key: "Europe", value: "europe", color: tint(brand.blue, 0.75) },
-    { key: "India", value: "india", color: tint(brand.blue, 0.55) },
-    { key: "North America", value: "northAmerica", color: tint(brand.blue, 0.4) },
-    { key: "Rest of world", value: "rest", color: tint(brand.blue, 0.25) },
+    { key: "China", value: "china", color: iea.regionTints[0] },
+    { key: "Europe", value: "europe", color: iea.regionTints[1] },
+    { key: "India", value: "india", color: iea.regionTints[2] },
+    { key: "North America", value: "northAmerica", color: iea.regionTints[3] },
+    { key: "Rest of world", value: "rest", color: iea.regionTints[4] },
   ],
   data,
 };
@@ -74,7 +75,7 @@ export const workforceByRegionB = {
     "Energy Workforce by Region, Million Workers, 2019–2024",
   description:
     "China and India's clean energy workforces grew steadily between 2019 and 2024, while Europe's stayed flat and North America's edged up only slightly.",
-  source: "Source: IEA 2026",
+  source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 4b",
   kind: "line-multiples",
   xKey: "year",
@@ -90,14 +91,17 @@ export const workforceByRegionB = {
   // panel is its own single-line chart, so there's no cross-panel legend to
   // keep straight; the label above each panel already names the region. This
   // does reuse hues that Figures 2, 3 and 5 use as a fixed sector code
-  // (teal/purple/coral = Efficiency/Grids/Solar), but a same-family blue ramp
-  // read as too flat to tell apart at a glance — legibility here wins over
-  // avoiding the cross-figure hue overlap.
+  // (efficiency/grids/solar = Europe/North America/India), but a same-family
+  // ramp off `iea.featured` read as too flat to tell apart at a glance —
+  // legibility here wins over avoiding the cross-figure hue overlap. This
+  // exact four-color set (plus `iea.wind`, unused here) is the one validated
+  // with `--pairs all` in colors.js, since small multiples are checked
+  // all-pairs, not just adjacent.
   panels: [
-    { label: "China", value: "china", color: brand.blue },
-    { label: "Europe", value: "europe", color: brand.teal },
-    { label: "North America", value: "northAmerica", color: brand.purple },
-    { label: "India", value: "india", color: brand.coral },
+    { label: "China", value: "china", color: iea.featured },
+    { label: "Europe", value: "europe", color: iea.efficiency },
+    { label: "North America", value: "northAmerica", color: iea.grids },
+    { label: "India", value: "india", color: iea.solar },
   ],
 };
 

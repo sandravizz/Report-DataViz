@@ -1,10 +1,14 @@
-import { colors, brand } from "$lib/colors";
+import { iea } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
-// Efficiency Workforce" (2026), p. 10: global energy workforce growth indexed
-// to 2019 = 100. Values read off the published chart, to be replaced with the
-// exact series if the client supplies the data table.
+// Efficiency Workforce" (2026), p. 8: global energy workforce growth indexed
+// to 2019 = 100. The report states each sector's cumulative 2019-2024 growth
+// only in rounded form in the chapter text (solar "about 60%", wind "24%",
+// grids "10%", efficiency "6%") and otherwise gives year-on-year rates for
+// 2024 alone; the year-by-year index points between 2019 and 2024 are not
+// published, so this series is read off the chart and carries the
+// "approximate" note below.
 const years = [2019, 2020, 2021, 2022, 2023, 2024];
 const seriesValues = {
   solar: [100, 97.5, 121, 137, 151, 160],
@@ -22,13 +26,13 @@ const data = years.map((year, i) => ({
 }));
 
 const allSeries = [
-  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: brand.coral },
-  { key: "Wind", endLabel: "Wind", value: "wind", color: brand.royal },
+  { key: "Solar PV", endLabel: "Solar PV", value: "solar", color: iea.solar },
+  { key: "Wind", endLabel: "Wind", value: "wind", color: iea.wind },
   {
     key: "Grids",
     endLabel: "Grids",
     value: "grids",
-    color: brand.purple,
+    color: iea.grids,
     // Grids (110) and efficiency (106) land close together on the index
     // scale, close enough that their two-line mobile labels overlap — nudge
     // them apart there only.
@@ -38,7 +42,7 @@ const allSeries = [
     key: "Energy efficiency",
     endLabel: "Energy efficiency",
     value: "efficiency",
-    color: colors.sage,
+    color: iea.efficiency,
     endLabelMobile: { labelYOffset: 6 },
   },
 ];
@@ -49,7 +53,7 @@ const allSeries = [
 const base = {
   subtitle:
     "Global Energy Workforce Growth Index (2019 = 100), 2019–2024",
-  source: "Source: IEA 2026",
+  source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
@@ -128,13 +132,12 @@ export const workforceGrowthIndexSteps = [
     series: stepSeries("solar", ["solar", "wind", "grids", "efficiency"]),
     // Solar vs wind is the widest gap of the sequence — the payoff band.
     diffBand: diffBand("solar", "wind"),
-    // Placeholder callout — to be refined once we decide what to emphasize.
     annotations: [
       circleCallout({
         x: new Date(2024, 0, 1),
         y: 160,
         filled: true,
-        color: brand.coral,
+        color: iea.solar,
         label: "Solar PV jobs up 60% since 2019",
         labelPlacement: "top-left",
         labelXOffset: 24,

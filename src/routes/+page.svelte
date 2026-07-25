@@ -126,6 +126,11 @@
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
+    <!-- Every chapter is sticky: the text stays pinned on the left while the
+         reader scrolls, its chart sticky on the right — including
+         single-figure chapters (1, 3, 5), which used to get the inline
+         McKinsey-style treatment; that's reverted so every chapter behaves
+         the same way again. -->
     <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
       <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:bg-base-100">
         <div class="lg:flex lg:min-h-full">
@@ -147,9 +152,7 @@
         </div>
       </div>
     </section>
-    {#if section.charts.length > 0}
-      <ScrollySection pairs={section.charts} />
-    {/if}
+    <ScrollySection pairs={section.charts} title={section.title} paragraphs={section.paragraphs} />
   {/each}
 </div>
 

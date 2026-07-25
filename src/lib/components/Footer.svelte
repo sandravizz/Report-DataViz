@@ -14,10 +14,30 @@
     ? 'translate-y-0 opacity-100'
     : 'pointer-events-none translate-y-full opacity-0'}"
 >
+  <!-- IEA licensing notice sits above the credit row, in a smaller, dimmer
+       type size so it stays legible but doesn't compete for attention. -->
+  <div class="mx-auto flex max-w-2xl flex-col items-center gap-1 px-2 text-center text-[10px] leading-snug text-base-content/35">
+    <p>
+      This is a work derived by Sandra Becker from IEA material and Sandra Becker is solely liable
+      and responsible for this derived work. The derived work is not endorsed by the IEA or its
+      Member countries in any manner.
+    </p>
+    <p>
+      IEA 2026; Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce,
+      <a
+        href="https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce"
+        target="_blank"
+        rel="noopener"
+        class="link link-hover"
+      >https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce</a>,
+      License: CC BY 4.0.
+    </p>
+  </div>
+
   <!-- Exactly two lines on phones and iPads: the credit sentence on top,
        "by SandraViz" + icons below. Both lines are nowrap so nothing can
        spill into a third line. From lg up everything joins a single row. -->
-  <div class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-base-content/50 lg:flex-row lg:gap-x-1.5">
+  <div class="mt-3 flex flex-col items-center justify-center gap-y-1.5 border-t border-base-content/10 pt-3 text-xs text-base-content/50 lg:flex-row lg:gap-x-1.5">
     <span class="whitespace-nowrap">Web development &amp; data visualization</span>
     <div class="flex items-center gap-3 whitespace-nowrap">
       <span>by

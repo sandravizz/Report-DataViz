@@ -1,4 +1,4 @@
-import { colors, brand, mintDark } from "$lib/colors";
+import { iea } from "$lib/colors";
 import { projectionRange } from "$lib/data/annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
@@ -43,9 +43,9 @@ const powerPanel = {
   // hue: grids purple, wind royal, solar the brand coral (not blue — wind
   // now owns blue in this stack).
   series: [
-    { key: "Grids", value: "grids", color: brand.purple },
-    { key: "Wind", value: "wind", color: brand.royal },
-    { key: "Solar PV", value: "solar", color: brand.coral },
+    { key: "Grids", value: "grids", color: iea.grids },
+    { key: "Wind", value: "wind", color: iea.wind },
+    { key: "Solar PV", value: "solar", color: iea.solar },
   ],
   data: [
     { year: new Date(2024, 0, 1), grids: 8.5, solar: 5.0, wind: 1.7 },
@@ -72,12 +72,12 @@ const efficiencyPanel = {
   // Matches the power panel's ceiling so both bars in the pair read at the
   // same visual scale.
   yDomain: [0, 25],
-  // Heat pumps use a shaded-down mint (mintDark) instead of the brand mint
-  // itself — mint is fills-only (1.5:1 on white) and was unreadable as
-  // direct-label text; the darker shade fixes both the segment and its label.
+  // Heat pumps is a lighter, brighter step of the efficiency hue rather than
+  // a separate color — same family as "Other efficiency", distinguished by
+  // lightness and its own direct label (see colors.js `iea.heatPumps`).
   series: [
-    { key: "Other efficiency", value: "other", color: colors.sage },
-    { key: "Heat pumps", value: "heatPumps", color: mintDark },
+    { key: "Other efficiency", value: "other", color: iea.efficiency },
+    { key: "Heat pumps", value: "heatPumps", color: iea.heatPumps },
   ],
   data: [
     { year: new Date(2024, 0, 1), other: 13.4, heatPumps: 0.9 },
@@ -93,7 +93,7 @@ export default {
     "Global Energy Workforce by Sector in the STEPS, Million Workers, 2024–2035",
   description:
     "Renewable energy, grids and energy efficiency employment rises from around 30 million jobs in 2024 to approximately 35 million by 2035 requiring efforts to attract more people to the energy sector and to train them.",
-  source: "Source: IEA 2026",
+  source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 5",
   kind: "double",
   // Energy efficiency leads, matching every other figure's convention of

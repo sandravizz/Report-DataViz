@@ -1,10 +1,14 @@
 <script>
-  import { ITEM_H } from "$lib/scroll-animation";
-  import ScrollColumn from "./ScrollColumn.svelte";
-  import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  let { pairs } = $props();
+  // `title`/`paragraphs` are the chapter's own text, repeated here as a
+  // static caption beside the chart — the chapter's text block above has
+  // already scrolled out of view by the time this section's sticky region
+  // takes over, so without this the chart would sit with nothing to read
+  // next to it while it steps through. Unlike the old per-step description
+  // it doesn't change with activeIndex; the chart itself carries the
+  // step-to-step reveal.
+  let { pairs, title, paragraphs = [] } = $props();
 
   let containerEl;
 
@@ -60,14 +64,20 @@
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
-  let centerOffset = $derived(vh / 2 - ITEM_H / 2);
-  let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
 </script>
 
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
-    <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} {inView} />
-    <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
+    <div
+      class="absolute top-24 left-[calc(43%+464px)] right-8 hidden flex-col gap-3 px-6 lg:flex"
+    >
+      <h3 class="font-sans text-lg font-medium text-base-content">{title}</h3>
+      {#each paragraphs as paragraph (paragraph)}
+        <p class="font-sans text-sm leading-relaxed text-base-content/80">
+          {paragraph}
+        </p>
+      {/each}
+    </div>
   </div>
 </div>

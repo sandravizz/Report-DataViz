@@ -1,4 +1,4 @@
-import { colors, brand } from "$lib/colors";
+import { iea } from "$lib/colors";
 import { projectionRange } from "$lib/data/annotation-presets.js";
 
 // From the IEA report "Ensuring a Skilled Renewable Energy and Energy
@@ -19,7 +19,7 @@ export default {
     "Southeast Asia's Energy Workforce by Sector in the STEPS, Million Workers, 2015–2035",
   description:
     "In the STEPS, employment in renewable energy, grids and energy efficiency in Southeast Asia rises to 1.8 million workers by 2035.",
-  source: "Source: IEA 2026",
+  source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 3",
   kind: "bar-stacked",
   xKey: "year",
@@ -36,10 +36,10 @@ export default {
   // Colors match Figure 2's sector palette one-to-one, so the same sector
   // wears the same hue across the line chart and this stack.
   series: [
-    { key: "Efficiency", value: "efficiency", color: colors.sage },
-    { key: "Grids", value: "grids", color: brand.purple },
-    { key: "Wind", value: "wind", color: brand.royal },
-    { key: "Solar PV", value: "solar", color: brand.coral },
+    { key: "Efficiency", value: "efficiency", color: iea.efficiency },
+    { key: "Grids", value: "grids", color: iea.grids },
+    { key: "Wind", value: "wind", color: iea.wind },
+    { key: "Solar PV", value: "solar", color: iea.solar },
   ],
   data,
   // 2035 is the STEPS projection, not an observation — same hatched
