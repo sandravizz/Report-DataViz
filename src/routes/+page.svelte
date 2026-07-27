@@ -125,7 +125,7 @@
   <Landing />
 
   <div id="charts"></div>
-  {#each sections as section (section.id)}
+  {#each sections as section, i (section.id)}
     <!-- Every chapter is sticky: the text stays pinned on the left while the
          reader scrolls, its chart sticky on the right — including
          single-figure chapters (1, 3, 5), which used to get the inline
@@ -134,20 +134,36 @@
     <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
       <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:bg-base-100">
         <div class="lg:flex lg:min-h-full">
-          <div
-            class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
-          >
-            {#if section.kicker}
-              <p class="mb-3 text-xs font-medium tracking-wide text-primary uppercase">
-                {section.kicker}
+          <div class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200">
+            <!-- Header band: kicker/title/chapter-progress on base-200, set off
+                 from the body copy below by a dotted accent rule — carries the
+                 same "background does the separating" idea as Carta's cream
+                 hero, in the existing brand palette. -->
+            <div class="bg-base-200 px-6 py-10 sm:px-10">
+              {#if section.kicker}
+                <p class="mb-4 text-xs font-semibold tracking-wide text-primary uppercase">
+                  {section.kicker}
+                </p>
+              {/if}
+              <h2 class="text-3xl leading-snug font-normal text-balance sm:text-4xl">
+                {section.title}
+              </h2>
+              <p class="mt-5 text-xs text-base-content/60">
+                Chapter {i + 1} of {sections.length}
               </p>
-            {/if}
-            <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
-            {#each section.paragraphs as paragraph (paragraph)}
-              <p class="mt-4 text-lg leading-relaxed text-base-content/80">
-                {paragraph}
-              </p>
-            {/each}
+            </div>
+            <div class="border-t-2 border-dotted border-accent"></div>
+            <div class="flex flex-col gap-4 px-6 py-10 sm:px-10">
+              {#each section.paragraphs as paragraph, pi (paragraph)}
+                <p
+                  class="leading-relaxed {pi === 0
+                    ? 'text-lg text-base-content'
+                    : 'text-base text-base-content/80'}"
+                >
+                  {paragraph}
+                </p>
+              {/each}
+            </div>
           </div>
         </div>
       </div>
@@ -156,6 +172,29 @@
       <ScrollySection pairs={section.charts} />
     {/if}
   {/each}
+
+  <!-- Closing disclosure: sits once at the end of the report body, not in the
+       footer. No rule of its own — a second divider style next to the
+       chapters' bold accent-dotted rule read as competing styles, so this
+       just borrows the same quiet, no-border citation treatment already used
+       under each chart (FigureFooter.svelte): tiny, muted, low-key. -->
+  <div class="mx-auto w-[88vw] max-w-2xl py-6 lg:w-200">
+    <p class="text-[10px] leading-relaxed text-base-content/40">
+      This is a work derived by Sandra Becker from IEA material and Sandra Becker is solely liable
+      and responsible for this derived work. The derived work is not endorsed by the IEA or its
+      Member countries in any manner.
+    </p>
+    <p class="mt-1 text-[10px] leading-relaxed text-base-content/40">
+      IEA 2026; Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce,
+      <a
+        href="https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce"
+        target="_blank"
+        rel="noopener"
+        class="link link-hover"
+      >https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce</a>,
+      License: CC BY 4.0.
+    </p>
+  </div>
 </div>
 
 <Footer />

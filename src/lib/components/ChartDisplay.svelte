@@ -34,7 +34,7 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-6 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
+      <div class="mb-8 font-sans text-xs text-base-content lg:mb-16 lg:text-sm">
         {pair.subtitle}
       </div>
 

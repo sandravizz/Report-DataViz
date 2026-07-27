@@ -29,11 +29,11 @@
 </script>
 
 <div
-  class="mt-3 flex flex-nowrap items-start justify-between gap-2 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6"
+  class="mt-8 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-16"
 >
   <span class="leading-snug">{pair.source}</span>
   <a
-    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
+    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 px-1.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case"
     href={figureImage(pair)}
     download={downloadName(pair)}
   >
