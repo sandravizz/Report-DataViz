@@ -37,9 +37,9 @@ export default {
     {
       key: "clean",
       label: "Renewable energy, grids and energy efficiency",
-      color: iea.featured,
+      color: iea.regionTints[3],
     },
-    { key: "economy", label: "Economy-wide", color: iea.gray },
+    { key: "economy", label: "Economy-wide", color: iea.regionTints[4] },
   ],
   data,
 };

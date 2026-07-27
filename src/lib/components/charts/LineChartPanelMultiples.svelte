@@ -137,7 +137,7 @@
               y1={panel.value}
               curve={curveMonotoneX}
               fill={panel.color}
-              fillOpacity={0.12}
+              fillOpacity={0.5}
               stroke="none"
             />
             <Spline seriesKey={panel.label} {...casingStyle} />

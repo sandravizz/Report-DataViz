@@ -78,15 +78,15 @@ export const mintDark = shade(brand.mint, 0.5);
 // off `featured` for Figure 4a's stack, not a categorical set, so it's
 // checked with `--ordinal` instead.
 export const iea = {
-  solar: "#eb5e55", //      Solar PV — the palette's coral, used as sampled
-  wind: "#009399", //       Wind — from the palette's turquoise (57E2E5), re-tuned
-  grids: "#6c4cae", //      Grids — from the palette's charcoal-purple (565264), re-tuned
-  efficiency: "#009e94", // Energy efficiency — from the palette's sage (789C98), re-tuned
+  solar: "#e09f3e", //      Solar PV — the palette's coral, used as sampled
+  wind: "#50c5b7", //       Wind — from the palette's turquoise (57E2E5), re-tuned
+  grids: "#6184d8", //      Grids — from the palette's charcoal-purple (565264), re-tuned
+  efficiency: "#2b2d42", // Energy efficiency — from the palette's sage (789C98), re-tuned
   featured: "#a52f63", //   Featured/highlight (China, Figure 1's "clean" series) — from the palette's mauve (A6808C), re-tuned
   gray: "#c67855", //       De-emphasized (economy-wide) — from the palette's tan (CCB7AE), re-tuned
-  heatPumps: "#00c6b9", //  Heat pumps segment — a lighter step of the efficiency hue, not a separate hue
+  heatPumps: "#7d8597", //  Heat pumps segment — a lighter step of the efficiency hue, not a separate hue
   // Figure 4a's region stack: China (full) fading through Europe, India,
   // North America, to the merged "Rest of world" — a single-hue ramp off
   // `featured`, not five arbitrary tints, so it passes as an ordinal ramp.
-  regionTints: ["#a52f63", "#b05075", "#b86d87", "#bd8a9a", "#c2a5ae"],
+  regionTints: ["#184e77", "#34a0a4", "#76c8a8", "#99D98C", "#cfc0bd"],
 };

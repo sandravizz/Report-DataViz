@@ -152,7 +152,9 @@
         </div>
       </div>
     </section>
-    <ScrollySection pairs={section.charts} title={section.title} paragraphs={section.paragraphs} />
+    {#if section.charts.length > 0}
+      <ScrollySection pairs={section.charts} />
+    {/if}
   {/each}
 </div>
 

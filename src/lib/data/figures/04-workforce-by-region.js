@@ -67,8 +67,7 @@ export const workforceByRegionA = {
 // region's own trajectory, side by side, instead of everyone's share of one
 // stack. "Rest of world" is a merged catch-all bucket rather than a real
 // region (see note above), so it's left out here; the other four are the
-// report's actual geographies. Order follows the size of each region's 2024
-// workforce, same as the stack in Figure 4a.
+// report's actual geographies, in the same order as the stack in Figure 4a.
 export const workforceByRegionB = {
   title: "China and India Keep Climbing While Europe and North America Flatten Out",
   subtitle:
@@ -98,10 +97,10 @@ export const workforceByRegionB = {
   // with `--pairs all` in colors.js, since small multiples are checked
   // all-pairs, not just adjacent.
   panels: [
-    { label: "China", value: "china", color: iea.featured },
-    { label: "Europe", value: "europe", color: iea.efficiency },
-    { label: "North America", value: "northAmerica", color: iea.grids },
-    { label: "India", value: "india", color: iea.solar },
+    { label: "China", value: "china",  color: iea.regionTints[0] },
+    { label: "Europe", value: "europe", color: iea.regionTints[1] },
+    { label: "India", value: "india", color: iea.regionTints[2] },
+    { label: "North America", value: "northAmerica", color: iea.regionTints[3] },
   ],
 };
 
