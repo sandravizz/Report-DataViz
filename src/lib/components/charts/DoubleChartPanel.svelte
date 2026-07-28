@@ -12,21 +12,13 @@
 <div class="flex min-h-0 min-w-0 flex-1 flex-col">
   {#each pair.panels as panel, i (i)}
     {#if i > 0}
-      <div class="mt-4 mb-6 font-sans text-xs text-base-content lg:mt-8 lg:mb-12 lg:text-sm">
+      <div class="mt-2 mb-4 font-sans text-xs text-base-content lg:mt-8 lg:mb-12 lg:text-sm">
         <span class:hidden={panel.hideOnMobile} class:lg:inline={panel.hideOnMobile}>
           {panel.subtitle}
         </span>
       </div>
     {/if}
-    <!-- The last panel gets a bigger mobile share than the others — with two
-         panels splitting the viewport evenly, the second (usually the more
-         crowded one, more series/end labels) read as cramped on a phone.
-         Desktop has enough height that an even split already works. -->
-    <div
-      class="flex min-h-0 {i === pair.panels.length - 1 ? 'flex-[1.3] lg:flex-1' : 'flex-1'}"
-      class:mt-6={i === 0}
-      class:lg:mt-0={i === 0}
-    >
+    <div class="flex min-h-0 flex-1" class:mt-6={i === 0} class:lg:mt-0={i === 0}>
       <ChartPanel pair={panel} />
     </div>
   {/each}

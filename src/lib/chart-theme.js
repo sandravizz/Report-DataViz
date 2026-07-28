@@ -151,13 +151,13 @@ export function yAxisPropsInline(innerWidth) {
 // the plot rather than needing gutter width sized to the longest tick.
 export const yLabelPaddingInline = { left: 8 };
 
-// End-of-line labels (LineChartPanel's series end labels) reserve padding on
-// the right. Mobile gets a tighter margin than desktop —
-// screen width is already scarce there, and the labels wrap instead of
-// running wide.
+// End-of-line labels (LineChartPanel's series end labels, stacked bars' direct
+// labels) reserve padding on the right. Same margin on mobile as desktop now —
+// a tighter mobile margin was forcing labels to wrap onto two lines even
+// though the mobile gap (see BarChartPanelStacked) plus label width (see
+// endLabelMobileWrap) need close to the full 80px to fit on one line.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const labelSpace = innerWidth < 1024 ? 68 : 80;
-  return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
+  return defaultChartPadding(hasLabels ? { ...extra, right: 80 } : extra);
 }
 
 // Mobile override for end-of-line label annotations: the reserved
@@ -166,7 +166,7 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 // against an assumed 16px base font, not our actual text-xs/12px), which
 // reads as oversized gaps between wrapped lines.
 export const endLabelMobileWrap = {
-  props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
+  props: { label: { width: 60, truncate: false, lineHeight: "13px" } },
 };
 
 // Stacked bar panels get extra breathing room between bars on mobile — a
@@ -176,5 +176,5 @@ export const endLabelMobileWrap = {
 // padding (not a flat add) so many-bar figures, which already read tighter
 // at any padding value, aren't compressed as aggressively as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
-  return innerWidth < 1024 ? Math.min(base * 1.4, 0.6) : base;
+  return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
 }
