@@ -139,8 +139,8 @@
          matching Landing/Header) — white is reserved for the chart panel
          itself (ScrollySection), so text sections and visualization
          sections read as two distinct, consistent zones throughout. -->
-    <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-      <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+    <section id={section.id} class="font-sans text-base-content h-[140vh]">
+      <div class="bg-base-200 sticky top-0 h-screen overflow-y-auto">
         <div class="lg:flex lg:min-h-full lg:flex-col lg:justify-center">
           <!-- Header band: kicker and chapter-progress share one row, title
                beneath — set on a full-page-width banner so it reads as a

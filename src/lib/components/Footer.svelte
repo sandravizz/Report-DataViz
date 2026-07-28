@@ -13,10 +13,10 @@
 
 <footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center lg:flex-row lg:items-center lg:gap-10"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center md:flex-row md:items-center md:gap-10"
   >
     <div
-      class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 lg:w-[48%] lg:shrink-0 lg:py-0 lg:pl-24"
+      class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
     >
       <img
         src="/sandra-portrait.jpg"
@@ -24,8 +24,8 @@
         class="mb-4 h-20 w-20 rounded-full object-cover sm:mb-6 sm:h-28 sm:w-28"
       />
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
-        I'm Sandra — a data visualization designer and developer. I specialise in customised data
-        visualization for reports, built for the web (including mobile) as well as static formats.
+        I'm Sandra, a data visualization designer and developer. I build interactive,
+        visualization-first reports for the web (including mobile) as well as static formats.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
         Like what you see? If you'd like something similar for your own reports,
@@ -63,10 +63,10 @@
     </div>
 
     <!-- Same turbine illustration as Landing, mirrored — the report closes
-         the loop instead of just trailing off. Hidden below lg: it's a nice
+         the loop instead of just trailing off. Hidden below md: it's a nice
          echo of the hero, not content that earns its keep in the page-length
          budget on a phone, where the bio/CTA/links are what actually matter. -->
-    <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+    <div class="hidden md:flex md:flex-1 md:justify-end">
       <img
         src="/windmill_row_grid_square.svg"
         alt="Illustration of a row of wind turbines receding toward the horizon, mirrored"

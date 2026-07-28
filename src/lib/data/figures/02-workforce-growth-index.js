@@ -1,14 +1,6 @@
 import { iea } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 
-// From the IEA report "Ensuring a Skilled Renewable Energy and Energy
-// Efficiency Workforce" (2026), p. 8: global energy workforce growth indexed
-// to 2019 = 100. The report states each sector's cumulative 2019-2024 growth
-// only in rounded form in the chapter text (solar "about 60%", wind "24%",
-// grids "10%", efficiency "6%") and otherwise gives year-on-year rates for
-// 2024 alone; the year-by-year index points between 2019 and 2024 are not
-// published, so this series is read off the chart and carries the
-// "approximate" note below.
 const years = [2019, 2020, 2021, 2022, 2023, 2024];
 const seriesValues = {
   solar: [100, 97.5, 121, 137, 151, 160],
@@ -33,9 +25,6 @@ const allSeries = [
     endLabel: "Grids",
     value: "grids",
     color: iea.grids,
-    // Grids (110) and efficiency (106) land close together on the index
-    // scale, close enough that their two-line mobile labels overlap — nudge
-    // them apart there only.
     endLabelMobile: { labelYOffset: -6 },
   },
   {
@@ -57,26 +46,15 @@ const base = {
   kind: "line",
   xKey: "year",
   xTicks: years.map((y) => new Date(y, 0, 1)),
-  // Index chart: the axis starts at the 90 baseline like the IEA original,
-  // not at 0.
   yDomain: [90, 170],
   data,
 };
 
-// Each step shows `values` and flags `newValue` with `drawIn`, which
-// LineChartPanel animates left-to-right when the step becomes active.
 const stepSeries = (newValue, values) =>
   allSeries
     .filter((s) => values.includes(s.value))
     .map((s) => ({ ...s, drawIn: s.value === newValue }));
 
-// Difference band between the step's new line and the previous step's line:
-// a transparent fill in the new line's color, revealed once its draw-in
-// finishes, with the 2024 gap written inside the band. On an index chart
-// (2019 = 100) that gap is the difference between the two sectors' growth in
-// percentage points, so the label reads e.g. "+14%". The band lives on its
-// step's panel only, so it fades away with the panel crossfade when the
-// reader moves on.
 const diffBand = (upperValue, lowerValue) => {
   const last = data[data.length - 1];
   const gap = Math.round(last[upperValue] - last[lowerValue]);
@@ -90,17 +68,11 @@ const diffBand = (upperValue, lowerValue) => {
   };
 };
 
-// Experiment: figure 2 as a cumulative reveal — one line, then two, three and
-// finally all four, so each sector enters the story on its own step. Each
-// step is a full figure object (own number/title/description); ScrollySection
-// crossfades between them like any other chart sequence, and the `drawIn`
-// flag set by stepSeries() above makes LineChartPanel draw the new line
-// left-to-right on activation. Full write-up: docs/scrolly-line-draw-in.md.
 export const workforceGrowthIndexSteps = [
   {
     ...base,
     number: "Figure 2a",
-    title: "Energy Efficiency Jobs Grew Only Modestly",
+    title: "Efficiency Jobs Grew Slowly",
     description:
       "Energy efficiency employment grew just 6% between 2019 and 2024 — a shallow dip in 2020 followed by a slow, steady recovery.",
     series: stepSeries("efficiency", ["efficiency"]),
@@ -108,7 +80,7 @@ export const workforceGrowthIndexSteps = [
   {
     ...base,
     number: "Figure 2b",
-    title: "Grid Employment Edged Slightly Ahead",
+    title: "Grid Employment Edged Ahead",
     description:
       "Grid employment barely dipped in 2020 and grew 10% by 2024 — a touch faster than energy efficiency, but still in the slow lane.",
     series: stepSeries("grids", ["grids", "efficiency"]),
@@ -126,11 +98,10 @@ export const workforceGrowthIndexSteps = [
   {
     ...base,
     number: "Figure 2d",
-    title: "Solar PV Leads the Energy Workforce Boom",
+    title: "Solar PV Leads the Workforce",
     description:
       "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
     series: stepSeries("solar", ["solar", "wind", "grids", "efficiency"]),
-    // Solar vs wind is the widest gap of the sequence — the payoff band.
     diffBand: diffBand("solar", "wind"),
     annotations: [
       circleCallout({

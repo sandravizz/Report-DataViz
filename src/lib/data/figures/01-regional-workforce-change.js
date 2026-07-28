@@ -1,13 +1,5 @@
 import { iea } from "$lib/colors";
 
-// Most bars are read off the published chart (p. 6) — the chapter text gives
-// only a handful of regions' rates directly, and mostly as *cumulative*
-// 2019-2024 growth (Africa 22%, Central and South America 15%, North America
-// 4%), a different measure than this chart's average annual change, so those
-// can't be substituted in directly. Southeast Asia is the one region where
-// the text states the average annual rate itself ("grew at an annual average
-// growth rate of 2% between 2019 and 2024"), so that bar uses the exact 2%
-// rather than the chart's ~2.3% reading.
 const data = [
   { region: "India", clean: 6.0, economy: 3.2 },
   { region: "China", clean: 4.3, economy: -0.1 },
@@ -20,7 +12,7 @@ const data = [
 ];
 
 export default {
-  title: "Clean Energy Jobs Outpace the Wider Economy",
+  title: "Clean Energy Jobs growing",
   subtitle:
     "Average Annual Change in Workforce by Region, 2019–2024",
   description:
@@ -30,9 +22,6 @@ export default {
   kind: "bar-horizontal",
   xKey: "region",
   valueSuffix: "%",
-  // Grouped bars position each series on a band scale keyed by `key`, so
-  // `key` must be the data field; the display name goes in `label` (used by
-  // the legend and tooltip).
   series: [
     {
       key: "clean",

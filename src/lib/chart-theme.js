@@ -156,7 +156,7 @@ export const yLabelPaddingInline = { left: 8 };
 // screen width is already scarce there, and the labels wrap instead of
 // running wide.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const labelSpace = innerWidth < 1024 ? 60 : 80;
+  const labelSpace = innerWidth < 1024 ? 68 : 80;
   return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
 }
 

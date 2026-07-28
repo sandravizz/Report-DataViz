@@ -15,7 +15,7 @@
      contrast (dark-on-light) state — no scrim, no transparent phase. -->
 <section class="relative flex min-h-screen flex-col bg-base-200 font-sans">
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col lg:flex-row lg:items-center lg:gap-10"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col md:flex-row md:items-center md:gap-10"
   >
     <!-- Title block, left-aligned but nudged well in from the edge — the
          max-width container above plus this padding pull the whole
@@ -23,11 +23,15 @@
          hugging the viewport edges. Widened from 38%→48% of the row so the
          headline wraps across fewer, longer lines instead of squeezing into
          a narrow column with a big dead gap before the illustration.
-         Padding/type shrink at the base (phone) tier only — sm/lg are
+         Padding/type shrink at the base (phone) tier only — sm/md/lg are
          untouched — so the whole hero has a chance of fitting one mobile
-         screen instead of forcing a scroll before anything else is visible. -->
+         screen instead of forcing a scroll before anything else is visible.
+         The row switch is md (768), not lg (1024): at lg an iPad in
+         portrait was still getting the stacked phone layout at sm-tier
+         (already large) type and a full-width image stacked beneath it,
+         which ran taller than the tablet's own screen. -->
     <div
-      class="px-6 pt-20 pb-4 sm:px-10 sm:pt-28 sm:pb-8 lg:w-[48%] lg:shrink-0 lg:py-0 lg:pl-24"
+      class="px-6 pt-20 pb-4 sm:px-10 sm:pt-28 sm:pb-8 md:w-[48%] md:shrink-0 md:py-0 md:pl-16 lg:pl-24"
     >
       <h1
         class="max-w-2xl font-display text-2xl leading-tight font-semibold text-balance text-base-content sm:text-4xl lg:text-5xl"
@@ -62,7 +66,7 @@
          (padding on top of an already-padded graphic just shrank it further,
          worst on mobile) — it runs edge to edge and simply fills whatever
          width the flex layout gives it. -->
-    <div class="flex justify-center lg:flex-1 lg:justify-end">
+    <div class="flex justify-center md:flex-1 md:justify-end">
       <img
         src="/windmill_row_grid_square.svg"
         alt="Illustration of a row of wind turbines receding toward the horizon"

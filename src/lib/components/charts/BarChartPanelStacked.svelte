@@ -239,9 +239,14 @@
     {/each}
     <!-- The label's anchor is the last band's center; offsetting by half the
          band width plus a small gap starts the text just clear of the bar's
-         right edge, whatever the figure's band count. -->
+         right edge, whatever the figure's band count. Mobile gets a wider
+         gap than desktop — at desktop's tighter 6px the label read as
+         touching the bar. -->
     {#each directLabels as annotation, i (i)}
-      <AnnotationPoint {...annotation} labelXOffset={context.xScale.bandwidth() / 2 + 6} />
+      <AnnotationPoint
+        {...annotation}
+        labelXOffset={context.xScale.bandwidth() / 2 + (innerWidth < 1024 ? 12 : 6)}
+      />
     {/each}
     <!-- AnnotationPoint auto-centers a band-scale x, so the offset here pulls
          the anchor back by half the bandwidth to flush the label's left edge

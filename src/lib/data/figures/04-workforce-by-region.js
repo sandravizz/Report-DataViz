@@ -1,14 +1,5 @@
 import { iea, ink } from "$lib/colors";
 
-// From the IEA report "Ensuring a Skilled Renewable Energy and Energy
-// Efficiency Workforce" (2026), p. 14: global renewable energy, grids and
-// energy efficiency workforce by region, million workers, 2019-2024. Values
-// read off the published chart (China's ~10 million in 2024 is stated in the
-// text), to be replaced with the exact series if the client supplies the
-// data table. The report's five smallest regions (Southeast Asia, Central and
-// South America, Africa, Other Asia Pacific, Rest of the world) are merged
-// into one "Rest of world" segment here — nine stacked slivers would be
-// unreadable at this size, and Figure 1 already carries the regional detail.
 const years = [2019, 2020, 2021, 2022, 2023, 2024];
 const seriesValues = {
   china: [8.1, 7.8, 8.5, 9.1, 9.7, 10.0],
@@ -27,8 +18,6 @@ const data = years.map((year, i) => ({
   rest: seriesValues.rest[i],
 }));
 
-// Figure 4a: the stacked column, unchanged — China's share of the whole
-// regional stack.
 export const workforceByRegionA = {
   title: "China Employs a Third of the Global Clean Energy Workforce",
   subtitle:
@@ -44,14 +33,6 @@ export const workforceByRegionA = {
   // width the inline labels (see yAxisPropsInline) crowd the "Rest of world"
   // end label and the topmost bars.
   hideYAxisMobile: true,
-  // The sector palette (Figures 2, 3 and 5) is the report's color code, so
-  // the regions deliberately don't get hues of their own: the whole stack is
-  // `iea.regionTints`, a one-hue ordinal ramp off `iea.featured` (validated
-  // with `--ordinal`, not the categorical checks), just distinct enough that
-  // each new segment reads at a glance. China carries the story, so it sits
-  // on the shared baseline in the full hue, fading upward to the merged
-  // "Rest of world". With one hue the segment colors can't carry the
-  // labels, so `directLabelFill` inks every end label black instead.
   directLabelFill: ink,
   series: [
     { key: "China", value: "china", color: iea.regionTints[0] },
@@ -86,16 +67,6 @@ export const workforceByRegionB = {
   yDomain: [2, 10],
   yTicks: [2, 4, 6, 8, 10],
   data,
-  // Colors are the report's validated line-mark set (see colors.js) — each
-  // panel is its own single-line chart, so there's no cross-panel legend to
-  // keep straight; the label above each panel already names the region. This
-  // does reuse hues that Figures 2, 3 and 5 use as a fixed sector code
-  // (efficiency/grids/solar = Europe/North America/India), but a same-family
-  // ramp off `iea.featured` read as too flat to tell apart at a glance —
-  // legibility here wins over avoiding the cross-figure hue overlap. This
-  // exact four-color set (plus `iea.wind`, unused here) is the one validated
-  // with `--pairs all` in colors.js, since small multiples are checked
-  // all-pairs, not just adjacent.
   panels: [
     { label: "China", value: "china",  color: iea.regionTints[0] },
     { label: "Europe", value: "europe", color: iea.regionTints[1] },

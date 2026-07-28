@@ -14,7 +14,7 @@ const data = [
 ];
 
 export default {
-  title: "Southeast Asia's Clean Energy Workforce Keeps Expanding",
+  title: "Workforce Keeps Expanding",
   subtitle:
     "Southeast Asia's Energy Workforce by Sector in the STEPS, Million Workers, 2015–2035",
   description:
