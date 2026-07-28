@@ -29,7 +29,7 @@
 </script>
 
 <div
-  class="mt-8 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-16"
+  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
   <a

@@ -31,7 +31,7 @@
          (already large) type and a full-width image stacked beneath it,
          which ran taller than the tablet's own screen. -->
     <div
-      class="px-6 pt-20 pb-4 sm:px-10 sm:pt-28 sm:pb-8 md:w-[48%] md:shrink-0 md:py-0 md:pl-16 lg:pl-24"
+      class="px-6 pt-4 pb-4 sm:px-10 sm:pt-8 sm:pb-8 md:w-[48%] md:shrink-0 md:py-0 md:pl-16 lg:pl-24"
     >
       <h1
         class="max-w-2xl font-display text-2xl leading-tight font-semibold text-balance text-base-content sm:text-4xl lg:text-5xl"

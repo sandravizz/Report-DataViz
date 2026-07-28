@@ -146,13 +146,11 @@
                beneath — set on a full-page-width banner so it reads as a
                section divider across the whole viewport rather than a
                floating card. The tint is barely-there (bg-base-200/50, not
-               the full base-200) and tall rather than tight, and there's no
-               rule closing it off — Carta's reference treatment reads as
-               "quiet and roomy", not "boxed off". Grown taller (py-20/24,
-               up from py-16/20) and the paragraph block's own top padding
-               dropped, so the tinted band itself covers the breathing room
-               instead of leaving a blank white gap before the paragraphs. -->
-          <div class="bg-base-200/50 px-6 py-20 sm:px-10 sm:py-24">
+               the full base-200). Report-density spacing, not presentation
+               spacing: kept tight (py-8/10) rather than the roomy py-20/24
+               this used to carry, and the paragraph block's own top padding
+               trimmed further so title and body text read close together. -->
+          <div class="bg-base-200/50 px-6 py-8 sm:px-10 sm:py-10">
             <div class="mx-auto w-[88vw] lg:mx-0 lg:ml-[calc(43%-440px)] lg:w-220">
               {#if section.kicker}
                 <p class="text-xs tracking-wide text-base-content/50 uppercase">
@@ -165,7 +163,7 @@
             </div>
           </div>
           <div class="mx-auto w-[88vw] pb-16 lg:ml-[calc(43%-440px)] lg:w-220">
-            <div class="flex flex-col gap-4 px-6 pt-6 pb-10 sm:px-10">
+            <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10">
               {#each section.paragraphs as paragraph (paragraph)}
                 <p class="text-base leading-relaxed text-base-content/80">
                   {paragraph}

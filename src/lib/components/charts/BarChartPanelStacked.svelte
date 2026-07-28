@@ -238,15 +238,14 @@
       <AnnotationPoint {...annotation} />
     {/each}
     <!-- The label's anchor is the last band's center; offsetting by half the
-         band width plus a small gap starts the text just clear of the bar's
-         right edge, whatever the figure's band count. Mobile gets a wider
-         gap than desktop — at desktop's tighter 6px the label read as
-         touching the bar. -->
+         band width plus a small fixed gap starts the text just clear of the
+         bar's right edge, whatever the figure's band count. Same gap on
+         mobile as desktop now — mobile's reserved right margin (see
+         endLabelPadding) is deliberately tight so bars stay wide, so the gap
+         can't afford to be any bigger without pushing labels toward the
+         card edge. -->
     {#each directLabels as annotation, i (i)}
-      <AnnotationPoint
-        {...annotation}
-        labelXOffset={context.xScale.bandwidth() / 2 + (innerWidth < 1024 ? 12 : 6)}
-      />
+      <AnnotationPoint {...annotation} labelXOffset={context.xScale.bandwidth() / 2 + 6} />
     {/each}
     <!-- AnnotationPoint auto-centers a band-scale x, so the offset here pulls
          the anchor back by half the bandwidth to flush the label's left edge
@@ -283,7 +282,7 @@
       <Text
         value={growthArrow.label}
         x={(sourceX + targetX) / 2 - 20}
-        y={Math.min(sourceY, targetY) + 4}
+        y={Math.min(sourceY, targetY)}
         textAnchor="middle"
         verticalAnchor="end"
         fill={colors.lavender}

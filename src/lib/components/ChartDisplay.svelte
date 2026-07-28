@@ -8,12 +8,16 @@
   let interpretationModal;
 </script>
 
-<div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
-       title, so titles are no longer unique. -->
+       title, so titles are no longer unique. The top offset and the height
+       subtraction below used to reserve room for the old fixed header,
+       which permanently covered this sticky panel; now that the header
+       scrolls away with the page, that dead space is reclaimed as extra
+       breathing room around the figure instead. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
     >
@@ -34,7 +38,7 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-8 font-sans text-xs text-base-content lg:mb-16 lg:text-sm">
+      <div class="mb-10 font-sans text-xs text-base-content lg:mb-20 lg:text-sm">
         {pair.subtitle}
       </div>
 

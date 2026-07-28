@@ -152,21 +152,25 @@ export function yAxisPropsInline(innerWidth) {
 export const yLabelPaddingInline = { left: 8 };
 
 // End-of-line labels (LineChartPanel's series end labels, stacked bars' direct
-// labels) reserve padding on the right. Same margin on mobile as desktop now —
-// a tighter mobile margin was forcing labels to wrap onto two lines even
-// though the mobile gap (see BarChartPanelStacked) plus label width (see
-// endLabelMobileWrap) need close to the full 80px to fit on one line.
+// labels) reserve padding on the right. Mobile only gets a little more than
+// desktop's 80 — on a ~330px-wide mobile plot every pixel reserved here comes
+// straight out of bar width, so this stays as small as the label box below
+// can get away with rather than growing to fit every long name on one line.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  return defaultChartPadding(hasLabels ? { ...extra, right: 80 } : extra);
+  const right = innerWidth < 1024 ? 84 : 80;
+  return defaultChartPadding(hasLabels ? { ...extra, right } : extra);
 }
 
-// Mobile override for end-of-line label annotations: the reserved
-// margin is too tight for longer names on one line, so wrap instead. Also
-// pins lineHeight — Text's default line height is a flat 16px (1em resolved
-// against an assumed 16px base font, not our actual text-xs/12px), which
-// reads as oversized gaps between wrapped lines.
+// Mobile override for end-of-line label annotations: wide enough for most
+// series names ("Heat pumps") on one line without eating into bar width the
+// way a much wider box (paired with endLabelPadding above) would — an
+// occasional longer name ("Other efficiency") still wraps rather than
+// stealing more margin from every figure's bars. Also pins lineHeight —
+// Text's default line height is a flat 16px (1em resolved against an assumed
+// 16px base font, not our actual text-xs/12px), which reads as oversized
+// gaps between wrapped lines.
 export const endLabelMobileWrap = {
-  props: { label: { width: 60, truncate: false, lineHeight: "13px" } },
+  props: { label: { width: 140, truncate: false, lineHeight: "13px" } },
 };
 
 // Stacked bar panels get extra breathing room between bars on mobile — a

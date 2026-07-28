@@ -33,7 +33,7 @@
   ];
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-base-200/80 backdrop-blur-sm">
+<header class="relative z-50 bg-base-200/80 backdrop-blur-sm">
   <div class="relative flex items-center justify-end gap-4 px-6 py-3">
     <nav class="flex items-center gap-4 text-base-content sm:gap-6 lg:gap-8">
       {#if abstract}

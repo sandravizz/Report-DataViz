@@ -53,9 +53,13 @@
     />
   </div>
   <!-- Grouped bars have no free spot for per-series direct labels, so the
-       color legend renders on every viewport, ordered to match the bars. -->
+       color legend renders on every viewport, ordered to match the bars.
+       The chart above is flex-1 in a fixed-height column, so whatever the
+       legend doesn't use goes straight to bar height — kept snug (pt-1.5,
+       not pt-3) so mobile's eight-category chart isn't squeezed for a
+       legend that doesn't need to sit far from the bars it labels. -->
   {#if pair.series.length > 1}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1.5 text-xs font-light">
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
