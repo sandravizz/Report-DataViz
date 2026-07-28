@@ -33,7 +33,7 @@
 >
   <span class="leading-snug">{pair.source}</span>
   <a
-    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 px-1.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case"
+    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 px-1.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:[--btn-bg:var(--color-base-200)] hover:[--btn-border:transparent] hover:[--btn-noise:none] hover:[--btn-shadow:none]"
     href={figureImage(pair)}
     download={downloadName(pair)}
   >

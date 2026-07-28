@@ -8,42 +8,41 @@
   let { children } = $props();
 </script>
 
-<!-- Full-bleed hero: two silhouetted figures on a tidal flat with wind
-     turbines at sunset (photo by ZHENYU LUO on Unsplash, free license, no
-     attribution required — chosen 2026-07-25 for the workforce + energy
-     mood), title overlaid McKinsey-style. The image runs under the fixed
-     translucent header. Source photo is portrait (2400x3600); object-position
-     keeps the turbines/figures band (~28% down the frame) in view across
-     wide desktop crops instead of the default center crop. -->
-<section class="relative flex min-h-screen flex-col font-sans">
-  <img
-    src="/cover.jpg"
-    alt="Two silhouetted people on a tidal flat at sunset, with wind turbines in the distance"
-    class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
-  />
-  <!-- Scrim: darkens toward the bottom where the text sits, so the white
-       title stays legible on the bright sky/ocean photo. -->
-  <div class="absolute inset-0 bg-linear-to-b from-black/20 via-black/25 to-black/65"></div>
-
+<!-- Hero, title left-aligned McKinsey/Global-Justice-Report style, with the
+     square wind-turbine illustration on the right instead of a photo.
+     Background is the same cream tint (base-200) used behind chapter titles
+     further down the report, so the header can sit permanently in its
+     contrast (dark-on-light) state — no scrim, no transparent phase. -->
+<section class="relative flex min-h-screen flex-col bg-base-200 font-sans">
   <div
-    class="relative flex flex-1 flex-col items-center px-6 pt-24 pb-8 text-white sm:px-10"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col lg:flex-row lg:items-center lg:gap-10"
   >
-    <!-- Title block centered in the space above the abstract box. -->
-    <div class="flex flex-1 flex-col items-center justify-center text-center">
+    <!-- Title block, left-aligned but nudged well in from the edge — the
+         max-width container above plus this padding pull the whole
+         title/illustration group toward the center of the page instead of
+         hugging the viewport edges. Widened from 38%→48% of the row so the
+         headline wraps across fewer, longer lines instead of squeezing into
+         a narrow column with a big dead gap before the illustration.
+         Padding/type shrink at the base (phone) tier only — sm/lg are
+         untouched — so the whole hero has a chance of fitting one mobile
+         screen instead of forcing a scroll before anything else is visible. -->
+    <div
+      class="px-6 pt-20 pb-4 sm:px-10 sm:pt-28 sm:pb-8 lg:w-[48%] lg:shrink-0 lg:py-0 lg:pl-24"
+    >
       <h1
-        class="max-w-4xl font-display text-3xl leading-tight font-semibold text-balance sm:text-5xl lg:text-6xl"
+        class="max-w-2xl font-display text-2xl leading-tight font-semibold text-balance text-base-content sm:text-4xl lg:text-5xl"
       >
         Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce
       </h1>
       {#if authors.length}
-        <p class="mt-6 text-lg text-white/90 sm:text-xl">
+        <p class="mt-4 text-lg text-base-content/80 sm:mt-6 sm:text-xl">
           {#each authors as author, i (author.name)}
             <a href={author.href} class="link-hover underline-offset-4">{author.name}</a
             >{i < authors.length - 1 ? ", " : ""}
           {/each}
         </p>
       {/if}
-      <p class="mt-6 text-lg text-white/90 sm:text-xl">
+      <p class="mt-4 text-lg text-base-content/80 sm:mt-6 sm:text-xl">
         Content &amp; data:
         <a
           href="https://www.iea.org"
@@ -52,31 +51,47 @@
           class="link-hover underline-offset-4">IEA</a
         > (2026)
       </p>
-      <p class="mt-2 text-sm text-white/75 sm:text-base">Interactive design study · SandraViz</p>
+      <p class="mt-2 text-sm text-base-content/60 sm:text-base">
+        Interactive design study · SandraViz
+      </p>
     </div>
 
-    <!-- Extra content (the abstract side note) overlaid at the bottom of the
-         hero; expanding it grows the hero downward. -->
-    {#if children}
-      <div class="w-full max-w-3xl">
-        {@render children()}
-      </div>
-    {/if}
-
-    <a
-      href="#charts"
-      aria-label="Scroll to content"
-      class="mt-8 text-white/80 hover:text-white"
-    >
-      <svg
-        class="h-8 w-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="m5 9 7 7 7-7" />
-      </svg>
-    </a>
+    <!-- Row of wind turbines, fading toward the horizon, in a square frame.
+         The SVG itself was recropped to remove the dead space it used to
+         carry at its own edges, so this wrapper adds no padding of its own
+         (padding on top of an already-padded graphic just shrank it further,
+         worst on mobile) — it runs edge to edge and simply fills whatever
+         width the flex layout gives it. -->
+    <div class="flex justify-center lg:flex-1 lg:justify-end">
+      <img
+        src="/windmill_row_grid_square.svg"
+        alt="Illustration of a row of wind turbines receding toward the horizon"
+        class="w-full"
+      />
+    </div>
   </div>
+
+  <!-- Extra content (the abstract side note) rendered below the hero;
+       expanding it grows the hero downward. -->
+  {#if children}
+    <div class="mx-auto w-full max-w-3xl px-6 pb-8 text-base-content sm:px-10">
+      {@render children()}
+    </div>
+  {/if}
+
+  <a
+    href="#charts"
+    aria-label="Scroll to content"
+    class="mx-auto mb-4 text-base-content/60 hover:text-base-content sm:mb-8"
+  >
+    <svg
+      class="h-8 w-8"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="m5 9 7 7 7-7" />
+    </svg>
+  </a>
 </section>

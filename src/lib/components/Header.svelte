@@ -1,17 +1,10 @@
 <script>
-  // Header floats transparent over the landing photo (no logo, no opaque
-  // bar) so the image reads edge to edge; a soft top scrim keeps the white
-  // nav text/icons legible over sky. Once scrolled past the hero it switches
-  // to the normal solid/blurred bar so it stays legible over the white
-  // report body. `abstract` is an optional snippet; when given, an
-  // "Abstract" dropdown appears next to the TOC with the snippet as its
+  // Header is a permanent solid/blurred bar in its contrast (dark-on-white)
+  // state — the landing hero is plain white now, so there's no dark photo to
+  // float transparently over. `abstract` is an optional snippet; when given,
+  // an "Abstract" dropdown appears next to the TOC with the snippet as its
   // panel content.
   let { links = [], abstract } = $props();
-  let overHero = $state(true);
-
-  function checkScroll() {
-    overHero = window.scrollY < window.innerHeight * 1.1;
-  }
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -40,35 +33,22 @@
   ];
 </script>
 
-<svelte:window onscroll={checkScroll} onresize={checkScroll} />
-
-<header
-  class="fixed inset-x-0 top-0 z-50 transition-colors duration-300 {overHero
-    ? ''
-    : 'bg-base-100/80 backdrop-blur-sm'}"
->
-  {#if overHero}
-    <div
-      class="pointer-events-none absolute inset-0 bg-linear-to-b from-black/50 via-black/15 to-transparent"
-    ></div>
-  {/if}
+<header class="fixed inset-x-0 top-0 z-50 bg-base-200/80 backdrop-blur-sm">
   <div class="relative flex items-center justify-end gap-4 px-6 py-3">
-    <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8 {overHero ? 'text-white' : 'text-base-content'}">
+    <nav class="flex items-center gap-4 text-base-content sm:gap-6 lg:gap-8">
       {#if abstract}
         <div class="dropdown dropdown-end">
           <div
             tabindex="0"
             role="button"
             aria-label="Abstract"
-            class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 underline-offset-8 outline-none hover:underline {overHero
-              ? 'decoration-white'
-              : 'decoration-primary'}"
+            class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 decoration-[#76c8a8] underline-offset-8 outline-none hover:underline"
           >
             Abstract
           </div>
           <div
             tabindex="-1"
-            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-100 p-6 font-sans text-base-content shadow-lg"
+            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans text-base-content shadow-lg"
           >
             <div
               class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80"
@@ -84,9 +64,7 @@
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 underline-offset-8 outline-none hover:underline {overHero
-            ? 'decoration-white'
-            : 'decoration-primary'}"
+          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 decoration-[#76c8a8] underline-offset-8 outline-none hover:underline"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -112,7 +90,7 @@
         </div>
         <ul
           tabindex="-1"
-          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-100 p-2 font-sans text-base-content shadow-lg"
+          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans text-base-content shadow-lg"
         >
           {#each links as link (link.href)}
             <li>
@@ -129,7 +107,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="hover:text-primary {overHero ? 'text-white' : 'text-neutral'}"
+            class="text-neutral hover:text-primary"
           >
             <svg
               class={social.size}
