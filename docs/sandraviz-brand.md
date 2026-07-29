@@ -22,19 +22,19 @@ instead — the palette below is pixel-sampled from `static/cover.jpg`
 | Warm tan-gray | `#e7dfd4` | borders/grid, `base-300`/`grayLight` | — (lightened neutral) |
 | Warm cream | `#f6f2ee` | section backgrounds, `base-200` | — (lightened neutral) |
 
-Chart palette (`src/lib/colors.js`, `brand.*`) — key names are kept from the
-previous (sandraviz.com) edition so figures re-skin without edits, which
-means `blue` now holds the photo's burnt orange (the featured-series role),
-not a literal blue; the real blue lives under `royal`. Validated line-mark
-set: **orange `#8f4d28` / blue `#1a6aff` / green `#1f7a3d` / purple
-`#7a3d99`** — all four checks pass (`scripts/validate_palette.js`,
-all-pairs), orange↔green CVD separation lands at a WARN (10.8Δ, floor is 8)
-covered by the house rule that every series is direct-labeled. Orange was
-chosen over several other sampled tones specifically because it's the only
-one that both reads as "the photo's orange" and clears 4.5:1 text contrast
-on white *and* passes CVD against the existing green — most of the vivid
-sunset pixels are too light/low-contrast for text, and most of the muted
-tidal-flat browns collide with green under protan/deutan simulation.
+`src/lib/colors.js`'s `brand.*` originally carried a full categorical set
+(blue/royal/teal/purple/etc., key names kept from the previous
+sandraviz.com edition) validated as **orange `#8f4d28` / blue `#1a6aff` /
+green `#1f7a3d` / purple `#7a3d99`** (`scripts/validate_palette.js`,
+all-pairs; orange↔green CVD landed at a WARN, covered by the house rule that
+every series is direct-labeled). This report's actual figures use the
+separate `iea` palette instead, so the unused categorical set was later
+removed — `brand` now only exports `gray`/`grayText`, the two colors used
+directly for chart ink. Orange was chosen as the signature hue over several
+other sampled tones because it's the only one that both reads as "the
+photo's orange" and clears 4.5:1 text contrast on white *and* passes CVD
+against green — most vivid sunset pixels are too light for text, and most
+muted tidal-flat browns collide with green under protan/deutan simulation.
 
 ## Fonts
 
@@ -72,19 +72,11 @@ as `Footer.svelte`.
 
 ## Header behavior over the hero
 
-The header is fully transparent while over the landing photo — no
-background bar — so the image reads edge to edge with just white nav text
-and icons floating on top (a soft `black/50→transparent` scrim in the header
-itself keeps them legible over bright sky). Past the hero it switches to the
-normal solid `bg-base-100/80` + blur bar so it stays legible over the white
-report body. Icons default to white (over hero) / neutral (scrolled) and go
-`primary` (orange) on hover either way. Implemented with a scroll listener in
-`Header.svelte` (`overHero = scrollY < innerHeight * 1.1`, bumped up from an
-initial 0.8 which switched while still over the hero — 2026-07-25), the same pattern
-`Footer.svelte` already uses for its own show/hide-at-bottom behavior. No
-divider line under the solid state either — Sandra didn't like the hairline
-border there, so it's just the bg blur separating header from content
-(2026-07-25).
+The landing hero is now plain white (no photo behind the header), so the
+scroll-aware transparent-over-photo header described in earlier drafts of
+this doc no longer applies. `Header.svelte` is a permanent solid
+`bg-base-200/80` + blur bar in its one contrast state, with no scroll
+listener.
 
 ## Where the theme lives
 

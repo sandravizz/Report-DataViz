@@ -1,11 +1,7 @@
 <script>
-  // Expandable aside ("sidebar" in editorial terms) — a daisyUI collapse built
-  // on native <details>/<summary>, so it works without JavaScript and stays
-  // keyboard-accessible. Collapsed it shows only kicker + title; the plus
-  // indicator invites the reader to expand.
-  // variant "solid" is the grey box for text columns; "glass" is a translucent
-  // white-on-image box for placement over photos (it darkens when open so the
-  // body text stays readable).
+  // Expandable aside — a daisyUI collapse on native <details>/<summary>.
+  // variant "solid" is the grey box for text columns; "glass" is translucent
+  // white-on-image, for placement over photos.
   let { kicker = "Sidebar", title, open = false, variant = "solid", children } = $props();
 
   const glass = variant === "glass";

@@ -7,9 +7,7 @@
   import LineChartPanel from "./LineChartPanel.svelte";
   import LineChartPanelMultiples from "./LineChartPanelMultiples.svelte";
 
-  // `active` = this panel is the current scrolly step. Passed through from
-  // ScrollySection (via ChartDisplay); only LineChartPanel consumes it, for
-  // the draw-in animation of series flagged `drawIn`.
+  // `active` is only consumed by LineChartPanel, for its draw-in animation.
   let { pair, active = false } = $props();
 </script>
 

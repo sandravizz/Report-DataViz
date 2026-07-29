@@ -28,11 +28,9 @@ export const workforceByRegionA = {
   number: "Figure 4a",
   kind: "bar-stacked",
   xKey: "year",
-    yTicks: [5, 10, 15, 20, 30],
-  // Mobile drops the y axis entirely — the stack's direct end labels and
-  // per-bar totals already carry every value the ticks would, and at mobile
-  // width the inline labels (see yAxisPropsInline) crowd the "Rest of world"
-  // end label and the topmost bars.
+  yTicks: [5, 10, 15, 20, 30],
+  // Mobile's inline y labels would otherwise crowd the "Rest of world" end
+  // label and topmost bars; direct labels + totals already carry the values.
   hideYAxisMobile: true,
   directLabelFill: ink,
   series: [
@@ -45,11 +43,9 @@ export const workforceByRegionA = {
   data,
 };
 
-// Figure 4b: same data, one small-multiple line chart per region — each
-// region's own trajectory, side by side, instead of everyone's share of one
-// stack. "Rest of world" is a merged catch-all bucket rather than a real
-// region (see note above), so it's left out here; the other four are the
-// report's actual geographies, in the same order as the stack in Figure 4a.
+// Figure 4b: same data, one small-multiple line chart per region instead of
+// everyone's share of one stack. "Rest of world" is a merged catch-all, not
+// a real region, so it's left out here.
 export const workforceByRegionB = {
   title: "China and India Keep Climbing While Europe and North America Flatten Out",
   subtitle:
@@ -61,15 +57,13 @@ export const workforceByRegionB = {
   kind: "line-multiples",
   xKey: "year",
   xTicks: [years[0], years[years.length - 1]].map((y) => new Date(y, 0, 1)),
-  // Shared y domain across all four panels — deliberately not auto-scaled per
-  // panel, so a flat line in Europe reads as genuinely flat (not stretched to
-  // fill its own axis) against China's actual climb. Explicit ticks (rather
-  // than the default d3 step) keep the same four gridlines on every panel.
+  // Shared, not auto-scaled per panel — so a flat Europe reads as genuinely
+  // flat against China's actual climb.
   yDomain: [2, 10],
   yTicks: [2, 4, 6, 8, 10],
   data,
   panels: [
-    { label: "China", value: "china",  color: iea.regionTints[0] },
+    { label: "China", value: "china", color: iea.regionTints[0] },
     { label: "Europe", value: "europe", color: iea.regionTints[1] },
     { label: "India", value: "india", color: iea.regionTints[2] },
     { label: "North America", value: "northAmerica", color: iea.regionTints[3] },

@@ -6,17 +6,10 @@
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
 
-  // Scrolly draw-in: series flagged `drawIn` on the figure get their line
-  // drawn left-to-right (and their end label / callouts faded in afterwards)
-  // the first time their step becomes the active one. All panels stay mounted
-  // and crossfade, so this is driven by toggling classes on `active`, not by
-  // mount transitions.
-  //
-  // The animation is one-shot per page load: once a step has been visited,
-  // `played` flips on leaving it and every later visit (e.g. scrolling back
-  // up) shows the finished state — line drawn, labels and diff band visible —
-  // with no replay. `played` is set in the effect's cleanup, not its body, so
-  // the first activation keeps its animating classes for its whole duration.
+  // Scrolly draw-in for series flagged `drawIn` — see docs/scrolly-line-draw-in.md
+  // for the full mechanism. One-shot per page load: `played` flips on leaving
+  // a step (in the effect's cleanup, not its body) so a revisit shows the
+  // finished state instantly instead of replaying.
   const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
   let played = $state(false);
   $effect(() => {
@@ -39,8 +32,7 @@
         ? "lc-line-draw lc-line-draw-active"
         : "lc-line-draw"
   );
-  // The diff band waits a beat longer than the labels: it fades in only after
-  // the line has visibly landed, on its own delay (see lc-band-reveal below).
+  // Diff band fades in a beat after the line lands, on its own delay.
   const bandRevealClass = $derived(
     played
       ? "lc-band-reveal lc-band-reveal-done"
@@ -50,16 +42,11 @@
   );
   const drawProps = (key) =>
     pair.series.find((s) => s.key === key)?.drawIn
-      ? {
-          // pathLength=1 normalizes the path so dasharray/dashoffset 1 span it.
-          pathLength: 1,
-          class: drawClass,
-        }
+      ? { pathLength: 1, class: drawClass } // pathLength=1 so dashoffset 1 spans the whole path
       : {};
 
-  // The FT-style white casing that separates crossing lines reads too heavy
-  // at phone plot sizes, so both the line and its halo thin down on mobile
-  // (same <1024 threshold as the rest of the chart theme).
+  // Casing (docs/line-chart-casing.md) thins down on mobile — it reads too
+  // heavy at phone plot sizes.
   const lineStyle = $derived({
     curve: curveMonotoneX,
     strokeWidth: innerWidth < 1024 ? 2 : 2.5,
@@ -73,27 +60,20 @@
   });
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full. Steps
-  // swap `pair` under the same panel (see the scrolly draw-in above), so
-  // this has to stay derived rather than a one-time const.
+  // Derived, not a one-time const: steps swap `pair` under the same panel.
   const firstTickYear = $derived(
     (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
   );
 
-  // There is no built-in legend; series that opt in via an explicit
-  // `endLabel` get their name at the end of the line instead, and right
-  // padding is reserved for them. Series without `endLabel` (e.g.
-  // de-emphasized background lines) get neither — charts where the series
-  // list would make a useless legend supply `legendItems` below instead.
+  // No built-in legend: series that opt in via `endLabel` get their name at
+  // the line's end instead. Charts needing a real legend use `legendItems` below.
   const endLabelAnnotations = $derived(
     pair.series
       .filter((s) => s.endLabel)
       .map((s) => {
-        // A series can end before the x-domain does (null cells in the CSV),
-        // so anchor its label to its own last observation, not the last row.
+        // Anchor to the series' own last observation, not the last row — a
+        // series can end early (null cells in the CSV).
         const last = pair.data.findLast((d) => d[s.value] != null);
-        // A drawn-in series' label waits for the line to finish drawing.
         const reveal = s.drawIn ? revealClass : undefined;
         return {
           x: last[pair.xKey],
@@ -110,16 +90,13 @@
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },
           },
-          // A series can opt into its own extra mobile nudge (e.g. two lines
-          // whose end values sit close together and would otherwise overlap
-          // once labels wrap to two lines on the narrower plot).
+          // A series can opt into its own extra mobile nudge (e.g. two close
+          // end values that would otherwise overlap once labels wrap).
           mobile: { ...endLabelMobileWrap, ...s.endLabelMobile },
         };
       })
   );
-  // The diff band's percentage label: plain text (no circle, no leader line)
-  // in the band's own color, anchored at the band's right edge and pulled
-  // inward so it sits inside the fill, vertically centered in the gap.
+  // Diff band's percentage label: plain text, no circle or leader line.
   const diffBandAnnotations = $derived(
     pair.diffBand
       ? resolveAnnotations(
@@ -140,10 +117,8 @@
                   class: "text-xs font-medium",
                 },
               },
-              // The band sits right where the end-of-line labels land at the
-              // last x value, and mobile's narrower plot brings its midpoint
-              // label close enough to crowd them — nudge it down, clear of
-              // the series line above it.
+              // Nudge down on mobile, clear of the end-of-line labels the
+              // band's own label would otherwise crowd.
               mobile: { labelYOffset: 8 },
             },
           ],
@@ -187,10 +162,7 @@
   }}
 >
   {#snippet marks({ context })}
-    <!-- Draw-in figures list series in tooltip order (final value, largest
-         first) while the steps introduce them in the reverse order — so
-         rendering the list reversed paints each step's newly drawn line last,
-         on top of every line already on screen. -->
+    <!-- Reversed so each step's newly drawn line paints on top of the rest. -->
     {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
       <Spline seriesKey={s.key} {...casingStyle} {...draw} />
@@ -202,10 +174,7 @@
       <AnnotationRange {...annotation} />
     {/each}
     {#if pair.diffBand}
-      <!-- Transparent fill between the step's new line and the previous
-           step's line, revealed together with the labels once the draw-in
-           lands. Sits below the lines so their casings still separate them
-           from the fill. -->
+      <!-- Below the lines so their casings still separate them from the fill. -->
       <Area
         y0={pair.diffBand.y0}
         y1={pair.diffBand.y1}
@@ -217,15 +186,12 @@
     {/if}
   {/snippet}
   {#snippet aboveMarks()}
-    <!-- Figure-level callouts wait for the draw-in on steps that have one;
-         end labels handle their reveal per-series via their own classes. -->
     <g class={hasDrawIn ? revealClass : undefined}>
       {#each calloutAnnotations as annotation, i (i)}
         <AnnotationPoint {...annotation} />
       {/each}
     </g>
-    <!-- The band's label appears together with the band, on its later delay,
-         not with the other callouts. -->
+    <!-- Band's label appears with the band, on its own later delay. -->
     <g class={bandRevealClass}>
       {#each diffBandAnnotations as annotation, i (i)}
         <AnnotationPoint {...annotation} />
@@ -239,12 +205,9 @@
 {/snippet}
 
 {#if pair.legendItems}
-  <!-- Manual legend for charts whose real series list would make a useless
-       legend (e.g. figure 2's eight identical gray region lines): the figure
-       supplies a few {label, color} entries that summarize the groupings.
-       Rendered below the plot like the built-in bottom-left legend, with the
-       same text size and swatch scale; pl-9 matches yLabelPadding's 36px
-       axis gutter so the swatches align with the plot's left edge. -->
+  <!-- Manual legend for charts whose real series list would be useless as
+       one (e.g. many near-identical lines): a few {label, color} entries
+       summarize the groupings instead. pl-9 matches yLabelPadding's gutter. -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}
@@ -263,11 +226,8 @@
 {/if}
 
 <style>
-  /* Draw-in for scrolly reveal steps. With pathLength=1 the dash pattern spans
-     the whole line, so animating dashoffset 1 → 0 wipes it in from the left.
-     The animation is one-shot: leaving the step swaps `-active` for `-done`,
-     which pins the drawn state with no transition — the line neither blinks
-     out during the panel crossfade nor replays when the reader scrolls back. */
+  /* Draw-in for scrolly reveal steps — see docs/scrolly-line-draw-in.md for
+     the full mechanism and tuning knobs. */
   :global(path.lc-line-draw) {
     stroke-dasharray: 1 1;
     stroke-dashoffset: 1;
@@ -279,8 +239,6 @@
   :global(path.lc-line-draw-done) {
     stroke-dashoffset: 0;
   }
-  /* Labels, callouts and the diff band tied to a drawn-in line fade in once
-     the draw finishes; `-done` shows them instantly on revisits. */
   :global(.lc-draw-reveal) {
     opacity: 0;
   }
@@ -291,8 +249,6 @@
   :global(.lc-draw-reveal-done) {
     opacity: 1;
   }
-  /* The diff band (fill + its label) waits ~600ms after the line lands
-     (draw ends at 250ms delay + 1300ms duration = 1550ms) before fading in. */
   :global(.lc-band-reveal) {
     opacity: 0;
   }

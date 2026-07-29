@@ -16,13 +16,8 @@ const powerPanel = {
   xKey: "year",
   xTickFormat: scenarioTickFormat,
   bandPadding: 0.6,
-  // Mobile drops the y axis entirely — the stack's direct end labels and
-  // per-bar totals already carry every value the ticks would (see Figure 4a).
-  hideYAxisMobile: true,
-  // A bit more breathing room than the default 6px gap (see
-  // BarChartPanelStacked's directLabels) between the last bar and its
-  // direct labels.
-  endLabelGap: 20,
+  hideYAxisMobile: true, // direct labels + bar totals already carry the values
+  endLabelGap: 20, // extra gap between the last bar and its direct labels
   yDomain: [0, 25],
   series: [
     { key: "Grids", value: "grids", color: iea.grids },
@@ -34,8 +29,8 @@ const powerPanel = {
     { year: new Date(2035, 0, 1), grids: 10.6, solar: 5.7, wind: 2.4 },
   ],
   rangeAnnotations: [projectionBand],
-  // The title's headline gain ("5.6 million more jobs") splits across both
-  // panels; each panel's own arrow shows its share of that total.
+  // The title's headline gain splits across both panels; each arrow shows
+  // its share of the total.
   growthArrow: true,
   hideOnMobile: true,
 };
@@ -46,12 +41,7 @@ const efficiencyPanel = {
   xKey: "year",
   xTickFormat: scenarioTickFormat,
   bandPadding: 0.6,
-  // Mobile drops the y axis entirely — the stack's direct end labels and
-  // per-bar totals already carry every value the ticks would (see Figure 4a).
   hideYAxisMobile: true,
-  // A bit more breathing room than the default 6px gap (see
-  // BarChartPanelStacked's directLabels) between the last bar and its
-  // direct labels.
   endLabelGap: 20,
   yDomain: [0, 25],
   series: [

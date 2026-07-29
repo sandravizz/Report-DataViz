@@ -12,12 +12,8 @@
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
-  <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
-       title, so titles are no longer unique. The top offset and the height
-       subtraction below used to reserve room for the old fixed header,
-       which permanently covered this sticky panel; now that the header
-       scrolls away with the page, that dead space is reclaimed as extra
-       breathing room around the figure instead. -->
+  <!-- Keyed by index, not title: the bar/area comparison pair of Figure 1
+       shares one title, so titles aren't unique. -->
   {#each pairs as pair, i (i)}
     <div
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
@@ -50,9 +46,8 @@
         {#if pair.kind === "double"}
           <DoubleChartPanel {pair} />
         {:else}
-          <!-- `active` tells the panel it is the current scrolly step (and
-               the section is actually on screen) — line charts use it to
-               trigger the draw-in animation of series flagged `drawIn`. -->
+          <!-- `active` gates the line chart draw-in animation (see
+               docs/scrolly-line-draw-in.md). -->
           <ChartPanel {pair} active={i === activeIndex && inView} />
         {/if}
       </div>

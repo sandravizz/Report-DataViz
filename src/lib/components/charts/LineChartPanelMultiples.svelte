@@ -1,18 +1,12 @@
 <script>
-  // Small multiples of single-line charts: each of pair.panels gets its own
-  // mini LineChart (one series, no legend needed — the label above the panel
-  // is the identity). A grid (not flex-wrap) so the column count is explicit
-  // per breakpoint rather than however many 224px panels happen to fit: 2x2
-  // on phones and tablets, all four in a row on desktop where the figure
-  // column is a fixed 800px (ChartDisplay's lg:w-200).
+  // Small multiples: each of pair.panels gets its own mini LineChart (one
+  // series, no legend — the label above the panel is the identity). A grid
+  // (not flex-wrap) fixes the column count per breakpoint: 2x2 on phones and
+  // tablets, all four in a row on desktop.
   import { Area, AnnotationPoint, LineChart, Spline, defaultChartPadding } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat } from "$lib/chart-theme";
 
-  // Same <1024 mobile threshold as the rest of the report (desktopTooltips,
-  // the grid's column breakpoints below). Below it every panel is stacked
-  // full-width, so there's no "first panel"/"last panel" left to carry axis
-  // numbers — all four rely on the start/end point labels only.
   const isMobile = (width) => width < 1024;
 
   let { pair } = $props();
@@ -33,19 +27,14 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
   const formatPoint = (d) => d.toFixed(1);
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
   const firstTickYear = $derived(
     (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
   );
 
-  // Desktop (all four panels in one row): only the first panel's axis
-  // carries numbers on the left and only the last carries them on the right;
-  // the two middle panels keep their gridlines (the chart's own default
-  // Grid, untouched here) but no tick text, so the row doesn't repeat the
-  // same four numbers four times. Below 1024 the panels stack full-width
-  // instead, so none of them get axis numbers at all — the start/end value
-  // labels are the only readout there.
+  // Desktop: only the first panel's axis carries numbers on the left and
+  // only the last on the right, so the row doesn't repeat the same four
+  // numbers four times. Mobile stacks full-width with no axis numbers at
+  // all — the start/end value labels are the only readout there.
   function yAxisConfig(index, count, width) {
     if (isMobile(width)) return { ...yAxisProps, ticks: pair.yTicks, format: () => "" };
     if (index === 0) return { ...yAxisProps, ticks: pair.yTicks, format: formatValue };
@@ -54,18 +43,14 @@
     return { ...yAxisProps, ticks: pair.yTicks, format: () => "" };
   }
 
-  // Extra top padding clears room for the start/end value labels (anchored
-  // above their points) without clipping against the plot's top edge; the
-  // last panel gets extra right padding to fit its right-side axis numbers,
-  // only relevant on desktop since mobile shows no axis numbers at all.
+  // Extra top padding clears the start/end value labels; the last panel gets
+  // extra right padding for its right-side axis numbers (desktop only).
   function panelPadding(isLast, width) {
     if (isMobile(width)) return defaultChartPadding({ top: 20 });
     return defaultChartPadding({ top: 28, right: isLast ? 32 : 4 });
   }
 
-  // Start and end value labels, in the line's own color — the readout the
-  // dropped y-axis numbers used to carry for the two middle panels, and a
-  // consistent "where it started, where it ended" for all four.
+  // Start/end value labels, in the line's own color, for all four panels.
   function pointAnnotations(panel) {
     const first = pair.data[0];
     const last = pair.data[pair.data.length - 1];
@@ -89,14 +74,8 @@
 <div class="grid h-full min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-1 md:gap-6 lg:grid-cols-4">
   {#each pair.panels as panel, i (panel.label)}
     <div class="flex h-full min-h-0 min-w-0 flex-1 flex-col">
-      <!-- Desktop only: the name sits above the chart, same as every other
-           figure's panel label. Below 1024 there's no headroom to spare for
-           a separate label row (two rows of two panels means every pixel of
-           row height counts), so the name instead overlays the chart,
-           centered — dead center clears both the start/end value labels
-           (anchored at the plot's left/right edges) and every series' own
-           line, which at this shared 2–10 domain never runs through the
-           vertical middle for more than an instant. -->
+      <!-- Desktop: label above the chart. Mobile has no headroom to spare for
+           a separate row, so the name overlays the chart instead (below). -->
       <div class="mb-3 hidden font-sans text-xs font-medium lg:block" style:color={panel.color}>
         {panel.label}
       </div>
@@ -127,11 +106,8 @@
           }}
         >
           {#snippet marks()}
-            <!-- Fill down to the shared domain floor (pair.yDomain[0]), not
-                 to 0 — y0 as a function is a constant accessor (a plain
-                 number here would be read as a field-index lookup), so every
-                 panel's area bottoms out at the same axis floor its line
-                 sits on. -->
+            <!-- y0 as a function (not a plain number, which reads as a field
+                 lookup) so every panel bottoms out at the shared domain floor. -->
             <Area
               y0={() => pair.yDomain[0]}
               y1={panel.value}

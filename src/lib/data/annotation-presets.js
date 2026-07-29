@@ -1,7 +1,7 @@
-import { ink, brand, colors } from "$lib/colors.js";
+import { ink, brand } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };
-const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
+const mutedLabel = { fill: brand.grayText, class: "text-xs font-light" };
 const projectionPattern = {
   size: 8,
   lines: { rotate: -45, color: brand.gray, opacity: 0.5 },
@@ -17,24 +17,6 @@ export function circleCallout({ color = ink, filled = false, labelProps = {}, ..
     props: {
       circle: filled ? { stroke: color, fill: color, fillOpacity: 0.2 } : { stroke: ink, fill: "none" },
       label: { ...annotationLabel, ...labelProps },
-    },
-  };
-}
-
-// Leader-line callout (Datawrapper-style): no circle, just a thin muted line
-// from the anchor to the label — the same connector language as the stacked
-// charts' direct series labels. `r` sets how far from the anchor the line
-// starts (pass ~half the bar width so it leaves from the bar's edge);
-// labelXOffset/labelYOffset set the line's length and angle. The text is
-// nudged 4px off the line's end on the side the placement points to.
-export function lineCallout({ labelProps = {}, lineProps = {}, ...annotation }) {
-  const dx = annotation.labelPlacement?.includes("left") ? -4 : 4;
-  return {
-    link: { stroke: colors.lavender, ...lineProps },
-    ...annotation,
-    props: {
-      circle: { r: 0, stroke: "none", fill: "none" },
-      label: { dx, ...annotationLabel, ...labelProps },
     },
   };
 }

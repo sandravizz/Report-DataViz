@@ -36,9 +36,8 @@ const allSeries = [
   },
 ];
 
-// Shared scaffold for the four reveal steps: same data, axes and subtitle, so
-// only the visible lines (and the step's own title/description) change while
-// scrolling.
+// Shared scaffold for the four reveal steps — only the visible lines and
+// each step's title/description change while scrolling.
 const base = {
   subtitle:
     "Global Energy Workforce Growth Index (2019 = 100), 2019–2024",
@@ -122,7 +121,3 @@ export const workforceGrowthIndexSteps = [
     ],
   },
 ];
-
-// The full four-line chart stays the canonical "Figure 2" for anything that
-// wants a single figure.
-export default workforceGrowthIndexSteps[workforceGrowthIndexSteps.length - 1];

@@ -1,7 +1,6 @@
 import { getChartSvgString } from "layerchart";
 
-// Matches the report's own type ramp (src/styles/tailwind.css --font-sans)
-// and base-content color (src/lib/colors.js `ink`) so the exported PNG reads
+// Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot.
 const FONT_FAMILY = "IBM Plex Sans, Arial, sans-serif";
 const INK = "#221d18";
@@ -9,15 +8,9 @@ const MUTED = "rgba(34, 29, 24, 0.5)";
 const MUTED_FAINT = "rgba(34, 29, 24, 0.3)";
 const BACKGROUND = "#ffffff";
 
-// LayerChart's chart SVGs render with `overflow: visible` and no `viewBox`
-// (see node_modules/layerchart/dist/components/layers/Svg.svelte) so
-// end-point labels and right-placed axis ticks are allowed to render past
-// the SVG's own nominal width/height — invisible on the live page since
-// there's ambient margin around every figure for it to spill into. Rasterized
-// standalone (as this capture does), that overflow has nowhere to go and gets
-// hard-clipped at the SVG's declared edge. Expanding the viewBox by this many
-// CSS px on every side before rasterizing reclaims that bleed so leaking
-// content survives the export.
+// Extra canvas on every side so labels that overflow the SVG's nominal
+// bounds (invisible on the live page, hard-clipped when rasterized standalone)
+// survive the export — see docs/download-image-overflow-clip-bug.md.
 const CAPTURE_BLEED = 20;
 
 function wrapLines(ctx, text, maxWidth) {
@@ -37,11 +30,8 @@ function wrapLines(ctx, text, maxWidth) {
   return lines;
 }
 
-// Captures one chart's own `.lc-root-container` as a bitmap, with
-// CAPTURE_BLEED of extra canvas on every side so overflowing labels aren't
-// clipped (see the comment on CAPTURE_BLEED above). Returns null for a
-// Canvas-only chart (none in this report — every chart type here renders
-// through LayerChart's SVG layer).
+// Captures one chart's own `.lc-root-container` as a bitmap with
+// CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here).
 async function captureChartBleed(root, pixelRatio) {
   const svgStr = getChartSvgString(root);
   if (!svgStr) return null;
@@ -80,19 +70,11 @@ async function captureChartBleed(root, pixelRatio) {
   }
 }
 
-/**
- * Composites a figure's chart(s) — rasterized via LayerChart's own SVG
- * export, with a bleed margin to preserve overflowing labels (see
- * CAPTURE_BLEED) — with the report's title/subtitle/source/wordmark text
- * into one downloadable PNG.
- *
- * Chart roots are auto-discovered inside `figureEl` via LayerChart's
- * `.lc-root-container` marker (one per <Chart>), each captured and then
- * redrawn at its original on-screen position relative to the others. That
- * makes this work unmodified for a single chart, the stacked double-panel
- * figure, and the line-multiples small-multiples grid alike — no per-figure
- * wiring needed.
- */
+// Composites a figure's chart(s) with the report's title/subtitle/source/
+// wordmark text into one downloadable PNG. Chart roots are auto-discovered
+// via LayerChart's `.lc-root-container` marker and redrawn at their original
+// relative position, so this works unmodified for a single chart, the
+// stacked double panel, and the line-multiples grid alike.
 export async function downloadFigureImage({ figureEl, title, subtitle, source, filename }) {
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([

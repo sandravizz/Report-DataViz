@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
   import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat } from "$lib/chart-theme";
-  import { ink, colors } from "$lib/colors";
+  import { ink, brand } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -24,13 +24,9 @@
     return `${label}${pair.valueSuffix ?? ""}`;
   };
 
-  // Direct labels instead of a legend, on every viewport (Datawrapper
-  // stacked-column guidance, mirrored in the dataviz skill's stacked-bars
-  // reference, plus the house rule that end labels never collapse into a
-  // bottom legend on mobile): each series is named beside its segment on the
-  // last bar in its own series color, mirroring the line charts' end labels.
-  // The x offset is set at render time from the actual band width so the
-  // label starts just over the bar's right edge on every figure.
+  // Direct labels instead of a legend, on every viewport (house rule: end
+  // labels never collapse into a bottom legend on mobile) — each series is
+  // named beside its segment on the last bar, in its own color.
   const directLabelsActive = $derived(pair.series.length > 1);
 
   const directLabelAnnotations = $derived.by(() => {
@@ -68,9 +64,6 @@
 
   // In-bar value labels, driven by pair.barLabels:
   //   [{ series, value: (d) => string, position: "bottom" | "middle", fill }]
-  // "bottom" anchors the number just above the baseline inside the bottom
-  // segment; "middle" centers it in its own segment. `value` returns the
-  // display string, so a percent chart can show absolute values.
   const barLabels = $derived.by(() =>
     (pair.barLabels ?? []).map((bl) => {
       const index = pair.series.findIndex((s) => s.key === bl.series);
@@ -85,23 +78,13 @@
     })
   );
 
-  // Bar total, above every bar — not a segment value but the full stack's
-  // sum. Same visual language as the projection band's "Projection" label
-  // (text-xs font-light, left-aligned, flush with the bar's top-left corner)
-  // but inked black like every other direct label instead of that label's
-  // muted gray. Percent charts report the share each series carries, not an
-  // absolute count, so their total is a fixed, uninformative 100% — skipped.
-  //
-  // Spelling out "million"/"thousand" on every bar read as noisy repetition
-  // (same call the y-axis ticks already made) — only the last bar, the
-  // figure's headline number, carries the unit; earlier bars are bare
-  // numbers, rounded to one decimal at most — summing floating-point series
-  // values (e.g. 9.1 + 5.0 + 2.8 + 3.3 + 7.42) otherwise surfaces the raw
-  // addition noise as two or more decimal places.
-  // Sub-million bars are the exception: rounding e.g. 0.95 to one decimal
-  // gives "1", which reads as an exact whole million and collides with the
-  // "1" gridline — formatMillions() spells those out as "950 thousand"
-  // instead, same as the last bar always does.
+  // Bar total, above every bar (the full stack's sum, not a segment value).
+  // Percent charts skip this — their total is always a flat, uninformative
+  // 100%. Only the last bar spells out "million"/"thousand" (the headline
+  // number); earlier bars are bare numbers rounded to one decimal, to avoid
+  // surfacing floating-point summing noise. Sub-million bars are the
+  // exception: rounding e.g. 0.95 to "1" would collide with the "1"
+  // gridline, so those use formatMillions() too ("950 thousand").
   const round1 = (n) => Math.round(n * 10) / 10;
   const totalLabels = $derived.by(() => {
     if (pair.percent) return [];
@@ -126,12 +109,9 @@
     });
   });
 
-  // Growth arrow (opt-in via pair.growthArrow): a rounded connector from the
-  // first bar's total to the last bar's total, labeled with the absolute
-  // gain — figures whose title promises a headline number (e.g. "5.6
-  // million more jobs") shouldn't leave readers to subtract the two totals
-  // themselves to find it on the chart. Lifted clear of both bars' own total
-  // labels in the template below, where the pixel scales are available.
+  // Growth arrow (opt-in via pair.growthArrow): connects the first and last
+  // bars' totals, labeled with the absolute gain, so readers don't have to
+  // subtract the totals themselves.
   const growthArrow = $derived.by(() => {
     if (!pair.growthArrow || pair.percent || pair.data.length < 2) return null;
     const sumRow = (d) => pair.series.reduce((sum, s) => sum + d[s.value], 0);
@@ -153,24 +133,17 @@
 
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
   const directLabels = $derived(resolveAnnotations(directLabelAnnotations, innerWidth));
-  // Figures with `hideYAxisMobile` drop the y axis (ticks, labels and
-  // gridlines) below the 1024 breakpoint — the region stack's own end labels
-  // and totals already carry the values, so the inline y ticks are pure
-  // clutter once mobile's narrower plot has them landing on top of the bars.
+  // `hideYAxisMobile` drops the y axis below 1024 — the direct labels and
+  // bar totals already carry the values, so inline ticks are pure clutter.
   const hideYAxis = $derived(pair.hideYAxisMobile && innerWidth < 1024);
-  // Y tick labels sit inside the plot now (see yAxisPropsInline), so the
-  // same narrow gutter fits every figure regardless of label width. Once
-  // hideYAxis drops the ticks entirely there's nothing left to gutter for —
-  // collapse it to 0 so bars sit flush with the title/subtitle's left edge
-  // instead of leaving that reserved sliver empty.
+  // Once hideYAxis drops the ticks there's nothing left to gutter for —
+  // collapse padding to 0 so bars sit flush with the title's left edge.
   const padding = $derived(
     endLabelPadding(innerWidth, directLabelsActive, hideYAxis ? { left: 0 } : yLabelPaddingInline)
   );
   const bandPadding = $derived(responsiveBandPadding(innerWidth, pair.bandPadding ?? 0.2));
-  // Passed alongside xScale below only so BarChart still sees a non-null
-  // bandPadding (it uses that as a flag to auto-baseline the value axis at
-  // 0); the actual band layout comes entirely from xScale's own inner/outer
-  // padding, not from this value.
+  // Passed alongside xScale only so BarChart sees a non-null bandPadding (its
+  // flag to auto-baseline the value axis at 0); actual layout comes from xScale.
   const xScale = $derived(bandXScale(bandPadding));
 </script>
 
@@ -206,10 +179,7 @@
         { item: { format: "percentRound" }, hideTotal: true }
       : pair.valueSuffix
         ? { item: { format: formatValue } }
-        : // No explicit format left the total using the tooltip's hardcoded
-          // "integer" fallback while categories printed raw (unrounded)
-          // values — a two-decimal format here applies to both, since the
-          // library spreads this same item config onto the total row.
+        : // Applies to both categories and the total row (same item config).
           { item: { format: (d) => d.toFixed(2) } },
   }}
 >
@@ -237,36 +207,23 @@
     {#each annotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
     {/each}
-    <!-- The label's anchor is the last band's center; offsetting by half the
-         band width plus a small gap starts the text just clear of the bar's
-         right edge, whatever the figure's band count. The gap defaults to 6
-         but a figure can widen it via pair.endLabelGap when its labels sit
-         too tight against the bar — this only nudges the label itself, it
-         doesn't touch the chart's own right padding (see endLabelPadding),
-         so the plot stays full width. -->
+    <!-- Offsetting by half the band width plus a gap starts the text just
+         clear of the last bar's right edge; pair.endLabelGap widens it. -->
     {#each directLabels as annotation, i (i)}
       <AnnotationPoint
         {...annotation}
         labelXOffset={context.xScale.bandwidth() / 2 + (pair.endLabelGap ?? 6)}
       />
     {/each}
-    <!-- AnnotationPoint auto-centers a band-scale x, so the offset here pulls
-         the anchor back by half the bandwidth to flush the label's left edge
-         with the bar's left edge, same as the projection band's label edge. -->
+    <!-- Pulls the auto-centered band anchor back by half the bandwidth, to
+         flush the label's left edge with the bar's left edge. -->
     {#each totalLabels as annotation, i (i)}
       <AnnotationPoint {...annotation} labelXOffset={-(context.xScale.bandwidth() / 2)} />
     {/each}
     {#if growthArrow}
-      <!-- Short hop that lives entirely in the gap between the two bars —
-           from the first bar's right edge to the last bar's left edge, not
-           bar-center to bar-center — so it reads as a beat between the bars
-           rather than a banner across the whole chart. Both ends are lifted
-           clear of the bars' own total labels ("14.3"/"16.4"); the growth
-           label floats above the arc's peak with its own extra gap so it
-           doesn't crowd the line itself. Same muted gray as the "Projection"
-           band's own label, so the two annotations read as one family. Raw
-           Link/Text (not AnnotationPoint) for full control over where the
-           label lands, independent of the arrow's endpoints. -->
+      <!-- Bar-edge to bar-edge (not center to center), lifted clear of the
+           bars' own total labels. Raw Link/Text, not AnnotationPoint, for
+           full control over where the label lands. -->
       {@const lift = -10}
       {@const sourceX = context.xScale(growthArrow.x) + context.xScale.bandwidth()}
       {@const sourceY = context.yScale(growthArrow.y) - lift}
@@ -278,7 +235,7 @@
         x2={targetX}
         y2={targetY}
         type="swoop"
-        stroke={colors.lavender}
+        stroke={brand.grayText}
         strokeWidth={1.5}
         fill="none"
         markerEnd={{ type: "triangle", size: 7 }}
@@ -289,7 +246,7 @@
         y={Math.min(sourceY, targetY) - 14}
         textAnchor="middle"
         verticalAnchor="end"
-        fill={colors.lavender}
+        fill={brand.grayText}
         class="text-xs font-light"
       />
     {/if}

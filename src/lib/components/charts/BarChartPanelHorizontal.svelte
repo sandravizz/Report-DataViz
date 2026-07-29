@@ -8,14 +8,11 @@
   let innerWidth = $state(1024);
   const formatValue = (d) => `${d.toFixed(1)}${pair.valueSuffix ?? ""}`;
 
-  // Category labels are long; give them a generous left gutter and let them
-  // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
-  // so labels reflow per breakpoint instead of relying on hard \n breaks.
+  // Category labels are long; give them a generous, width-based word-wrap
+  // gutter (bars can spare the width) instead of hard \n breaks.
   const labelGutter = $derived(innerWidth < 1024 ? 110 : 180);
 
-  // Bar value labels ("6%", "4.3%"...) read as oversized on mobile's narrow
-  // bars; shrink below the tickLabelProps default (text-xs/12px) only under
-  // the report's usual <1024 breakpoint.
+  // Bar value labels read as oversized on mobile's narrow bars.
   const valueLabelProps = $derived({
     ...tickLabelProps,
     class: innerWidth < 1024 ? "text-[10px] font-light" : tickLabelProps.class,
@@ -59,12 +56,9 @@
       }}
     />
   </div>
-  <!-- Grouped bars have no free spot for per-series direct labels, so the
-       color legend renders on every viewport, ordered to match the bars.
-       The chart above is flex-1 in a fixed-height column, so whatever the
-       legend doesn't use goes straight to bar height — kept snug (pt-1.5,
-       not pt-3) so mobile's eight-category chart isn't squeezed for a
-       legend that doesn't need to sit far from the bars it labels. -->
+  <!-- Grouped bars have no free spot for per-series direct labels, so a
+       color legend renders on every viewport, kept snug (pt-1.5) so mobile's
+       eight-category chart isn't squeezed for it. -->
   {#if pair.series.length > 1}
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1.5 text-xs font-light">
       {#each pair.series as item (item.key)}

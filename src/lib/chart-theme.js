@@ -5,44 +5,23 @@ import { ink, brand } from "./colors.js";
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // Axis numbers are a reference, not the primary readout (series are
-// direct-labeled), so both axes get the same muted gray as the "Projection"
-// band label instead of the report's usual black ink. Data labels (bar
-// totals, value-on-bar text, etc.) keep using `tickLabelProps` above.
+// direct-labeled), so both axes get a muted gray instead of ink.
 export const mutedTickLabelProps = { fill: brand.grayText, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
 export const yAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
 
-// X ticks for year axes: every 25 years on the quarter-century grid
-// (1800, 1825, … 2100), so a tick and its gridline always land on 2025,
-// where the projection bands start. Start years off the grid (e.g. 1980)
-// snap up to the next grid year.
-export function quarterCenturyTicks(startYear, endYear) {
-  const ticks = [];
-  for (let y = Math.ceil(startYear / 25) * 25; y <= endYear; y += 25) {
-    ticks.push(new Date(y, 0, 1));
-  }
-  return ticks;
-}
-
-// On mobile the quarter-century ticks crowd the narrow x axis, so keep only
-// the half-century years (1800, 1850, … 2100). Short-range charts would be
-// left with fewer than three ticks that way, so they keep the full
-// quarter-century set instead. Same <1024 mobile threshold as the layout's
-// lg: breakpoint.
+// Mobile keeps only half-century ticks (1800, 1850…) to avoid crowding the
+// narrow x axis; short ranges left with <3 ticks keep the full set instead.
 export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   if (!ticks || innerWidth >= 1024) return ticks;
   const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
   return halved.length >= 3 ? halved : ticks;
 }
 
-// On mobile the x axis is too narrow to spell out every year in full — the
-// first tick keeps its 4-digit year for orientation, later ticks abbreviate
-// to the last two digits ("20", "21"…) since the century never changes
-// within one chart's range. Desktop always shows full years. Figures with
-// their own custom xTickFormat (e.g. "2035 STEPS" scenario labels) pass that
-// prop directly instead, so this only ever applies to plain year axes.
+// Mobile abbreviates years to their last two digits ("20", "21"…) except the
+// first tick, which stays a full 4-digit year for orientation.
 export function yearTickFormat(innerWidth, firstYear) {
   return (d) => {
     const year = d.getFullYear();
@@ -51,48 +30,26 @@ export function yearTickFormat(innerWidth, firstYear) {
   };
 }
 
-// Default y-axis ticks when a figure doesn't supply its own array via
-// pair.yTicks: use the scale's own candidate ticks with 0 dropped, since the
-// plot area already sits flush against the axis there and a "0" label is
-// redundant clutter. Figures that need exact values (e.g. log scales, or a
-// deliberately included 0) pass pair.yTicks, which is used as-is instead.
-// `count` is forwarded to `scale.ticks()` as-is, so callers that want a
-// specific step (paired with a matching `yNice` count on the scale, e.g. 5
-// for "5, 10, 15…" / "0.5, 1, 1.5…" spacing) can pass it; omitted, it's
-// d3's own default tick count.
+// Default y ticks when a figure doesn't pass its own pair.yTicks: the
+// scale's own candidates with 0 dropped (redundant against the flush axis).
+// `count` forwards to scale.ticks() for a specific step.
 export function excludeZeroTick(scale, count) {
   const candidates = typeof scale.ticks === "function" ? scale.ticks(count) : scale.domain();
   return candidates.filter((tick) => tick !== 0);
 }
 
-// Tooltips are desktop-only: on mobile viewports the tooltip interaction is
-// buggy (tap-triggered tooltips misbehave on touch), so every chart passes
-// this as its `tooltipContext` instead of a hardcoded boolean. Same <1024
-// mobile threshold as the layout's lg: breakpoint and the helpers below.
+// Tooltips are desktop-only — tap-triggered tooltips misbehave on touch.
 export function desktopTooltips(innerWidth) {
   return innerWidth >= 1024;
 }
 
-// Numeric y tick labels are wider than the default 20px left gutter; give
-// those charts enough room that the labels stay inside the chart container,
-// so the legend and plot stay flush with the title/subtitle/source.
+// Numeric y tick labels need more than the default 20px left gutter.
 export const yLabelPadding = { left: 36 };
 
-// Word-formatted y tick labels ("1.5 million") run wider than the plain
-// numeric gutter above, so charts using formatMillions() below get extra
-// left padding to keep the longest tick ("10 million" etc.) from clipping.
-export const yLabelPaddingWide = { left: 64 };
-
-// Report figures store worker counts pre-scaled to millions (e.g. 1.5 =
-// 1.5 million), so the y-axis domain is already the "actual" unit — this
-// just spells out the magnitude on the tick label itself ("1.5 million",
-// "500 thousand") instead of leaving readers to infer it from the subtitle.
-// innerWidth is optional — callers that never see mobile (or don't care,
-// like the y-axis tick format below) can omit it and keep spelling out
-// "million" in full; it only shortens to "mil." once a caller passes an
-// actual viewport width under the 1024 breakpoint, e.g. a stacked bar's
-// last-bar total label, which sits directly on the bar and reads as
-// cluttered at mobile's narrower width with the full word.
+// Report figures store worker counts pre-scaled to millions (1.5 = 1.5
+// million); this spells the magnitude out on the tick label itself. Only
+// shortens to "mil." once a caller passes an actual mobile innerWidth (e.g.
+// the stacked bar's last-bar total, which sits directly on the bar).
 export function formatMillions(d, innerWidth = Infinity) {
   if (d === 0) return "0";
   if (Math.abs(d) >= 1) {
@@ -104,9 +61,8 @@ export function formatMillions(d, innerWidth = Infinity) {
   return `${thousands.toLocaleString()}K`;
 }
 
-// Point annotations may carry a `mobile` override (placement, offsets, label
-// props) for narrow viewports where the desktop placement would run past the
-// plot edge; SVG text does not clip-or-wrap on its own, so reposition instead.
+// A point annotation may carry a `mobile` override (placement/offsets/label
+// props) for narrow viewports where the desktop placement would clip.
 export function resolveAnnotations(annotations, innerWidth) {
   return annotations.map(({ mobile, ...annotation }) =>
     innerWidth < 1024 && mobile
@@ -123,28 +79,16 @@ export function resolveAnnotations(annotations, innerWidth) {
   );
 }
 
-// Halo behind every end/direct label: a same-color-as-background text stroke
-// so a label stays legible wherever it lands — most notably over a hatched
-// projection band, but just as true over a gridline or another series. Text
-// already paints its stroke under its fill (paint-order: stroke, set
-// globally on .lc-text-svg), so this reads as a tight halo, not an outline.
-// Mobile's smaller text and tighter layouts read the desktop width as a
-// bloated blob rather than a halo, so it's scaled down there.
+// Same-color-as-background text stroke behind every end/direct label, so it
+// stays legible over a projection band, gridline, or another series.
 export function endLabelHalo(innerWidth) {
   return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
 }
 
-// Stacked bar charts put the y-axis tick labels inside the plot, over the
-// gridlines, instead of in a reserved left-hand gutter — on mobile a "1
-// million" label has nowhere to go if it has to live outside the chart.
-// textAnchor flips from the axis default ("end", sitting left of the axis
-// line) to "start" with a small positive dx, so the label starts right at
-// the axis line and reads into the chart; the halo keeps it legible over a
-// gridline or a bar it happens to land on. dx only nudges the text itself —
-// unlike the chart's own left padding (yLabelPaddingInline), it doesn't move
-// the plot's left edge (bars, gridlines) at all, so it's the knob to reach
-// for if the topmost tick ("30 million") reads as too tight against the
-// container edge.
+// Stacked-bar y tick labels sit inside the plot rather than in a left
+// gutter, so mobile has somewhere for them to go. textAnchor flips to
+// "start" with a small dx so the label reads into the chart instead of
+// hanging left of the axis line; the halo keeps it legible over gridlines.
 export function yAxisPropsInline(innerWidth) {
   return {
     ...yAxisProps,
@@ -159,54 +103,36 @@ export function yAxisPropsInline(innerWidth) {
   };
 }
 
-// Left padding only needs to clear the SVG edge now that labels live inside
-// the plot rather than needing gutter width sized to the longest tick.
+// Left padding just needs to clear the SVG edge, since labels above live
+// inside the plot rather than needing gutter width for the longest tick.
 export const yLabelPaddingInline = { left: 8 };
 
-// End-of-line labels (LineChartPanel's series end labels) reserve padding on
-// the right. Mobile only gets a little more than desktop's 80 — on a
-// ~330px-wide mobile plot every pixel reserved here comes straight out of
-// plot width, so this stays as small as the label box below can get away
-// with rather than growing to fit every long name on one line.
+// Right padding reserved for line charts' end-of-line labels.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
   const right = innerWidth < 1024 ? 60 : 80;
   return defaultChartPadding(hasLabels ? { ...extra, right } : extra);
 }
 
-// Mobile override for end-of-line label annotations: wide enough for most
-// series names ("Heat pumps") on one line without eating into bar width the
-// way a much wider box (paired with endLabelPadding above) would — an
-// occasional longer name ("Other efficiency") still wraps rather than
-// stealing more margin from every figure's bars. Also pins lineHeight —
-// Text's default line height is a flat 16px (1em resolved against an assumed
-// 16px base font, not our actual text-xs/12px), which reads as oversized
-// gaps between wrapped lines.
+// Mobile end-label wrap width: fits most series names on one line without
+// eating much bar width; also pins lineHeight (Text's 16px default reads
+// oversized against our text-xs/12px).
 export const endLabelMobileWrap = {
-  props: { label: { width:80, truncate: false, lineHeight: "13px" } },
+  props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
 };
 
-// Stacked bar panels get extra breathing room between bars on mobile — a
-// narrow viewport otherwise crowds two-bar "before/after" panels (e.g. the
-// STEPS scenario figures), where a growth arrow and both bars' total labels
-// all sit in the gap between them. Scaled relative to the figure's own base
-// padding (not a flat add) so many-bar figures, which already read tighter
-// at any padding value, aren't compressed as aggressively as two-bar ones.
+// Extra gap between bars on mobile so a growth arrow and both bars' totals
+// fit in a two-bar panel; scaled relative to the figure's own padding so
+// many-bar figures aren't compressed as aggressively as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
   return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
 }
 
-// scaleBand's own `.padding()` setter (what BarChart's `bandPadding` prop
-// feeds) applies one fraction to both paddingInner (the gap between bars)
-// and paddingOuter (the margin before the first bar and after the last).
-// A two-bar "before/after" panel needs a big inner gap so a growth arrow and
-// both bars' totals fit between them (see responsiveBandPadding above), but
-// there's nothing useful to fit in the outer margins — inflating those too
-// only eats plot width that could go straight to bar thickness. Passing
-// BarChart a pre-built scale via its `xScale` prop (which takes priority over
-// its own bandPadding-derived scale) decouples the two: paddingOuter stays
-// this small constant regardless of the figure's own padding value, so bars
-// get thicker and the plot's edges lose their dead margin without touching
-// the inter-bar gap at all.
+// scaleBand's `.padding()` setter applies one fraction to both the inner gap
+// (between bars) and outer margin (before/after the first/last bar). A
+// two-bar panel needs a big inner gap (see responsiveBandPadding) but
+// nothing useful fills the outer margin, so passing BarChart this prebuilt
+// scale (via its `xScale` prop) decouples the two: outer stays a small
+// constant and bars get thicker.
 const bandOuterPadding = 0.1;
 
 export function bandXScale(paddingInner) {

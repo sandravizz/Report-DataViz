@@ -54,9 +54,8 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
-  // The first pair is "active" (activeIndex 0) even while the section is still
-  // below the fold — gate draw-in animations on the section actually being on
-  // screen so they don't play unseen before the user arrives.
+  // activeIndex is 0 even while the section is below the fold, so gate
+  // draw-in animations on it actually being on screen (docs/scrolly-line-draw-in.md).
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );

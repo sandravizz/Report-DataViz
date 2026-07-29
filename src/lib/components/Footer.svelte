@@ -1,12 +1,6 @@
-<!-- Closing panel — a deliberate bookend of Landing rather than a centered
-     sentence floating in an empty screen (that read as barren, not "full
-     screen"). Same structure as Landing: left-aligned text column, cream
-     (base-200) background, the turbine illustration filling the right side
-     — mirrored horizontally (scale-x-[-1]) so the report visually closes
-     the loop instead of just repeating the hero. `disclosure` is an
-     optional snippet for report-specific licensing text (e.g. the IEA
-     citation in +page.svelte) — kept out of this component so Footer stays
-     reusable across reports; it sits small and muted at the bottom-left. -->
+<!-- Closing panel — bookends Landing (same layout, mirrored turbine image).
+     `disclosure` is an optional snippet for report-specific licensing text,
+     kept out of this component so Footer stays reusable across reports. -->
 <script>
   let { disclosure } = $props();
 </script>
@@ -62,10 +56,8 @@
       </div>
     </div>
 
-    <!-- Same turbine illustration as Landing, mirrored — the report closes
-         the loop instead of just trailing off. Hidden below md: it's a nice
-         echo of the hero, not content that earns its keep in the page-length
-         budget on a phone, where the bio/CTA/links are what actually matter. -->
+    <!-- Same turbine illustration as Landing, mirrored. Hidden on phones —
+         the bio/CTA/links matter more than a hero echo there. -->
     <div class="hidden md:flex md:flex-1 md:justify-end">
       <img
         src="/windmill_row_grid_square.svg"

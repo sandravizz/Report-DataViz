@@ -17,21 +17,13 @@ export default {
   number: "Figure 3",
   kind: "bar-stacked",
   xKey: "year",
-  // Default 5-step ticks would include 0.5, which always lands inside the
-  // 2015 bar (total 0.95) with no gridline space clear of it to sit in.
+  // Default 5-step ticks would include 0.5, landing inside the 2015 bar.
   yTicks: [1, 1.5, 2],
-  // Mobile drops the y axis entirely — the stack's direct end labels and
-  // per-bar totals already carry every value the ticks would (see Figure 4a).
-  hideYAxisMobile: true,
-  // A bit more breathing room than the default 6px gap (see
-  // BarChartPanelStacked's directLabels) between the last bar and its
-  // direct labels.
-  endLabelGap: 20,
+  hideYAxisMobile: true, // direct labels + bar totals already carry the values
+  endLabelGap: 20, // extra gap between the last bar and its direct labels
   xTickFormat: (d) => (d.getFullYear() === 2035 ? "2035 STEPS" : String(d.getFullYear())),
-  // Efficiency is the region's biggest employer and the headline's subject,
-  // so it sits on the shared baseline; the rest stack above it in size order.
-  // Colors match Figure 2's sector palette one-to-one, so the same sector
-  // wears the same hue across the line chart and this stack.
+  // Efficiency (the biggest employer) sits on the baseline; colors match
+  // Figure 2's sector palette one-to-one.
   series: [
     { key: "Efficiency", value: "efficiency", color: iea.efficiency },
     { key: "Grids", value: "grids", color: iea.grids },
@@ -39,8 +31,7 @@ export default {
     { key: "Solar PV", value: "solar", color: iea.solar },
   ],
   data,
-  // 2035 is the STEPS projection, not an observation — same hatched
-  // "Projection" band as Figure 5's 2035 bars.
+  // 2035 is the STEPS projection, not an observation.
   rangeAnnotations: [
     projectionRange({ x: [new Date(2035, 0, 1), new Date(2035, 0, 1)], label: "Projection" }),
   ],

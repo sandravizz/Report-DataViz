@@ -1,6 +1,4 @@
 <script>
-  const authors = [];
-
   // Optional extra content (e.g. the abstract side note) rendered in a text
   // band directly below the hero; the chevron scrolls to it when present.
   let { children } = $props();
@@ -10,23 +8,11 @@
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col md:flex-row md:items-center md:gap-10"
   >
-    <!-- Title block, left-aligned but nudged well in from the edge — the
-         max-width container above plus this padding pull the whole
-         title/illustration group toward the center of the page instead of
-         hugging the viewport edges. Widened from 38%→48% of the row so the
-         headline wraps across fewer, longer lines instead of squeezing into
-         a narrow column with a big dead gap before the illustration.
-         Padding/type shrink at the base (phone) tier only — sm/md/lg are
-         untouched — so the whole hero has a chance of fitting one mobile
-         screen instead of forcing a scroll before anything else is visible.
-         The section itself is a flex-1 child of the `#top` flex column in
-         +page.svelte (Header is the other child, shrink-0) so it fills the
-         viewport height that's actually left over after the header, not a
-         flat 100vh stacked underneath it.
-         The row switch is md (768), not lg (1024): at lg an iPad in
-         portrait was still getting the stacked phone layout at sm-tier
-         (already large) type and a full-width image stacked beneath it,
-         which ran taller than the tablet's own screen. -->
+    <!-- Row switch is md (768), not the report's usual lg (1024): at lg an
+         iPad portrait still got the stacked phone layout, which ran taller
+         than the tablet's own screen. This section is a flex-1 child of
+         `#top` in +page.svelte, so it fills the viewport height left over
+         after the header rather than a flat 100vh stacked underneath it. -->
     <div
       class="px-6 pt-4 pb-4 sm:px-10 sm:pt-8 sm:pb-8 md:w-[48%] md:shrink-0 md:py-0 md:pl-16 lg:pl-24"
     >
@@ -35,14 +21,6 @@
       >
         Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce
       </h1>
-      {#if authors.length}
-        <p class="mt-4 text-lg text-base-content/80 sm:mt-6 sm:text-xl">
-          {#each authors as author, i (author.name)}
-            <a href={author.href} class="link-hover underline-offset-4">{author.name}</a
-            >{i < authors.length - 1 ? ", " : ""}
-          {/each}
-        </p>
-      {/if}
       <p class="mt-4 text-lg text-base-content/80 sm:mt-6 sm:text-xl">
         Content &amp; data:
         <a
@@ -57,12 +35,8 @@
       </p>
     </div>
 
-    <!-- Row of wind turbines, fading toward the horizon, in a square frame.
-         The SVG itself was recropped to remove the dead space it used to
-         carry at its own edges, so this wrapper adds no padding of its own
-         (padding on top of an already-padded graphic just shrank it further,
-         worst on mobile) — it runs edge to edge and simply fills whatever
-         width the flex layout gives it. -->
+    <!-- Wind turbine illustration; the SVG is pre-cropped tight to its own
+         content, so this wrapper adds no padding of its own. -->
     <div class="flex justify-center md:flex-1 md:justify-end">
       <img
         src="/windmill_row_grid_square.svg"
