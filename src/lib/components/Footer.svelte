@@ -19,13 +19,10 @@
       />
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports — for the web, mobile, and static formats too.
+        visualization-first reports for the web, mobile, and static downloads too.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        This is one example of what that looks like in practice.
-      </p>
-      <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        If you've got a report that deserves to be more than a PDF, let's talk.
+        This is one example of what that looks like in practice. If you've got a report that deserves to be more than a PDF, let's talk.
       </p>
       <a
         href="https://sandraviz.com"
