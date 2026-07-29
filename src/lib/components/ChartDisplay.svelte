@@ -24,6 +24,7 @@
     return len;
   }
   let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
+  let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
   function tabLabel(pair) {
     const short = pair.number.slice(tabPrefixLength).trim();
     return short || pair.number;
