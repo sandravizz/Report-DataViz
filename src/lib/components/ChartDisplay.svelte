@@ -41,16 +41,16 @@
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
-      <div class="mb-1 flex items-center justify-between gap-2 lg:hidden">
+      <div class="mb-1 flex items-center justify-between gap-1 lg:hidden">
         {#if pairs.length > 1}
-          <div class="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto">
+          <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
             <span class="shrink-0 font-sans text-xs tracking-wide text-base-content/50 uppercase">
               {tabPrefix}
             </span>
             {#each pairs as p, pi (pi)}
               <button
                 type="button"
-                class="shrink-0 rounded-full px-2 py-0.5 font-sans text-xs tracking-wide uppercase transition-colors {pi ===
+                class="shrink-0 rounded-full px-1.5 py-0.5 font-sans text-xs uppercase transition-colors {pi ===
                 activeIndex
                   ? 'bg-base-200 text-base-content'
                   : 'text-base-content/50'}"
