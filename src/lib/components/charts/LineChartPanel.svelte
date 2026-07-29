@@ -175,15 +175,15 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    tooltip:
-      pair.valueSuffix || pair.tooltipHeaderFormat
-        ? {
-            ...(pair.valueSuffix && { item: { format: formatValue } }),
-            ...(pair.tooltipHeaderFormat && {
-              header: { format: pair.tooltipHeaderFormat },
-            }),
-          }
-        : undefined,
+    // Line charts plot trends (often an index), never a stack — a summed
+    // "total" row is meaningless here, unlike the stacked bar tooltip.
+    tooltip: {
+      hideTotal: true,
+      ...(pair.valueSuffix && { item: { format: formatValue } }),
+      ...(pair.tooltipHeaderFormat && {
+        header: { format: pair.tooltipHeaderFormat },
+      }),
+    },
   }}
 >
   {#snippet marks({ context })}

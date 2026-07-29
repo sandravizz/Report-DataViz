@@ -200,7 +200,11 @@
         { item: { format: "percentRound" }, hideTotal: true }
       : pair.valueSuffix
         ? { item: { format: formatValue } }
-        : undefined,
+        : // No explicit format left the total using the tooltip's hardcoded
+          // "integer" fallback while categories printed raw (unrounded)
+          // values — a two-decimal format here applies to both, since the
+          // library spreads this same item config onto the total row.
+          { item: { format: (d) => d.toFixed(2) } },
   }}
 >
   {#snippet belowMarks()}
