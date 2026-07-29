@@ -11,18 +11,12 @@ importers:
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(@sveltejs/kit@2.69.3(@sveltejs/vite-plugin-svelte@7.2.0(svelte@5.56.6)(vite@8.1.5(jiti@2.7.0)))(svelte@5.56.6)(vite@8.1.5(jiti@2.7.0)))(svelte@5.56.6)
-      d3-array:
-        specifier: ^3.2.4
-        version: 3.2.4
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
       d3-shape:
         specifier: ^3.2.0
         version: 3.2.0
-      d3-time-format:
-        specifier: ^4.1.0
-        version: 4.1.0
       daisyui:
         specifier: ^5.5.23
         version: 5.6.18
