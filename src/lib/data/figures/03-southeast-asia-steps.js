@@ -1,12 +1,6 @@
 import { iea } from "$lib/colors";
 import { projectionRange } from "$lib/data/annotation-presets.js";
 
-// From the IEA report "Ensuring a Skilled Renewable Energy and Energy
-// Efficiency Workforce" (2026), p. 11: Southeast Asia's workforce by sector in
-// the STEPS, million workers, for 2015, 2024 and the 2035 STEPS projection.
-// Values read off the published chart (the 2035 total of 1.8 million is
-// stated in the text), to be replaced with the exact series if the client
-// supplies the data table.
 const data = [
   { year: new Date(2015, 0, 1), efficiency: 0.42, grids: 0.4, wind: 0.01, solar: 0.12 },
   { year: new Date(2024, 0, 1), efficiency: 0.8, grids: 0.45, wind: 0.05, solar: 0.15 },
@@ -29,7 +23,10 @@ export default {
   // Mobile drops the y axis entirely — the stack's direct end labels and
   // per-bar totals already carry every value the ticks would (see Figure 4a).
   hideYAxisMobile: true,
-  // The middle bar is 2024 actuals; the last is the 2035 STEPS projection.
+  // A bit more breathing room than the default 6px gap (see
+  // BarChartPanelStacked's directLabels) between the last bar and its
+  // direct labels.
+  endLabelGap: 20,
   xTickFormat: (d) => (d.getFullYear() === 2035 ? "2035 STEPS" : String(d.getFullYear())),
   // Efficiency is the region's biggest employer and the headline's subject,
   // so it sits on the shared baseline; the rest stack above it in size order.

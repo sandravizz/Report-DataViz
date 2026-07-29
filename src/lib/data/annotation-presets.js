@@ -1,8 +1,3 @@
-// Shared visual language for explanatory annotations (Datawrapper-style:
-// dark ink for labels, hatch for projection ranges). Figures compose these
-// via the factories below so every callout inherits the same styling; any
-// AnnotationPoint/Range prop can still be overridden per call.
-
 import { ink, brand, colors } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };

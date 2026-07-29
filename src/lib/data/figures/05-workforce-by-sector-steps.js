@@ -19,6 +19,10 @@ const powerPanel = {
   // Mobile drops the y axis entirely — the stack's direct end labels and
   // per-bar totals already carry every value the ticks would (see Figure 4a).
   hideYAxisMobile: true,
+  // A bit more breathing room than the default 6px gap (see
+  // BarChartPanelStacked's directLabels) between the last bar and its
+  // direct labels.
+  endLabelGap: 20,
   yDomain: [0, 25],
   series: [
     { key: "Grids", value: "grids", color: iea.grids },
@@ -45,6 +49,10 @@ const efficiencyPanel = {
   // Mobile drops the y axis entirely — the stack's direct end labels and
   // per-bar totals already carry every value the ticks would (see Figure 4a).
   hideYAxisMobile: true,
+  // A bit more breathing room than the default 6px gap (see
+  // BarChartPanelStacked's directLabels) between the last bar and its
+  // direct labels.
+  endLabelGap: 20,
   yDomain: [0, 25],
   series: [
     { key: "Other efficiency", value: "other", color: iea.efficiency },

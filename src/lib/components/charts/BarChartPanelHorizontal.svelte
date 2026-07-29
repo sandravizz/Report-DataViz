@@ -6,11 +6,6 @@
   let { pair } = $props();
 
   let innerWidth = $state(1024);
-
-  // toFixed(1) instead of the raw number: summed series values (see the
-  // tooltip's "total" row) can land on float noise like 1.7999999999999998
-  // (1.2 + 0.6), and toFixed also caps display to the one decimal the data
-  // actually carries.
   const formatValue = (d) => `${d.toFixed(1)}${pair.valueSuffix ?? ""}`;
 
   // Category labels are long; give them a generous left gutter and let them

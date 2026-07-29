@@ -86,11 +86,18 @@ export const yLabelPaddingWide = { left: 64 };
 // 1.5 million), so the y-axis domain is already the "actual" unit — this
 // just spells out the magnitude on the tick label itself ("1.5 million",
 // "500 thousand") instead of leaving readers to infer it from the subtitle.
-export function formatMillions(d) {
+// innerWidth is optional — callers that never see mobile (or don't care,
+// like the y-axis tick format below) can omit it and keep spelling out
+// "million" in full; it only shortens to "mil." once a caller passes an
+// actual viewport width under the 1024 breakpoint, e.g. a stacked bar's
+// last-bar total label, which sits directly on the bar and reads as
+// cluttered at mobile's narrower width with the full word.
+export function formatMillions(d, innerWidth = Infinity) {
   if (d === 0) return "0";
   if (Math.abs(d) >= 1) {
     const millions = Math.round(d * 10) / 10;
-    return `${Number.isInteger(millions) ? millions : millions.toFixed(1)} million`;
+    const value = Number.isInteger(millions) ? millions : millions.toFixed(1);
+    return `${value} ${innerWidth < 1024 ? "mil." : "million"}`;
   }
   const thousands = Math.round(d * 1000);
   return `${thousands.toLocaleString()}K`;
@@ -151,13 +158,13 @@ export function yAxisPropsInline(innerWidth) {
 // the plot rather than needing gutter width sized to the longest tick.
 export const yLabelPaddingInline = { left: 8 };
 
-// End-of-line labels (LineChartPanel's series end labels, stacked bars' direct
-// labels) reserve padding on the right. Mobile only gets a little more than
-// desktop's 80 — on a ~330px-wide mobile plot every pixel reserved here comes
-// straight out of bar width, so this stays as small as the label box below
-// can get away with rather than growing to fit every long name on one line.
+// End-of-line labels (LineChartPanel's series end labels) reserve padding on
+// the right. Mobile only gets a little more than desktop's 80 — on a
+// ~330px-wide mobile plot every pixel reserved here comes straight out of
+// plot width, so this stays as small as the label box below can get away
+// with rather than growing to fit every long name on one line.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const right = innerWidth < 1024 ? 84 : 80;
+  const right = innerWidth < 1024 ? 60 : 80;
   return defaultChartPadding(hasLabels ? { ...extra, right } : extra);
 }
 
@@ -170,7 +177,7 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 // 16px base font, not our actual text-xs/12px), which reads as oversized
 // gaps between wrapped lines.
 export const endLabelMobileWrap = {
-  props: { label: { width: 140, truncate: false, lineHeight: "13px" } },
+  props: { label: { width:80, truncate: false, lineHeight: "13px" } },
 };
 
 // Stacked bar panels get extra breathing room between bars on mobile — a

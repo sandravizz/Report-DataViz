@@ -5,27 +5,11 @@
 
   let { pair } = $props();
   let innerWidth = $state(1024);
-
-  // Figures with scenario bars ("2035 STEPS") pass their own xTickFormat;
-  // plain time-series columns keep the year default, abbreviated to two
-  // digits after the first tick on mobile (see yearTickFormat).
   const formatYear = $derived(
     pair.xTickFormat ?? yearTickFormat(innerWidth, pair.data[0][pair.xKey].getFullYear())
   );
 
-  // Every bar-stacked figure's values are workers in millions, but spelling
-  // "million" out on every tick is noisy repetition. Instead only the
-  // topmost tick carries the unit ("14 million"); the rest render as bare
-  // numbers, the way a chart labeled "in millions" would read. yTicks()
-  // records the topmost value as a side effect each time the axis asks for
-  // its tick list, so formatValue (called once per tick, value only — no
-  // index) knows which one to spell out.
-  //
-  // The 5-count here is paired with `yNice={5}` below on <BarChart>: nice(5)
-  // rounds the domain to a multiple of the step ticks(5) will land on, so
-  // the axis reads in clean 5-unit steps ("5, 10, 15, 20") or, for the
-  // smaller figures, 0.5-unit steps ("0.5, 1, 1.5, 2") — rather than
-  // whatever odd increment d3's default tick count picks.
+
   let maxYTick = 0;
   const yTicks = (scale) => {
     // Most figures take the scale's own 5-step candidates; a figure can
@@ -125,7 +109,8 @@
     return pair.data.map((d, i) => {
       const total = pair.series.reduce((sum, s) => sum + d[s.value], 0);
       const rounded = round1(total);
-      const label = i === lastIndex || Math.abs(total) < 1 ? formatMillions(total) : String(rounded);
+      const label =
+        i === lastIndex || Math.abs(total) < 1 ? formatMillions(total, innerWidth) : String(rounded);
       return {
         x: d[pair.xKey],
         y: total,
@@ -174,8 +159,13 @@
   // clutter once mobile's narrower plot has them landing on top of the bars.
   const hideYAxis = $derived(pair.hideYAxisMobile && innerWidth < 1024);
   // Y tick labels sit inside the plot now (see yAxisPropsInline), so the
-  // same narrow gutter fits every figure regardless of label width.
-  const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPaddingInline));
+  // same narrow gutter fits every figure regardless of label width. Once
+  // hideYAxis drops the ticks entirely there's nothing left to gutter for —
+  // collapse it to 0 so bars sit flush with the title/subtitle's left edge
+  // instead of leaving that reserved sliver empty.
+  const padding = $derived(
+    endLabelPadding(innerWidth, directLabelsActive, hideYAxis ? { left: 0 } : yLabelPaddingInline)
+  );
   const bandPadding = $derived(responsiveBandPadding(innerWidth, pair.bandPadding ?? 0.2));
 </script>
 
@@ -238,14 +228,17 @@
       <AnnotationPoint {...annotation} />
     {/each}
     <!-- The label's anchor is the last band's center; offsetting by half the
-         band width plus a small fixed gap starts the text just clear of the
-         bar's right edge, whatever the figure's band count. Same gap on
-         mobile as desktop now — mobile's reserved right margin (see
-         endLabelPadding) is deliberately tight so bars stay wide, so the gap
-         can't afford to be any bigger without pushing labels toward the
-         card edge. -->
+         band width plus a small gap starts the text just clear of the bar's
+         right edge, whatever the figure's band count. The gap defaults to 6
+         but a figure can widen it via pair.endLabelGap when its labels sit
+         too tight against the bar — this only nudges the label itself, it
+         doesn't touch the chart's own right padding (see endLabelPadding),
+         so the plot stays full width. -->
     {#each directLabels as annotation, i (i)}
-      <AnnotationPoint {...annotation} labelXOffset={context.xScale.bandwidth() / 2 + 6} />
+      <AnnotationPoint
+        {...annotation}
+        labelXOffset={context.xScale.bandwidth() / 2 + (pair.endLabelGap ?? 6)}
+      />
     {/each}
     <!-- AnnotationPoint auto-centers a band-scale x, so the offset here pulls
          the anchor back by half the bandwidth to flush the label's left edge
