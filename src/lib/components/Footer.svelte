@@ -19,17 +19,21 @@
       />
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports for the web (including mobile) as well as static formats.
+        visualization-first reports — for the web, mobile, and static formats too.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        Like what you see? If you'd like something similar for your own reports,
-        <a
-          href="https://sandraviz.com"
-          target="_blank"
-          rel="noopener"
-          class="font-semibold underline-offset-4 hover:underline">get in touch</a
-        >.
+        This is one example of what that looks like in practice.
       </p>
+      <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
+        If you've got a report that deserves to be more than a PDF, let's talk.
+      </p>
+      <a
+        href="https://sandraviz.com"
+        target="_blank"
+        rel="noopener"
+        class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
+        >Get in touch →</a
+      >
       <div class="mt-4 flex items-center gap-5 sm:mt-6">
         <a
           href="https://github.com/sandravizz"

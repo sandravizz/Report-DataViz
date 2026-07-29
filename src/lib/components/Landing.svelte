@@ -31,7 +31,13 @@
         > (2026)
       </p>
       <p class="mt-2 text-sm text-base-content/60 sm:text-base">
-        Interactive design study · SandraViz
+        Interactive design study ·
+        <a
+          href="https://www.sandraviz.com/"
+          target="_blank"
+          rel="noopener"
+          class="underline underline-offset-4">SandraViz</a
+        >
       </p>
     </div>
 

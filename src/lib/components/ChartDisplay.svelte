@@ -3,12 +3,31 @@
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
 
-  let { pairs, activeIndex, inView = true } = $props();
+  let { pairs, activeIndex, inView = true, jumpTo } = $props();
 
   let interpretationModal;
   // One ref per pair, bound below — FigureFooter's download button walks
   // this element's LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
+
+  // Mobile tab labels: strip the prefix all pairs share (e.g. "Figure 2")
+  // so the strip reads "a b c d" instead of repeating "Figure 2a/2b/2c/2d".
+  // A one-pair group has nothing to strip, so it falls back to the full number.
+  function commonPrefixLength(strings) {
+    if (strings.length < 2) return 0;
+    let len = strings[0].length;
+    for (const s of strings.slice(1)) {
+      let i = 0;
+      while (i < len && i < s.length && s[i] === strings[0][i]) i++;
+      len = i;
+    }
+    return len;
+  }
+  let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
+  function tabLabel(pair) {
+    const short = pair.number.slice(tabPrefixLength).trim();
+    return short || pair.number;
+  }
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
@@ -22,9 +41,26 @@
       bind:this={figureRefs[i]}
     >
       <div class="mb-1 flex items-center justify-between lg:hidden">
-        <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
-          {pair.number}
-        </span>
+        {#if pairs.length > 1}
+          <div class="flex gap-1 overflow-x-auto">
+            {#each pairs as p, pi (pi)}
+              <button
+                type="button"
+                class="shrink-0 rounded-full px-2 py-0.5 font-sans text-xs tracking-wide uppercase transition-colors {pi ===
+                activeIndex
+                  ? 'bg-base-200 text-base-content'
+                  : 'text-base-content/50'}"
+                onclick={() => jumpTo(pi)}
+              >
+                {tabLabel(p)}
+              </button>
+            {/each}
+          </div>
+        {:else}
+          <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
+            {pair.number}
+          </span>
+        {/if}
         <button
           class="btn btn-ghost btn-xs gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
           onclick={() => interpretationModal.showModal()}
