@@ -1,6 +1,4 @@
 <script>
-  // No individual authors credited — if a client wants an author line here,
-  // names (and links) still to come.
   const authors = [];
 
   // Optional extra content (e.g. the abstract side note) rendered in a text
@@ -8,11 +6,6 @@
   let { children } = $props();
 </script>
 
-<!-- Hero, title left-aligned McKinsey/Global-Justice-Report style, with the
-     square wind-turbine illustration on the right instead of a photo.
-     Background is the same cream tint (base-200) used behind chapter titles
-     further down the report, so the header can sit permanently in its
-     contrast (dark-on-light) state — no scrim, no transparent phase. -->
 <section class="relative flex flex-1 flex-col bg-base-200 font-sans">
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col md:flex-row md:items-center md:gap-10"

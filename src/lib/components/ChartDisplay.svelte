@@ -6,6 +6,9 @@
   let { pairs, activeIndex, inView = true } = $props();
 
   let interpretationModal;
+  // One ref per pair, bound below — FigureFooter's download button walks
+  // this element's LayerChart chart(s) to build the exported PNG.
+  let figureRefs = $state([]);
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
@@ -20,6 +23,7 @@
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
+      bind:this={figureRefs[i]}
     >
       <div class="mb-1 flex items-center justify-between lg:hidden">
         <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
@@ -53,7 +57,7 @@
         {/if}
       </div>
 
-      <FigureFooter {pair} />
+      <FigureFooter {pair} figureEl={figureRefs[i]} />
     </div>
   {/each}
 
