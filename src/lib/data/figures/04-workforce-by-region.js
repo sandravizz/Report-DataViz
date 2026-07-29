@@ -28,6 +28,7 @@ export const workforceByRegionA = {
   number: "Figure 4a",
   kind: "bar-stacked",
   xKey: "year",
+    yTicks: [5, 10, 15, 20, 30],
   // Mobile drops the y axis entirely — the stack's direct end labels and
   // per-bar totals already carry every value the ticks would, and at mobile
   // width the inline labels (see yAxisPropsInline) crowd the "Rest of world"

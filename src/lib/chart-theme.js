@@ -1,4 +1,5 @@
 import { defaultChartPadding } from "layerchart";
+import { scaleBand } from "d3-scale";
 import { ink, brand } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
@@ -139,7 +140,11 @@ export function endLabelHalo(innerWidth) {
 // textAnchor flips from the axis default ("end", sitting left of the axis
 // line) to "start" with a small positive dx, so the label starts right at
 // the axis line and reads into the chart; the halo keeps it legible over a
-// gridline or a bar it happens to land on.
+// gridline or a bar it happens to land on. dx only nudges the text itself —
+// unlike the chart's own left padding (yLabelPaddingInline), it doesn't move
+// the plot's left edge (bars, gridlines) at all, so it's the knob to reach
+// for if the topmost tick ("30 million") reads as too tight against the
+// container edge.
 export function yAxisPropsInline(innerWidth) {
   return {
     ...yAxisProps,
@@ -147,7 +152,7 @@ export function yAxisPropsInline(innerWidth) {
       ...mutedTickLabelProps,
       textAnchor: "start",
       verticalAnchor: "end",
-      dx: 4,
+      dx: 8,
       dy: -3,
       ...endLabelHalo(innerWidth),
     },
@@ -188,4 +193,22 @@ export const endLabelMobileWrap = {
 // at any padding value, aren't compressed as aggressively as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
   return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
+}
+
+// scaleBand's own `.padding()` setter (what BarChart's `bandPadding` prop
+// feeds) applies one fraction to both paddingInner (the gap between bars)
+// and paddingOuter (the margin before the first bar and after the last).
+// A two-bar "before/after" panel needs a big inner gap so a growth arrow and
+// both bars' totals fit between them (see responsiveBandPadding above), but
+// there's nothing useful to fit in the outer margins — inflating those too
+// only eats plot width that could go straight to bar thickness. Passing
+// BarChart a pre-built scale via its `xScale` prop (which takes priority over
+// its own bandPadding-derived scale) decouples the two: paddingOuter stays
+// this small constant regardless of the figure's own padding value, so bars
+// get thicker and the plot's edges lose their dead margin without touching
+// the inter-bar gap at all.
+const bandOuterPadding = 0.1;
+
+export function bandXScale(paddingInner) {
+  return scaleBand().paddingInner(paddingInner).paddingOuter(bandOuterPadding);
 }

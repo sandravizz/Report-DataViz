@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
-  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat } from "$lib/chart-theme";
   import { ink, colors } from "$lib/colors";
 
   let { pair } = $props();
@@ -167,6 +167,11 @@
     endLabelPadding(innerWidth, directLabelsActive, hideYAxis ? { left: 0 } : yLabelPaddingInline)
   );
   const bandPadding = $derived(responsiveBandPadding(innerWidth, pair.bandPadding ?? 0.2));
+  // Passed alongside xScale below only so BarChart still sees a non-null
+  // bandPadding (it uses that as a flag to auto-baseline the value axis at
+  // 0); the actual band layout comes entirely from xScale's own inner/outer
+  // padding, not from this value.
+  const xScale = $derived(bandXScale(bandPadding));
 </script>
 
 <svelte:window bind:innerWidth />
@@ -180,6 +185,7 @@
   series={pair.series}
   seriesLayout={pair.percent ? "stackExpand" : "stack"}
   {bandPadding}
+  {xScale}
   yDomain={pair.yDomain}
   yNice={pair.percent ? undefined : 5}
   legend={false}
@@ -255,12 +261,13 @@
            from the first bar's right edge to the last bar's left edge, not
            bar-center to bar-center — so it reads as a beat between the bars
            rather than a banner across the whole chart. Both ends are lifted
-           clear of the bars' own total labels ("14.3"/"16.4"); the label
-           floats centered above the arc's peak. Same muted gray as the
-           "Projection" band's own label, so the two annotations read as one
-           family. Raw Link/Text (not AnnotationPoint) for full control over
-           where the label lands, independent of the arrow's endpoints. -->
-      {@const lift = -6}
+           clear of the bars' own total labels ("14.3"/"16.4"); the growth
+           label floats above the arc's peak with its own extra gap so it
+           doesn't crowd the line itself. Same muted gray as the "Projection"
+           band's own label, so the two annotations read as one family. Raw
+           Link/Text (not AnnotationPoint) for full control over where the
+           label lands, independent of the arrow's endpoints. -->
+      {@const lift = -10}
       {@const sourceX = context.xScale(growthArrow.x) + context.xScale.bandwidth()}
       {@const sourceY = context.yScale(growthArrow.y) - lift}
       {@const targetX = context.xScale(growthArrow.targetX)}
@@ -279,7 +286,7 @@
       <Text
         value={growthArrow.label}
         x={(sourceX + targetX) / 2 - 20}
-        y={Math.min(sourceY, targetY)}
+        y={Math.min(sourceY, targetY) - 14}
         textAnchor="middle"
         verticalAnchor="end"
         fill={colors.lavender}

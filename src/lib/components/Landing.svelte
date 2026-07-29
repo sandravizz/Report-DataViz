@@ -13,7 +13,7 @@
      Background is the same cream tint (base-200) used behind chapter titles
      further down the report, so the header can sit permanently in its
      contrast (dark-on-light) state — no scrim, no transparent phase. -->
-<section class="relative flex min-h-screen flex-col bg-base-200 font-sans">
+<section class="relative flex flex-1 flex-col bg-base-200 font-sans">
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col md:flex-row md:items-center md:gap-10"
   >
@@ -26,6 +26,10 @@
          Padding/type shrink at the base (phone) tier only — sm/md/lg are
          untouched — so the whole hero has a chance of fitting one mobile
          screen instead of forcing a scroll before anything else is visible.
+         The section itself is a flex-1 child of the `#top` flex column in
+         +page.svelte (Header is the other child, shrink-0) so it fills the
+         viewport height that's actually left over after the header, not a
+         flat 100vh stacked underneath it.
          The row switch is md (768), not lg (1024): at lg an iPad in
          portrait was still getting the stacked phone layout at sm-tier
          (already large) type and a full-width image stacked beneath it,

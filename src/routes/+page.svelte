@@ -89,45 +89,44 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
-<Header links={tocLinks} />
-
-<div id="top">
+<div id="top" class="flex min-h-screen flex-col">
+  <Header links={tocLinks} />
   <Landing />
+</div>
 
-  <div id="charts"></div>
-  {#each sections as section (section.id)}
-    <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-      <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-        <div class="lg:flex lg:min-h-full lg:flex-col lg:justify-center">
-          <div class="bg-base-200/50 px-6 py-8 sm:px-10 sm:py-10">
-            <div class="mx-auto w-[88vw] lg:mx-0 lg:ml-[calc(43%-440px)] lg:w-220">
-              {#if section.kicker}
-                <p class="text-xs tracking-wide text-base-content/50 uppercase">
-                  {section.kicker}
-                </p>
-              {/if}
-              <h2 class="mt-5 text-2xl leading-snug font-medium text-balance">
-                {section.shortTitle}
-              </h2>
-            </div>
+<div id="charts"></div>
+{#each sections as section (section.id)}
+  <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
+    <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+      <div class="lg:flex lg:min-h-full lg:flex-col lg:justify-center">
+        <div class="bg-base-200/50 px-6 py-8 sm:px-10 sm:py-10">
+          <div class="w-full lg:ml-[calc(43%-440px)] lg:w-220">
+            {#if section.kicker}
+              <p class="text-xs tracking-wide text-base-content/50 uppercase">
+                {section.kicker}
+              </p>
+            {/if}
+            <h2 class="mt-5 text-2xl leading-snug font-medium text-balance">
+              {section.shortTitle}
+            </h2>
           </div>
-          <div class="mx-auto w-[88vw] pb-16 lg:ml-[calc(43%-440px)] lg:w-220">
-            <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10">
-              {#each section.paragraphs as paragraph (paragraph)}
-                <p class="text-base leading-relaxed text-base-content/80">
-                  {paragraph}
-                </p>
-              {/each}
-            </div>
+        </div>
+        <div class="w-full pb-16 lg:ml-[calc(43%-440px)] lg:w-220">
+          <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10">
+            {#each section.paragraphs as paragraph (paragraph)}
+              <p class="text-base leading-relaxed text-base-content/80">
+                {paragraph}
+              </p>
+            {/each}
           </div>
         </div>
       </div>
-    </section>
-    {#if section.charts.length > 0}
-      <ScrollySection pairs={section.charts} />
-    {/if}
-  {/each}
-</div>
+    </div>
+  </section>
+  {#if section.charts.length > 0}
+    <ScrollySection pairs={section.charts} />
+  {/if}
+{/each}
 
 <Footer>
   {#snippet disclosure()}
