@@ -131,16 +131,16 @@
 <Footer>
   {#snippet disclosure()}
     <p>
-      This is a work derived by Sandra Becker from IEA material and Sandra Becker is solely liable
-      and responsible for this derived work. The derived work is not endorsed by the IEA or its
-      Member countries in any manner. IEA 2026; Ensuring a Skilled Renewable Energy and Energy
-      Efficiency Workforce,
+      Based on data from International Energy Agency (IEA) 2026, Ensuring a Skilled Renewable
+      Energy and Energy Efficiency Workforce,
       <a
         href="https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce"
         target="_blank"
         rel="noopener"
         class="link link-hover"
       >https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce</a>,
+      as modified by Sandra Becker. Sandra Becker is solely liable and responsible for this
+      derived work, which is not endorsed by the IEA or its Member countries in any manner.
       License: CC BY 4.0.
     </p>
   {/snippet}
