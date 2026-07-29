@@ -1,17 +1,30 @@
 <script>
   import { BarChart, defaultChartPadding } from "layerchart";
   import { tickLabelProps, yAxisProps, mutedTickLabelProps, desktopTooltips } from "$lib/chart-theme";
+  import { brand } from "$lib/colors";
 
   let { pair } = $props();
 
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // toFixed(1) instead of the raw number: summed series values (see the
+  // tooltip's "total" row) can land on float noise like 1.7999999999999998
+  // (1.2 + 0.6), and toFixed also caps display to the one decimal the data
+  // actually carries.
+  const formatValue = (d) => `${d.toFixed(1)}${pair.valueSuffix ?? ""}`;
 
   // Category labels are long; give them a generous left gutter and let them
   // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
   // so labels reflow per breakpoint instead of relying on hard \n breaks.
   const labelGutter = $derived(innerWidth < 1024 ? 110 : 180);
+
+  // Bar value labels ("6%", "4.3%"...) read as oversized on mobile's narrow
+  // bars; shrink below the tickLabelProps default (text-xs/12px) only under
+  // the report's usual <1024 breakpoint.
+  const valueLabelProps = $derived({
+    ...tickLabelProps,
+    class: innerWidth < 1024 ? "text-[10px] font-light" : tickLabelProps.class,
+  });
 </script>
 
 <svelte:window bind:innerWidth />
@@ -24,16 +37,17 @@
       series={pair.series}
       seriesLayout="group"
       orientation="horizontal"
-      bandPadding={pair.bandPadding ?? 0.25}
+      bandPadding={pair.bandPadding ?? 0.2}
       axis="y"
       grid={false}
-      rule={false}
+      rule={true}
       legend={false}
       labels
       tooltipContext={desktopTooltips(innerWidth)}
       padding={defaultChartPadding({ left: labelGutter, right: 40 })}
       props={{
         bars: { strokeWidth: 0 },
+        rule: { stroke: brand.gray, opacity: 0.5, strokeWidth: 1 },
         yAxis: {
           ...yAxisProps,
           tickLabelProps: {
@@ -42,12 +56,10 @@
             dx: -labelGutter,
             width: labelGutter,
             truncate: false,
-            // Axis defaults tick labels to an 11px line height, which is tighter
-            // than the 12px text-xs font and makes wrapped lines overlap.
             lineHeight: "12px",
           },
         },
-        labels: { ...tickLabelProps, format: formatValue },
+        labels: { ...valueLabelProps, format: formatValue },
         tooltip: { item: { format: formatValue } },
       }}
     />

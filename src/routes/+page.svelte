@@ -12,15 +12,10 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Chapter 1 of the IEA report "Ensuring a Skilled Renewable Energy and
-  // Energy Efficiency Workforce" (2026). Section titles and intro paragraphs
-  // are the report's own text, verbatim (CC BY 4.0) — `intro` takes an array
-  // of paragraphs. Ids are assigned automatically (chapter-1, chapter-2, ...)
-  // below.
   const sections = [
     {
       kicker:
-        "Chapter 1. Employment trends in renewable energy, grids and energy efficiency",
+        "Chapter 1. Employment trends in renewable energy",
       title:
         "Employment opportunities are growing in renewable energy, grids and energy efficiency",
       shortTitle: "Employment opportunities are growing",
@@ -96,60 +91,14 @@
 
 <Header links={tocLinks} />
 
-<!-- Abstract of the report, verbatim (CC BY 4.0). The Header component still
-     supports an "Abstract" dropdown via an optional `abstract` snippet prop —
-     pass it back in (`<Header links={tocLinks}>{#snippet abstract()}...`) to
-     bring it back. Kept here, unused, so the text isn't lost.
-{#snippet abstract()}
-  <p>
-    This report examines employment trends, skills needs, and skills gaps
-    across renewable energy, grids, and energy efficiency. It highlights the
-    increased demand for skilled workers in these sectors and the need to
-    address skilled labour shortages. The report identifies barriers which
-    are currently hindering energy education and training. It also discusses
-    policy measures aimed at attracting more people to the renewable energy
-    and energy efficiency sectors and providing them with the necessary
-    training.
-  </p>
-  <p>
-    The report includes new IEA analysis on online job postings in renewable
-    energy and energy efficiency, and IEA modelling on energy employment
-    from 2024 as the last full year of data available at the time of
-    publication. The analysis also draws from stakeholder input from two
-    in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
-    IEA and the European Commission and the results from three IEA surveys
-    conducted in 2025 with over 700 respondents: the
-    <em>IEA Industry Employment Survey</em>,
-    <em>IEA Labour Employment Survey</em> and
-    <em>IEA Educators&rsquo; Employment Survey</em>.
-  </p>
-{/snippet}
--->
-
 <div id="top">
   <Landing />
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <!-- Every chapter is sticky: the text stays pinned on the left while the
-         reader scrolls, its chart sticky on the right — including
-         single-figure chapters (1, 3, 5), which used to get the inline
-         McKinsey-style treatment; that's reverted so every chapter behaves
-         the same way again. Every chapter's text panel is cream (base-200,
-         matching Landing/Header) — white is reserved for the chart panel
-         itself (ScrollySection), so text sections and visualization
-         sections read as two distinct, consistent zones throughout. -->
     <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
       <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
         <div class="lg:flex lg:min-h-full lg:flex-col lg:justify-center">
-          <!-- Header band: kicker and chapter-progress share one row, title
-               beneath — set on a full-page-width banner so it reads as a
-               section divider across the whole viewport rather than a
-               floating card. The tint is barely-there (bg-base-200/50, not
-               the full base-200). Report-density spacing, not presentation
-               spacing: kept tight (py-8/10) rather than the roomy py-20/24
-               this used to carry, and the paragraph block's own top padding
-               trimmed further so title and body text read close together. -->
           <div class="bg-base-200/50 px-6 py-8 sm:px-10 sm:py-10">
             <div class="mx-auto w-[88vw] lg:mx-0 lg:ml-[calc(43%-440px)] lg:w-220">
               {#if section.kicker}
@@ -178,12 +127,8 @@
       <ScrollySection pairs={section.charts} />
     {/if}
   {/each}
-
 </div>
 
-<!-- The IEA disclosure now renders inside Footer's closing panel (small,
-     muted, at the very bottom) rather than as its own block above it —
-     passed in as a snippet so Footer itself stays report-agnostic. -->
 <Footer>
   {#snippet disclosure()}
     <p>

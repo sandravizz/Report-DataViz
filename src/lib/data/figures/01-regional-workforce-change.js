@@ -16,7 +16,7 @@ export default {
   subtitle:
     "Average Annual Change in Workforce by Region, 2019–2024",
   description:
-    "Since 2019, the energy sector added on average more than 1 million jobs annually, which marks a shift compared to the period between 2015 and 2019, when the sector created around 300 000 jobs per year on average.",
+    "India leads regional employment growth by a wide margin, with clean energy jobs expanding 6.0% a year on average — nearly 40% faster than second-placed China's 4.3%, whose broader economy-wide workforce actually shrank slightly over the same period.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 1",
   kind: "bar-horizontal",
