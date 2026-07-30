@@ -76,7 +76,7 @@
   <div id="charts"></div>
   {#each sections as section (section.id)}
     <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-      <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:bg-base-100">
+      <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
         <div class="lg:flex lg:min-h-full">
           <div
             class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"

@@ -40,7 +40,7 @@
     // A wash under a 2.5px top line, not a saturated block — the shared
     // theme opacity, same as every other area chart.
     area: { fillOpacity: areaFillOpacity },
-    line: { strokeWidth: 2.5 },
+    line: { strokeWidth: 2.5, "stroke-linecap": "round", "stroke-linejoin": "round" },
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     tooltip:

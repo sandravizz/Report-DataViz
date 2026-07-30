@@ -8,8 +8,9 @@
 </script>
 
 <!-- Full-bleed hero (same treatment as the IEA report): the cover photo as
-     background with the title block overlaid McKinsey-style. The image runs
-     under the fixed translucent header. -->
+     background with the title block overlaid McKinsey-style. Header is
+     absolutely positioned (see Header.svelte) and floats on top of this
+     photo — it isn't fixed, so it scrolls away with the hero. -->
 <!-- Interim cover: lone figure on Preikestolen (CC0, via Wikimedia Commons:
      File:Preikestolen (Unsplash).jpg — public domain, no attribution needed).
      Final cover image is an open client question (docs/fdl-client-meeting.md). -->
@@ -24,7 +25,7 @@
   <div class="absolute inset-0 bg-linear-to-b from-black/20 via-black/25 to-black/65"></div>
 
   <div
-    class="relative flex flex-1 flex-col items-center px-6 pt-24 pb-8 text-white sm:px-10"
+    class="relative flex flex-1 flex-col items-center px-6 pt-10 pb-8 text-white sm:px-10"
   >
     <div class="flex flex-1 flex-col items-center justify-center text-center">
       <h1

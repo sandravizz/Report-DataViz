@@ -1,10 +1,9 @@
 <script>
-  // Header simulating findevlab.org's site header: logo left; nav items in
-  // uppercase Kapra Neue Expanded slate (brand slate stays here even though
-  // running text is black — that's how their site does it); FR | EN language
-  // toggle (display only — a French version may come later, nothing is wired
-  // up); their four social profiles. The report title lives in the landing
-  // hero, not here, matching their pages.
+  // Header overlays the landing hero photo (absolutely positioned over
+  // Landing's image, transparent background) rather than sitting in normal
+  // flow with its own bar — see Landing.svelte's scrim. So logo/nav/icons use
+  // white instead of FDL's slate/neutral brand colors, which would vanish
+  // against the photo.
   // `abstract` is an optional snippet; when given, an "Abstract" dropdown
   // appears next to the TOC with the snippet as its panel content.
   let { links = [], abstract } = $props();
@@ -47,12 +46,14 @@
   ];
 </script>
 
-<header
-  class="fixed inset-x-0 top-0 z-50 border-b border-base-content/10 bg-base-100/80 backdrop-blur-sm"
->
+<header class="absolute inset-x-0 top-0 z-20">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
-    <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">
-      <img src="/fdl-logo.svg" alt="FDL — Finance for Development Lab" class="h-9 w-auto sm:h-11" />
+    <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to top">
+      <img
+        src="/fdl-logo-white.svg"
+        alt="FDL — Finance for Development Lab"
+        class="h-9 w-auto sm:h-11"
+      />
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
@@ -62,7 +63,7 @@
             tabindex="0"
             role="button"
             aria-label="Abstract"
-            class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
+            class="cursor-pointer font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
           >
             Abstract
           </div>
@@ -82,7 +83,7 @@
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
+          class="cursor-pointer font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -118,8 +119,8 @@
         </ul>
       </div>
 
-      <div class="hidden items-center gap-1.5 font-sans text-sm text-primary md:flex">
-        <span class="opacity-40">FR</span>
+      <div class="hidden items-center gap-1.5 font-sans text-sm text-white md:flex">
+        <span class="opacity-60">FR</span>
         <span class="font-light text-warning">|</span>
         <span class="font-semibold">EN</span>
       </div>
@@ -131,7 +132,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="text-neutral hover:text-primary"
+            class="text-white/80 hover:text-white"
           >
             <svg class={social.size} viewBox={social.viewBox} fill="currentColor">
               <path d={social.path} />
