@@ -1,4 +1,5 @@
 import { defaultChartPadding } from "layerchart";
+import { scaleBand } from "d3-scale";
 import { ink, iea } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
@@ -86,11 +87,16 @@ export const yLabelPaddingWide = { left: 64 };
 // 1.5 million), so the y-axis domain is already the "actual" unit — this
 // just spells out the magnitude on the tick label itself ("1.5 million",
 // "500 thousand") instead of leaving readers to infer it from the subtitle.
-export function formatMillions(d) {
+// Only shortens to "mil." once a caller passes an actual mobile innerWidth
+// (e.g. the stacked bar's last-bar total, which sits directly on the bar) —
+// omitted, the default keeps every existing call spelling out "million" in
+// full, so this stays backward-compatible with every current call site.
+export function formatMillions(d, innerWidth = Infinity) {
   if (d === 0) return "0";
   if (Math.abs(d) >= 1) {
     const millions = Math.round(d * 10) / 10;
-    return `${Number.isInteger(millions) ? millions : millions.toFixed(1)} million`;
+    const value = Number.isInteger(millions) ? millions : millions.toFixed(1);
+    return `${value} ${innerWidth < 1024 ? "mil." : "million"}`;
   }
   const thousands = Math.round(d * 1000);
   return `${thousands.toLocaleString()}K`;
@@ -177,4 +183,16 @@ export const endLabelMobileWrap = {
 // at any padding value, aren't compressed as aggressively as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
   return innerWidth < 1024 ? Math.min(base * 1.4, 0.6) : base;
+}
+
+// scaleBand's `.padding()` setter applies one fraction to both the inner gap
+// (between bars) and outer margin (before/after the first/last bar). A
+// two-bar panel needs a big inner gap (see responsiveBandPadding) but
+// nothing useful fills the outer margin, so passing BarChart this prebuilt
+// scale (via its `xScale` prop) decouples the two: outer stays a small
+// constant and bars get thicker.
+const bandOuterPadding = 0.1;
+
+export function bandXScale(paddingInner) {
+  return scaleBand().paddingInner(paddingInner).paddingOuter(bandOuterPadding);
 }

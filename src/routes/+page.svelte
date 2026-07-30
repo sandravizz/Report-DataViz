@@ -89,37 +89,32 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
 
-<Header links={tocLinks} />
-
-<!-- Abstract of the report, verbatim (CC BY 4.0). The Header component still
-     supports an "Abstract" dropdown via an optional `abstract` snippet prop —
-     pass it back in (`<Header links={tocLinks}>{#snippet abstract()}...`) to
-     bring it back. Kept here, unused, so the text isn't lost.
-{#snippet abstract()}
-  <p>
-    This report examines employment trends, skills needs, and skills gaps
-    across renewable energy, grids, and energy efficiency. It highlights the
-    increased demand for skilled workers in these sectors and the need to
-    address skilled labour shortages. The report identifies barriers which
-    are currently hindering energy education and training. It also discusses
-    policy measures aimed at attracting more people to the renewable energy
-    and energy efficiency sectors and providing them with the necessary
-    training.
-  </p>
-  <p>
-    The report includes new IEA analysis on online job postings in renewable
-    energy and energy efficiency, and IEA modelling on energy employment
-    from 2024 as the last full year of data available at the time of
-    publication. The analysis also draws from stakeholder input from two
-    in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
-    IEA and the European Commission and the results from three IEA surveys
-    conducted in 2025 with over 700 respondents: the
-    <em>IEA Industry Employment Survey</em>,
-    <em>IEA Labour Employment Survey</em> and
-    <em>IEA Educators&rsquo; Employment Survey</em>.
-  </p>
-{/snippet}
--->
+<Header links={tocLinks}>
+  {#snippet abstract()}
+    <p>
+      This report examines employment trends, skills needs, and skills gaps
+      across renewable energy, grids, and energy efficiency. It highlights the
+      increased demand for skilled workers in these sectors and the need to
+      address skilled labour shortages. The report identifies barriers which
+      are currently hindering energy education and training. It also discusses
+      policy measures aimed at attracting more people to the renewable energy
+      and energy efficiency sectors and providing them with the necessary
+      training.
+    </p>
+    <p>
+      The report includes new IEA analysis on online job postings in renewable
+      energy and energy efficiency, and IEA modelling on energy employment
+      from 2024 as the last full year of data available at the time of
+      publication. The analysis also draws from stakeholder input from two
+      in-person <em>Future of Energy Skills</em> workshops co-ordinated by the
+      IEA and the European Commission and the results from three IEA surveys
+      conducted in 2025 with over 700 respondents: the
+      <em>IEA Industry Employment Survey</em>,
+      <em>IEA Labour Employment Survey</em> and
+      <em>IEA Educators&rsquo; Employment Survey</em>.
+    </p>
+  {/snippet}
+</Header>
 
 <div id="top">
   <Landing />
@@ -153,4 +148,20 @@
   {/each}
 </div>
 
-<Footer />
+<Footer>
+  {#snippet disclosure()}
+    <p>
+      Based on data from International Energy Agency (IEA) 2026, Ensuring a Skilled Renewable
+      Energy and Energy Efficiency Workforce,
+      <a
+        href="https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce"
+        target="_blank"
+        rel="noopener"
+        class="link link-hover"
+      >https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce</a>,
+      as modified by Sandra Becker. Sandra Becker is solely liable and responsible for this
+      derived work, which is not endorsed by the IEA or its Member countries in any manner.
+      License: CC BY 4.0.
+    </p>
+  {/snippet}
+</Footer>

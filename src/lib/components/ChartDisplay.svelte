@@ -1,51 +1,72 @@
 <script>
   import ChartPanel from "./charts/ChartPanel.svelte";
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
+  import FigureFooter from "./FigureFooter.svelte";
 
-  let { pairs, activeIndex, inView = true } = $props();
+  let { pairs, activeIndex, inView = true, jumpTo } = $props();
 
   let interpretationModal;
+  // One ref per pair, bound below — FigureFooter's download button walks
+  // this element's LayerChart chart(s) to build the exported PNG.
+  let figureRefs = $state([]);
 
-  const figureFiles = {
-    "Figure 1": "Figure1.png",
-    "Figure 2a": "Figure2.png",
-    "Figure 2b": "Figure2.png",
-    "Figure 2c": "Figure2.png",
-    "Figure 2d": "Figure2.png",
-    "Figure 3": "Figure3.png",
-    "Figure 4a": "Figure4a.png",
-    "Figure 4b": "Figure4b.png",
-    "Figure 5": "Figure5.png",
-  };
-
-  function figureImage(pair) {
-    return `/figures/${figureFiles[pair.number]}`;
+  // Mobile tab labels: strip the prefix all pairs share (e.g. "Figure 2")
+  // so the strip reads "a b c d" instead of repeating "Figure 2a/2b/2c/2d".
+  // A one-pair group has nothing to strip, so it falls back to the full number.
+  function commonPrefixLength(strings) {
+    if (strings.length < 2) return 0;
+    let len = strings[0].length;
+    for (const s of strings.slice(1)) {
+      let i = 0;
+      while (i < len && i < s.length && s[i] === strings[0][i]) i++;
+      len = i;
+    }
+    return len;
   }
-
-  function downloadName(pair) {
-    const slug = `${pair.number} ${pair.title}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-    return `${slug}.png`;
+  let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
+  let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
+  function tabLabel(pair) {
+    const short = pair.number.slice(tabPrefixLength).trim();
+    return short || pair.number;
   }
 </script>
 
-<div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
+      bind:this={figureRefs[i]}
     >
-      <div class="mb-1 flex items-center justify-between lg:hidden">
-        <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
-          {pair.number}
-        </span>
+      <div class="mb-1 flex items-center justify-between gap-1 lg:hidden">
+        {#if pairs.length > 1}
+          <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+            <span class="shrink-0 font-sans text-xs tracking-wide text-base-content/50 uppercase">
+              {tabPrefix}
+            </span>
+            {#each pairs as p, pi (pi)}
+              <button
+                type="button"
+                class="shrink-0 rounded-full px-1.5 py-0.5 font-sans text-xs uppercase transition-colors {pi ===
+                activeIndex
+                  ? 'bg-base-200 text-base-content'
+                  : 'text-base-content/50'}"
+                onclick={() => jumpTo(pi)}
+              >
+                {tabLabel(p)}
+              </button>
+            {/each}
+          </div>
+        {:else}
+          <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
+            {pair.number}
+          </span>
+        {/if}
         <button
-          class="btn btn-ghost btn-xs gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
+          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
           onclick={() => interpretationModal.showModal()}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
@@ -57,7 +78,7 @@
       <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-6 font-sans text-xs text-base-content lg:mb-12 lg:text-sm">
+      <div class="mb-10 font-sans text-xs text-base-content lg:mb-20 lg:text-sm">
         {pair.subtitle}
       </div>
 
@@ -72,21 +93,7 @@
         {/if}
       </div>
 
-      <div
-        class="mt-3 flex flex-nowrap items-center justify-between gap-2 font-sans text-xs tracking-wide text-base-content/50 lg:mt-6"
-      >
-        <span>{pair.source}</span>
-        <a
-          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
-          href={figureImage(pair)}
-          download={downloadName(pair)}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
-            <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-          </svg>
-          PNG
-        </a>
-      </div>
+      <FigureFooter {pair} figureEl={figureRefs[i]} />
     </div>
   {/each}
 
