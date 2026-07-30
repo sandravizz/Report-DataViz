@@ -1,7 +1,15 @@
 import { defaultChartPadding } from "layerchart";
-import { ink } from "./colors.js";
+import { scaleBand } from "d3-scale";
+import { ink, fdl } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
+
+// Muted variant for axes/annotations that are a reference rather than the
+// primary readout (e.g. a chart whose series are direct-labeled already).
+// greyGreen is FDL's own "muted secondary, muted label text" palette entry
+// (colors.js) — not currently the default for xAxisProps/yAxisProps below,
+// available for panels that want it explicitly.
+export const mutedTickLabelProps = { fill: fdl.greyGreen, class: "text-xs font-light" };
 
 // Every line-over-area chart draws its wash at the same strength: the line
 // does the reading, the fill only signals amount. All area components read
@@ -54,8 +62,10 @@ export function yearTickFormat(innerWidth, firstYear) {
 // plot area already sits flush against the axis there and a "0" label is
 // redundant clutter. Figures that need exact values (e.g. log scales, or a
 // deliberately included 0) pass pair.yTicks, which is used as-is instead.
-export function excludeZeroTick(scale) {
-  const candidates = typeof scale.ticks === "function" ? scale.ticks() : scale.domain();
+// `count` forwards to scale.ticks() for a specific step; omitted, behaves as
+// before.
+export function excludeZeroTick(scale, count) {
+  const candidates = typeof scale.ticks === "function" ? scale.ticks(count) : scale.domain();
   return candidates.filter((tick) => tick !== 0);
 }
 
@@ -145,4 +155,63 @@ export function endLabelAnnotation(s, pair, innerWidth) {
     },
     mobile: endLabelMobileWrap,
   };
+}
+
+// Formats a value already scaled to millions (1.5 = 1.5 million) with the
+// magnitude spelled out on the tick label itself. Only shortens to "mil."
+// once a caller passes an actual mobile innerWidth — otherwise spells out
+// "million" in full. Ported from the shared chart-theme helpers; not wired
+// into any findevlab figure yet, available for a future one that needs it.
+export function formatMillions(d, innerWidth = Infinity) {
+  if (d === 0) return "0";
+  if (Math.abs(d) >= 1) {
+    const millions = Math.round(d * 10) / 10;
+    const value = Number.isInteger(millions) ? millions : millions.toFixed(1);
+    return `${value} ${innerWidth < 1024 ? "mil." : "million"}`;
+  }
+  const thousands = Math.round(d * 1000);
+  return `${thousands.toLocaleString()}K`;
+}
+
+// Stacked-bar y tick labels that sit inside the plot rather than in a left
+// gutter, for a mobile layout with nowhere else to put them. textAnchor
+// flips to "start" with a small dx so the label reads into the chart
+// instead of hanging left of the axis line; the halo keeps it legible over
+// gridlines. Not wired into BarChartPanelStacked yet — available for it.
+export function yAxisPropsInline(innerWidth) {
+  return {
+    ...yAxisProps,
+    tickLabelProps: {
+      ...mutedTickLabelProps,
+      textAnchor: "start",
+      verticalAnchor: "end",
+      dx: 8,
+      dy: -3,
+      ...endLabelHalo(innerWidth),
+    },
+  };
+}
+
+// Left padding just needs to clear the SVG edge, since labels above live
+// inside the plot rather than needing gutter width for the longest tick.
+export const yLabelPaddingInline = { left: 8 };
+
+// Extra gap between bars on mobile so two adjacent bars' totals (and, e.g.,
+// a growth arrow between them) fit without crowding; scaled relative to the
+// figure's own base padding so many-bar figures aren't compressed as
+// aggressively as two-bar ones.
+export function responsiveBandPadding(innerWidth, base) {
+  return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
+}
+
+// scaleBand's `.padding()` setter applies one fraction to both the inner gap
+// (between bars) and outer margin (before/after the first/last bar). A
+// two-bar panel needs a big inner gap (see responsiveBandPadding) but
+// nothing useful fills the outer margin, so passing BarChart this prebuilt
+// scale (via its `xScale` prop) decouples the two: outer stays a small
+// constant and bars get thicker.
+const bandOuterPadding = 0.1;
+
+export function bandXScale(paddingInner) {
+  return scaleBand().paddingInner(paddingInner).paddingOuter(bandOuterPadding);
 }
