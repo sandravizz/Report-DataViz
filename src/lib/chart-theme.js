@@ -1,13 +1,18 @@
 import { defaultChartPadding } from "layerchart";
 import { scaleBand } from "d3-scale";
-import { ink } from "./colors.js";
 
-export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
+// Plain neutral gray for reference text (axis numbers, the projection band's
+// muted label) — distinct from colors.gray in colors.js, which has a warm
+// cast tuned for de-emphasized data series, not text. Axis numbers are a
+// reference, not the primary readout, so they stay this quiet next to the
+// report's ink-dark body text.
+export const mutedTextGray = "#9CA3AF";
 
-// Axis numbers are a reference, not the primary readout in some figures; a
-// caller that wants a de-emphasized numeric tick can opt into this instead
-// of tickLabelProps — same ink color, reduced opacity.
-export const mutedTickLabelProps = { fill: ink, class: "text-xs font-light opacity-50" };
+export const tickLabelProps = { fill: mutedTextGray, class: "text-xs font-light" };
+
+// Even quieter still, for a tick style that's a reference twice over (e.g.
+// background gridline labels): same gray, reduced opacity.
+export const mutedTickLabelProps = { fill: mutedTextGray, class: "text-xs font-light opacity-50" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
@@ -85,10 +90,16 @@ export function desktopTooltips(innerWidth) {
 // so the legend and plot stay flush with the title/subtitle/source.
 export const yLabelPadding = { left: 36 };
 
+// Every chart panel sits on a plain white surface (see ScrollySection/
+// +page.svelte) regardless of the theme's base-100 — on this report base-100
+// is the pink used behind the header/footer/landing, not the chart
+// background, so halos and line casings match against this instead.
+export const chartSurface = "#ffffff";
+
 // Same-color-as-background text stroke behind an end/direct label, so it
 // stays legible over a gridline, projection band, or another series.
 export function endLabelHalo(innerWidth) {
-  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
+  return { stroke: chartSurface, strokeWidth: innerWidth < 1024 ? 1 : 8 };
 }
 
 // A y-axis tick style for labels placed inside the plot instead of a left

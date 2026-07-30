@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -19,7 +19,7 @@
   };
   const casingStyle = {
     ...lineStyle,
-    stroke: "var(--color-base-100)",
+    stroke: chartSurface,
     strokeWidth: 6.5,
   };
 
@@ -45,7 +45,7 @@
           labelXOffset: 8,
           props: {
             circle: { fill: s.color, stroke: "none" },
-            label: { fill: s.color, class: "text-xs font-light" },
+            label: { ...endLabelHalo(innerWidth), fill: s.color, class: "text-xs font-light" },
           },
           mobile: endLabelMobileWrap,
         };

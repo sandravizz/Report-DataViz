@@ -4,6 +4,8 @@
   // underline in the dark green (#00371f) their nav indicator bar uses; their
   // four social profiles, taken from the site footer. The report title lives
   // in the landing hero, not here, matching their chapter pages.
+  // Not fixed — it only overlays Landing, then scrolls away with it like
+  // every other report's header (see docs on cross-report conventions).
   // `abstract` is an optional snippet; when given, an "Abstract" dropdown
   // appears next to the TOC with the snippet as its panel content.
   let { links = [], abstract } = $props();
@@ -47,9 +49,7 @@
   ];
 </script>
 
-<header
-  class="fixed inset-x-0 top-0 z-50 bg-base-100/90 backdrop-blur-sm"
->
+<header class="absolute inset-x-0 top-0 z-20 bg-base-100/90 backdrop-blur-sm">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
     <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">
       <img src="/gjp-logo.svg" alt="Global Justice Project" class="h-9 w-auto sm:h-11" />

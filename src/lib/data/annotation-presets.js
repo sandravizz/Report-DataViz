@@ -3,10 +3,13 @@
 // via the factories below so every callout inherits the same styling; any
 // AnnotationPoint/Range prop can still be overridden per call.
 
-import { ink, colors } from "$lib/colors.js";
+import { ink } from "$lib/colors.js";
+import { endLabelHalo, mutedTextGray } from "$lib/chart-theme.js";
 
-const annotationLabel = { fill: ink, class: "text-xs font-light" };
-const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
+// Desktop-width halo: these presets are built once at figure-definition time,
+// with no viewport to react to (unlike endLabelHalo's own per-panel usage).
+const annotationLabel = { ...endLabelHalo(1024), fill: ink, class: "text-xs font-light" };
+const mutedLabel = { ...endLabelHalo(1024), fill: mutedTextGray, class: "text-xs font-light" };
 const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
 
 // Circled point callout. `filled` tints the ring with the series color for

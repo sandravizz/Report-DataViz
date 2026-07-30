@@ -70,7 +70,7 @@
 </script>
 
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
-  <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
+  <div class="sticky top-0 h-screen overflow-hidden bg-white">
     <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} {jumpTo} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />

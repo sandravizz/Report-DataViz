@@ -5,24 +5,34 @@
   let { disclosure } = $props();
 </script>
 
-<footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+<footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center md:flex-row md:items-center md:gap-10"
   >
     <div
       class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
     >
-      <img
-        src="/sandra-portrait.jpg"
-        alt="Portrait of Sandra"
-        class="mb-4 h-20 w-20 rounded-full object-cover sm:mb-6 sm:h-28 sm:w-28"
-      />
+      <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
+        <img
+          src="/sandra-portrait.jpg"
+          alt="Portrait of Sandra"
+          class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
+        />
+        <img
+          src="/gjp-logo.svg"
+          alt="Global Justice Project"
+          class="h-8 w-auto sm:h-10"
+        />
+      </div>
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
         visualization-first reports for the web, mobile, and static downloads too.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        This is one example of what that looks like in practice. If you've got a report that deserves to be more than a PDF, let's talk.
+        This is one example of what that looks like in practice, built on real content and data
+        from the Global Justice Project (World Inequality Lab) — the interactive design and
+        development are mine. If you've got a report that deserves to be more than a PDF, let's
+        talk.
       </p>
       <a
         href="https://sandraviz.com"
@@ -57,13 +67,14 @@
       </div>
     </div>
 
-    <!-- Same turbine illustration as Landing, mirrored. Hidden on phones —
-         the bio/CTA/links matter more than a hero echo there. -->
+    <!-- Same cover photo as Landing, mirrored, so the two bookend sections
+         match. Hidden on phones — the bio/CTA/links matter more than a hero
+         echo there. -->
     <div class="hidden md:flex md:flex-1 md:justify-end">
       <img
-        src="/windmill_row_grid_square.svg"
-        alt="Illustration of a row of wind turbines receding toward the horizon, mirrored"
-        class="w-full scale-x-[-1]"
+        src="/cover.jpg"
+        alt="Collage of hands holding a globe, with people carrying coins and trees – cover illustration of the Global Justice Report"
+        class="w-full scale-x-[-1] object-cover"
       />
     </div>
   </div>
