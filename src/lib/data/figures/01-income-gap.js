@@ -8,7 +8,7 @@ export default {
   source:
     "Sources & series: gjp.wid.world (F1)",
   number: "Figure 1",
-  kind: "bar",
+  kind: "bar-horizontal",
   xKey: "region",
   yKey: "v",
   valuePrefix: "€",
