@@ -7,20 +7,13 @@ import { mutedTextGray } from "$lib/colors.js";
 // background, so halos and line casings match against this instead.
 export const chartSurface = "#ffffff";
 
-// LayerChart's own Axis component gives every tick/axis label a 2px halo
-// stroke by default (Axis.base.svelte), colored via the theme's
-// `--color-surface-100` token — i.e. it assumes the chart sits directly on
-// the theme's base-100 surface. Here that token resolves to this report's
-// pink, so without this override every axis label got a pink halo baked
-// into the tick text itself, not a bug in this file's own styling. Setting
-// `stroke` explicitly here overrides that default with the chart's actual
-// (white) background.
-export const tickLabelProps = {
-  fill: mutedTextGray,
-  stroke: chartSurface,
-  strokeWidth: 2,
-  class: "text-xs font-light",
-};
+// No stroke here: an SVG presentation attribute can't outrank a stylesheet
+// rule, so a `stroke` prop set here would lose to LayerChart's own default
+// axis-label halo (Axis.base.svelte, `components` layer) regardless of its
+// value. That halo — and every other LayerChart text stroke — is disabled
+// globally in tailwind.css's `@layer utilities` block instead, the one place
+// with a cascade layer late enough to actually win.
+export const tickLabelProps = { fill: mutedTextGray, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
@@ -72,10 +65,14 @@ export function desktopTooltips(innerWidth) {
 // so the legend and plot stay flush with the title/subtitle/source.
 export const yLabelPadding = { left: 36 };
 
-// Same-color-as-background text stroke behind an end/direct label, so it
-// stays legible over a gridline, projection band, or another series.
-export function endLabelHalo(innerWidth) {
-  return { stroke: chartSurface, strokeWidth: innerWidth < 1024 ? 1 : 8 };
+// Was a same-color-as-background text stroke behind an end/direct label, so
+// it stayed legible over a gridline, projection band, or another series.
+// Disabled: tailwind.css's `@layer utilities` block now strips `stroke` from
+// every LayerChart text element globally, so any value returned here is
+// moot — kept (rather than removed at all 3 call sites) so it's a one-line
+// revert if the halo comes back.
+export function endLabelHalo() {
+  return { strokeWidth: 0 };
 }
 
 // Point annotations may carry a `mobile` override (placement, offsets, label

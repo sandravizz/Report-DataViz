@@ -45,3 +45,20 @@
   --font-sans: 'Satoshi', sans-serif;
   --font-display: 'Satoshi', sans-serif;
 }
+
+/* LayerChart's own Axis component gives every axis label a 2px halo stroke
+   by default (Axis.base.svelte, `components` layer), colored via the theme's
+   `--color-surface-100` token — here that resolves to this report's pink
+   base-100, producing a pink halo on every axis label regardless of what any
+   chart passes as its own `stroke` prop: an SVG presentation attribute can
+   never outrank a stylesheet rule, even a zero-specificity one, so setting
+   `stroke` in chart-theme.js's tickLabelProps has no effect here. Layer
+   order (see layerchart's core.css: theme, base, components, utilities) is
+   the only lever that wins — this sits in `utilities`, after `components`,
+   and removes the stroke from every LayerChart text element everywhere
+   (axis ticks, end-of-line labels, annotations alike). */
+@layer utilities {
+  :where(.lc-text) {
+    stroke: none;
+  }
+}
