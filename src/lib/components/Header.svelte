@@ -62,7 +62,7 @@
             tabindex="0"
             role="button"
             aria-label="Abstract"
-            class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-2 decoration-[#76c8a8] underline-offset-8 hover:underline"
+            class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
           >
             Abstract
           </div>
@@ -82,7 +82,7 @@
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-2 decoration-[#76c8a8] underline-offset-8 hover:underline"
+          class="cursor-pointer font-display text-sm tracking-wide text-primary uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
         >
           <svg
             class="h-5 w-5 sm:hidden"
