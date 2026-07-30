@@ -4,8 +4,50 @@
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
 
-  let { pair } = $props();
+  let { pair, active = false } = $props();
   let innerWidth = $state(1024);
+
+  // Scrolly draw-in for series flagged `drawIn` — see
+  // docs/scrolly-line-draw-in.md for the full mechanism. One-shot per page
+  // load: `played` flips on leaving an active state (in the effect's
+  // cleanup, not its body) so a revisit shows the finished state instantly
+  // instead of replaying.
+  const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
+  let played = $state(false);
+  $effect(() => {
+    if (!active) return;
+    return () => {
+      played = true;
+    };
+  });
+  const revealClass = $derived(
+    played
+      ? "lc-draw-reveal lc-draw-reveal-done"
+      : active
+        ? "lc-draw-reveal lc-draw-reveal-active"
+        : "lc-draw-reveal"
+  );
+  const drawClass = $derived(
+    played
+      ? "lc-line-draw lc-line-draw-done"
+      : active
+        ? "lc-line-draw lc-line-draw-active"
+        : "lc-line-draw"
+  );
+  const drawProps = (key) =>
+    pair.series.find((s) => s.key === key)?.drawIn
+      ? { pathLength: 1, class: drawClass } // pathLength=1 so dashoffset 1 spans the whole path
+      : {};
+  // A step's callout annotation (e.g. Figure 13c's "overtakes" marker) waits
+  // a further ~1s after the line/end-labels land, on its own delay — see
+  // lc-annotation-reveal's transition below.
+  const annotationRevealClass = $derived(
+    played
+      ? "lc-annotation-reveal lc-annotation-reveal-done"
+      : active
+        ? "lc-annotation-reveal lc-annotation-reveal-active"
+        : "lc-annotation-reveal"
+  );
 
   // FT-style line treatment: monotone smoothing (rounds corners without
   // overshooting the data) plus round joins/caps. Each line is drawn twice in
@@ -36,6 +78,7 @@
       .filter((s) => s.endLabel)
       .map((s) => {
         const last = pair.data[pair.data.length - 1];
+        const reveal = s.drawIn ? revealClass : undefined;
         return {
           x: last[pair.xKey],
           y: last[s.value],
@@ -44,16 +87,19 @@
           labelPlacement: "right",
           labelXOffset: 8,
           props: {
-            circle: { fill: s.color, stroke: "none" },
-            label: { ...endLabelHalo(innerWidth), fill: s.color, class: "text-xs font-light" },
+            circle: { fill: s.color, stroke: "none", class: reveal },
+            label: {
+              ...endLabelHalo(innerWidth),
+              fill: s.color,
+              class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
+            },
           },
           mobile: endLabelMobileWrap,
         };
       })
   );
-  const annotations = $derived(
-    resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
-  );
+  const calloutAnnotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
+  const endAnnotations = $derived(resolveAnnotations(endLabelAnnotations, innerWidth));
   const padding = $derived(
     endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
   );
@@ -65,6 +111,7 @@
 <LineChart
   data={pair.data}
   x={pair.xKey}
+  yDomain={pair.yDomain}
   series={pair.series}
   legend={false}
   rule={false}
@@ -78,9 +125,10 @@
   }}
 >
   {#snippet marks({ context })}
-    {#each context.series.visibleSeries as s (s.key)}
-      <Spline seriesKey={s.key} {...casingStyle} />
-      <Spline seriesKey={s.key} {...lineStyle} />
+    {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
+      {@const draw = drawProps(s.key)}
+      <Spline seriesKey={s.key} {...casingStyle} {...draw} />
+      <Spline seriesKey={s.key} {...lineStyle} {...draw} />
     {/each}
   {/snippet}
   {#snippet belowMarks()}
@@ -89,7 +137,12 @@
     {/each}
   {/snippet}
   {#snippet aboveMarks()}
-    {#each annotations as annotation, i (i)}
+    <g class={hasDrawIn ? annotationRevealClass : undefined}>
+      {#each calloutAnnotations as annotation, i (i)}
+        <AnnotationPoint {...annotation} />
+      {/each}
+    </g>
+    {#each endAnnotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
     {/each}
   {/snippet}
@@ -119,3 +172,39 @@
 {:else}
   {@render chart()}
 {/if}
+
+<style>
+  /* Draw-in for scrolly reveal — see docs/scrolly-line-draw-in.md for the
+     full mechanism and tuning knobs. */
+  :global(path.lc-line-draw) {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+  :global(path.lc-line-draw-active) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1300ms cubic-bezier(0.65, 0, 0.35, 1) 250ms;
+  }
+  :global(path.lc-line-draw-done) {
+    stroke-dashoffset: 0;
+  }
+  :global(.lc-draw-reveal) {
+    opacity: 0;
+  }
+  :global(.lc-draw-reveal-active) {
+    opacity: 1;
+    transition: opacity 450ms ease 1350ms;
+  }
+  :global(.lc-draw-reveal-done) {
+    opacity: 1;
+  }
+  :global(.lc-annotation-reveal) {
+    opacity: 0;
+  }
+  :global(.lc-annotation-reveal-active) {
+    opacity: 1;
+    transition: opacity 450ms ease 2350ms;
+  }
+  :global(.lc-annotation-reveal-done) {
+    opacity: 1;
+  }
+</style>

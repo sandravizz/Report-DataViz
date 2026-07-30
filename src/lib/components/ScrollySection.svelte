@@ -54,6 +54,11 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
+  // activeIndex is 0 even while the section is still below the fold, so gate
+  // draw-in animations on it actually being on screen (docs/scrolly-line-draw-in.md).
+  let inView = $derived(
+    scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
+  );
   let centerOffset = $derived(vh / 2 - ITEM_H / 2);
   let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
 
@@ -72,7 +77,7 @@
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-white">
     <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
-    <ChartDisplay {pairs} {activeIndex} {jumpTo} />
+    <ChartDisplay {pairs} {activeIndex} {inView} {jumpTo} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>

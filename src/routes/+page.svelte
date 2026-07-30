@@ -32,7 +32,7 @@
       id: "compressing",
       title: "Compressing the Income and Wealth Scale",
       intro:"The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution.",
-      charts: [figures.incomeShares],
+      charts: figures.incomeSharesSteps,
     },
   ];
 

@@ -3,8 +3,8 @@
 // via the factories below so every callout inherits the same styling; any
 // AnnotationPoint/Range prop can still be overridden per call.
 
-import { ink } from "$lib/colors.js";
-import { endLabelHalo, mutedTextGray } from "$lib/chart-theme.js";
+import { ink, mutedTextGray } from "$lib/colors.js";
+import { endLabelHalo } from "$lib/chart-theme.js";
 
 // Desktop-width halo: these presets are built once at figure-definition time,
 // with no viewport to react to (unlike endLabelHalo's own per-panel usage).

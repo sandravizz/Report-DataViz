@@ -7,11 +7,12 @@
   import BarChartPanelHorizontal from "./BarChartPanelHorizontal.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
 
-  let { pair } = $props();
+  // `active` is only consumed by LineChartPanel, for its draw-in animation.
+  let { pair, active = false } = $props();
 </script>
 
 {#if pair.kind === "bar-horizontal"}
   <BarChartPanelHorizontal {pair} />
 {:else if pair.kind === "line"}
-  <LineChartPanel {pair} />
+  <LineChartPanel {pair} {active} />
 {/if}

@@ -7,6 +7,24 @@
       <p class="mt-4 text-xl leading-snug text-base-content/80 sm:text-2xl">
         A Plan for Equality &amp; Prosperity Within Planetary Boundaries
       </p>
+      <p class="mt-4 text-lg text-base-content/80 sm:mt-6 sm:text-xl">
+        Content &amp; data:
+        <a
+          href="https://gjp.wid.world"
+          target="_blank"
+          rel="noopener"
+          class="link-hover underline-offset-4">WID</a
+        > (2026)
+      </p>
+      <p class="mt-2 text-sm text-base-content/60 sm:text-base">
+        Interactive design study ·
+        <a
+          href="https://www.sandraviz.com/"
+          target="_blank"
+          rel="noopener"
+          class="underline underline-offset-4">SandraViz</a
+        >
+      </p>
     </div>
 
     <img

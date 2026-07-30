@@ -3,7 +3,7 @@
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
 
-  let { pairs, activeIndex, jumpTo } = $props();
+  let { pairs, activeIndex, inView = true, jumpTo } = $props();
 
   let interpretationModal;
   // One ref per pair, bound below — FigureFooter's download button walks
@@ -86,7 +86,9 @@
         {#if pair.kind === "double"}
           <DoubleChartPanel {pair} />
         {:else}
-          <ChartPanel {pair} />
+          <!-- `active` gates the line chart draw-in animation (see
+               docs/scrolly-line-draw-in.md). -->
+          <ChartPanel {pair} active={i === activeIndex && inView} />
         {/if}
       </div>
 

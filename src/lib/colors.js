@@ -2,8 +2,14 @@
 // daisyUI UI theme in src/styles/tailwind.css (which follows the Global
 // Justice Project site's palette).
 
-// Axis ticks and annotation labels.
+// Annotation labels and callout ink.
 export const ink = "#2A2659";
+
+// Axis numbers and other reference-only text — a plain neutral gray,
+// distinct from `colors.gray` below (which has a warm cast tuned for
+// de-emphasized data series, not text) and from `ink` (used for the
+// higher-emphasis annotation/callout labels).
+export const mutedTextGray = "#9CA3AF";
 
 // Series colors, named by hue. In the figures: gray de-emphasizes background
 // series, sky highlights the "World" series, coral marks extremes.

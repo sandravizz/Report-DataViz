@@ -3,10 +3,10 @@
 // the sections there define the story order.
 import incomeGap from "./figures/01-income-gap.js";
 import workHours from "./figures/02-work-hours.js";
-import incomeShares from "./figures/13-income-shares.js";
+import { incomeSharesSteps } from "./figures/13-income-shares.js";
 
 export const figures = {
   incomeGap,
   workHours,
-  incomeShares,
+  incomeSharesSteps,
 };
