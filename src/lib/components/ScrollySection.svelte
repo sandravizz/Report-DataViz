@@ -1,6 +1,4 @@
 <script>
-  import { ITEM_H } from "$lib/scroll-animation";
-  import ScrollColumn from "./ScrollColumn.svelte";
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
@@ -59,9 +57,6 @@
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
-  let centerOffset = $derived(vh / 2 - ITEM_H / 2);
-  let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
-
   // Lets the mobile figure-tab strip jump directly to a figure by scrolling
   // the window to the scroll position that would naturally produce that
   // activeIndex — scroll position stays the single source of truth.
@@ -76,7 +71,6 @@
 
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
-    <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
     <ChartDisplay {pairs} {activeIndex} {inView} {jumpTo} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
