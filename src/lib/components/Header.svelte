@@ -1,13 +1,4 @@
 <script>
-  // Header simulating globaljusticeproject.wid.world's site header: GJP logo
-  // mark left; nav in Satoshi with plain black text like their menu; hover
-  // underline in the dark green (#00371f) their nav indicator bar uses; their
-  // four social profiles, taken from the site footer. The report title lives
-  // in the landing hero, not here, matching their chapter pages.
-  // Not fixed — it only overlays Landing, then scrolls away with it like
-  // every other report's header (see docs on cross-report conventions).
-  // `abstract` is an optional snippet; when given, an "Abstract" dropdown
-  // appears next to the TOC with the snippet as its panel content.
   let { links = [], abstract } = $props();
 
   function closeDropdown(event) {
@@ -15,8 +6,6 @@
     event.currentTarget.blur();
   }
 
-  // WIL's real profiles, from globaljusticeproject.wid.world's page footer
-  // (Font Awesome glyphs as used there, viewBox 0 0 640 640).
   const socials = [
     {
       label: "Bluesky",
