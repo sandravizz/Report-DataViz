@@ -9,6 +9,7 @@
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
+  import ChapterRail from "$lib/components/ChapterRail.svelte";
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
@@ -57,6 +58,7 @@
 </svelte:head>
 
 <Header links={tocLinks} />
+<ChapterRail {sections} />
 
 <div id="top">
   <Landing />
