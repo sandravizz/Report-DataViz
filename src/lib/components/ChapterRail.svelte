@@ -16,7 +16,45 @@
 
   let activeIndex = $state(0);
   let expanded = $state(false);
+  let showRail = $state(false);
   let railEl;
+
+  // Hides the rail while Landing (above the first chapter) or Footer (below
+  // the last) occupies any part of the viewport — it should only appear
+  // once the reader is actually inside a chapter. Reads live
+  // getBoundingClientRect() on every scroll tick rather than caching a
+  // position up front, so it can't go stale like the old activeIndex bug.
+  $effect(() => {
+    const firstEl = document.getElementById(sections[0]?.id);
+    const footerEl = document.querySelector("footer");
+    if (!firstEl || !footerEl) return;
+
+    function update() {
+      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
+      showRail = pastLanding && beforeFooter;
+      if (!showRail) expanded = false;
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", update);
+    };
+  });
 
   $effect(() => {
     const watched = sections
@@ -82,12 +120,13 @@
 
 <nav
   bind:this={railEl}
-  class="fixed top-1/2 right-6 z-40 flex -translate-y-1/2 flex-col items-end gap-2.5 rounded-box px-2.5 py-3.5 transition-colors duration-200 {expanded
+  class="fixed top-1/2 right-6 z-40 flex -translate-y-1/2 flex-col items-end gap-2.5 rounded-box px-2.5 py-3.5 transition-[background-color,opacity] duration-200 {expanded
     ? 'bg-base-200'
-    : ''}"
+    : ''} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   onmouseenter={() => (expanded = true)}
   onmouseleave={() => (expanded = false)}
   aria-label="Chapter navigation"
+  aria-hidden={!showRail}
 >
   {#each sections as section, i (section.id)}
     <button
