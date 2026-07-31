@@ -41,7 +41,7 @@
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
-      <div class="mb-1 flex items-center justify-between gap-1 lg:hidden">
+      <div class="mb-1 flex items-center justify-between gap-1 lg:mb-3">
         {#if pairs.length > 1}
           <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
             <span class="shrink-0 font-sans text-xs tracking-wide text-base-content/50 uppercase">
@@ -66,7 +66,7 @@
           </span>
         {/if}
         <button
-          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
+          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case lg:hidden"
           onclick={() => interpretationModal.showModal()}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
