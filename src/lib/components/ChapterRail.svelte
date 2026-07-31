@@ -1,8 +1,10 @@
 <script>
   // Chapter-nav pattern C from the rail comparison (dot rail): a compact
   // scroll-synced dot per chapter, current one filled, others outline.
-  // Hovering (or focusing) the rail reveals the full chapter list with the
-  // current one highlighted, rather than a per-dot tooltip.
+  // Visible at every size (phones included), so reveal is driven by an
+  // explicit `expanded` state rather than CSS :hover — desktop expands on
+  // mouseenter, touch expands on first tap (second tap on a row jumps and
+  // collapses; tapping outside collapses without jumping).
   // Chosen for this report over the minimal-tick (A) and block-spine (B)
   // variants used on findevlab/template respectively.
   //
@@ -13,6 +15,8 @@
   let { sections = [] } = $props();
 
   let activeIndex = $state(0);
+  let expanded = $state(false);
+  let railEl;
 
   $effect(() => {
     const watched = sections
@@ -46,27 +50,57 @@
     return () => observer.disconnect();
   });
 
+  // Closes the rail on a tap/click anywhere outside it, without navigating.
+  $effect(() => {
+    function handleDocClick(event) {
+      if (expanded && railEl && !railEl.contains(event.target)) {
+        expanded = false;
+      }
+    }
+    document.addEventListener("click", handleDocClick);
+    return () => document.removeEventListener("click", handleDocClick);
+  });
+
   function jumpTo(index) {
     document
       .getElementById(sections[index].id)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  // First tap reveals the full list (no jump yet, matching how hover reveals
+  // it on desktop); a tap while already expanded jumps and collapses. On
+  // desktop, mouseenter has already expanded it, so a click always jumps.
+  function handleRowClick(index) {
+    if (expanded) {
+      jumpTo(index);
+      expanded = false;
+    } else {
+      expanded = true;
+    }
+  }
 </script>
 
 <nav
-  class="group fixed top-1/2 right-6 z-40 hidden -translate-y-1/2 flex-col items-end gap-4 rounded-box transition-[background-color,padding,box-shadow] duration-200 hover:bg-base-200/95 hover:px-5 hover:py-4 hover:shadow-lg focus-within:bg-base-200/95 focus-within:px-5 focus-within:py-4 focus-within:shadow-lg lg:flex"
+  bind:this={railEl}
+  class="fixed top-1/2 right-6 z-40 flex -translate-y-1/2 flex-col items-end gap-4 rounded-box transition-[background-color,padding,box-shadow] duration-200 {expanded
+    ? 'bg-base-200/95 px-5 py-4 shadow-lg'
+    : ''}"
+  onmouseenter={() => (expanded = true)}
+  onmouseleave={() => (expanded = false)}
   aria-label="Chapter navigation"
 >
   {#each sections as section, i (section.id)}
     <button
       type="button"
-      onclick={() => jumpTo(i)}
+      onclick={() => handleRowClick(i)}
       aria-current={activeIndex === i ? "true" : undefined}
-      class="flex items-center gap-3"
+      aria-expanded={expanded}
+      class="flex items-center gap-3 p-1.5 -m-1.5"
     >
       <span
-        class="max-w-0 overflow-hidden text-sm whitespace-nowrap opacity-0 transition-all duration-200 group-hover:max-w-56 group-hover:opacity-100 group-focus-within:max-w-56 group-focus-within:opacity-100 {activeIndex ===
-        i
+        class="overflow-hidden text-sm whitespace-nowrap transition-all duration-200 {expanded
+          ? 'max-w-56 opacity-100'
+          : 'max-w-0 opacity-0'} {activeIndex === i
           ? 'font-semibold text-primary'
           : 'text-base-content/55'}"
       >
@@ -75,7 +109,7 @@
       <span
         class="block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
           ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
-          : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/60'}"
+          : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent'}"
       ></span>
     </button>
   {/each}
