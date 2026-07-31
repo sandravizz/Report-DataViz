@@ -9,9 +9,47 @@
 
   let activeIndex = $state(0);
   let expanded = $state(false);
+  let showRail = $state(false);
 
   const bgClasses = ["bg-primary", "bg-secondary", "bg-neutral"];
   const contentClasses = ["text-primary-content", "text-secondary-content", "text-neutral-content"];
+
+  // Hides the rail while Landing (above the first chapter) or Footer (below
+  // the last) occupies any part of the viewport — it should only appear
+  // once the reader is actually inside a chapter. Reads live
+  // getBoundingClientRect() on every scroll tick rather than caching a
+  // position up front, so it can't go stale like the old activeIndex bug.
+  $effect(() => {
+    const firstEl = document.getElementById(sections[0]?.id);
+    const footerEl = document.querySelector("footer");
+    if (!firstEl || !footerEl) return;
+
+    function update() {
+      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
+      showRail = pastLanding && beforeFooter;
+      if (!showRail) expanded = false;
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", update);
+    };
+  });
 
   // Uses IntersectionObserver directly on each chapter's section element
   // (rather than caching scroll positions up front, like ScrollySection
@@ -57,10 +95,11 @@
 </script>
 
 <nav
-  class="fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-[width] duration-300 {expanded
+  class="fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-[width,opacity] duration-300 {expanded
     ? 'w-64'
-    : 'w-5'}"
+    : 'w-5'} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   aria-label="Chapter navigation"
+  aria-hidden={!showRail}
 >
   {#each sections as section, i (section.id)}
     <button
