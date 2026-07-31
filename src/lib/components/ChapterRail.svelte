@@ -1,54 +1,64 @@
 <script>
   // Chapter-nav pattern A from the rail comparison (minimal rail): ticks sit
-  // quietly against the margin until hovered, then unfold into the full
+  // quietly against the margin until revealed, then unfold into the full
   // chapter list with the current one highlighted. Chosen for this report
   // over the dot rail (main) and block-spine rail (template).
+  // Visible at every size (phones included); reveal is driven by an
+  // explicit `expanded` state rather than CSS :hover — desktop expands on
+  // mouseenter, touch expands on first tap (second tap on a row jumps and
+  // collapses; tapping outside collapses without jumping).
+  //
+  // Uses IntersectionObserver directly on each chapter's section element
+  // (rather than caching scroll positions up front, like ScrollySection
+  // does for its continuous chart-step progress) so "current chapter" is
+  // always read from actual viewport intersection, never a stale snapshot.
   let { sections = [] } = $props();
 
   let activeIndex = $state(0);
-  let sectionTops = $state([]);
-
-  function measure() {
-    sectionTops = sections.map((s) => {
-      const el = document.getElementById(s.id);
-      return el ? el.getBoundingClientRect().top + window.scrollY : 0;
-    });
-  }
+  let expanded = $state(false);
+  let railEl;
 
   $effect(() => {
-    measure();
+    const watched = sections
+      .map((s, i) => ({ el: document.getElementById(s.id), i }))
+      .filter((entry) => entry.el);
 
-    function update() {
-      const probe = window.scrollY + window.innerHeight * 0.35;
-      let idx = 0;
-      for (let i = 0; i < sectionTops.length; i++) {
-        if (probe >= sectionTops[i]) idx = i;
+    if (watched.length === 0) return;
+
+    const visible = new Set();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const match = watched.find((w) => w.el === entry.target);
+          if (!match) continue;
+          if (entry.isIntersecting) {
+            visible.add(match.i);
+          } else {
+            visible.delete(match.i);
+          }
+        }
+        if (visible.size > 0) {
+          activeIndex = Math.max(...visible);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+
+    watched.forEach((entry) => observer.observe(entry.el));
+
+    return () => observer.disconnect();
+  });
+
+  // Closes the rail on a tap/click anywhere outside it, without navigating.
+  $effect(() => {
+    function handleDocClick(event) {
+      if (expanded && railEl && !railEl.contains(event.target)) {
+        expanded = false;
       }
-      activeIndex = idx;
     }
-
-    let ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        update();
-        ticking = false;
-      });
-    }
-    function onResize() {
-      measure();
-      update();
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-    update();
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-    };
+    document.addEventListener("click", handleDocClick);
+    return () => document.removeEventListener("click", handleDocClick);
   });
 
   function jumpTo(index) {
@@ -56,27 +66,46 @@
       .getElementById(sections[index].id)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  // First tap reveals the full list (no jump yet, matching how hover reveals
+  // it on desktop); a tap while already expanded jumps and collapses. On
+  // desktop, mouseenter has already expanded it, so a click always jumps.
+  function handleRowClick(index) {
+    if (expanded) {
+      jumpTo(index);
+      expanded = false;
+    } else {
+      expanded = true;
+    }
+  }
 </script>
 
 <nav
-  class="group fixed top-1/2 right-6 z-40 hidden -translate-y-1/2 flex-col items-end gap-2.5 rounded-box px-2.5 py-3.5 transition-colors duration-200 hover:bg-base-200 focus-within:bg-base-200 lg:flex"
+  bind:this={railEl}
+  class="fixed top-1/2 right-6 z-40 flex -translate-y-1/2 flex-col items-end gap-2.5 rounded-box px-2.5 py-3.5 transition-colors duration-200 {expanded
+    ? 'bg-base-200'
+    : ''}"
+  onmouseenter={() => (expanded = true)}
+  onmouseleave={() => (expanded = false)}
   aria-label="Chapter navigation"
 >
   {#each sections as section, i (section.id)}
     <button
       type="button"
-      onclick={() => jumpTo(i)}
+      onclick={() => handleRowClick(i)}
       aria-current={activeIndex === i ? "true" : undefined}
-      class="flex items-center gap-2.5 py-0.5"
+      aria-expanded={expanded}
+      class="flex items-center gap-2.5 p-1.5 -m-1.5"
     >
       <span
         class="block h-0.5 shrink-0 rounded-full transition-all duration-200 {activeIndex === i
           ? 'w-8 bg-secondary'
-          : 'w-5 bg-base-content/30 group-hover:bg-base-content/45'}"
+          : 'w-5 bg-base-content/30'}"
       ></span>
       <span
-        class="max-w-0 overflow-hidden text-sm whitespace-nowrap opacity-0 transition-all duration-200 group-hover:max-w-56 group-hover:opacity-100 group-focus-within:max-w-56 group-focus-within:opacity-100 {activeIndex ===
-        i
+        class="overflow-hidden text-sm whitespace-nowrap transition-all duration-200 {expanded
+          ? 'max-w-56 opacity-100'
+          : 'max-w-0 opacity-0'} {activeIndex === i
           ? 'font-semibold text-secondary'
           : 'text-base-content/60'}"
       >
