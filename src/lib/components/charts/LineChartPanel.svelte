@@ -54,25 +54,25 @@
   // overshooting the data) plus round joins/caps. Each line is drawn twice in
   // the marks snippet below — a surface-colored casing under the colored
   // stroke — so crossings read as "in front of" instead of spaghetti.
-  const lineStyle = {
+  // De-emphasized background series (colors.regionGray, e.g. figure 2's eight
+  // region lines) get half the line weight of a highlighted line, plus a
+  // much thinner, slightly translucent casing — with that many overlapping
+  // lines, full weight and a full-width opaque halo on every one washes the
+  // chart out in white. Casing width also gets a further reduction on
+  // mobile, same <1024 threshold as the rest of the report.
+  const lineStyle = (deemphasized) => ({
     curve: curveMonotoneX,
-    strokeWidth: 2.5,
+    strokeWidth: deemphasized ? 1.25 : 2.5,
     "stroke-linejoin": "round",
     "stroke-linecap": "round",
-  };
-  // De-emphasized background series (colors.regionGray, e.g. figure 2's eight
-  // region lines) get a much thinner, slightly translucent casing than a
-  // highlighted line — with that many overlapping lines, a full-width opaque
-  // halo on every one washes the chart out in white. Mobile gets a further
-  // reduction across the board, same <1024 threshold as the rest of the
-  // report.
+  });
   function casingWidth(deemphasized, innerWidth) {
     const mobile = innerWidth < 1024;
     if (deemphasized) return mobile ? 1.6 : 2;
     return mobile ? 5 : 6.5;
   }
   const casingStyle = (deemphasized) => ({
-    ...lineStyle,
+    ...lineStyle(deemphasized),
     stroke: chartSurface,
     strokeWidth: casingWidth(deemphasized, innerWidth),
     opacity: deemphasized ? 0.7 : 1,
@@ -140,8 +140,9 @@
   {#snippet marks({ context })}
     {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
-      <Spline seriesKey={s.key} {...casingStyle(s.color === colors.regionGray)} {...draw} />
-      <Spline seriesKey={s.key} {...lineStyle} {...draw} />
+      {@const deemphasized = s.color === colors.regionGray}
+      <Spline seriesKey={s.key} {...casingStyle(deemphasized)} {...draw} />
+      <Spline seriesKey={s.key} {...lineStyle(deemphasized)} {...draw} />
     {/each}
   {/snippet}
   {#snippet belowMarks()}
