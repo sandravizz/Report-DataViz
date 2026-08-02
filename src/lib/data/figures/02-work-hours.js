@@ -21,32 +21,32 @@ export default {
   // summarize the two groupings instead (desktop tooltips name each region).
   legendItems: [
     { label: "World", color: colors.sky },
-    { label: "Regions", color: colors.gray },
+    { label: "Regions", color: colors.regionGray },
   ],
   series: [
-    { key: "Europe", value: "europe", color: colors.gray },
+    { key: "Europe", value: "europe", color: colors.regionGray },
     {
       key: "North America/Oceania",
       value: "northAmericaOceania",
-      color: colors.gray,
+      color: colors.regionGray,
     },
-    { key: "Latin America", value: "latinAmerica", color: colors.gray },
+    { key: "Latin America", value: "latinAmerica", color: colors.regionGray },
     {
       key: "Middle East/North Africa",
       value: "middleEastNorthAfrica",
-      color: colors.gray,
+      color: colors.regionGray,
     },
-    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: colors.gray },
+    { key: "Sub-Saharan Africa", value: "subSaharanAfrica", color: colors.regionGray },
     {
       key: "Russia/Central Asia",
       value: "russiaCentralAsia",
-      color: colors.gray,
+      color: colors.regionGray,
     },
-    { key: "East Asia", value: "eastAsia", color: colors.gray },
+    { key: "East Asia", value: "eastAsia", color: colors.regionGray },
     {
       key: "South/South-East Asia",
       value: "southSoutheastAsia",
-      color: colors.gray,
+      color: colors.regionGray,
     },
     { key: "World", value: "world", color: colors.sky },
   ],

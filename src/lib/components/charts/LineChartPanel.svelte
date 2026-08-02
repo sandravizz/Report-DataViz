@@ -3,6 +3,7 @@
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { colors } from "$lib/colors";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -59,11 +60,23 @@
     "stroke-linejoin": "round",
     "stroke-linecap": "round",
   };
-  const casingStyle = {
+  // De-emphasized background series (colors.regionGray, e.g. figure 2's eight
+  // region lines) get a much thinner, slightly translucent casing than a
+  // highlighted line — with that many overlapping lines, a full-width opaque
+  // halo on every one washes the chart out in white. Mobile gets a further
+  // reduction across the board, same <1024 threshold as the rest of the
+  // report.
+  function casingWidth(deemphasized, innerWidth) {
+    const mobile = innerWidth < 1024;
+    if (deemphasized) return mobile ? 1.6 : 2;
+    return mobile ? 5 : 6.5;
+  }
+  const casingStyle = (deemphasized) => ({
     ...lineStyle,
     stroke: chartSurface,
-    strokeWidth: 6.5,
-  };
+    strokeWidth: casingWidth(deemphasized, innerWidth),
+    opacity: deemphasized ? 0.7 : 1,
+  });
 
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
@@ -127,7 +140,7 @@
   {#snippet marks({ context })}
     {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
-      <Spline seriesKey={s.key} {...casingStyle} {...draw} />
+      <Spline seriesKey={s.key} {...casingStyle(s.color === colors.regionGray)} {...draw} />
       <Spline seriesKey={s.key} {...lineStyle} {...draw} />
     {/each}
   {/snippet}

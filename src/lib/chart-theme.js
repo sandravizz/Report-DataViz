@@ -1,5 +1,5 @@
 import { defaultChartPadding } from "layerchart";
-import { mutedTextGray } from "$lib/colors.js";
+import { ink } from "$lib/colors.js";
 
 // Every chart panel sits on a plain white surface (see ScrollySection/
 // +page.svelte) regardless of the theme's base-100 — on this report base-100
@@ -13,7 +13,7 @@ export const chartSurface = "#ffffff";
 // value. That halo — and every other LayerChart text stroke — is disabled
 // globally in tailwind.css's `@layer utilities` block instead, the one place
 // with a cascade layer late enough to actually win.
-export const tickLabelProps = { fill: mutedTextGray, class: "text-xs font-light" };
+export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
