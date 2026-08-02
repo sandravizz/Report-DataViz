@@ -58,21 +58,11 @@
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
-  // Lets the mobile figure-tab strip jump directly to a figure by scrolling
-  // the window to the scroll position that would naturally produce that
-  // activeIndex — scroll position stays the single source of truth.
-  function jumpTo(index) {
-    const denom = pairs.length - 1;
-    if (denom <= 0) return;
-    const targetProgress = index / denom;
-    const targetScrollY = containerTop + targetProgress * (containerHeight - vh);
-    window.scrollTo({ top: targetScrollY, behavior: "smooth" });
-  }
 </script>
 
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
   <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
-    <ChartDisplay {pairs} {activeIndex} {inView} {jumpTo} />
+    <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>
