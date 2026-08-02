@@ -1,10 +1,9 @@
 <script>
-  // Chapter-nav pattern B from the rail comparison (block rail): a colored
-  // spine down the left edge, one segment per chapter, collapsed to a slim
-  // strip by default and expandable into full titles via the toggle. Chosen
-  // for this branch over the dot rail (main) and minimal-tick rail (findevlab).
-  // Visible at every size (phones included) — the toggle button already
-  // makes this variant tap-friendly, unlike the hover-only A/C variants.
+  // Chapter-nav pattern B (block rail): a colored spine down the left edge,
+  // one segment per chapter, collapsed to a slim strip by default,
+  // expandable into full titles via the toggle button. Standardized across
+  // all three report branches (main, findevlab, template) on this pattern.
+  // Desktop only (lg+) — hidden on tablets and phones.
   let { sections = [] } = $props();
 
   let activeIndex = $state(0);
@@ -95,7 +94,7 @@
 </script>
 
 <nav
-  class="fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-[width,opacity] duration-300 {expanded
+  class="fixed top-0 bottom-0 left-0 z-40 hidden flex-col transition-[width,opacity] duration-300 lg:flex {expanded
     ? 'w-64'
     : 'w-5'} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   aria-label="Chapter navigation"
