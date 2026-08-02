@@ -1,23 +1,19 @@
 <script>
-  // Chapter-nav pattern A from the rail comparison (minimal rail): ticks sit
-  // quietly against the margin until revealed, then unfold into the full
-  // chapter list with the current one highlighted. Chosen for this report
-  // over the dot rail (main) and block-spine rail (template).
-  // Visible at every size (phones included); reveal is driven by an
-  // explicit `expanded` state rather than CSS :hover — desktop expands on
-  // mouseenter, touch expands on first tap (second tap on a row jumps and
-  // collapses; tapping outside collapses without jumping).
-  //
-  // Uses IntersectionObserver directly on each chapter's section element
-  // (rather than caching scroll positions up front, like ScrollySection
-  // does for its continuous chart-step progress) so "current chapter" is
-  // always read from actual viewport intersection, never a stale snapshot.
+  // Chapter-nav pattern B (block rail): a colored spine down the left edge,
+  // one segment per chapter, collapsed to a slim strip by default,
+  // expandable into full titles via the toggle button. Standardized across
+  // all three report branches (main, findevlab, template) on this pattern —
+  // previously each branch had a different pattern (dot rail on main,
+  // minimal-tick rail here); this replaces that.
+  // Desktop only (lg+) — hidden on tablets and phones.
   let { sections = [] } = $props();
 
   let activeIndex = $state(0);
   let expanded = $state(false);
   let showRail = $state(false);
-  let railEl;
+
+  const bgClasses = ["bg-primary", "bg-secondary", "bg-neutral"];
+  const contentClasses = ["text-primary-content", "text-secondary-content", "text-neutral-content"];
 
   // Hides the rail while Landing (above the first chapter) or Footer (below
   // the last) occupies any part of the viewport — it should only appear
@@ -56,6 +52,10 @@
     };
   });
 
+  // Uses IntersectionObserver directly on each chapter's section element
+  // (rather than caching scroll positions up front, like ScrollySection
+  // does for its continuous chart-step progress) so "current chapter" is
+  // always read from actual viewport intersection, never a stale snapshot.
   $effect(() => {
     const watched = sections
       .map((s, i) => ({ el: document.getElementById(s.id), i }))
@@ -88,68 +88,60 @@
     return () => observer.disconnect();
   });
 
-  // Closes the rail on a tap/click anywhere outside it, without navigating.
-  $effect(() => {
-    function handleDocClick(event) {
-      if (expanded && railEl && !railEl.contains(event.target)) {
-        expanded = false;
-      }
-    }
-    document.addEventListener("click", handleDocClick);
-    return () => document.removeEventListener("click", handleDocClick);
-  });
-
   function jumpTo(index) {
     document
       .getElementById(sections[index].id)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-
-  // First tap reveals the full list (no jump yet, matching how hover reveals
-  // it on desktop); a tap while already expanded jumps and collapses. On
-  // desktop, mouseenter has already expanded it, so a click always jumps.
-  function handleRowClick(index) {
-    if (expanded) {
-      jumpTo(index);
-      expanded = false;
-    } else {
-      expanded = true;
-    }
-  }
 </script>
 
 <nav
-  bind:this={railEl}
-  class="fixed top-1/2 right-6 z-40 flex -translate-y-1/2 flex-col items-end gap-2.5 rounded-box px-2.5 py-3.5 transition-[background-color,opacity] duration-200 {expanded
-    ? 'bg-base-200'
-    : ''} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
-  onmouseenter={() => (expanded = true)}
-  onmouseleave={() => (expanded = false)}
+  class="fixed top-0 bottom-0 left-0 z-40 hidden flex-col transition-[width,opacity] duration-300 lg:flex {expanded
+    ? 'w-64'
+    : 'w-5'} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   aria-label="Chapter navigation"
   aria-hidden={!showRail}
 >
   {#each sections as section, i (section.id)}
     <button
       type="button"
-      onclick={() => handleRowClick(i)}
+      onclick={() => jumpTo(i)}
       aria-current={activeIndex === i ? "true" : undefined}
-      aria-expanded={expanded}
-      class="flex items-center gap-2.5 p-1.5 -m-1.5"
+      class="group relative flex flex-1 items-center overflow-hidden border-b border-base-100/20 pl-4 text-left transition-[filter] duration-150 hover:brightness-110 {bgClasses[
+        i % bgClasses.length
+      ]} {contentClasses[i % contentClasses.length]}"
     >
+      {#if activeIndex === i}
+        <span class="absolute inset-y-0 left-0 w-1 bg-base-100"></span>
+      {/if}
+      <span class="shrink-0 text-[0.65rem] font-bold tracking-wider uppercase">
+        {String(i + 1).padStart(2, "0")}
+      </span>
       <span
-        class="block h-0.5 shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-          ? 'w-8 bg-secondary'
-          : 'w-5 bg-base-content/30'}"
-      ></span>
-      <span
-        class="overflow-hidden text-sm whitespace-nowrap transition-all duration-200 {expanded
-          ? 'max-w-56 opacity-100'
-          : 'max-w-0 opacity-0'} {activeIndex === i
-          ? 'font-semibold text-secondary'
-          : 'text-base-content/60'}"
+        class="ml-3 max-w-0 overflow-hidden text-sm font-semibold whitespace-nowrap opacity-0 transition-all duration-300 {expanded
+          ? 'max-w-48 opacity-100'
+          : ''}"
       >
         {section.title}
       </span>
     </button>
   {/each}
+
+  <button
+    type="button"
+    onclick={() => (expanded = !expanded)}
+    aria-label={expanded ? "Collapse chapter rail" : "Expand chapter rail"}
+    aria-expanded={expanded}
+    class="absolute top-4 -right-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-base-300 bg-base-100 text-base-content shadow-sm"
+  >
+    <svg
+      class="h-3 w-3 transition-transform duration-300 {expanded ? 'rotate-180' : ''}"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6" />
+    </svg>
+  </button>
 </nav>
