@@ -133,8 +133,14 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%").
-    tooltip: pair.valueSuffix ? { item: { format: formatValue } } : undefined,
+    // Tooltip header shows just the year (no month/day, since the data has
+    // no finer granularity); rows show the same unit suffix as the y-axis
+    // (e.g. "28%"), as whole numbers.
+    tooltip: {
+      header: { format: formatYear },
+      item: { format: formatValue },
+      hideTotal: pair.hideTooltipTotal,
+    },
   }}
 >
   {#snippet marks({ context })}

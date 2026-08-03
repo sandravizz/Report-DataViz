@@ -1,6 +1,3 @@
-<!-- Closing panel — bookends Landing (same layout, mirrored turbine image).
-     `disclosure` is an optional snippet for report-specific licensing text,
-     kept out of this component so Footer stays reusable across reports. -->
 <script>
   let { disclosure } = $props();
 </script>
@@ -30,7 +27,7 @@
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
         This is one example of what that looks like in practice, built on real content and data
-        from the Global Justice Project (World Inequality Lab) — the interactive design and
+        from the Global Justice Project (World Inequality Lab), the interactive design and
         development are mine. If you've got a report that deserves to be more than a PDF, let's
         talk.
       </p>
@@ -67,9 +64,6 @@
       </div>
     </div>
 
-    <!-- Same cover photo as Landing, mirrored, so the two bookend sections
-         match. Hidden on phones — the bio/CTA/links matter more than a hero
-         echo there. -->
     <div class="hidden md:flex md:flex-1 md:justify-end">
       <img
         src="/cover.jpg"

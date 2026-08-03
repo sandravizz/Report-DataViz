@@ -2,9 +2,6 @@ import { colors } from "$lib/colors";
 import { quarterCenturyTicks } from "$lib/chart-theme";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 
-// World series from the report's DataF2.13a14a tables (gjp.wid.world),
-// sampled every 20 years plus 2025 (projection start) and key
-// projection-era points.
 const data = [
   { year: new Date(1800, 0, 1), top10: 50, middle40: 36, bottom50: 15 },
   { year: new Date(1820, 0, 1), top10: 50, middle40: 35, bottom50: 14 },
@@ -33,8 +30,6 @@ const allSeries = [
   { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.coral },
 ];
 
-// Shared scaffold for the three reveal steps — only the visible lines and
-// each step's title/description/annotations change while scrolling.
 const base = {
   subtitle: "Global Income Shares in Post-Tax Income, 1800–2100",
   source: "Sources & series: gjp.wid.world (F13)",
@@ -42,10 +37,6 @@ const base = {
   xKey: "year",
   valueSuffix: "%",
   xTicks: quarterCenturyTicks(1800, 2100),
-  // Fixed across all three steps (matches the original single-panel chart's
-  // auto-derived range) so the y axis holds still while a step's series
-  // subset changes — an auto domain would shrink to whichever lines are
-  // visible and rescale, jumping, on every step transition.
   yDomain: [0, 60],
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
@@ -64,7 +55,7 @@ export const incomeSharesSteps = [
     number: "Figure 13a",
     title: "The Top 10% Share Has Swung Widely, and Is Set to Shrink",
     description:
-      "The world's top 10% has held 50–59% of post-tax income since 1800. Under the Global Justice Platform's projections, that share falls sharply after 2025 — from 52% in 2025 to 18% in 2100.",
+      "The world's top 10% has held 50–59% of post-tax income since 1800. Under the Global Justice Platform's projections, that share falls sharply after 2025, from 52% in 2025 to 18% in 2100.",
     series: stepSeries("top10", ["top10"]),
   },
   {
@@ -80,7 +71,7 @@ export const incomeSharesSteps = [
     number: "Figure 13c",
     title: "The Bottom 50% Overtakes the Top 10% Around 2050",
     description:
-      "The bottom 50%'s share, squeezed to as little as 6% in the 1970s, is projected to grow more than fourfold — from 8% in 2025 to 38% in 2100 — overtaking the shrinking top 10% around 2050.",
+      "The bottom 50%'s share, squeezed to as little as 6% in the 1970s, is projected to grow more than fourfold from 8% in 2025 to 38% in 2100, overtaking the shrinking top 10% around 2050.",
     series: stepSeries("bottom50", ["top10", "middle40", "bottom50"]),
     annotations: [
       circleCallout({
@@ -94,10 +85,6 @@ export const incomeSharesSteps = [
         labelYOffset: 30,
         link: { type: "swoop" },
         labelProps: { textAnchor: "end", verticalAnchor: "middle", dx: -4 },
-        // Narrow viewports: the one-line label is wider than the space left
-        // of the point, so wrap it to 2 lines in the open region
-        // below-left of the intersection. Text truncates at `width` unless
-        // truncate is explicitly disabled — only then does `width` word-wrap.
         mobile: {
           labelXOffset: 20,
           labelYOffset: 36,

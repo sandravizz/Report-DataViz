@@ -40,7 +40,7 @@
 
 <header class="absolute inset-x-0 top-0 z-20 bg-base-100/90 backdrop-blur-sm">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
-    <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">
+    <a href="https://globaljusticeproject.wid.world/insight/summary/" class="shrink-0 hover:opacity-70" aria-label="Back to top">
       <img src="/gjp-logo.svg" alt="Global Justice Project" class="h-9 w-auto sm:h-11" />
     </a>
 

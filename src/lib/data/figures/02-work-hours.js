@@ -2,9 +2,6 @@ import { quarterCenturyTicks } from "$lib/chart-theme";
 import { colors } from "$lib/colors";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-// Extracted from the report's DataF1.3 table (projected annual economic
-// labour hours, SC scenario) — year + the 9 region columns, thousands
-// separators stripped.
 import csv from "./csv/02-work-hours.csv?raw";
 
 export default {
@@ -16,6 +13,9 @@ export default {
   number: "Figure 2",
   kind: "line",
   xKey: "year",
+  // Summing hours across the 8 regions + world is meaningless, unlike
+  // figure 13's shares which do add up.
+  hideTooltipTotal: true,
   xTicks: quarterCenturyTicks(1800, 2100),
   // The real legend would be eight identical gray swatches plus one blue, so
   // summarize the two groupings instead (desktop tooltips name each region).
