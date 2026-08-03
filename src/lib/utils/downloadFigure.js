@@ -115,7 +115,7 @@ export async function downloadFigureImage({
 
   const pad = 28;
   const numberSize = 11;
-  const railHeight = 2;
+  const railHeight = 1;
   const titleSize = 20;
   const subtitleSize = 14;
   const footerSize = 12;

@@ -10,7 +10,11 @@ import { endLabelHalo } from "$lib/chart-theme.js";
 // with no viewport to react to (unlike endLabelHalo's own per-panel usage).
 const annotationLabel = { ...endLabelHalo(1024), fill: ink, class: "text-xs font-light" };
 const mutedLabel = { ...endLabelHalo(1024), fill: mutedTextGray, class: "text-xs font-light" };
-const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
+// Explicit color (not `currentColor`/a CSS variable) — the hatch lines are
+// drawn via an SVG presentation attribute, and the figure download's PNG
+// export re-serializes the chart's SVG outside the page's stylesheet, where
+// a CSS custom property has nothing to resolve against.
+const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2, color: "#000000" } };
 
 // Circled point callout. `filled` tints the ring with the series color for
 // strong emphasis; otherwise a thin ink outline. `labelProps` extends the
