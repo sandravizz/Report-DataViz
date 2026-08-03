@@ -60,31 +60,28 @@
 <Header links={tocLinks} />
 <ChapterRail {sections} />
 
-<div id="top">
-  <Landing />
+<Landing />
 
-  <div id="charts"></div>
-  {#each sections as section (section.id)}
-    <section id={section.id} class="h-[140vh] font-sans text-base-content">
-      <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
-        <div class="flex min-h-full">
-          <div
-            class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
-          >
-            <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
-            {#if section.intro}
-              <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
-                {section.intro}
-              </p>
-            {/if}
-          </div>
+{#each sections as section (section.id)}
+  <section id={section.id} class="h-[140vh] font-sans text-base-content">
+    <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
+      <div class="flex min-h-full">
+        <div
+          class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
+        >
+          <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+          {#if section.intro}
+            <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
+              {section.intro}
+            </p>
+          {/if}
         </div>
       </div>
-    </section>
-    {#if section.charts.length > 0}
-      <ScrollySection pairs={section.charts} />
-    {/if}
-  {/each}
-</div>
+    </div>
+  </section>
+  {#if section.charts.length > 0}
+    <ScrollySection pairs={section.charts} />
+  {/if}
+{/each}
 
 <Footer />

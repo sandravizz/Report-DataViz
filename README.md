@@ -38,15 +38,15 @@ src/
     data/index.js       # figure registry
     colors.js           # single source for chart colors
     chart-theme.js      # shared chart theming (axes, ticks, tooltips)
+    utils/              # figure PNG export
   routes/               # +page.svelte assembles the story sections
   styles/               # Tailwind, fonts, daisyUI theme
 docs/                   # developer notes (scroll mechanics, chart styling)
-static/figures/         # pre-made figure PNGs served by the download button
 ```
 
 ## Working with Figures
 
-Each figure lives in its own file in `src/lib/data/figures/` — a plain object with title, subtitle, description, source, figure number, chart `kind` (`"bar"` or `"line"`), and the data itself (inline, or parsed from a CSV in `figures/csv/` via `parse-csv.js`). All figures are registered by name in `src/lib/data/index.js`; the story itself is assembled in `src/routes/+page.svelte`, where each section (title + intro text) lists the figures it shows in its `charts` array.
+Each figure lives in its own file in `src/lib/data/figures/` — a plain object with title, subtitle, description, source, figure number, chart `kind` (`"bar-horizontal"` or `"line"`), and the data itself (inline, or parsed from a CSV in `figures/csv/` via `parse-csv.js`). All figures are registered by name in `src/lib/data/index.js`; the story itself is assembled in `src/routes/+page.svelte`, where each section (title + intro text) lists the figures it shows in its `charts` array.
 
 **To add a figure:** copy an existing file in `src/lib/data/figures/`, adjust it, register it in `index.js`, and add it to a section's `charts` in `+page.svelte`.
 
@@ -56,6 +56,6 @@ Chart colors come from `src/lib/colors.js` — named series colors (`colors.sky`
 
 ## PNG Download
 
-Every visualization has a PNG button that downloads a pre-made screenshot from `static/figures/`. The files are named after the figure number — `figure-1.png`, `figure-2.png`, `figure-13.png` — so when a chart changes, replace the matching screenshot in that folder. The downloaded file is automatically renamed to a descriptive slug (e.g. `figure-2-using-productivity-gains-to-reduce-work-hours.png`).
+Every visualization has a PNG button that renders the figure live, so the export always matches what is on screen — there is nothing to regenerate when a chart changes. `src/lib/utils/downloadFigure.js` finds the LayerChart roots inside the figure, serializes each one's SVG, rasterizes it at retina scale, and composites the result onto a canvas together with the figure number, progress rail, title, subtitle, source, and the `sandraviz.com` wordmark. The file is named from a slug of the figure number and title (e.g. `figure-2-using-productivity-gains-to-reduce-work-hours.png`).
 
-Live DOM-to-image capture was tried and abandoned: `html2canvas` cannot parse the `oklch()` colors Tailwind v4/daisyUI 5 use, and `modern-screenshot` mis-renders LayerChart's nested-`<svg>` text labels (they rely on `overflow: visible` with negative offsets, which the foreignObject clone clips/displaces — cutting off axis labels).
+Generic DOM-to-image libraries were tried first and abandoned, which is why the export goes through LayerChart's own SVG serialization instead: `html2canvas` cannot parse the `oklch()` colors Tailwind v4/daisyUI 5 use, and `modern-screenshot` mis-renders LayerChart's nested-`<svg>` text labels (they rely on `overflow: visible` with negative offsets, which the foreignObject clone clips/displaces — cutting off axis labels).

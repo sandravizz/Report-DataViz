@@ -9,9 +9,10 @@ const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
 const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 
-// Extra canvas on every side so labels that overflow the SVG's nominal
-// bounds (invisible on the live page, hard-clipped when rasterized standalone)
-// survive the export — see docs/download-image-overflow-clip-bug.md.
+// Extra canvas on every side so labels that overflow the SVG's nominal bounds
+// survive the export. On the live page they spill past the chart box and stay
+// visible; rasterized standalone, that same overflow is hard-clipped at the
+// viewBox edge, beheading end-of-line labels and annotation text.
 const CAPTURE_BLEED = 20;
 
 function wrapLines(ctx, text, maxWidth) {

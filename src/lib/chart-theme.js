@@ -70,8 +70,11 @@ export const yLabelPadding = { left: 36 };
 // Disabled: tailwind.css's `@layer utilities` block now strips `stroke` from
 // every LayerChart text element globally, so any value returned here is
 // moot — kept (rather than removed at all 3 call sites) so it's a one-line
-// revert if the halo comes back.
-export function endLabelHalo() {
+// revert if the halo comes back. `innerWidth` is unused while the halo is
+// disabled but stays in the signature: the stroke width was viewport-
+// dependent, and all three call sites already pass a width, so restoring it
+// really is a one-line change to the body.
+export function endLabelHalo(innerWidth) {
   return { strokeWidth: 0 };
 }
 
