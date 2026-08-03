@@ -44,14 +44,27 @@ async function captureChartBleed(root, pixelRatio) {
     .split(/\s+/)
     .map(Number);
 
-  const outWidth = width + CAPTURE_BLEED * 2;
-  const outHeight = height + CAPTURE_BLEED * 2;
+  // Bleed math must derive from the viewBox (the content's own coordinate
+  // space), not the width/height attributes: those come from the root
+  // element's clientWidth/clientHeight, which can drift from the viewBox on
+  // a figure whose `.lc-root-container` sits inside extra wrapper markup
+  // (e.g. figure 2's legend row) — sizing the output canvas off the
+  // mismatched attribute stretches every stroke/pattern to fit.
+  const outWidth = vw + CAPTURE_BLEED * 2;
+  const outHeight = vh + CAPTURE_BLEED * 2;
   svg.setAttribute(
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${vw + CAPTURE_BLEED * 2} ${vh + CAPTURE_BLEED * 2}`
   );
-  svg.setAttribute("width", String(Math.round(outWidth * pixelRatio)));
-  svg.setAttribute("height", String(Math.round(outHeight * pixelRatio)));
+  // Load the SVG at its native 1:1 size (width/height attrs matching the
+  // viewBox exactly) and let createImageBitmap's own resize do the retina
+  // upscale, rather than asking the SVG rasterizer to stretch width/height
+  // attributes past the viewBox itself: a `patternUnits="userSpaceOnUse"`
+  // tile (the projection-band hatch) doesn't reliably scale with that trick
+  // across browsers and was tiling far denser than intended — plain
+  // geometry (e.g. the grid lines) scaled fine, only the pattern didn't.
+  svg.setAttribute("width", String(outWidth));
+  svg.setAttribute("height", String(outHeight));
 
   const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
     type: "image/svg+xml;charset=utf-8",
@@ -64,7 +77,11 @@ async function captureChartBleed(root, pixelRatio) {
       img.onerror = reject;
       img.src = url;
     });
-    const bitmap = await createImageBitmap(img);
+    const bitmap = await createImageBitmap(img, {
+      resizeWidth: Math.round(outWidth * pixelRatio),
+      resizeHeight: Math.round(outHeight * pixelRatio),
+      resizeQuality: "high",
+    });
     return { bitmap, width: outWidth, height: outHeight };
   } finally {
     URL.revokeObjectURL(url);
