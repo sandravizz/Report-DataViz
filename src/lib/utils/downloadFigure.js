@@ -38,11 +38,54 @@ function wrapLines(ctx, text, maxWidth) {
 // Captures one chart's own `.lc-root-container` as a bitmap with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here) or
 // one whose SVG reports no usable dimensions at all; the caller skips those.
+// TEMPORARY DIAGNOSTIC — remove once the figure 2 export artifact is fixed.
+// Prints what the serialized SVG actually says about the two things that come
+// out solid black in the PNG (grid lines, projection hatch), next to what the
+// live DOM computes for the same elements. Also stashes the full SVG string on
+// `window.__lastFigureSvg` for follow-up inspection.
+function debugExport(root, svg, svgStr) {
+  const q = (sel) => svg.querySelector(sel);
+  const qa = (sel) => Array.from(svg.querySelectorAll(sel));
+
+  window.__lastFigureSvg = svgStr;
+  console.group("figure export debug");
+  console.log("svg layers:", root.querySelectorAll(".lc-layout-svg").length);
+  console.log("svg attrs:", {
+    width: svg.getAttribute("width"),
+    height: svg.getAttribute("height"),
+    viewBox: svg.getAttribute("viewBox"),
+    length: svgStr.length,
+  });
+
+  const liveGrid = root.querySelector("[class*='lc-grid-y-rule']");
+  if (liveGrid) {
+    const cs = getComputedStyle(liveGrid);
+    console.log("live grid — stroke:", cs.stroke, "| opacity:", cs.opacity);
+  }
+  const gridLines = qa("[class*='lc-grid-y-rule']");
+  console.log("serialized grid lines:", gridLines.length);
+  console.log("first grid line:", gridLines[0]?.outerHTML);
+
+  console.log("pattern:", q("pattern")?.outerHTML);
+  console.log(
+    "pattern-filled rects:",
+    qa("rect")
+      .filter((r) => (r.getAttribute("fill") ?? "").includes("url("))
+      .map((r) => r.outerHTML)
+  );
+  console.groupEnd();
+}
+
 async function captureChartBleed(root, scale) {
   const svgStr = getChartSvgString(root);
   if (!svgStr) return null;
 
   const svg = new DOMParser().parseFromString(svgStr, "image/svg+xml").documentElement;
+  try {
+    debugExport(root, svg, svgStr);
+  } catch (error) {
+    console.warn("figure export debug failed", error);
+  }
 
   // When a viewBox is present the bleed math must derive from it (the
   // content's own coordinate space) rather than the width/height attributes:
