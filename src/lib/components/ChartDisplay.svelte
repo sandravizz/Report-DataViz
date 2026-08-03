@@ -1,6 +1,5 @@
 <script>
   import ChartPanel from "./charts/ChartPanel.svelte";
-  import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
 
   let { pairs, activeIndex, inView = true } = $props();
@@ -78,13 +77,9 @@
       </div>
 
       <div class="flex min-h-0 flex-1 gap-6">
-        {#if pair.kind === "double"}
-          <DoubleChartPanel {pair} />
-        {:else}
-          <!-- `active` gates the line chart draw-in animation (see
-               docs/scrolly-line-draw-in.md). -->
-          <ChartPanel {pair} active={i === activeIndex && inView} />
-        {/if}
+        <!-- `active` gates the line chart draw-in animation (see
+             docs/scrolly-line-draw-in.md). -->
+        <ChartPanel {pair} active={i === activeIndex && inView} />
       </div>
 
       <FigureFooter {pair} figureEl={figureRefs[i]} number={headerLabel} progress={stepProgress} />
