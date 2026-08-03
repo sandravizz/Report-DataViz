@@ -5,6 +5,9 @@
   // template) on this pattern — replaces the block-spine rail (option B)
   // this branch briefly had.
   // Desktop only (lg+) — hidden on tablets and phones.
+  // Lives in the LEFT gutter (the empty column left of the figure card),
+  // McKinsey-style, not on the right: the right side is the description
+  // column's, and the dots were sitting on top of its text edge.
   let { sections = [] } = $props();
 
   let activeIndex = $state(0);
@@ -92,7 +95,7 @@
 </script>
 
 <nav
-  class="fixed top-1/2 right-6 z-40 hidden -translate-y-1/2 flex-col items-end gap-4 rounded-box transition-[background-color,padding,box-shadow,opacity] duration-200 lg:flex {expanded
+  class="fixed top-1/2 left-14 z-40 hidden -translate-y-1/2 flex-col items-start gap-4 rounded-2xl transition-[background-color,padding,box-shadow,opacity] duration-200 lg:flex {expanded
     ? 'bg-base-200/95 px-5 py-4 shadow-lg'
     : ''} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   onmouseenter={() => (expanded = true)}
@@ -105,22 +108,27 @@
       type="button"
       onclick={() => jumpTo(i)}
       aria-current={activeIndex === i ? "true" : undefined}
-      class="flex items-center gap-3 p-1.5 -m-1.5"
+      class="group flex cursor-pointer items-center gap-3 p-1.5 -m-1.5"
     >
+      <!-- Hovering a non-current chapter previews the selected state: the
+           hollow dot picks up a tint and a darker rim, the muted label goes
+           to full contrast. Two coordinated cues in the rail's own visual
+           language, so the row reads as clickable without adding a link
+           underline. The current chapter stays put — it's already there. -->
+      <span
+        class="block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
+          ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
+          : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
+      ></span>
       <span
         class="overflow-hidden text-sm whitespace-nowrap transition-all duration-200 {expanded
           ? 'max-w-56 opacity-100'
           : 'max-w-0 opacity-0'} {activeIndex === i
           ? 'font-semibold text-primary'
-          : 'text-base-content/55'}"
+          : 'text-base-content/55 group-hover:text-base-content'}"
       >
         {section.title}
       </span>
-      <span
-        class="block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-          ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
-          : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent'}"
-      ></span>
     </button>
   {/each}
 </nav>
