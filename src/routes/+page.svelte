@@ -3,7 +3,7 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Interactive Report Design by SandraViz",
+    title: "An interactive, visualization-first report by SandraViz",
     description:
       "Reports don't have to be static PDFs. An interactive, visualization-first version of the Global Justice Report, built for web and mobile.",
   };
