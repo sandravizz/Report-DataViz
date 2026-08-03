@@ -6,6 +6,7 @@ const FONT_FAMILY = "Satoshi, sans-serif";
 const INK = "#000000";
 const MUTED = "rgba(0, 0, 0, 0.5)";
 const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
+const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 
 // Extra canvas on every side so labels that overflow the SVG's nominal
@@ -75,7 +76,15 @@ async function captureChartBleed(root, pixelRatio) {
 // via LayerChart's `.lc-root-container` marker and redrawn at their original
 // relative position, so this works unmodified for a single chart, a stacked
 // double panel, or a line-multiples grid alike.
-export async function downloadFigureImage({ figureEl, title, subtitle, source, filename }) {
+export async function downloadFigureImage({
+  figureEl,
+  number,
+  progress,
+  title,
+  subtitle,
+  source,
+  filename,
+}) {
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([
     document.fonts.load(`500 16px "Satoshi"`),
@@ -105,6 +114,8 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   );
 
   const pad = 28;
+  const numberSize = 11;
+  const railHeight = 2;
   const titleSize = 20;
   const subtitleSize = 14;
   const footerSize = 12;
@@ -119,12 +130,19 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   measure.font = `400 ${footerSize}px ${FONT_FAMILY}`;
   const sourceLines = source ? wrapLines(measure, source, textWidth) : [];
 
+  const numberLineHeight = numberSize * 1.4;
   const titleLineHeight = titleSize * 1.3;
   const subtitleLineHeight = subtitleSize * 1.4;
   const footerLineHeight = footerSize * 1.5;
 
+  // Mirrors the on-page reading-progress rail (ChartDisplay.svelte), which
+  // sits above the title — the export used to start at the title, cropping
+  // the figure number and progress bar shown on screen.
+  const numberBlockHeight = number ? numberLineHeight + 12 + railHeight + 16 : 0;
+
   const headerHeight =
     pad +
+    numberBlockHeight +
     titleLines.length * titleLineHeight +
     (subtitleLines.length ? 10 + subtitleLines.length * subtitleLineHeight : 0) +
     24;
@@ -143,8 +161,24 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   ctx.fillRect(0, 0, cssWidth, cssHeight);
 
   ctx.textBaseline = "top";
-  ctx.fillStyle = INK;
   let y = pad;
+
+  if (number) {
+    ctx.fillStyle = MUTED;
+    ctx.font = `500 ${numberSize}px ${FONT_FAMILY}`;
+    ctx.fillText(number.toUpperCase(), pad, y);
+    y += numberLineHeight + 12;
+
+    ctx.fillStyle = RAIL_TRACK;
+    ctx.fillRect(pad, y, textWidth, railHeight);
+    if (progress != null) {
+      ctx.fillStyle = MUTED;
+      ctx.fillRect(pad, y, textWidth * Math.min(Math.max(progress, 0), 1), railHeight);
+    }
+    y += railHeight + 16;
+  }
+
+  ctx.fillStyle = INK;
   ctx.font = `500 ${titleSize}px ${FONT_FAMILY}`;
   for (const line of titleLines) {
     ctx.fillText(line, pad, y);

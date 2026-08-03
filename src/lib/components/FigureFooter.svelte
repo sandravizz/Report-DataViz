@@ -3,7 +3,7 @@
   // wordmark stay in one place.
   import { downloadFigureImage } from "$lib/utils/downloadFigure.js";
 
-  let { pair, figureEl } = $props();
+  let { pair, figureEl, number, progress } = $props();
   let downloading = $state(false);
 
   function downloadName(p) {
@@ -20,6 +20,8 @@
     try {
       await downloadFigureImage({
         figureEl,
+        number,
+        progress,
         title: pair.title,
         subtitle: pair.subtitle,
         source: pair.source,
