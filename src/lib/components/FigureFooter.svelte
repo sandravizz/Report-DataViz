@@ -27,6 +27,10 @@
         source: pair.source,
         filename: downloadName(pair),
       });
+    } catch (error) {
+      // Without this the export's rejections become unhandled: the button
+      // would silently flip back from "Exporting…" with no file and no trace.
+      console.error("Figure PNG export failed", error);
     } finally {
       downloading = false;
     }
