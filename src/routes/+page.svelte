@@ -115,7 +115,7 @@
           </div>
         </div>
         <div class="w-full pb-16 lg:ml-[calc(43%-440px)] lg:w-220">
-          <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10">
+          <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10 lg:pl-16">
             {#each section.paragraphs as paragraph (paragraph)}
               <p class="text-base leading-relaxed text-base-content/80">
                 {paragraph}
