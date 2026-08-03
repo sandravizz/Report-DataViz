@@ -6,6 +6,7 @@ const FONT_FAMILY = "IBM Plex Sans, Arial, sans-serif";
 const INK = "#221d18";
 const MUTED = "rgba(34, 29, 24, 0.5)";
 const MUTED_FAINT = "rgba(34, 29, 24, 0.3)";
+const RAIL_TRACK = "rgba(34, 29, 24, 0.1)";
 const BACKGROUND = "#ffffff";
 
 // Extra canvas on every side so labels that overflow the SVG's nominal
@@ -43,14 +44,27 @@ async function captureChartBleed(root, pixelRatio) {
     .split(/\s+/)
     .map(Number);
 
-  const outWidth = width + CAPTURE_BLEED * 2;
-  const outHeight = height + CAPTURE_BLEED * 2;
+  // Bleed math must derive from the viewBox (the content's own coordinate
+  // space), not the width/height attributes: those come from the root
+  // element's clientWidth/clientHeight, which can drift from the viewBox on
+  // a figure whose `.lc-root-container` sits inside extra wrapper markup
+  // (e.g. a legend row) — sizing the output canvas off the mismatched
+  // attribute stretches every stroke/pattern to fit.
+  const outWidth = vw + CAPTURE_BLEED * 2;
+  const outHeight = vh + CAPTURE_BLEED * 2;
   svg.setAttribute(
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${vw + CAPTURE_BLEED * 2} ${vh + CAPTURE_BLEED * 2}`
   );
-  svg.setAttribute("width", String(Math.round(outWidth * pixelRatio)));
-  svg.setAttribute("height", String(Math.round(outHeight * pixelRatio)));
+  // Load the SVG at its native 1:1 size (width/height attrs matching the
+  // viewBox exactly) and let createImageBitmap's own resize do the retina
+  // upscale, rather than asking the SVG rasterizer to stretch width/height
+  // attributes past the viewBox itself: a `patternUnits="userSpaceOnUse"`
+  // tile (the projection-band hatch) doesn't reliably scale with that trick
+  // across browsers and was tiling far denser than intended — plain
+  // geometry (e.g. the grid lines) scaled fine, only the pattern didn't.
+  svg.setAttribute("width", String(outWidth));
+  svg.setAttribute("height", String(outHeight));
 
   const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
     type: "image/svg+xml;charset=utf-8",
@@ -63,7 +77,11 @@ async function captureChartBleed(root, pixelRatio) {
       img.onerror = reject;
       img.src = url;
     });
-    const bitmap = await createImageBitmap(img);
+    const bitmap = await createImageBitmap(img, {
+      resizeWidth: Math.round(outWidth * pixelRatio),
+      resizeHeight: Math.round(outHeight * pixelRatio),
+      resizeQuality: "high",
+    });
     return { bitmap, width: outWidth, height: outHeight };
   } finally {
     URL.revokeObjectURL(url);
@@ -75,7 +93,15 @@ async function captureChartBleed(root, pixelRatio) {
 // via LayerChart's `.lc-root-container` marker and redrawn at their original
 // relative position, so this works unmodified for a single chart, the
 // stacked double panel, and the line-multiples grid alike.
-export async function downloadFigureImage({ figureEl, title, subtitle, source, filename }) {
+export async function downloadFigureImage({
+  figureEl,
+  number,
+  progress,
+  title,
+  subtitle,
+  source,
+  filename,
+}) {
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([
     document.fonts.load(`500 16px "IBM Plex Sans"`),
@@ -105,6 +131,8 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   );
 
   const pad = 28;
+  const numberSize = 11;
+  const railHeight = 1;
   const titleSize = 20;
   const subtitleSize = 14;
   const footerSize = 12;
@@ -119,12 +147,19 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   measure.font = `400 ${footerSize}px ${FONT_FAMILY}`;
   const sourceLines = source ? wrapLines(measure, source, textWidth) : [];
 
+  const numberLineHeight = numberSize * 1.4;
   const titleLineHeight = titleSize * 1.3;
   const subtitleLineHeight = subtitleSize * 1.4;
   const footerLineHeight = footerSize * 1.5;
 
+  // Mirrors the on-page reading-progress rail (ChartDisplay.svelte), which
+  // sits above the title — the export used to start at the title, cropping
+  // the figure number and progress bar shown on screen.
+  const numberBlockHeight = number ? numberLineHeight + 12 + railHeight + 16 : 0;
+
   const headerHeight =
     pad +
+    numberBlockHeight +
     titleLines.length * titleLineHeight +
     (subtitleLines.length ? 10 + subtitleLines.length * subtitleLineHeight : 0) +
     24;
@@ -143,8 +178,24 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
   ctx.fillRect(0, 0, cssWidth, cssHeight);
 
   ctx.textBaseline = "top";
-  ctx.fillStyle = INK;
   let y = pad;
+
+  if (number) {
+    ctx.fillStyle = MUTED;
+    ctx.font = `500 ${numberSize}px ${FONT_FAMILY}`;
+    ctx.fillText(number.toUpperCase(), pad, y);
+    y += numberLineHeight + 12;
+
+    ctx.fillStyle = RAIL_TRACK;
+    ctx.fillRect(pad, y, textWidth, railHeight);
+    if (progress != null) {
+      ctx.fillStyle = MUTED;
+      ctx.fillRect(pad, y, textWidth * Math.min(Math.max(progress, 0), 1), railHeight);
+    }
+    y += railHeight + 16;
+  }
+
+  ctx.fillStyle = INK;
   ctx.font = `500 ${titleSize}px ${FONT_FAMILY}`;
   for (const line of titleLines) {
     ctx.fillText(line, pad, y);
