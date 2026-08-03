@@ -13,6 +13,12 @@
   let activeIndex = $state(0);
   let expanded = $state(false);
   let showRail = $state(false);
+  // The rail floats over two different surfaces as you scroll: chapter
+  // sections are the theme's base-100 pink, the pinned figure sections a flat
+  // white. The hover panel can't just be transparent (it overlaps the chart's
+  // y-axis labels), so it takes the colour of whatever is behind it and lets
+  // the shadow alone lift it off the page.
+  let overChart = $state(false);
 
   // Hides the rail while Landing (above the first chapter) or Footer (below
   // the last) occupies any part of the viewport — it should only appear
@@ -29,6 +35,15 @@
       const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
       showRail = pastLanding && beforeFooter;
       if (!showRail) expanded = false;
+
+      // Which surface sits behind the rail's vertical midpoint.
+      const mid = window.innerHeight / 2;
+      overChart = Array.from(document.querySelectorAll("[data-scrolly]")).some(
+        (el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.top <= mid && rect.bottom >= mid;
+        }
+      );
     }
 
     let ticking = false;
@@ -96,7 +111,7 @@
 
 <nav
   class="fixed top-1/2 left-14 z-40 hidden -translate-y-1/2 flex-col items-start gap-4 rounded-2xl transition-[background-color,padding,box-shadow,opacity] duration-200 lg:flex {expanded
-    ? 'bg-base-200/95 px-5 py-4 shadow-lg'
+    ? `px-5 py-4 shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}`
     : ''} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
   onmouseenter={() => (expanded = true)}
   onmouseleave={() => (expanded = false)}
@@ -120,14 +135,23 @@
           ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
           : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
       ></span>
+      <!-- Width animates via a 0fr → 1fr grid column rather than a max-width:
+           a max-width has to be a fixed number, which clipped the longer
+           chapter titles. 1fr resolves to the label's own intrinsic width, so
+           the panel sizes itself to the longest title, whatever it is. -->
       <span
-        class="overflow-hidden text-sm whitespace-nowrap transition-all duration-200 {expanded
-          ? 'max-w-56 opacity-100'
-          : 'max-w-0 opacity-0'} {activeIndex === i
-          ? 'font-semibold text-primary'
-          : 'text-base-content/55 group-hover:text-base-content'}"
+        class="grid transition-[grid-template-columns,opacity] duration-200 {expanded
+          ? 'grid-cols-[1fr] opacity-100'
+          : 'grid-cols-[0fr] opacity-0'}"
       >
-        {section.title}
+        <span
+          class="overflow-hidden text-sm whitespace-nowrap transition-colors duration-200 {activeIndex ===
+          i
+            ? 'font-semibold text-primary'
+            : 'text-base-content/55 group-hover:text-base-content'}"
+        >
+          {section.title}
+        </span>
       </span>
     </button>
   {/each}
