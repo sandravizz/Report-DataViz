@@ -7,7 +7,11 @@ import { ink, colors } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };
 const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
-const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2 } };
+// Explicit color (not `currentColor`/a CSS variable) — the hatch lines are
+// drawn via an SVG presentation attribute, and the figure download's PNG
+// export re-serializes the chart's SVG outside the page's stylesheet, where
+// a CSS custom property has nothing to resolve against.
+const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2, color: ink } };
 
 // Circled point callout — one style everywhere: the ring wears the color of
 // the series it highlights (stroke + translucent fill), the connector and

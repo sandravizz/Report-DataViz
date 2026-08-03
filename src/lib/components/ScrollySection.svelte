@@ -61,7 +61,9 @@
 </script>
 
 <div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
-  <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
+  <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
+       hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>

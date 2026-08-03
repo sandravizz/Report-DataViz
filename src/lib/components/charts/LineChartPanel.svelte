@@ -70,6 +70,11 @@
             }),
           }
         : undefined,
+    // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
+    // — that CSS-variable chain is what the PNG export loses on a larger DOM
+    // (several series' worth of casing strokes), falling back to a solid
+    // black un-themed default instead of a faint 10%-opacity line.
+    grid: { stroke: "rgba(0, 0, 0, 0.1)" },
   }}
 >
   {#snippet marks({ context })}

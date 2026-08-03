@@ -85,7 +85,10 @@
           >
             <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
             {#if section.intro}
-              <p class="mt-4 text-lg leading-relaxed text-base-content/80">
+              <!-- The intro is stepped in from the heading (desktop only), so
+                   the chapter title reads as the block's left edge and the
+                   body text as a subordinate column under it. -->
+              <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
                 {section.intro}
               </p>
             {/if}
