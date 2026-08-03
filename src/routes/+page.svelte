@@ -13,7 +13,6 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Sections mirror the summary page at globaljusticeproject.wid.world/insight/summary/
   const sections = [
     {
       id: "ensuring-equality",

@@ -13,12 +13,8 @@ export default {
   number: "Figure 2",
   kind: "line",
   xKey: "year",
-  // Summing hours across the 8 regions + world is meaningless, unlike
-  // figure 13's shares which do add up.
   hideTooltipTotal: true,
   xTicks: quarterCenturyTicks(1800, 2100),
-  // The real legend would be eight identical gray swatches plus one blue, so
-  // summarize the two groupings instead (desktop tooltips name each region).
   legendItems: [
     { label: "World", color: colors.sky },
     { label: "Regions", color: colors.regionGray },
@@ -65,8 +61,6 @@ export default {
       labelYOffset: 10,
       link: { type: "beveled", radius: 15, sweep: "vertical-horizontal" },
       labelProps: { textAnchor: "start", verticalAnchor: "middle", dx: 4 },
-      // Narrow viewports: "right" runs off-screen (2025 sits at ~75% of the
-      // x-axis), so point upward into the empty area above the line bundle.
       mobile: {
         labelPlacement: "top",
         labelXOffset: 0,
