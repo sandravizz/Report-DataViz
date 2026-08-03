@@ -38,54 +38,11 @@ function wrapLines(ctx, text, maxWidth) {
 // Captures one chart's own `.lc-root-container` as a bitmap with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here) or
 // one whose SVG reports no usable dimensions at all; the caller skips those.
-// TEMPORARY DIAGNOSTIC — remove once the figure 2 export artifact is fixed.
-// Prints what the serialized SVG actually says about the two things that come
-// out solid black in the PNG (grid lines, projection hatch), next to what the
-// live DOM computes for the same elements. Also stashes the full SVG string on
-// `window.__lastFigureSvg` for follow-up inspection.
-function debugExport(root, svg, svgStr) {
-  const q = (sel) => svg.querySelector(sel);
-  const qa = (sel) => Array.from(svg.querySelectorAll(sel));
-
-  window.__lastFigureSvg = svgStr;
-  console.group("figure export debug");
-  console.log("svg layers:", root.querySelectorAll(".lc-layout-svg").length);
-  console.log("svg attrs:", {
-    width: svg.getAttribute("width"),
-    height: svg.getAttribute("height"),
-    viewBox: svg.getAttribute("viewBox"),
-    length: svgStr.length,
-  });
-
-  const liveGrid = root.querySelector("[class*='lc-grid-y-rule']");
-  if (liveGrid) {
-    const cs = getComputedStyle(liveGrid);
-    console.log("live grid — stroke:", cs.stroke, "| opacity:", cs.opacity);
-  }
-  const gridLines = qa("[class*='lc-grid-y-rule']");
-  console.log("serialized grid lines:", gridLines.length);
-  console.log("first grid line:", gridLines[0]?.outerHTML);
-
-  console.log("pattern:", q("pattern")?.outerHTML);
-  console.log(
-    "pattern-filled rects:",
-    qa("rect")
-      .filter((r) => (r.getAttribute("fill") ?? "").includes("url("))
-      .map((r) => r.outerHTML)
-  );
-  console.groupEnd();
-}
-
 async function captureChartBleed(root, scale) {
   const svgStr = getChartSvgString(root);
   if (!svgStr) return null;
 
   const svg = new DOMParser().parseFromString(svgStr, "image/svg+xml").documentElement;
-  try {
-    debugExport(root, svg, svgStr);
-  } catch (error) {
-    console.warn("figure export debug failed", error);
-  }
 
   // When a viewBox is present the bleed math must derive from it (the
   // content's own coordinate space) rather than the width/height attributes:
@@ -113,15 +70,26 @@ async function captureChartBleed(root, scale) {
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${outWidth} ${outHeight}`
   );
-  // Load the SVG at its native 1:1 size (width/height attrs matching the
-  // viewBox exactly) and let createImageBitmap's own resize do the retina
-  // upscale, rather than asking the SVG rasterizer to stretch width/height
-  // attributes past the viewBox itself: a `patternUnits="userSpaceOnUse"`
-  // tile (the projection-band hatch) doesn't reliably scale with that trick
-  // across browsers and was tiling far denser than intended — plain
-  // geometry (e.g. the grid lines) scaled fine, only the pattern didn't.
-  svg.setAttribute("width", String(outWidth));
-  svg.setAttribute("height", String(outHeight));
+  // Rasterize at the final export resolution: width/height carry the retina
+  // multiple while the viewBox above stays in CSS units, so the whole user
+  // space (strokes and `patternUnits="userSpaceOnUse"` hatch tiles alike)
+  // scales uniformly. The `<img>` is then already at output size and needs no
+  // resampling on the way to the canvas.
+  //
+  // The alternative — loading at 1:1 and letting `createImageBitmap`'s
+  // resizeWidth/resizeHeight do the upscale — is what turned every
+  // translucent stroke opaque in Chrome: its resampler mishandles alpha, so
+  // the 10%-black gridlines and the 20%-black projection hatch rasterized as
+  // solid black. Safari and Firefox largely ignore those resize options, which
+  // is why the bug only ever showed up in Chrome.
+  //
+  // Stretching width/height past the viewBox is only unsafe when there is no
+  // viewBox at all — a single-layer chart serializes with width/height alone
+  // (see layerchart/utils/download.js), and without the reconstruction above
+  // its content would stay at 1:1 in the corner of an oversized canvas, which
+  // is what made the hatch look "far denser than intended" before.
+  svg.setAttribute("width", String(Math.round(outWidth * scale)));
+  svg.setAttribute("height", String(Math.round(outHeight * scale)));
 
   const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
     type: "image/svg+xml;charset=utf-8",
@@ -136,11 +104,10 @@ async function captureChartBleed(root, scale) {
       img.onerror = () => reject(new Error("Chart SVG could not be rasterized"));
       img.src = url;
     });
-    const bitmap = await createImageBitmap(img, {
-      resizeWidth: Math.round(outWidth * scale),
-      resizeHeight: Math.round(outHeight * scale),
-      resizeQuality: "high",
-    });
+    // No resize options: the image is already at export resolution, so this
+    // just decodes it. `width`/`height` come back in CSS units — the caller
+    // composites onto a context already scaled by `exportScale`.
+    const bitmap = await createImageBitmap(img);
     return { bitmap, width: outWidth, height: outHeight };
   } finally {
     URL.revokeObjectURL(url);

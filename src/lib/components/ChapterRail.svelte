@@ -1,4 +1,6 @@
 <script>
+  import { fade } from "svelte/transition";
+
   // Chapter-nav pattern C (dot rail): a dot per chapter, current one filled;
   // hovering the rail reveals the full chapter list with the current one
   // bolded. Standardized across all three report branches (main, findevlab,
@@ -139,105 +141,111 @@
   }
 </script>
 
-<!-- The padding is permanent and only the background/shadow toggle, because the
-     hover target must not move when the panel opens. It used to gain px-5 on
-     hover, which shifted every row 20px right; combined with the rows' -m-1.5
-     (their hit box overflows the nav's left edge, so approaching from the left
-     triggers mouseenter early) that shift pulled the row out from under the
-     cursor, fired mouseleave, collapsed, slid it back — a 200ms open/close
-     shiver. Constant padding also widens the closed rail's grab zone to 20px
-     either side of the dots. left-9 + px-5 puts the dots at the same 56px as
-     the old left-14. -->
+
+<!-- THE HOVER TARGET MUST NEVER MOVE. Every shiver this rail has had was the
+     same loop: opening the panel shifted geometry out from under a cursor
+     sitting near its edge → mouseleave → collapse → geometry slid back under
+     the cursor → mouseenter, at 200ms a cycle. Horizontally it was padding
+     added on hover; vertically it's the chart lists, which push the chapter
+     rows hundreds of pixels apart as they open (and, the rail being centred,
+     drag the top row up as the bottom row goes down).
+     So the <nav> — the element the mouse handlers are on — is a fixed-size
+     invisible block that never changes, and the panel that does all the moving
+     is absolutely positioned inside it, out of flow. mouseenter/mouseleave
+     count descendants as "inside" even when they overflow, so the live hover
+     region is (fixed block ∪ panel): it can only grow when the panel opens,
+     and it only shrinks again after the cursor has already left it. A cycle is
+     no longer geometrically possible, whatever we later put in the panel.
+     h-32 w-14 is the closed rail (~52×100) plus a little slack, so the dots
+     stay comfortable to hit. -->
 <nav
-  class="fixed top-1/2 left-9 z-40 hidden -translate-y-1/2 flex-col items-start gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow,opacity] duration-200 lg:flex {expanded
-    ? `shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}`
-    : ''} {showRail ? 'opacity-100' : 'pointer-events-none opacity-0'}"
+  class="fixed top-1/2 left-9 z-40 hidden -translate-y-1/2 transition-opacity duration-200 lg:block {showRail
+    ? 'opacity-100'
+    : 'pointer-events-none opacity-0'}"
   onmouseenter={() => (expanded = true)}
   onmouseleave={() => (expanded = false)}
   aria-label="Chapter navigation"
   aria-hidden={!showRail}
 >
-  {#each sections as section, i (section.id)}
-    <!-- One flex item per chapter — dot row plus its (collapsed) chart list —
-         so the nav's gap-4 stays a chapter-to-chapter rhythm and doesn't also
-         space out the zero-height chart lists. -->
-    <div class="flex flex-col">
-      <button
-        type="button"
-        onclick={() => jumpTo(i)}
-        aria-current={activeIndex === i ? "true" : undefined}
-        class="group flex cursor-pointer items-center gap-3 p-1.5 -m-1.5"
-      >
-        <!-- Hovering a non-current chapter previews the selected state: the
-             hollow dot picks up a tint and a darker rim, the muted label goes
-             to full contrast. Two coordinated cues in the rail's own visual
-             language, so the row reads as clickable without adding a link
-             underline. The current chapter stays put — it's already there. -->
-        <span
-          class="block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-            ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
-            : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
-        ></span>
-        <!-- Width animates via a 0fr → 1fr grid column rather than a max-width:
-             a max-width has to be a fixed number, which clipped the longer
-             chapter titles. 1fr resolves to the label's own intrinsic width, so
-             the panel sizes itself to the longest title, whatever it is. -->
-        <span
-          class="grid transition-[grid-template-columns,opacity] duration-200 {expanded
-            ? 'grid-cols-[1fr] opacity-100'
-            : 'grid-cols-[0fr] opacity-0'}"
-        >
-          <span
-            class="overflow-hidden text-sm whitespace-nowrap transition-colors duration-200 {activeIndex ===
-            i
-              ? 'font-semibold text-primary'
-              : 'text-base-content/55 group-hover:text-base-content'}"
-          >
-            {section.title}
-          </span>
-        </span>
-      </button>
+  <div class="pointer-events-none h-32 w-14" aria-hidden="true"></div>
 
-      {#if section.charts?.length}
-        <!-- Collapses on BOTH axes: rows 0fr keeps the closed rail a bare
-             column of dots; cols 0fr keeps it from claiming width the reader
-             can't see — an invisible wide nav would open the panel on a stray
-             hover far to its right. Same 0fr → 1fr trick as the chapter labels.
-             Chart titles wrap inside a max-w instead of running nowrap like the
-             chapter titles do, so a long figure name can't push the panel out
-             over the chart it's pointing at. -->
-        <div
-          class="grid transition-[grid-template-columns,grid-template-rows,opacity] duration-200 {expanded
-            ? 'grid-cols-[1fr] grid-rows-[1fr] opacity-100'
-            : 'pointer-events-none grid-cols-[0fr] grid-rows-[0fr] opacity-0'}"
+  <!-- The open panel needs a definite width (w-72), because an absolutely
+       positioned box shrink-wraps against its containing block — and this one's
+       containing block is that 56px hover target, which squeezed every label to
+       a sliver. A definite width also retires the old 0fr → 1fr column trick:
+       that sized itself off the labels' intrinsic width, which an absolute box
+       can't offer, and it clipped the longer chapter titles mid-word anyway.
+       Labels wrap inside the fixed width instead, and are only rendered while
+       open, so nothing has to be collapsed to zero.
+       Padding is permanent: when it toggled, the rows shifted 20px right on
+       open — the horizontal half of the same shiver. left-9 + px-5 keeps the
+       dots on the same 56px line as the old left-14. -->
+  <div
+    class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {expanded
+      ? `w-72 shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}`
+      : 'w-max'}"
+  >
+    {#each sections as section, i (section.id)}
+      <!-- One flex item per chapter — dot row plus its chart list — so the
+           panel's gap-4 stays a chapter-to-chapter rhythm. -->
+      <div class="flex flex-col">
+        <button
+          type="button"
+          onclick={() => jumpTo(i)}
+          aria-current={activeIndex === i ? "true" : undefined}
+          class="group flex cursor-pointer items-start gap-3 p-1.5 -m-1.5 text-left"
         >
-          <div class="overflow-hidden">
-            <ul
-              class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+          <!-- Hovering a non-current chapter previews the selected state: the
+               hollow dot picks up a tint and a darker rim, the muted label goes
+               to full contrast. Two coordinated cues in the rail's own visual
+               language, so the row reads as clickable without adding a link
+               underline. The current chapter stays put — it's already there.
+               mt-0.5 optically centres the dot on the label's first line now
+               that a long title can wrap to two. -->
+          <span
+            class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
+              ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
+          ></span>
+          {#if expanded}
+            <span
+              transition:fade={{ duration: 120 }}
+              class="text-sm leading-snug transition-colors duration-200 {activeIndex ===
+              i
+                ? 'font-semibold text-primary'
+                : 'text-base-content/55 group-hover:text-base-content'}"
             >
-              {#each section.charts as chart, j (chart.number ?? j)}
-                <li>
-                  <button
-                    type="button"
-                    tabindex={expanded ? 0 : -1}
-                    onclick={() => jumpToChart(section.id, j)}
-                    aria-current={activeChart === `${section.id}:${j}`
-                      ? "true"
-                      : undefined}
-                    class="max-w-64 cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
-                    `${section.id}:${j}`
-                      ? 'font-medium text-primary'
-                      : 'text-base-content/45 hover:text-base-content'}"
-                  >
-                    <span class="opacity-70">{chart.number}</span>
-                    {chart.title}
-                  </button>
-                </li>
-              {/each}
-            </ul>
-          </div>
-        </div>
-      {/if}
-    </div>
-  {/each}
+              {section.title}
+            </span>
+          {/if}
+        </button>
+
+        {#if expanded && section.charts?.length}
+          <ul
+            transition:fade={{ duration: 120 }}
+            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+          >
+            {#each section.charts as chart, j (chart.number ?? j)}
+              <li>
+                <button
+                  type="button"
+                  onclick={() => jumpToChart(section.id, j)}
+                  aria-current={activeChart === `${section.id}:${j}`
+                    ? "true"
+                    : undefined}
+                  class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
+                  `${section.id}:${j}`
+                    ? 'font-medium text-primary'
+                    : 'text-base-content/45 hover:text-base-content'}"
+                >
+                  <span class="opacity-70">{chart.number}</span>
+                  {chart.title}
+                </button>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+    {/each}
+  </div>
 </nav>
