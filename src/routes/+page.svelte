@@ -48,13 +48,13 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/share-image.png" />
+  <meta property="og:image" content="{page.url.origin}/share-image.jpg" />
   <meta property="og:image:width" content="1712" />
   <meta property="og:image:height" content="1517" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/share-image.png" />
+  <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
 </svelte:head>
 
 <Header links={tocLinks} />
