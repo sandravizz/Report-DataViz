@@ -42,4 +42,21 @@
 @theme {
   --font-sans: 'Barlow', sans-serif;
   --font-display: 'Kapra Neue Expanded', 'Barlow', sans-serif;
+
+  /* The whole scrolly system is keyed to `lg` — chart position, description
+     column, chapter rail, the mobile "Interpretation" modal button — so this
+     one number decides where the side-by-side desktop layout takes over from
+     the stacked tablet one. It is deliberately NOT Tailwind's stock 1024px.
+     The desktop layout is built from two fixed offsets (ChartDisplay's
+     `left-[43%] w-200`, DescriptionColumn's `left-[calc(43%+464px)] right-8`),
+     which means the description column is whatever is left over:
+     0.57 × viewport − 544px. Below ~1400px that leftover collapses — 185px of
+     text at 1280, 83px at 1100 — while the 800px chart, which never shrinks,
+     slides left until it sits under the chapter rail at 56px. Rather than make
+     the chart elastic (tried; it spoils the wide-desktop composition), the
+     tablet layout simply stays in charge until there is genuinely room:
+     1400px leaves the description ~254px and the chart's left edge at 202px.
+     Nothing else in the project uses lg except Header's nav gap; layerchart
+     ships no responsive classes, so it is unaffected. */
+  --breakpoint-lg: 1400px;
 }

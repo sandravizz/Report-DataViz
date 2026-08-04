@@ -27,6 +27,10 @@
         source: pair.source,
         filename: downloadName(pair),
       });
+    } catch (error) {
+      // Without this the export's rejections become unhandled: the button
+      // would silently flip back from "Exporting…" with no file and no trace.
+      console.error("Figure PNG export failed", error);
     } finally {
       downloading = false;
     }
@@ -37,9 +41,17 @@
   class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
+  <!-- Hover lift borrowed from ChapterRail's panel: instead of darkening in
+       place, the control takes the colour of the surface behind it — the
+       figure surface (base-100, on ScrollySection's data-scrolly block) — and
+       rises on a shadow-lg. Painted with `!` utilities rather than daisyUI's
+       --btn-* variables: .btn composes box-shadow out of --btn-inset and
+       --btn-shadow and .btn-ghost zeroes them, so a plain shadow utility
+       loses. .btn's own 200ms transition on background-color/box-shadow
+       already matches the rail's. -->
   <button
     type="button"
-    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:[--btn-bg:var(--color-base-200)] hover:[--btn-border:transparent] hover:[--btn-noise:none] hover:[--btn-shadow:none]"
+    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:border-transparent! hover:bg-base-100! hover:shadow-lg!"
     disabled={downloading}
     onclick={handleDownload}
   >
@@ -49,11 +61,16 @@
     {downloading ? "Exporting…" : "PNG"}
   </button>
 </div>
+<!-- Same lift as the PNG button. self-start is what keeps the pill around the
+     text: this <a> is a flex item of ChartDisplay's column, so the default
+     stretch blew its hover surface across the figure's full width. The pill's
+     padding is cancelled by -ml-2.5 and replaces the old mt-1, so the wordmark
+     sits exactly where it did before — only the hover surface is new. -->
 <a
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="mt-1 inline-block font-sans text-[11px] tracking-wide text-base-content/30 hover:text-base-content/50"
+  class="-ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/30 transition-[background-color,box-shadow,color] duration-200 hover:bg-base-100 hover:text-base-content/50 hover:shadow-lg"
 >
   sandraviz.com
 </a>

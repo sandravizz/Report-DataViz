@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -61,15 +61,13 @@
     // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
     // figures whose x values aren't plain years (e.g. figure 2's IDA period
     // codes) override the header via `tooltipHeaderFormat`.
-    tooltip:
-      pair.valueSuffix || pair.tooltipHeaderFormat
-        ? {
-            ...(pair.valueSuffix && { item: { format: formatValue } }),
-            ...(pair.tooltipHeaderFormat && {
-              header: { format: pair.tooltipHeaderFormat },
-            }),
-          }
-        : undefined,
+    // Header is the year alone — the data is annual, so LayerChart's default
+    // "1 January 2035" is precision the figures never had. A figure can still
+    // override it with pair.tooltipHeaderFormat.
+    tooltip: {
+      header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+      ...(pair.valueSuffix && { item: { format: formatValue } }),
+    },
     // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
     // — that CSS-variable chain is what the PNG export loses on a larger DOM
     // (several series' worth of casing strokes), falling back to a solid

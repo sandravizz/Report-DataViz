@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
@@ -107,12 +107,17 @@
           ticks: excludeZeroTick,
           format: pair.percent ? "percentRound" : formatValue,
         },
-        tooltip: pair.percent
-          ? // Series carry share values; a total row (always 100%) is noise.
-            { item: { format: "percentRound" }, hideTotal: true }
-          : pair.valueSuffix
-            ? { item: { format: formatValue } }
-            : undefined,
+        // Header is the year alone — the data is annual, so LayerChart's
+        // default "1 January 2035" is precision the figures never had.
+        tooltip: {
+          header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+          ...(pair.percent
+            ? // Series carry share values; a total row (always 100%) is noise.
+              { item: { format: "percentRound" }, hideTotal: true }
+            : pair.valueSuffix
+              ? { item: { format: formatValue } }
+              : {}),
+        },
       }}
     >
       {#snippet aboveMarks()}

@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, Area, AreaChart } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -97,15 +97,13 @@
   props={{
     xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
-    tooltip:
-      pair.valueSuffix || pair.tooltipHeaderFormat
-        ? {
-            ...(pair.valueSuffix && { item: { format: formatValue } }),
-            ...(pair.tooltipHeaderFormat && {
-              header: { format: pair.tooltipHeaderFormat },
-            }),
-          }
-        : undefined,
+    // Header is the year alone — the data is annual, so LayerChart's default
+    // "1 January 2035" is precision the figures never had. A figure can still
+    // override it with pair.tooltipHeaderFormat.
+    tooltip: {
+      header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+      ...(pair.valueSuffix && { item: { format: formatValue } }),
+    },
   }}
 >
   {#snippet marks({ context })}
