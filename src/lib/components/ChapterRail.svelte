@@ -67,18 +67,6 @@
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
 
-      // Active chapter = the last one whose top has crossed the midline. A
-      // chapter's figures are siblings that FOLLOW it in the document, so this
-      // keeps the chapter lit for the whole run of its figures — in both
-      // directions. (Asking "which chapter is on screen?" instead can't answer
-      // while a figure is pinned, and holding the previous answer only reads
-      // correctly scrolling down: coming back up it names the chapter below.)
-      let current = 0;
-      chapterEls.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top <= mid) current = i;
-      });
-      activeIndex = current;
-
       // Which surface sits behind the rail's vertical midpoint.
       overChart = Array.from(document.querySelectorAll("[data-scrolly]")).some(
         (el) => {
@@ -93,8 +81,8 @@
       // anchor is the same rule, and the rail lights the new figure at the
       // start of its scroll. ("Last anchor scrolled past" instead waited for
       // the step's midpoint, half a screen after the chart had changed.)
+      let anchor = null;
       if (overChart) {
-        let anchor = null;
         let nearest = Infinity;
         for (const el of document.querySelectorAll("[data-chart-anchor]")) {
           const distance = Math.abs(el.getBoundingClientRect().top);
@@ -103,12 +91,29 @@
             anchor = el;
           }
         }
-        activeChart = anchor
-          ? `${anchor.dataset.chapter}:${anchor.dataset.step}`
-          : null;
-      } else {
-        activeChart = null;
       }
+      activeChart = anchor
+        ? `${anchor.dataset.chapter}:${anchor.dataset.step}`
+        : null;
+
+      // Active chapter. A figure ALWAYS belongs to the chapter that owns it,
+      // whichever direction the reader arrived from, so while a figure is
+      // under the rail the answer is simply that figure's data-chapter — read
+      // off the anchor rather than inferred from where the chapter sections
+      // happen to sit. Only between figures (chapter text on screen) does
+      // position decide: the last chapter whose top has crossed the midline.
+      // Position alone was the bug — a chapter's own section scrolls past
+      // long before its figures are done, so which chapter that "last one
+      // above the midline" names depends on the scroll direction.
+      let current = 0;
+      chapterEls.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top <= mid) current = i;
+      });
+      if (anchor) {
+        const owner = sections.findIndex((s) => s.id === anchor.dataset.chapter);
+        if (owner !== -1) current = owner;
+      }
+      activeIndex = current;
     }
 
     let ticking = false;

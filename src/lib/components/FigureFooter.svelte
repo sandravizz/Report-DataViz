@@ -61,16 +61,6 @@
     {downloading ? "Exporting…" : "PNG"}
   </button>
 </div>
-<!-- Same lift as the PNG button. self-start is what keeps the pill around the
-     text: this <a> is a flex item of ChartDisplay's column, so the default
-     stretch blew its hover surface across the figure's full width. The pill's
-     padding is cancelled by -ml-2.5 and replaces the old mt-1, so the wordmark
-     sits exactly where it did before — only the hover surface is new. -->
-<a
-  href="https://sandraviz.com"
-  target="_blank"
-  rel="noopener"
-  class="-ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/30 transition-[background-color,box-shadow,color] duration-200 hover:bg-base-100 hover:text-base-content/50 hover:shadow-lg"
->
-  sandraviz.com
-</a>
+<!-- No per-figure sandraviz.com wordmark on this branch: FDL is a client
+     report, and the credit lives once in the page footer instead. The other
+     branches keep it (see main/template's FigureFooter). -->
