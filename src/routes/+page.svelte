@@ -57,6 +57,18 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
+  <!-- Absolute URLs: scrapers (Slack, WhatsApp, LinkedIn) don't resolve
+       relative image paths, hence the origin prefix. TODO: static/share-image.jpg
+       does not exist on this branch yet — drop an IW-Wohnindex share card there
+       (1200×630 is the safe default; update the width/height below if the file
+       Sandra supplies has other dimensions). -->
+  <meta property="og:image" content="{page.url.origin}/share-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={meta.title} />
+  <meta name="twitter:description" content={meta.description} />
+  <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
 </svelte:head>
 
 <Header links={tocLinks} />
