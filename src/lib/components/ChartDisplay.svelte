@@ -36,8 +36,8 @@
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
-  <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
-       title, so titles are no longer unique. -->
+  <!-- Keyed by index, not by number or title: the animated steps of
+       Abbildung 2-1 deliberately share both. -->
   {#each pairs as pair, i (i)}
     <div
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"

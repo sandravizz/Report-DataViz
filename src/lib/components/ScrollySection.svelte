@@ -71,7 +71,7 @@
        reads their positions to tell which figure is showing. Keyed by index,
        not by number: this report's animated steps deliberately share one
        figure number ("Abbildung 2-1 (animiert)"). -->
-  {#each pairs as pair, i (i)}
+  {#each pairs as _, i (i)}
     <div
       id="{sectionId}-chart-{i}"
       data-chart-anchor
