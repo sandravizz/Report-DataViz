@@ -1,4 +1,5 @@
-<!-- Closing panel — bookends Landing (same layout, mirrored turbine image).
+<!-- Closing panel — text only, no hero echo: the turbine illustration belongs to
+     Landing and reads as decoration here.
      `disclosure` is an optional snippet for report-specific licensing text,
      kept out of this component so Footer stays reusable across reports. -->
 <script>
@@ -7,38 +8,43 @@
 
 <footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center md:flex-row md:items-center md:gap-10"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center"
   >
     <div
-      class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
+      class="max-w-3xl px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:py-0 md:pl-24"
     >
       <!-- Portrait and the report's own logo side by side: the credit line
            reads as "this work, for that client" before the copy says it. -->
       <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
         <img
           src="/sandra-portrait.jpg"
-          alt="Portrait of Sandra"
+          alt="Porträt von Sandra"
           class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
         />
         <img
           src="/iw-logo.svg"
-          alt="IW — Institut der deutschen Wirtschaft"
+          alt="IW Institut der deutschen Wirtschaft"
           class="h-8 w-auto sm:h-10"
         />
       </div>
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
-        I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports for the web, mobile, and static downloads too.
+        Ich bin Sandra, Designerin und Entwicklerin für Datenvisualisierung. Ich setze
+        Studien und Reports als interaktive Webpublikationen um, in denen die
+        fachliche Interpretation der Daten bereits in den Grafiken steckt. So werden
+        die Ergebnisse schneller und genauer erfasst.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        This is one example of what that looks like in practice. If you've got a report that deserves to be more than a PDF, let's talk.
+        Diese Demo zeigt, wie der IW-Wohnindex als interaktiver Report aussehen könnte:
+        dieselben Daten, dieselben Befunde, aufbereitet zum Lesen im Web. Wenn Sie
+        darüber sprechen möchten, wie eine vollständige Fassung aussehen könnte, melden
+        Sie sich gern.
       </p>
       <a
         href="https://sandraviz.com"
         target="_blank"
         rel="noopener"
         class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
-        >Get in touch →</a
+        >Kontakt aufnehmen →</a
       >
       <div class="mt-4 flex items-center gap-5 sm:mt-6">
         <a
@@ -64,16 +70,6 @@
           </svg>
         </a>
       </div>
-    </div>
-
-    <!-- Same turbine illustration as Landing, mirrored. Hidden on phones —
-         the bio/CTA/links matter more than a hero echo there. -->
-    <div class="hidden md:flex md:flex-1 md:justify-end">
-      <img
-        src="/windmill_row_grid_square.svg"
-        alt="Illustration of a row of wind turbines receding toward the horizon, mirrored"
-        class="w-full scale-x-[-1]"
-      />
     </div>
   </div>
 
