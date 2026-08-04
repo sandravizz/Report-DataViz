@@ -9,8 +9,21 @@
   // indent under their chapter (as +page.svelte nests them in `section.charts`).
   let { sections = [] } = $props();
 
+  const FADE_MS = 120;
+  // The width has to be released only once the fading labels are really gone,
+  // and a fade that is scheduled for 120ms ends a frame or two later. Anything
+  // shorter than the outro plus that slack drops the box to max-content while
+  // wide labels are still in it: they stop wrapping, every two-line row becomes
+  // one, and the dots hop for those frames before settling.
+  const WIDTH_HOLD_MS = FADE_MS + 80;
+
   let activeIndex = $state(0);
   let expanded = $state(false);
+  // Open geometry, held across the close so only ONE layout change happens —
+  // the labels leaving. Paint (bg + shadow) still follows `expanded`, fading
+  // out on the box's own transition.
+  let boxOpen = $state(false);
+  let closeTimer;
   let showRail = $state(false);
   // The panel overlaps the chart's y-axis labels, so it can't be transparent;
   // instead it matches whichever surface is behind it — base-100 pink over a
@@ -20,10 +33,22 @@
   // off ScrollySection's anchors rather than redoing its progress maths.
   let activeChart = $state(null);
 
+  function openPanel() {
+    clearTimeout(closeTimer);
+    expanded = true;
+    boxOpen = true;
+  }
+
+  function closePanel() {
+    clearTimeout(closeTimer);
+    expanded = false;
+    closeTimer = setTimeout(() => (boxOpen = false), WIDTH_HOLD_MS);
+  }
+
   // Everything the rail shows is derived from one scroll tick of live
   // getBoundingClientRect() reads — nothing is cached up front, so no position
-  // can go stale. Visibility: the rail shows only while the reader is inside a
-  // chapter, hidden whenever Landing or Footer is on screen.
+  // can go stale. Visibility: the rail shows once chapter 1 reaches the top and
+  // stays up until the footer reaches the rail itself.
   $effect(() => {
     const chapterEls = sections.map((s) => document.getElementById(s.id));
     const firstEl = chapterEls[0];
@@ -31,12 +56,16 @@
     if (!firstEl || !footerEl) return;
 
     function update() {
-      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
-      const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
-      showRail = pastLanding && beforeFooter;
-      if (!showRail) expanded = false;
-
       const mid = window.innerHeight / 2;
+
+      // The footer test is against the rail's own line, not the viewport
+      // bottom: the last figure is pinned right up against the footer, so
+      // "footer not on screen at all" blanked the rail — including the dots —
+      // for the whole of that figure. It hides once the footer reaches it.
+      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      const beforeFooter = footerEl.getBoundingClientRect().top > mid;
+      showRail = pastLanding && beforeFooter;
+      if (!showRail && expanded) closePanel();
 
       // Active chapter = the last one whose top has crossed the midline. A
       // chapter's figures are siblings that FOLLOW it in the document, so this
@@ -58,12 +87,21 @@
         }
       );
 
-      // The last anchor scrolled past is the figure on screen — only true while
-      // a figure is pinned; in chapter text it belongs to the chapter before.
+      // The anchor NEAREST the viewport top is the figure on screen. Each
+      // anchor sits at the scroll offset where its step is exactly centred,
+      // and ScrollySection switches charts by rounding progress — so nearest
+      // anchor is the same rule, and the rail lights the new figure at the
+      // start of its scroll. ("Last anchor scrolled past" instead waited for
+      // the step's midpoint, half a screen after the chart had changed.)
       if (overChart) {
         let anchor = null;
+        let nearest = Infinity;
         for (const el of document.querySelectorAll("[data-chart-anchor]")) {
-          if (el.getBoundingClientRect().top <= 1) anchor = el;
+          const distance = Math.abs(el.getBoundingClientRect().top);
+          if (distance < nearest) {
+            nearest = distance;
+            anchor = el;
+          }
         }
         activeChart = anchor
           ? `${anchor.dataset.chapter}:${anchor.dataset.step}`
@@ -90,6 +128,7 @@
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", update);
+      clearTimeout(closeTimer);
     };
   });
 
@@ -120,8 +159,8 @@
   class="fixed top-1/2 left-9 z-40 hidden -translate-y-1/2 transition-opacity duration-200 lg:block {showRail
     ? 'opacity-100'
     : 'pointer-events-none opacity-0'}"
-  onmouseenter={() => (expanded = true)}
-  onmouseleave={() => (expanded = false)}
+  onmouseenter={openPanel}
+  onmouseleave={closePanel}
   aria-label="Chapter navigation"
   aria-hidden={!showRail}
 >
@@ -134,9 +173,9 @@
        20px right on open, the horizontal half of the shiver above. left-9 +
        px-5 puts the dots on the same 56px line as a bare left-14. -->
   <div
-    class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {expanded
-      ? `w-72 shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}`
-      : 'w-max'}"
+    class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
+      ? 'w-72'
+      : 'w-max'} {expanded ? `shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}` : ''}"
   >
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a
@@ -159,7 +198,7 @@
           ></span>
           {#if expanded}
             <span
-              transition:fade={{ duration: 120 }}
+              transition:fade={{ duration: FADE_MS }}
               class="text-sm leading-snug transition-colors duration-200 {activeIndex ===
               i
                 ? 'font-semibold text-primary'
@@ -172,7 +211,7 @@
 
         {#if expanded && section.charts?.length}
           <ul
-            transition:fade={{ duration: 120 }}
+            transition:fade={{ duration: FADE_MS }}
             class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
           >
             {#each section.charts as chart, j (chart.number ?? j)}
