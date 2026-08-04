@@ -12,11 +12,20 @@
     <div
       class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
     >
-      <img
-        src="/sandra-portrait.jpg"
-        alt="Portrait of Sandra"
-        class="mb-4 h-20 w-20 rounded-full object-cover sm:mb-6 sm:h-28 sm:w-28"
-      />
+      <!-- Portrait and the report's own logo side by side: the credit line
+           reads as "this work, for that client" before the copy says it. -->
+      <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
+        <img
+          src="/sandra-portrait.jpg"
+          alt="Portrait of Sandra"
+          class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
+        />
+        <img
+          src="/iw-logo.svg"
+          alt="IW — Institut der deutschen Wirtschaft"
+          class="h-8 w-auto sm:h-10"
+        />
+      </div>
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
         visualization-first reports for the web, mobile, and static downloads too.

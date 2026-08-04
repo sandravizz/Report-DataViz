@@ -31,9 +31,10 @@
   ];
 </script>
 
-<header
-  class="fixed inset-x-0 top-0 z-50 border-b border-base-content/10 bg-base-100/80 backdrop-blur-sm"
->
+<!-- Absolute, never fixed or sticky: the header belongs to the landing screen
+     and scrolls away with it, leaving the pinned figures the full viewport.
+     z-20 keeps it under the chapter rail's z-40. -->
+<header class="absolute inset-x-0 top-0 z-20 bg-base-100/90 backdrop-blur-sm">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
     <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">
       <img src="/iw-logo.svg" alt="IW — Institut der deutschen Wirtschaft" class="h-8 w-auto sm:h-9" />
@@ -52,7 +53,7 @@
           </div>
           <div
             tabindex="-1"
-            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans shadow-lg"
+            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans text-base-content shadow-lg"
           >
             <div
               class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80"
@@ -94,7 +95,7 @@
         </div>
         <ul
           tabindex="-1"
-          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans shadow-lg"
+          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans text-base-content shadow-lg"
         >
           {#each links as link (link.href)}
             <li>
