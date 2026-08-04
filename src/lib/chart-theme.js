@@ -30,6 +30,16 @@ export function yearTickFormat(innerWidth, firstYear) {
   };
 }
 
+// Tooltip header for a time x axis: the year alone. The x values are Dates
+// pinned to 1 January, so LayerChart's default header spells that out
+// ("1 January 2035") — a day and a month the annual data never had. Values
+// that aren't Dates (categorical bars) pass through untouched, so a panel can
+// hand this to every tooltip it renders. Figures override via
+// pair.tooltipHeaderFormat.
+export function tooltipHeaderYear(d) {
+  return d instanceof Date ? String(d.getFullYear()) : d;
+}
+
 // Default y ticks when a figure doesn't pass its own pair.yTicks: the
 // scale's own candidates with 0 dropped (redundant against the flush axis).
 // `count` forwards to scale.ticks() for a specific step.

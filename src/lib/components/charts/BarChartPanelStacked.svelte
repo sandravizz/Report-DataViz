@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
-  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { ink, brand } from "$lib/colors";
 
   let { pair } = $props();
@@ -174,13 +174,18 @@
       ticks: hideYAxis ? [] : yTicks,
       format: hideYAxis ? () => "" : pair.percent ? "percentRound" : formatValue,
     },
-    tooltip: pair.percent
-      ? // Series carry share values; a total row (always 100%) is noise.
-        { item: { format: "percentRound" }, hideTotal: true }
-      : pair.valueSuffix
-        ? { item: { format: formatValue } }
-        : // Applies to both categories and the total row (same item config).
-          { item: { format: (d) => d.toFixed(2) } },
+    // Header is the year alone — the data is annual, so LayerChart's default
+    // "1 January 2035" is precision the figures never had.
+    tooltip: {
+      header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+      ...(pair.percent
+        ? // Series carry share values; a total row (always 100%) is noise.
+          { item: { format: "percentRound" }, hideTotal: true }
+        : pair.valueSuffix
+          ? { item: { format: formatValue } }
+          : // Applies to both categories and the total row (same item config).
+            { item: { format: (d) => d.toFixed(2) } }),
+    },
   }}
 >
   {#snippet belowMarks()}

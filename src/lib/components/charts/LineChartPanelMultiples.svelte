@@ -5,7 +5,7 @@
   // tablets, all four in a row on desktop.
   import { Area, AnnotationPoint, LineChart, Spline, defaultChartPadding } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   const isMobile = (width) => width < 1024;
 
@@ -102,7 +102,12 @@
           props={{
             xAxis: { ...xAxisProps, ticks: pair.xTicks, format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
             yAxis: yAxisConfig(i, pair.panels.length, innerWidth),
-            tooltip: pair.valueSuffix ? { item: { format: formatValue } } : undefined,
+            // Header is the year alone — the data is annual, so LayerChart's
+            // default "1 January 2035" is precision the figures never had.
+            tooltip: {
+              header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+              ...(pair.valueSuffix && { item: { format: formatValue } }),
+            },
           }}
         >
           {#snippet marks()}

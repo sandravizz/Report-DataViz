@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -152,12 +152,13 @@
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
     // Line charts plot trends (often an index), never a stack — a summed
     // "total" row is meaningless here, unlike the stacked bar tooltip.
+    // Header is the year alone — the data is annual, so LayerChart's default
+    // "1 January 2035" is precision the figures never had. A figure can still
+    // override it with pair.tooltipHeaderFormat.
     tooltip: {
       hideTotal: true,
+      header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
       ...(pair.valueSuffix && { item: { format: formatValue } }),
-      ...(pair.tooltipHeaderFormat && {
-        header: { format: pair.tooltipHeaderFormat },
-      }),
     },
     // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
     // — that CSS-variable chain is what the PNG export loses on a larger DOM

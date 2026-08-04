@@ -2,7 +2,9 @@
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  let { pairs } = $props();
+  // sectionId is the owning chapter's id: it namespaces the per-chart scroll
+  // anchors below so ChapterRail can link to an individual figure.
+  let { pairs, sectionId = "" } = $props();
 
   let containerEl;
 
@@ -59,7 +61,29 @@
   );
 </script>
 
-<div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
+<div
+  bind:this={containerEl}
+  class="relative"
+  style:height="{(pairs.length - 1) * 80 + 140}vh"
+>
+  <!-- One invisible scroll target per chart step. A step is active when the
+       page has scrolled (progress × (containerHeight − vh)) past the container
+       top, so an anchor parked at exactly that offset lands the right chart on
+       screen with a plain scrollIntoView({ block: "start" }) — no scroll maths
+       duplicated in the caller. ChapterRail links its hover panel to these and
+       reads their positions to tell which figure is showing. -->
+  {#each pairs as pair, i (pair.number ?? i)}
+    <div
+      id="{sectionId}-chart-{i}"
+      data-chart-anchor
+      data-chapter={sectionId}
+      data-step={i}
+      class="pointer-events-none absolute left-0 h-px w-px"
+      style:top={pairs.length > 1
+        ? `calc(${i / (pairs.length - 1)} * (100% - 100vh))`
+        : "0px"}
+    ></div>
+  {/each}
   <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
        hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
