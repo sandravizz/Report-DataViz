@@ -8,6 +8,7 @@
       "An interactive report on the IW-Wohnindex Q2 2026 (Institut der deutschen Wirtschaft): German residential property prices and listing volumes. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
+  import Interlude from "$lib/components/Interlude.svelte";
   import Header from "$lib/components/Header.svelte";
   import ChapterRail from "$lib/components/ChapterRail.svelte";
   import Landing from "$lib/components/Landing.svelte";
@@ -39,6 +40,19 @@
         "Die Wohnkosten steigen damit inzwischen wieder recht kontinuierlich in beiden Marktsegmenten. Während sich die Kaufpreise bislang nur leicht erhöhen, setzen die Angebotsmieten ihren deutlich stärkeren Anstieg fort. Gegenüber dem Vorjahresquartal beträgt das Plus 4,0 Prozent, gegenüber dem Vorquartal 1,3 Prozent.",
       ],
       charts: [figures.nationalIndex, ...figures.nationalIndexAnimatedSteps],
+      // Abbildung 2-1 runs twice here: finished, then rebuilt step by step.
+      // `after` is how many figures precede the note, so the split below stays
+      // right if figures are added or reordered.
+      interlude: {
+        after: 1,
+        kicker: "Hinweis zur Demo",
+        title: "Dieselbe Abbildung, zweimal gezeigt",
+        paragraphs: [
+          "Abbildung 2-1 steht oben so, wie sie auch im Report steht: alle drei Reihen auf einmal.",
+          "Auf den nächsten Bildschirmen entsteht dieselbe Abbildung noch einmal, beim Scrollen Schritt für Schritt: zuerst die Angebotsmieten, dann die Eigentumswohnungen, dann die Ein- und Zweifamilienhäuser. Die Daten sind identisch, vorgegeben ist nur die Reihenfolge, in der sie gelesen werden.",
+          "In einer fertigen Publikation fiele die Wahl pro Abbildung auf eine der beiden Varianten. Hier stehen beide nebeneinander, damit der Unterschied direkt vergleichbar ist.",
+        ],
+      },
     },
   ].map((section, i) => ({
     ...section,
@@ -100,7 +114,21 @@
         </div>
       </div>
     </section>
-    {#if section.charts.length > 0}
+    <!-- An `interlude` splits the chapter's figures into two scrolly runs with
+         a text pause between them; the second run continues the figure
+         numbering via indexOffset (see ScrollySection). -->
+    {#if section.interlude}
+      <ScrollySection
+        pairs={section.charts.slice(0, section.interlude.after)}
+        sectionId={section.id}
+      />
+      <Interlude {...section.interlude} />
+      <ScrollySection
+        pairs={section.charts.slice(section.interlude.after)}
+        sectionId={section.id}
+        indexOffset={section.interlude.after}
+      />
+    {:else if section.charts.length > 0}
       <ScrollySection pairs={section.charts} sectionId={section.id} />
     {/if}
   {/each}

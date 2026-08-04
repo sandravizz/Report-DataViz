@@ -4,7 +4,11 @@
 
   // sectionId is the owning chapter's id: it namespaces the per-chart scroll
   // anchors below so ChapterRail can link to an individual figure.
-  let { pairs, sectionId = "" } = $props();
+  // indexOffset is how many of the chapter's figures ran before this instance.
+  // A chapter split by an Interlude renders two ScrollySections but is still
+  // ONE list of figures to ChapterRail, so the anchors have to keep counting
+  // from where the first run stopped instead of restarting at 0.
+  let { pairs, sectionId = "", indexOffset = 0 } = $props();
 
   let containerEl;
 
@@ -73,10 +77,10 @@
        figure number ("Abbildung 2-1 (animiert)"). -->
   {#each pairs as _, i (i)}
     <div
-      id="{sectionId}-chart-{i}"
+      id="{sectionId}-chart-{i + indexOffset}"
       data-chart-anchor
       data-chapter={sectionId}
-      data-step={i}
+      data-step={i + indexOffset}
       class="pointer-events-none absolute left-0 h-px w-px"
       style:top={pairs.length > 1
         ? `calc(${i / (pairs.length - 1)} * (100% - 100vh))`
