@@ -188,6 +188,12 @@
             }),
           }
         : undefined,
+    // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
+    // — that CSS-variable chain is what the PNG export loses once the chart's
+    // SVG is re-serialized outside the page's stylesheet, falling back to a
+    // solid un-themed black instead of a faint 10%-ink line. Same value the
+    // default resolves to on screen: 10% of --color-base-content (#1b4160).
+    grid: { stroke: "rgba(27, 65, 96, 0.1)" },
   }}
 >
   {#snippet marks({ context })}

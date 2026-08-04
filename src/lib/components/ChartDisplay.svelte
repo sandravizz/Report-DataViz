@@ -89,7 +89,7 @@
         {/if}
       </div>
 
-      <FigureFooter {pair} figureEl={figureRefs[i]} />
+      <FigureFooter {pair} figureEl={figureRefs[i]} number={headerLabel} progress={stepProgress} />
     </div>
   {/each}
 
