@@ -1,10 +1,10 @@
 <script>
-  import { ITEM_H } from "$lib/scroll-animation";
-  import ScrollColumn from "./ScrollColumn.svelte";
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  let { pairs } = $props();
+  // sectionId is the owning chapter's id: it namespaces the per-chart scroll
+  // anchors below so ChapterRail can link to an individual figure.
+  let { pairs, sectionId = "" } = $props();
 
   let containerEl;
 
@@ -60,25 +60,33 @@
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
-  let centerOffset = $derived(vh / 2 - ITEM_H / 2);
-  let listY = $derived(centerOffset - progress * (pairs.length - 1) * ITEM_H);
-
-  // Lets the mobile figure-tab strip jump directly to a figure by scrolling
-  // the window to the scroll position that would naturally produce that
-  // activeIndex — scroll position stays the single source of truth.
-  function jumpTo(index) {
-    const denom = pairs.length - 1;
-    if (denom <= 0) return;
-    const targetProgress = index / denom;
-    const targetScrollY = containerTop + targetProgress * (containerHeight - vh);
-    window.scrollTo({ top: targetScrollY, behavior: "smooth" });
-  }
 </script>
 
-<div bind:this={containerEl} style:height="{(pairs.length - 1) * 80 + 140}vh">
-  <div class="sticky top-0 h-screen overflow-hidden bg-base-100">
-    <ScrollColumn items={pairs.map((p) => p.number)} {activeIndex} y={listY} align="left" />
-    <ChartDisplay {pairs} {activeIndex} {inView} {jumpTo} />
+<div bind:this={containerEl} class="relative" style:height="{(pairs.length - 1) * 80 + 140}vh">
+  <!-- One invisible scroll target per chart step. A step is active when the
+       page has scrolled (progress × (containerHeight − vh)) past the container
+       top, so an anchor parked at exactly that offset lands the right chart on
+       screen with a plain scrollIntoView({ block: "start" }) — no scroll maths
+       duplicated in the caller. ChapterRail links its hover panel to these and
+       reads their positions to tell which figure is showing. Keyed by index,
+       not by number: this report's animated steps deliberately share one
+       figure number ("Abbildung 2-1 (animiert)"). -->
+  {#each pairs as pair, i (i)}
+    <div
+      id="{sectionId}-chart-{i}"
+      data-chart-anchor
+      data-chapter={sectionId}
+      data-step={i}
+      class="pointer-events-none absolute left-0 h-px w-px"
+      style:top={pairs.length > 1
+        ? `calc(${i / (pairs.length - 1)} * (100% - 100vh))`
+        : "0px"}
+    ></div>
+  {/each}
+  <!-- data-scrolly marks the figure surface: ChapterRail reads it to know
+       which surface sits behind the rail (see ChapterRail.svelte). -->
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
+    <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>

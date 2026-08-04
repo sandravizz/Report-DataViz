@@ -87,7 +87,7 @@
       </div>
     </section>
     {#if section.charts.length > 0}
-      <ScrollySection pairs={section.charts} />
+      <ScrollySection pairs={section.charts} sectionId={section.id} />
     {/if}
   {/each}
 </div>

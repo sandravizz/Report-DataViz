@@ -3,17 +3,18 @@
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
 
-  let { pairs, activeIndex, inView = true, jumpTo } = $props();
+  let { pairs, activeIndex, inView = true } = $props();
 
   let interpretationModal;
   // One ref per pair, bound below — FigureFooter's download button walks
   // this element's LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
 
-  // Mobile tab labels: strip the prefix all pairs share (e.g. "Abbildung 2")
-  // so the strip reads short labels instead of repeating the full number on
-  // every tab. A one-pair group has nothing to strip, so it falls back to
-  // the full number.
+  // Multi-step figures (here "Abbildung 2-1" plus its three animated steps)
+  // show the shared prefix only — "Abbildung 2-1" — instead of cycling the
+  // per-step suffix; the progress rail below the header carries the "how far
+  // along" signal instead. A one-pair group has nothing to strip, so it falls
+  // back to the full number.
   function commonPrefixLength(strings) {
     if (strings.length < 2) return 0;
     let len = strings[0].length;
@@ -26,48 +27,30 @@
   }
   let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
   let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
-  function tabLabel(pair) {
-    const short = pair.number.slice(tabPrefixLength).trim();
-    return short || pair.number;
-  }
+  let headerLabel = $derived(pairs.length > 1 ? tabPrefix : (pairs[0]?.number ?? ""));
+  // One step's worth of fill per chart, not raw scroll fraction: chart 1 of 4
+  // lands the rail at 25%, chart 2 at 50%, the last chart always at a flat
+  // 100% (rather than only reaching 100% at the very last pixel of the
+  // pinned scroll range).
+  let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<div class="absolute top-20 left-1/2 w-[88vw] -translate-x-1/2 lg:left-[43%] lg:w-200">
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
-      <div class="mb-1 flex items-center justify-between gap-1 lg:hidden">
-        {#if pairs.length > 1}
-          <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
-            <span class="shrink-0 font-sans text-xs tracking-wide text-base-content/50 uppercase">
-              {tabPrefix}
-            </span>
-            {#each pairs as p, pi (pi)}
-              <button
-                type="button"
-                class="shrink-0 rounded-full px-1.5 py-0.5 font-sans text-xs uppercase transition-colors {pi ===
-                activeIndex
-                  ? 'bg-base-200 text-base-content'
-                  : 'text-base-content/50'}"
-                onclick={() => jumpTo(pi)}
-              >
-                {tabLabel(p)}
-              </button>
-            {/each}
-          </div>
-        {:else}
-          <span class="font-sans text-xs tracking-wide text-base-content/50 uppercase">
-            {pair.number}
-          </span>
-        {/if}
+      <div class="mb-1 flex items-center justify-between gap-1 lg:mb-3">
+        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/50 uppercase">
+          {headerLabel}
+        </span>
         <button
-          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case"
+          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case lg:hidden"
           onclick={() => interpretationModal.showModal()}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
@@ -76,6 +59,18 @@
           Interpretation
         </button>
       </div>
+
+      <!-- Always-present reading-progress rail, not gated to multi-step
+           figures — a single-chart figure is just a flat 100%. Sits above
+           the title (McKinsey-style). Shown at every breakpoint, unlike the
+           chapter rail (desktop-only). -->
+      <div class="mb-3 h-px w-full shrink-0 overflow-hidden rounded-full bg-base-content/10 lg:mb-4">
+        <div
+          class="h-full rounded-full bg-base-content/50 transition-[width] duration-300 ease-out"
+          style:width="{stepProgress * 100}%"
+        ></div>
+      </div>
+
       <div class="font-display mb-1 text-base leading-snug font-bold text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
