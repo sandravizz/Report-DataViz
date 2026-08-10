@@ -6,11 +6,17 @@
      Intl Mono.
 
      The wave is the institute's own cover artwork, lifted from page 1 of the
-     PDF — the "KIEL Institut" wordmark is part of that image, bottom left,
-     exactly as it is on the cover. On paper it occupies the bottom half of a
-     portrait A4; a landscape browser window cannot hold those proportions, so
-     it is anchored to the bottom edge, full width, and cropped from the top,
-     which keeps both its dense lower half and the wordmark. -->
+     PDF, with their "KIEL Institut" wordmark painted out of its bottom-left
+     corner — on paper the wordmark is the cover's own signature, but here the
+     header already carries the logo and a second one low on the page just
+     read as clutter. (Nothing was lost: that corner of the artwork held no
+     orange.) Its background is the same cream as base-100, so the strip has
+     no visible edge.
+
+     Everything is sized against the viewport's *height* as well as its width
+     — `min(Nvw, Nvh)` inside each clamp — because a cover is one screenful by
+     definition: on a short laptop the headline has to give way rather than
+     push the author line off the bottom. -->
 <section
   class="relative flex min-h-screen flex-col overflow-hidden bg-base-100 font-sans text-secondary"
 >
@@ -18,18 +24,18 @@
     src="/kiel-cover-wave.png"
     alt=""
     aria-hidden="true"
-    class="pointer-events-none absolute inset-x-0 bottom-0 h-[38vh] w-full object-cover object-bottom-left select-none sm:h-[46vh]"
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-[22vh] w-full object-cover object-bottom-left select-none sm:h-[27vh]"
   />
 
-  <!-- The bottom padding is the artwork's own height, so `mt-auto` lands the
+  <!-- Bottom padding matches the artwork's height, so `mt-auto` lands the
        author line just above the wave the way it does on the cover, rather
        than at the foot of the viewport underneath it. -->
   <div
-    class="relative z-10 flex flex-1 flex-col px-[4%] pt-24 pb-[38vh] sm:pt-28 sm:pb-[46vh]"
+    class="relative z-10 flex flex-1 flex-col px-[4%] pt-[clamp(7rem,16vh,11rem)] pb-[24vh] sm:pb-[29vh]"
   >
     <div class="flex items-start justify-between gap-6">
       <h1
-        class="text-[clamp(2.75rem,8.5vw,7.5rem)] leading-[0.94] font-medium tracking-[-0.02em]"
+        class="text-[clamp(2.5rem,min(8vw,12vh),7rem)] leading-[0.94] font-medium tracking-[-0.02em]"
       >
         Economic<br />Outlook
       </h1>
@@ -39,15 +45,15 @@
     </div>
 
     <p
-      class="mt-[3vh] text-[clamp(1.35rem,3.9vw,3.4rem)] leading-[1.1] font-medium tracking-[-0.02em]"
+      class="mt-[2.5vh] text-[clamp(1.25rem,min(3.6vw,5.2vh),3rem)] leading-[1.1] font-medium tracking-[-0.02em]"
     >
       World Economy in Summer 2026
     </p>
 
-    <p class="mt-[6vh] text-base font-medium sm:text-xl">Finalized June 10, 2026</p>
+    <p class="mt-[4vh] text-base font-medium sm:text-lg">Finalized June 10, 2026</p>
 
     <div
-      class="mt-auto flex flex-col gap-4 pt-[6vh] font-mono text-xs sm:flex-row sm:items-start sm:justify-between sm:gap-10 sm:text-sm"
+      class="mt-auto flex flex-col gap-3 pt-[4vh] font-mono text-xs sm:flex-row sm:items-start sm:justify-between sm:gap-10 sm:text-sm"
     >
       <p class="max-w-md leading-relaxed">
         Klaus-Jürgen Gern, Stefan Kooths, Johanna Krohn, Wan-Hsin Liu und Jan Reents
@@ -57,7 +63,7 @@
       </p>
     </div>
 
-    <p class="pt-6 font-mono text-xs text-secondary/70">
+    <p class="pt-4 font-mono text-xs text-secondary/70">
       Demo created by
       <a
         href="https://www.sandraviz.com/"

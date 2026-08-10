@@ -1,7 +1,3 @@
-<script>
-  let { disclosure } = $props();
-</script>
-
 <footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
   <div class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center">
     <div
@@ -61,12 +57,4 @@
       </div>
     </div>
   </div>
-
-  {#if disclosure}
-    <div class="mx-auto w-full max-w-350 px-6 pb-4 sm:px-10 sm:pb-6">
-      <div class="text-left text-[10px] leading-relaxed text-base-content/40">
-        {@render disclosure()}
-      </div>
-    </div>
-  {/if}
 </footer>

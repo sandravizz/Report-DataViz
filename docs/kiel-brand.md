@@ -107,11 +107,20 @@ the headline sits at roughly 10.6 percent of page width with the two lines set s
 (leading ≈ 0.94), the title at about 4.9 percent, and the artwork fills the bottom half.
 
 `static/kiel-cover-wave.png` is the institute's own cover artwork, extracted with
-`pdfimages -png -f 1 -l 1` from page 1 — the blue "KIEL Institut" wordmark is baked into
-that image at bottom left, exactly as it is on the cover, and its background is the same
-`#f5f1e7`, so it sits seamlessly on `base-100`. A landscape browser window cannot hold a
-portrait A4's proportions, so on screen the artwork is anchored to the bottom edge, full
-width, and cropped from the top, which keeps its dense lower half and the wordmark.
+`pdfimages -png -f 1 -l 1` from page 1. Its background is the same `#f5f1e7`, so the strip
+sits on `base-100` with no visible edge. Two changes from the printed original:
+
+- The blue "KIEL Institut" wordmark baked into the image's bottom-left corner is **painted
+  out** (that box held no orange, so the wave is untouched). On paper it is the cover's
+  signature; on screen the header already carries the logo, and a second one low on the
+  page just reads as clutter.
+- A landscape browser window cannot hold a portrait A4's proportions, so the artwork is a
+  band anchored to the bottom edge — full width, cropped from the top, about a quarter of
+  the viewport's height rather than half of it.
+
+Everything on the cover is sized against viewport *height* as well as width
+(`min(Nvw, Nvh)` inside each clamp): a cover is one screenful by definition, so on a short
+laptop the headline has to give way rather than push the author line off the bottom.
 
 The source PDF is public:
 `kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/c803572d-aaf5-4658-a326-32b5c3956a11-_KKB_133_2026-Q2_Welt_EN.pdf`

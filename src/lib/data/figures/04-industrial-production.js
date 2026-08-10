@@ -26,12 +26,12 @@ export default {
   // exists to show. Ticks match the original's 5-point steps.
   yDomain: [65, 105],
   yTicks: [65, 70, 75, 80, 85, 90, 95, 100, 105],
-  // `key` has to be the data field, not the display text: for grouped bars
-  // LayerChart builds the sub-band scale from the series keys, while each
-  // Bars group looks itself up in that scale by the same key. Naming the
-  // series "01/2026" put "jan" in one and "01/2026" in the other, the lookup
-  // missed, and every bar came out at an undefined x. The month reading is
-  // carried by `label`, which is what the tooltip and the legend read.
+  // `key` is the data field, as in LayerChart's grouped-series example: for
+  // grouped bars the sub-band scale is built from the series keys, and each
+  // Bars group looks itself up in that scale by the same key, so a key that
+  // isn't the field name leaves every bar at an undefined x. The month
+  // reading rides along as `label`, which is what the legend and the tooltip
+  // print.
   series: [
     { key: "jan", label: "01/2026", color: colors.highlight },
     { key: "feb", label: "02/2026", color: colors.lightBlue },

@@ -121,16 +121,4 @@
   {/if}
 {/each}
 
-<Footer>
-  {#snippet disclosure()}
-    <p>
-      Content and data: Kiel Institute for the World Economy, <em>Economic Outlook</em> Nr. 133
-      (2026 | Q2), “World Economy in Summer 2026: Iran War Still Weighs on Growth”, by
-      Klaus-Jürgen Gern, Stefan Kooths, Johanna Krohn, Wan-Hsin Liu and Jan Reents, Research Group
-      Business Cycles and Growth, finalized June 10, 2026. © 2026 Kiel Institut für Weltwirtschaft.
-      Figures 3, 4 and 5 are reproduced here from the published charts; their series were digitized
-      from the report PDF, so values carry small reading errors and every rate quoted in the text
-      is the report's own. Interactive design and development: SandraViz.
-    </p>
-  {/snippet}
-</Footer>
+<Footer />

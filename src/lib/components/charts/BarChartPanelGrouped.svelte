@@ -4,15 +4,20 @@
      industrial production side by side per country group), which the
      horizontal single-series panel cannot express.
 
-     Two things differ from BarChartPanelHorizontal beyond the orientation:
-     colour comes from the *series* (each month has its own colour, shared
-     across every cluster) rather than per datum, and the y axis starts at a
-     non-zero baseline, because these are index values around 100 where a
-     zero baseline would flatten every difference the figure is about. That
+     Deliberately built as the plain LayerChart grouped-series example
+     (layerchart.com/docs/components/BarChart, "group series") plus this
+     report's axis theme, and nothing else: data, x, series, seriesLayout,
+     bandPadding, legend. Two earlier hand-rolled additions were what kept
+     the panel empty — a custom `xScale` and `groupPadding={2}`, where
+     groupPadding is a d3 band padding *fraction* and 2 collapses every bar
+     to zero width. Reach for a LayerChart prop before writing one.
+
+     The one thing that isn't from the example is the y axis: it starts at a
+     non-zero baseline, because these are index values around 100 where a zero
+     baseline would flatten every difference the figure is about. That
      truncation is the published chart's own choice — its axis runs 65 to 105
      — so `yDomain` is required from the figure rather than defaulted here. */
   import { BarChart, defaultChartPadding } from "layerchart";
-  import { scaleBand } from "d3-scale";
   import { xAxisProps, yAxisProps, yLabelPadding, desktopTooltips } from "$lib/chart-theme";
 
   let { pair } = $props();
@@ -21,53 +26,58 @@
   // Category labels ("Africa & Middle East") are long and there are only a
   // handful of clusters, so wrap them under their group instead of rotating.
   const labelWidth = $derived(innerWidth < 1024 ? 62 : 96);
+
+  // The legend is absolutely positioned inside the chart container, so it
+  // lands on top of the plot unless the padding reserves a strip for it:
+  // `legend: true` is what adds that strip (32px). The x tick labels wrap to
+  // two lines here, which the 20px default bottom can't hold either.
+  const padding = defaultChartPadding({
+    ...yLabelPadding,
+    right: 8,
+    bottom: 36,
+    legend: true,
+  });
 </script>
 
 <svelte:window bind:innerWidth />
 
-<div class="flex min-w-0 flex-1 flex-col">
-  <div class="min-h-0 flex-1">
-    <BarChart
-      data={pair.data}
-      x={pair.xKey}
-      xScale={scaleBand().paddingInner(0.28).paddingOuter(0.14)}
-      yDomain={pair.yDomain}
-      series={pair.series}
-      seriesLayout="group"
-      groupPadding={2}
-      legend={false}
-      grid={false}
-      rule={false}
-      tooltipContext={desktopTooltips(innerWidth)}
-      padding={defaultChartPadding({ ...yLabelPadding, right: 8 })}
-      props={{
-        xAxis: {
-          ...xAxisProps,
-          tickLabelProps: {
-            ...xAxisProps.tickLabelProps,
-            width: labelWidth,
-            truncate: false,
-            lineHeight: "12px",
-          },
-        },
-        yAxis: { ...yAxisProps, ticks: pair.yTicks },
-        // Square corners, like the original. Bars rise from the domain
-        // minimum rather than from zero (LayerChart clamps the bar's foot to
-        // `yDomain[0]`), which is what makes the truncated axis safe here.
-        bars: { strokeWidth: 0, rounded: "none", radius: 0 },
-        tooltip: { hideTotal: true },
-      }}
-    />
-  </div>
-
-  <!-- The report puts its series key on one line above the plot; here it sits
-       under it, matching the line panel's legend so both figures read alike. -->
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
-    {#each pair.series as item (item.key)}
-      <div class="flex items-center gap-1.5">
-        <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
-        <span>{item.label ?? item.key}</span>
-      </div>
-    {/each}
-  </div>
-</div>
+<BarChart
+  data={pair.data}
+  x={pair.xKey}
+  series={pair.series}
+  seriesLayout="group"
+  bandPadding={0.2}
+  yDomain={pair.yDomain}
+  legend={{ placement: "bottom-left" }}
+  grid={false}
+  rule={false}
+  tooltipContext={desktopTooltips(innerWidth)}
+  {padding}
+  props={{
+    xAxis: {
+      ...xAxisProps,
+      format: "none",
+      tickLabelProps: {
+        ...xAxisProps.tickLabelProps,
+        width: labelWidth,
+        truncate: false,
+        lineHeight: "12px",
+      },
+    },
+    yAxis: { ...yAxisProps, ticks: pair.yTicks },
+    // Square corners and no outline, like the original — BarChart's own
+    // default is a 1px black stroke on every bar. Bars rise from the domain
+    // minimum rather than from zero (LayerChart clamps the bar's foot to
+    // `yDomain[0]`), which is what makes the truncated axis safe here.
+    bars: { rounded: "none", radius: 0, strokeWidth: 0 },
+    // Sits in the space `defaultChartPadding({ legend: true })` reserves
+    // below the axis, left-aligned with the plot rather than the container
+    // (hence the 36px pad, matching yLabelPadding's gutter), and scaled down
+    // from LayerChart's 16px swatch to the 10px dot the other panels use.
+    legend: {
+      class: "pl-9",
+      classes: { swatch: "size-2.5", label: "font-light" },
+    },
+    tooltip: { header: { format: "none" }, hideTotal: true },
+  }}
+/>
