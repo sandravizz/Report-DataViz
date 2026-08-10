@@ -26,11 +26,5 @@
         >
       </p>
     </div>
-
-    <img
-      src="/cover.jpg"
-      alt="Collage of hands holding a globe, with people carrying coins and trees – cover illustration of the Global Justice Report"
-      class="w-full"
-    />
   </div>
 </section>

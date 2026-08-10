@@ -63,14 +63,6 @@
         </a>
       </div>
     </div>
-
-    <div class="hidden md:flex md:flex-1 md:justify-end">
-      <img
-        src="/cover.jpg"
-        alt="Collage of hands holding a globe, with people carrying coins and trees – cover illustration of the Global Justice Report"
-        class="w-full scale-x-[-1] object-cover"
-      />
-    </div>
   </div>
 
   {#if disclosure}
