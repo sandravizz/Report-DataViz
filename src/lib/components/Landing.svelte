@@ -18,12 +18,17 @@
      base-100, so the panel has no visible edge.
 
      The chevron is the same scroll cue the other report branches use, in the
-     cover's blue here. -->
+     brand orange rather than the cover's blue: it is the one thing here that
+     invites an action rather than asking to be read, and against a page of
+     blue the orange is what makes it register. The text block sits low,
+     justified to the bottom of its row, so the cue reads as the end of the
+     cover rather than as something floating below it. -->
+
 <section
   class="relative flex min-h-screen flex-col overflow-hidden bg-base-100 font-sans text-secondary"
 >
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center gap-10 px-[4%] pt-28 pb-12 md:flex-row md:items-center md:gap-14 md:pt-24"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-end gap-10 px-[4%] pt-28 pb-6 md:flex-row md:items-center md:gap-14 md:pt-24 md:pb-8"
   >
     <!-- Text column. Sizes clamp against viewport *height* as well as width
          (`min(Nvw, Nvh)`): a cover is one screenful by definition, so on a
@@ -80,14 +85,14 @@
   <a
     href="#{nextId}"
     aria-label="Scroll to content"
-    class="mx-auto mb-4 text-secondary/60 hover:text-secondary sm:mb-8"
+    class="mx-auto mb-5 text-primary hover:text-primary/70 sm:mb-8"
   >
     <svg
-      class="h-8 w-8"
+      class="h-9 w-9"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.5"
+      stroke-width="2.5"
     >
       <path stroke-linecap="round" stroke-linejoin="round" d="m5 9 7 7 7-7" />
     </svg>
