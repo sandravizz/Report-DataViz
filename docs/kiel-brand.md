@@ -87,15 +87,15 @@ Inter is in fact already loaded on their site as the Bootstrap package's fallbac
 
 ## Logo and links
 
-- `static/kiel-logo.svg` and `static/kiel-logo-inverted.svg` are the institute's own
-  files (`/_assets/.../Images/logo.svg`), the bar mark plus "Kiel Institut" wordmark. The
-  standard one is solid `#ff6a00`; the "inverted" one is solid black, for light-on-dark
-  use — despite the name, neither is white.
+- `static/kiel-logo.svg` is the institute's own file (`/_assets/.../Images/logo.svg`), the
+  bar mark plus "Kiel Institut" wordmark, solid `#ff6a00`. They also publish an
+  "inverted" variant (solid black, for light-on-dark use — despite the name, neither is
+  white); this report never sits type on a dark ground, so that file isn't carried here.
 - Header logo links to `kielinstitut.de`; header socials are their five channels in the
   order their own footer lists them (LinkedIn, X, Bluesky, Facebook, YouTube).
-- The footer carries their institutional links: About, Publications, Data Hub, Legal
-  Notice, Privacy, eAccessibility, plus the contact address and phone number from their
-  footer.
+- The page footer is the pitch block, not the institute's own: these are client-facing
+  demos, so it carries the portrait, their logo and a contact line rather than a copy of
+  their institutional nav.
 
 ## The cover
 

@@ -1,9 +1,9 @@
 <script>
   // Kind → panel dispatch, kept out of ChartDisplay so adding a chart type is
   // a one-file change and any future composite figure can reuse the chain
-  // rather than duplicate it. main only has bar-horizontal and line figures
-  // today; a report with grouped/stacked bars or line-multiples would add
-  // those imports and branches here the same way template does.
+  // rather than duplicate it. This report draws on the line and bar-grouped
+  // branches; bar-horizontal is kept from the template so a figure of that
+  // kind needs no change here.
   import BarChartPanelHorizontal from "./BarChartPanelHorizontal.svelte";
   import BarChartPanelGrouped from "./BarChartPanelGrouped.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
