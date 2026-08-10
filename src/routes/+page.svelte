@@ -13,7 +13,7 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Chapters follow the report's own argument, and each keeps the bold
+  // Chapters follow the report's own argument and each keeps the bold
   // lead-in sentence the report gives that passage as its heading. The intro
   // paragraphs are the report's text, trimmed to what the figure beside them
   // is about; the per-figure `description` in src/lib/data/figures/ carries
