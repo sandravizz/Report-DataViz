@@ -42,10 +42,20 @@ Two deliberate departures, both noted in the theme block:
 - **`--color-base-content: #1d1815`** instead of their flat `#000000` — a near-black
   warmed toward the orange, because pure black punches a hole in a cream page.
 
-Chart colors live in `src/lib/colors.js` and are all site hues: brand orange is the
-highlight (the series a figure is *about*), their blue carries the main contrast series,
-and teal/green/amber/red round out the categorical set. The two background greys are
-warm (`#c9c3b6`, `#d3cec4`) so they don't go green against the cream.
+Chart colors live in `src/lib/colors.js`. The institute's *publications* turn out to use a
+narrower palette than its website: every figure in the Economic Outlook is drawn in the
+brand orange `#ff6a00`, the brand blue `#194abb`, or a pale tint of that blue `#9badd5` —
+pixel-sampled from the report's own legends, and nothing else appears. Those three are
+`highlight` / `blue` / `lightBlue` and carry the reproduced figures. teal/green/amber/red
+(the site's contextual colors) stay available for figures that need more categories, and
+the two background greys are warm (`#c9c3b6`, `#d3cec4`) so they don't go green against
+the cream. `forecastBand` `#f7cfad` is the tint they wash over the forecast part of a
+chart — the orange at low opacity over the cream page.
+
+Their figures print straight onto the cream page rather than onto white cards, so the
+chart stage here is `base-100` too (`ScrollySection`, `chartSurface` in `chart-theme.js`
+and `BACKGROUND` in `downloadFigure.js` all track that one color — line casings are drawn
+in it, so they have to stay in step).
 
 ## Type
 
@@ -90,5 +100,3 @@ Inter is in fact already loaded on their site as the Bootstrap package's fallbac
 ## Still to swap
 
 - `static/share-image.jpg` is still the previous report's Open Graph image.
-- The figures in `src/lib/data/figures/` carry placeholder data; only their colors have
-  been remapped to the Kiel palette.

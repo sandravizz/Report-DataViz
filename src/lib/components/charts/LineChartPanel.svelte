@@ -1,5 +1,5 @@
 <script>
-  import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
+  import { AnnotationPoint, AnnotationRange, Axis, LineChart, Spline, Tooltip } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
@@ -79,6 +79,11 @@
   });
 
   const formatYear = timeFormat("%Y");
+  // Axis ticks are always years; the tooltip header can be finer-grained for
+  // figures whose data is monthly (`tooltipDateFormat: "%b %Y"`).
+  const formatTooltipHeader = $derived(
+    pair.tooltipDateFormat ? timeFormat(pair.tooltipDateFormat) : formatYear
+  );
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
   // There is no built-in legend; series that opt in via an explicit
@@ -113,15 +118,65 @@
   );
   const calloutAnnotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
   const endAnnotations = $derived(resolveAnnotations(endLabelAnnotations, innerWidth));
+
+  // Second y axis, for figures whose two series are in different units (the
+  // Economic Outlook's Figure 5: a commodity index on the left, dollars per
+  // barrel on the right). LayerChart charts carry one y scale, so the figure
+  // pre-projects the right-hand series into the left-hand domain — storing
+  // both the projected value the line is drawn from and the raw value — and
+  // this axis relabels the *same* scale in the right-hand unit: its ticks are
+  // given in left-domain positions, its `format` converts each back. Nothing
+  // about the geometry is duplicated, so the two axes cannot drift apart.
+  //
+  //   secondaryAxis: { ticks: [...left-domain positions],
+  //                    format: (leftValue) => rightAxisLabel,
+  //                    raw: { [seriesKey]: dataKey },
+  //                    rowFormat: (value, seriesKey) => tooltipText }
+  const secondary = $derived(pair.secondaryAxis);
   const padding = $derived(
-    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
+    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, {
+      ...yLabelPadding,
+      ...(secondary ? { right: 44 } : null),
+    })
   );
+
+  // A dual-unit figure cannot use the built-in tooltip: it formats every row
+  // with one formatter, which would print the right-hand series in left-hand
+  // units. This one reads each series' raw value straight off the hovered
+  // datum instead, via `secondaryAxis.raw`.
+  const rawValue = (s, datum) => {
+    const key = secondary?.raw?.[s.key];
+    const value = key ? datum?.[key] : s.value;
+    return secondary?.rowFormat ? secondary.rowFormat(value, s.key) : value;
+  };
 </script>
 
 <svelte:window bind:innerWidth />
 
+<!-- Replaces the built-in tooltip for dual-unit figures only; passed to
+     LineChart as `tooltip={secondary ? dualUnitTooltip : undefined}` so every
+     other figure keeps LayerChart's default one. -->
+{#snippet dualUnitTooltip({ context })}
+  <Tooltip.Root {context}>
+    {#snippet children({ data })}
+      <Tooltip.Header value={formatTooltipHeader(context.x(data))} />
+      <Tooltip.List>
+        {#each context.tooltip.series.filter((s) => s.visible) as s (s.key)}
+          <Tooltip.Item
+            label={s.label ?? s.key}
+            value={rawValue(s, data)}
+            color={s.color}
+            valueAlign="right"
+          />
+        {/each}
+      </Tooltip.List>
+    {/snippet}
+  </Tooltip.Root>
+{/snippet}
+
 {#snippet chart()}
 <LineChart
+  tooltip={secondary ? dualUnitTooltip : undefined}
   data={pair.data}
   x={pair.xKey}
   yDomain={pair.yDomain}
@@ -133,11 +188,12 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Tooltip header shows just the year (no month/day, since the data has
-    // no finer granularity); rows show the same unit suffix as the y-axis
+    // Tooltip header shows the year by default — no month/day, since most
+    // figures here are annual — and month + year for figures that set
+    // `tooltipDateFormat`. Rows show the same unit suffix as the y-axis
     // (e.g. "28%"), as whole numbers.
     tooltip: {
-      header: { format: formatYear },
+      header: { format: formatTooltipHeader },
       item: { format: formatValue },
       hideTotal: pair.hideTooltipTotal,
     },
@@ -162,6 +218,14 @@
     {/each}
   {/snippet}
   {#snippet aboveMarks()}
+    {#if secondary}
+      <Axis
+        placement="right"
+        {...yAxisProps}
+        ticks={secondary.ticks}
+        format={secondary.format}
+      />
+    {/if}
     <g class={hasDrawIn ? annotationRevealClass : undefined}>
       {#each calloutAnnotations as annotation, i (i)}
         <AnnotationPoint {...annotation} />

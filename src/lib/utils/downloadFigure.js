@@ -7,7 +7,11 @@ const INK = "#1d1815";
 const MUTED = "rgba(29, 24, 21, 0.5)";
 const MUTED_FAINT = "rgba(29, 24, 21, 0.3)";
 const RAIL_TRACK = "rgba(29, 24, 21, 0.1)";
-const BACKGROUND = "#ffffff";
+// Matches the on-screen chart stage (chart-theme.js's `chartSurface`) — the
+// institute prints its figures onto the cream report page, and the exported
+// PNG has to carry the same ground or the line casings, which are drawn in
+// that colour, show up as white ghosts at every crossing.
+const BACKGROUND = "#f5f1e7";
 
 // Extra canvas on every side so labels that overflow the SVG's nominal bounds
 // survive the export. On the live page they spill past the chart box and stay

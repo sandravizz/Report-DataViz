@@ -1,11 +1,13 @@
 import { defaultChartPadding } from "layerchart";
 import { ink } from "$lib/colors.js";
 
-// Every chart panel sits on a plain white surface (see ScrollySection/
-// +page.svelte) regardless of the theme's base-100 — on this report base-100
-// is the pink used behind the header/footer/landing, not the chart
-// background, so halos and line casings match against this instead.
-export const chartSurface = "#ffffff";
+// The Economic Outlook prints its figures straight onto the report's cream
+// page rather than onto white cards, so here the chart stage *is* base-100
+// (see ScrollySection) and this constant tracks it. Line casings and label
+// halos are drawn in this color to knock out what sits behind them, so it
+// has to stay in step with the chart background or the casings show up as
+// pale ghosts on every crossing.
+export const chartSurface = "#f5f1e7";
 
 // No stroke here: an SVG presentation attribute can't outrank a stylesheet
 // rule, so a `stroke` prop set here would lose to LayerChart's own default

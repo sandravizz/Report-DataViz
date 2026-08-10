@@ -3,9 +3,9 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "An interactive, visualization-first report by SandraViz",
+    title: "World Economy in Summer 2026 — Kiel Institute Economic Outlook",
     description:
-      "Reports don't have to be static PDFs. An interactive, visualization-first report for the Kiel Institute for the World Economy, built for web and mobile.",
+      "Reports don't have to be static PDFs. An interactive, visualization-first version of the Kiel Institute's Economic Outlook Nr. 133 (2026 | Q2), built for web and mobile.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -13,33 +13,32 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // Placeholder chapters, taken from the Global Transformation research
-  // center's own research groups and page copy so the scaffold reads in the
-  // institute's voice. The scrolly machinery, the three figure types
-  // (horizontal bars, multi-line, stepped line) and the chapter rail are all
-  // wired up and running on stand-in data from src/lib/data/figures/ — swap
-  // titles, intros and figures once the report content arrives.
+  // Chapters follow the report's own argument, and each keeps the bold
+  // lead-in sentence the report gives that passage as its heading. The intro
+  // paragraphs are the report's text, trimmed to what the figure beside them
+  // is about; the per-figure `description` in src/lib/data/figures/ carries
+  // the rest of the reading alongside the chart itself.
   const sections = [
     {
-      id: "global-commons",
-      title: "Global Commons and Climate Policy",
+      id: "world-trade",
+      title: "The Iran War Is Clearly Visible in World Trade",
       intro:
-        "The Research Center examines the design and effects of European and international climate policy, with a special focus on negative emission technologies. Placeholder text: this paragraph sets up the first figure before the reader scrolls into it.",
-      charts: [figures.incomeGap],
+        "Global industrial production, which had increased at a moderate pace last year, accelerated in the first two months of this year and in February stood 3.4 percent above its level a year earlier. World trade expanded even more strongly, rising by 7.6 percent over the same period. This momentum was driven mainly by the AI boom; accordingly, Asian economies, where production of the relevant capital goods is concentrated, benefited particularly strongly.",
+      charts: [figures.worldTrade],
     },
     {
-      id: "cooperation-cohesion",
-      title: "Global Cooperation and Social Cohesion",
+      id: "industrial-production",
+      title: "But the Damage Remains Concentrated in the Gulf Countries",
       intro:
-        "How can global cooperation be promoted, which circumstances undermine social cohesion, and how are collective risks managed? Placeholder text: the figure below steps through its data as the reader scrolls, with the interpretation moving alongside it.",
-      charts: [figures.workHours],
+        "In March, with the onset of the war in Iran and the associated closure of the Strait of Hormuz, both industrial production and world trade declined markedly — by around 2 percent each. The decline was due mainly to the direct effects of the war on production and trade in the Gulf region. A similar picture emerges for world trade, where exports and imports of the advanced economies initially showed little reaction.",
+      charts: [figures.industrialProduction],
     },
     {
-      id: "geopolitical-conflict",
-      title: "Geopolitical Conflict and Labor Market Transformation",
+      id: "raw-materials",
+      title: "Oil Prices Should Decline, but Stay Higher Than Assumed",
       intro:
-        "Far-reaching change in the global economy promotes regional disparities and conflicts, creating frictions and social problems that demand new forms of international cooperation. Placeholder text: this chapter's figure runs through several steps, each with its own annotation.",
-      charts: figures.incomeSharesSteps,
+        "Prices of non-energy commodities have also risen significantly. On the supply side, commodity production is typically energy-intensive; on the demand side, industrial demand remained robust. Prices of metals and minerals have increased by around 10 percent since March, and food prices are clearly on an upward trend, with higher fertilizer prices raising concerns that lower fertilizer use could weigh on future harvests.",
+      charts: [figures.rawMaterialPrices],
     },
   ];
 
@@ -63,7 +62,35 @@
   <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
 </svelte:head>
 
-<Header links={tocLinks} />
+<!-- The report's own abstract, verbatim, behind the header's "Abstract"
+     dropdown — the italic standfirst on its first page. -->
+<Header links={tocLinks}>
+  {#snippet abstract()}
+    <p>
+      In the spring of 2026, global growth slowed amid rising energy prices and heightened
+      geopolitical risks. While production in the Persian Gulf countries has slumped, the economy
+      remained firmly on an upward trajectory in most other countries. In the United States in
+      particular, the economy is expected to continue expanding at a largely unchanged pace.
+      Positive momentum continues to come from the boom in AI technology, which is providing strong
+      impetus for trade and investment.
+    </p>
+    <p>
+      Currently, financial markets appear to continue expecting that oil and gas production and
+      transportation in the Gulf region will soon return to normal levels. In this scenario, which
+      is also underlying our forecast, the consequences for the global economy will remain limited,
+      the rise in inflation temporary, and the monetary policy response moderate.
+    </p>
+    <p>
+      However, as the conflict has now lasted significantly longer than expected in March, we have
+      reduced our forecast for global output growth — measured in terms of purchasing power parity
+      — for this year from 3.1 percent to 2.8 percent. For the coming year, a rebound to 3.3
+      percent is then expected (March forecast: 3.2 percent). The main risk to this forecast is a
+      prolonged closure of the Strait of Hormuz meaning that oil supplies remain at their current
+      sharply reduced levels for a significantly longer period of time, which would lead to a much
+      more severe and prolonged slowdown in the global economy.
+    </p>
+  {/snippet}
+</Header>
 <ChapterRail {sections} />
 
 <Landing />
@@ -94,4 +121,16 @@
   {/if}
 {/each}
 
-<Footer />
+<Footer>
+  {#snippet disclosure()}
+    <p>
+      Content and data: Kiel Institute for the World Economy, <em>Economic Outlook</em> Nr. 133
+      (2026 | Q2), “World Economy in Summer 2026: Iran War Still Weighs on Growth”, by
+      Klaus-Jürgen Gern, Stefan Kooths, Johanna Krohn, Wan-Hsin Liu and Jan Reents, Research Group
+      Business Cycles and Growth, finalized June 10, 2026. © 2026 Kiel Institut für Weltwirtschaft.
+      Figures 3, 4 and 5 are reproduced here from the published charts; their series were digitized
+      from the report PDF, so values carry small reading errors and every rate quoted in the text
+      is the report's own. Interactive design and development: SandraViz.
+    </p>
+  {/snippet}
+</Footer>

@@ -180,7 +180,7 @@
   <div
     class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
       ? 'w-72'
-      : 'w-max'} {expanded ? `shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}` : ''}"
+      : 'w-max'} {expanded ? 'bg-base-100 shadow-lg' : ''}"
   >
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a

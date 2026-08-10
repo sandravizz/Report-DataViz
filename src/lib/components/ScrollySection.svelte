@@ -84,10 +84,13 @@
         : "0px"}
     ></div>
   {/each}
-  <!-- data-scrolly marks the white figure surface: ChapterRail reads it to
-       tint its hover panel to whatever is behind the rail (docs below in
-       ChapterRail.svelte). -->
-  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-white">
+  <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
+       hover panel to whatever is behind the rail (docs below in
+       ChapterRail.svelte). The Economic Outlook prints its figures onto the
+       cream report page rather than onto white cards, so the stage is
+       base-100 here — kept in step with `chartSurface` in chart-theme.js,
+       which the line casings are drawn in. -->
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>

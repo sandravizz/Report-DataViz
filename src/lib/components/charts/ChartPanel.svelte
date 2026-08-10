@@ -5,6 +5,7 @@
   // today; a report with grouped/stacked bars or line-multiples would add
   // those imports and branches here the same way template does.
   import BarChartPanelHorizontal from "./BarChartPanelHorizontal.svelte";
+  import BarChartPanelGrouped from "./BarChartPanelGrouped.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
 
   // `active` is only consumed by LineChartPanel, for its draw-in animation.
@@ -13,6 +14,8 @@
 
 {#if pair.kind === "bar-horizontal"}
   <BarChartPanelHorizontal {pair} />
+{:else if pair.kind === "bar-grouped"}
+  <BarChartPanelGrouped {pair} />
 {:else if pair.kind === "line"}
   <LineChartPanel {pair} {active} />
 {/if}

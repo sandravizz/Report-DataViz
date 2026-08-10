@@ -3,7 +3,7 @@
 // via the factories below so every callout inherits the same styling; any
 // AnnotationPoint/Range prop can still be overridden per call.
 
-import { ink, mutedTextGray } from "$lib/colors.js";
+import { ink, mutedTextGray, forecastBand } from "$lib/colors.js";
 import { endLabelHalo } from "$lib/chart-theme.js";
 
 // Desktop-width halo: these presets are built once at figure-definition time,
@@ -27,6 +27,19 @@ export function circleCallout({ color = ink, filled = false, labelProps = {}, ..
       circle: filled ? { stroke: color, fill: color, fillOpacity: 0.2 } : { stroke: ink, fill: "none" },
       label: { ...annotationLabel, ...labelProps },
     },
+  };
+}
+
+// Solid tinted band over the forecast portion of a chart — the Economic
+// Outlook's own device (see `forecastBand`), used instead of this template's
+// hatch wherever a figure of theirs is being reproduced. No label by default:
+// their charts leave the band unlabelled and explain it in the source note.
+export function forecastRange({ x, ...annotation }) {
+  return {
+    x,
+    fill: forecastBand,
+    props: { rect: { stroke: "none" } },
+    ...annotation,
   };
 }
 
