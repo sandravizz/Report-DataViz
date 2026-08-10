@@ -1,4 +1,6 @@
 <script>
+  import GlobeMark from './GlobeMark.svelte';
+
   let { disclosure } = $props();
 </script>
 
@@ -62,6 +64,10 @@
           </svg>
         </a>
       </div>
+    </div>
+
+    <div class="hidden text-primary/20 md:flex md:flex-1 md:justify-end md:pr-24">
+      <GlobeMark class="w-64 lg:w-80" />
     </div>
   </div>
 

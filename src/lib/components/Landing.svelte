@@ -1,3 +1,7 @@
+<script>
+  import GlobeMark from './GlobeMark.svelte';
+</script>
+
 <section class="flex min-h-screen flex-col px-6 pt-24 pb-10 font-sans text-base-content sm:px-10 md:px-14">
   <div class="grid flex-1 items-center gap-10 md:grid-cols-[5fr_7fr] md:gap-16">
     <div class="max-w-xl">
@@ -25,6 +29,10 @@
           class="underline underline-offset-4">SandraViz</a
         >
       </p>
+    </div>
+
+    <div class="justify-self-center text-primary/20 md:justify-self-end">
+      <GlobeMark class="w-44 sm:w-56 md:w-72 lg:w-80" />
     </div>
   </div>
 </section>
