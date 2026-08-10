@@ -2,6 +2,17 @@
   import GlobeMark from './GlobeMark.svelte';
 
   let { disclosure } = $props();
+
+  const kielLinks = [
+    { label: "Kiel Institute", href: "https://www.kielinstitut.de/institute/about-the-kiel-institute/" },
+    { label: "Publications", href: "https://www.kielinstitut.de/search/?tx_solr%5Bfilter%5D%5B0%5D=type%3Apublication&tx_solr%5Bq%5D=%2A&tx_solr%5Bsort%5D=date+desc" },
+    { label: "Data Hub", href: "https://www.kielinstitut.de/kiel-institute-data-hub/" },
+    { label: "Legal Notice", href: "https://www.kielinstitut.de/legal-notice/" },
+    { label: "Privacy", href: "https://www.kielinstitut.de/privacy/" },
+    { label: "eAccessibility", href: "https://www.kielinstitut.de/eaccessibility/" },
+    { label: "info@kielinstitut.de", href: "mailto:info@kielinstitut.de" },
+    { label: "+49 431 8814-1", href: "tel:+4943188141" },
+  ];
 </script>
 
 <footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
@@ -18,20 +29,19 @@
           class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
         />
         <img
-          src="/gjp-logo.svg"
-          alt="Global Justice Project"
-          class="h-8 w-auto sm:h-10"
+          src="/kiel-logo.svg"
+          alt="Kiel Institute for the World Economy"
+          class="h-7 w-auto sm:h-9"
         />
       </div>
-      <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
+      <p class="font-serif text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
         visualization-first reports for the web, mobile, and static downloads too.
       </p>
-      <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
-        This is one example of what that looks like in practice, built on real content and data
-        from the Global Justice Project (World Inequality Lab), the interactive design and
-        development are mine. If you've got a report that deserves to be more than a PDF, let's
-        talk.
+      <p class="mt-4 font-serif text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
+        This is one example of what that looks like in practice, built on content and data from
+        the Kiel Institute for the World Economy; the interactive design and development are
+        mine. If you've got a report that deserves to be more than a PDF, let's talk.
       </p>
       <a
         href="https://sandraviz.com"
@@ -68,6 +78,23 @@
 
     <div class="hidden text-primary/20 md:flex md:flex-1 md:justify-end md:pr-24">
       <GlobeMark class="w-64 lg:w-80" />
+    </div>
+  </div>
+
+  <!-- The institute's own footer links, in the order and wording
+       kielinstitut.de lists them. -->
+  <div class="mx-auto w-full max-w-350 px-6 pb-4 sm:px-10 sm:pb-6">
+    <div
+      class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-base-content/50 sm:text-sm"
+    >
+      {#each kielLinks as link (link.href)}
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener"
+          class="underline-offset-4 hover:text-primary hover:underline">{link.label}</a
+        >
+      {/each}
     </div>
   </div>
 

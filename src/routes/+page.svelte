@@ -5,7 +5,7 @@
   const meta = {
     title: "An interactive, visualization-first report by SandraViz",
     description:
-      "Reports don't have to be static PDFs. An interactive, visualization-first version of the Global Justice Report, built for web and mobile.",
+      "Reports don't have to be static PDFs. An interactive, visualization-first report for the Kiel Institute for the World Economy, built for web and mobile.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -13,25 +13,32 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
+  // Placeholder chapters, taken from the Global Transformation research
+  // center's own research groups and page copy so the scaffold reads in the
+  // institute's voice. The scrolly machinery, the three figure types
+  // (horizontal bars, multi-line, stepped line) and the chapter rail are all
+  // wired up and running on stand-in data from src/lib/data/figures/ — swap
+  // titles, intros and figures once the report content arrives.
   const sections = [
     {
-      id: "ensuring-equality",
-      title: "Ensuring Equality and Prosperity for All",
+      id: "global-commons",
+      title: "Global Commons and Climate Policy",
       intro:
-        "The Global Justice Platform's basic objective for equality and prosperity is full income convergence across countries by 2100. There are two main reasons for this target. First, all countries in the Global South aspire to economic prosperity, and any credible framework for global climate cooperation must account for that aspiration.",
+        "The Research Center examines the design and effects of European and international climate policy, with a special focus on negative emission technologies. Placeholder text: this paragraph sets up the first figure before the reader scrolls into it.",
       charts: [figures.incomeGap],
     },
     {
-      id: "working-less",
-      title: "Working Less, Achieving Gender Equality",
+      id: "cooperation-cohesion",
+      title: "Global Cooperation and Social Cohesion",
       intro:
-        "The first element of sufficiency in the Global Justice Platform is a large reduction in working hours: from about 2,100 hours to 1,000 hours per year per employed person, between 2025 and 2100 (Figure 2). As observed in historical episodes of working-time reduction, productivity growth makes such reductions possible.",
+        "How can global cooperation be promoted, which circumstances undermine social cohesion, and how are collective risks managed? Placeholder text: the figure below steps through its data as the reader scrolls, with the interpretation moving alongside it.",
       charts: [figures.workHours],
     },
     {
-      id: "compressing",
-      title: "Compressing the Income and Wealth Scale",
-      intro:"The Global Justice Platform aims at substantial compression of national income and wealth scales over 2026-2100. Global wealth and income taxes are designed both to raise the resources needed by the Global Justice Fund and to curb the concentration of income, wealth, and power at the top of the world distribution.",
+      id: "geopolitical-conflict",
+      title: "Geopolitical Conflict and Labor Market Transformation",
+      intro:
+        "Far-reaching change in the global economy promotes regional disparities and conflicts, creating frictions and social problems that demand new forms of international cooperation. Placeholder text: this chapter's figure runs through several steps, each with its own annotation.",
       charts: figures.incomeSharesSteps,
     },
   ];
@@ -68,9 +75,13 @@
         <div
           class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
         >
-          <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+          <!-- Institute heading style: Suisse Intl Medium, line-height 1.166,
+               -1px letter-spacing (their --typo-header-2-* tokens). -->
+          <h2 class="text-2xl leading-[1.166] font-medium tracking-[-1px] sm:text-3xl">
+            {section.title}
+          </h2>
           {#if section.intro}
-            <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
+            <p class="mt-8 font-serif text-lg leading-relaxed text-base-content/80 lg:pl-16">
               {section.intro}
             </p>
           {/if}

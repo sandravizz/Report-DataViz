@@ -69,10 +69,12 @@
         ></div>
       </div>
 
-      <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
+      <!-- Figure title in the institute's heading style (Suisse Intl Medium,
+           -1px letter-spacing); the subtitle is running text, so serif. -->
+      <div class="mb-1 font-sans text-base leading-snug font-medium tracking-[-0.5px] text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
-      <div class="mb-10 font-sans text-xs text-base-content lg:mb-20 lg:text-sm">
+      <div class="mb-10 font-serif text-xs text-base-content lg:mb-20 lg:text-sm">
         {pair.subtitle}
       </div>
 
@@ -94,10 +96,10 @@
       <div class="mb-1 font-sans text-xs tracking-wide text-base-content/50 uppercase">
         {pairs[activeIndex].number}
       </div>
-      <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium text-base-content">
+      <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium tracking-[-0.5px] text-base-content">
         {pairs[activeIndex].title}
       </div>
-      <p class="font-sans text-sm leading-relaxed text-base-content">
+      <p class="font-serif text-sm leading-relaxed text-base-content">
         {pairs[activeIndex].description}
       </p>
     </div>

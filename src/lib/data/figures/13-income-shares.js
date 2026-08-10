@@ -25,14 +25,14 @@ const data = [
 ];
 
 const allSeries = [
-  { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.sky },
-  { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.sage },
-  { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.coral },
+  { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.highlight },
+  { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.green },
+  { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.red },
 ];
 
 const base = {
   subtitle: "Global Income Shares in Post-Tax Income, 1800–2100",
-  source: "Sources & series: gjp.wid.world (F13)",
+  source: "Placeholder data — figure source to follow",
   kind: "line",
   xKey: "year",
   valueSuffix: "%",
@@ -55,7 +55,7 @@ export const incomeSharesSteps = [
     number: "Figure 13a",
     title: "The Top 10% Share Has Swung Widely, and Is Set to Shrink",
     description:
-      "The world's top 10% has held 50–59% of post-tax income since 1800. Under the Global Justice Platform's projections, that share falls sharply after 2025, from 52% in 2025 to 18% in 2100.",
+      "Placeholder figure. The world's top 10% has held 50–59% of post-tax income since 1800. In this projection that share falls sharply after 2025, from 52% in 2025 to 18% in 2100.",
     series: stepSeries("top10", ["top10"]),
   },
   {
@@ -78,7 +78,7 @@ export const incomeSharesSteps = [
         x: new Date(2050, 0, 1),
         y: 28,
         filled: true,
-        color: colors.lavender,
+        color: colors.teal,
         label: "Bottom 50% overtakes the top 10% around 2050",
         labelPlacement: "bottom-left",
         labelXOffset: 30,

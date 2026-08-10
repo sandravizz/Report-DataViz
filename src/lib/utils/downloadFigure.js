@@ -2,11 +2,11 @@ import { getChartSvgString } from "layerchart";
 
 // Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot.
-const FONT_FAMILY = "Satoshi, sans-serif";
-const INK = "#000000";
-const MUTED = "rgba(0, 0, 0, 0.5)";
-const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
-const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
+const FONT_FAMILY = "'Suisse Intl', sans-serif";
+const INK = "#1d1815";
+const MUTED = "rgba(29, 24, 21, 0.5)";
+const MUTED_FAINT = "rgba(29, 24, 21, 0.3)";
+const RAIL_TRACK = "rgba(29, 24, 21, 0.1)";
 const BACKGROUND = "#ffffff";
 
 // Extra canvas on every side so labels that overflow the SVG's nominal bounds
@@ -133,8 +133,8 @@ export async function downloadFigureImage({
   // outlives the screen it was made on.
   const exportScale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([
-    document.fonts.load(`500 16px "Satoshi"`),
-    document.fonts.load(`400 16px "Satoshi"`),
+    document.fonts.load(`500 16px "Suisse Intl"`),
+    document.fonts.load(`400 16px "Suisse Intl"`),
   ]);
 
   const chartRoots = Array.from(figureEl.querySelectorAll(".lc-root-container"));

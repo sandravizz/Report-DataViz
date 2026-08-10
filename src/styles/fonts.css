@@ -1,7 +1,77 @@
-/* Global Justice Project site fonts:
-   - Satoshi — the body/nav face globaljusticeproject.wid.world uses, loaded
-     from Fontshare with the exact URL their pages use (variable font,
-     normal + italic). Headings there are Satoshi bold, so no separate
-     display face is needed. */
+/* Kiel Institute site fonts, self-hosted from the institute's own build
+   (www.kielinstitut.de/_assets/vite/assets/*.woff2):
 
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@1,2&display=swap');
+   - Suisse Works (serif) — the body face. kielinstitut.de sets
+     `--bs-body-font-family: "Suisse Works", serif` and
+     `--font-stack-base: Suisse Works, serif`, so all running prose is serif.
+   - Suisse Intl (sans) — the headline/UI face
+     (`--font-stack-headline: Suisse Intl, sans-serif`): headings, navigation,
+     chart labels, buttons.
+   - Suisse Intl Mono — used on their site for figures/tabular bits; loaded
+     here so numeric labels can opt into it later.
+
+   Both are commercial faces from Swiss Typefaces, licensed by the Kiel
+   Institute for their own domain — fine for a proposal built for them, but
+   they must not travel to another client's report. See docs/kiel-brand.md.
+
+   Weight ranges: the institute ships Suisse Intl in Medium only, and Suisse
+   Works in Book + Bold. Declaring a *range* on a static file (rather than a
+   single weight) makes the browser match every weight in that range to the
+   real file instead of synthesizing a faux-bold — so `font-semibold` on a
+   heading renders as genuine Suisse Intl Medium, not a smeared version of it. */
+
+@font-face {
+  font-family: 'Suisse Works';
+  src: url('/fonts/SuisseWorks-Book.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Works';
+  src: url('/fonts/SuisseWorks-BookItalic.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Works';
+  src: url('/fonts/SuisseWorks-Bold.woff2') format('woff2');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Works';
+  src: url('/fonts/SuisseWorks-BoldItalic.woff2') format('woff2');
+  font-weight: 600 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/SuisseIntl-Medium.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/SuisseIntl-MediumItalic.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl Mono';
+  src: url('/fonts/SuisseIntlMono.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

@@ -4,46 +4,61 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: globaljustice --default;
+  themes: kiel --default;
 }
 
-/* Colors lifted from globaljusticeproject.wid.world's theme CSS, except the
-   surfaces: #f4ddd6 is this report's original pink (kept on purpose, also
-   behind the header and footer), with the original #efccc2/#e9bcae as its
-   darker tints. #362e4f is the GJP logo purple; #00371f the dark green of
-   their nav indicator bar; #fbedf5 the pink of their chapter table of
-   contents. */
+/* Colors read straight out of kielinstitut.de's own production CSS
+   (_assets/vite/assets/Main-*.css), where the site declares
+   `--color-primary: #FF6A00`, `--color-secondary: #194ABB`,
+   `--color-tertiary: #DFE0E3`, `--color-minorinfo: #6f6d68`, and the light
+   theme's `--bs-body-bg: #F5F1E7`. #FF6A00 is also the exact fill of the
+   institute's logo mark. The status hues (#287f9a teal, #3a833a green,
+   #a4660e amber, #d4403a red) are their Bootstrap contextual colors.
+
+   Two deliberate departures:
+   - base-300 (#e4dbc9) is a darker step of their cream, mixed here — the
+     site has no third surface tone, and their tertiary #DFE0E3 is a cool
+     grey that reads dirty next to the warm base.
+   - base-content is #1d1815, a near-black warmed toward the orange rather
+     than the site's flat #000000, which sits harshly on the cream. */
 @plugin "daisyui/theme" {
-  name: 'globaljustice';
+  name: 'kiel';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
-  --color-base-100: #f4ddd6;
-  --color-base-200: #efccc2;
-  --color-base-300: #e9bcae;
-  --color-base-content: #000000;
-  --color-primary: #362e4f;
+  --color-base-100: #f5f1e7;
+  --color-base-200: #ede6d8;
+  --color-base-300: #e4dbc9;
+  --color-base-content: #1d1815;
+  --color-primary: #ff6a00;
   --color-primary-content: #ffffff;
-  --color-secondary: #00371f;
+  --color-secondary: #194abb;
   --color-secondary-content: #ffffff;
-  --color-accent: #fbedf5;
-  --color-accent-content: #000000;
-  --color-neutral: #1d1d1b;
-  --color-neutral-content: #ffffff;
-  --color-info: #e2f3f6;
-  --color-info-content: #000000;
-  --color-success: #337357;
+  --color-accent: #dfe0e3;
+  --color-accent-content: #1d1815;
+  --color-neutral: #212121;
+  --color-neutral-content: #dedede;
+  --color-info: #287f9a;
+  --color-info-content: #ffffff;
+  --color-success: #3a833a;
   --color-success-content: #ffffff;
-  --color-warning: #ffcc00;
-  --color-warning-content: #000000;
-  --color-error: #cc0000;
+  --color-warning: #a4660e;
+  --color-warning-content: #ffffff;
+  --color-error: #d4403a;
   --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Satoshi', sans-serif;
-  --font-display: 'Satoshi', sans-serif;
+  /* kielinstitut.de pairs a serif body with a sans headline face
+     (`--font-stack-base: Suisse Works, serif`,
+     `--font-stack-headline: Suisse Intl, sans-serif`). Both stacks are kept
+     here: `font-sans` for headings, navigation, and chart chrome,
+     `font-serif` for running prose. See src/styles/fonts.css. */
+  --font-sans: 'Suisse Intl', system-ui, sans-serif;
+  --font-serif: 'Suisse Works', Georgia, serif;
+  --font-mono: 'Suisse Intl Mono', ui-monospace, monospace;
+  --font-display: 'Suisse Intl', system-ui, sans-serif;
 
   /* The whole scrolly system is keyed to `lg` — chart position, description
      column, chapter rail, the mobile "Interpretation" modal button — so this
@@ -65,8 +80,8 @@
 
 /* LayerChart's own Axis component gives every axis label a 2px halo stroke
    by default (Axis.base.svelte, `components` layer), colored via the theme's
-   `--color-surface-100` token — here that resolves to this report's pink
-   base-100, producing a pink halo on every axis label regardless of what any
+   `--color-surface-100` token — here that resolves to this report's cream
+   base-100, producing a cream halo on every axis label regardless of what any
    chart passes as its own `stroke` prop: an SVG presentation attribute can
    never outrank a stylesheet rule, even a zero-specificity one, so setting
    `stroke` in chart-theme.js's tickLabelProps has no effect here. Layer

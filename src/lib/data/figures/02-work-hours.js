@@ -9,14 +9,14 @@ export default {
   subtitle: "Average Annual Labour Hours per Employed Individual, 1800–2100",
   description:
     "In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation).",
-  source: "Sources & series: gjp.wid.world (F2)",
+  source: "Placeholder data — figure source to follow",
   number: "Figure 2",
   kind: "line",
   xKey: "year",
   hideTooltipTotal: true,
   xTicks: quarterCenturyTicks(1800, 2100),
   legendItems: [
-    { label: "World", color: colors.sky },
+    { label: "World", color: colors.highlight },
     { label: "Regions", color: colors.regionGray },
   ],
   series: [
@@ -44,7 +44,7 @@ export default {
       value: "southSoutheastAsia",
       color: colors.regionGray,
     },
-    { key: "World", value: "world", color: colors.sky },
+    { key: "World", value: "world", color: colors.highlight },
   ],
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
@@ -54,7 +54,7 @@ export default {
       x: new Date(2025, 0, 1),
       y: 2100,
       filled: true,
-      color: colors.sky,
+      color: colors.highlight,
       label: "2,100 hours in 2025",
       labelPlacement: "right",
       labelXOffset: 30,
@@ -80,7 +80,7 @@ export default {
       x: new Date(2100, 0, 1),
       y: 1000,
       filled: true,
-      color: colors.sky,
+      color: colors.highlight,
       label: "1,000 hours by 2100",
       labelPlacement: "bottom-left",
       labelXOffset: 30,
