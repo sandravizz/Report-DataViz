@@ -4,9 +4,11 @@
      screen says so: same title, same subtitle, same description column, only
      the figure number differs. Without this the second run reads as a new,
      emptier chart.
-     Deliberately unlike a chapter: tinted surface (base-200, the footer's
-     fill), narrower centred column, muted kicker instead of the chapters'
-     primary one — so it is legible as commentary, not as IW's report text. -->
+     It sits in the SAME text column as a chapter (same left edge, same width —
+     see +page.svelte) and on the same tinted base-200 surface, because a second
+     column geometry mid-report reads as a layout glitch, not as a change of
+     voice. What marks it as commentary rather than IW's report text is only the
+     muted kicker, where the chapters' is primary. -->
 <script>
   let { kicker, title, paragraphs = [] } = $props();
 </script>
@@ -14,7 +16,7 @@
 <section
   class="flex min-h-screen items-center bg-base-200 font-sans text-base-content"
 >
-  <div class="mx-auto w-[88vw] max-w-3xl py-24">
+  <div class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200">
     {#if kicker}
       <p class="mb-3 text-xs font-medium tracking-wide text-base-content/50 uppercase">
         {kicker}

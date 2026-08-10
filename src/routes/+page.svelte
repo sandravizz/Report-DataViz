@@ -97,8 +97,15 @@
     <!-- min-h rather than h: a short intro still fills the viewport and sticks,
          a long one (chapter 1) grows the pane instead of being clipped into a
          nested scroller. -->
-    <section id={section.id} class="font-sans text-base-content lg:min-h-[140vh]">
-      <div class="lg:sticky lg:top-0 lg:min-h-screen lg:bg-base-100">
+    <!-- Chapter text sits on the tinted surface (base-200, the footer's and the
+         interlude's fill) at EVERY breakpoint, never lg:-scoped: text is tinted,
+         figures are flat white, and that pairing is what the reader — and the
+         chapter rail's panel — uses to tell the two surfaces apart. -->
+    <section
+      id={section.id}
+      class="bg-base-200 font-sans text-base-content lg:min-h-[140vh]"
+    >
+      <div class="bg-base-200 lg:sticky lg:top-0 lg:min-h-screen">
         <div class="lg:flex lg:min-h-screen">
           <div
             class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"

@@ -25,10 +25,11 @@
   let boxOpen = $state(false);
   let closeTimer;
   let showRail = $state(false);
-  // Whether a pinned figure sits behind the rail. On other report branches
-  // this also decides the panel's fill (their chapters sit on a tinted
-  // base-100 while figures sit on flat white); here both surfaces are the
-  // same base-100 white, so it is only used to gate the anchor read below.
+  // Whether a pinned figure sits behind the rail. This decides the panel's
+  // fill: chapter and interlude text sit on tinted base-200, figures on flat
+  // base-100 white, so the panel takes whichever surface is behind it and the
+  // opaque box stops reading as a white card floating on the tint. It also
+  // gates the anchor read below.
   let overChart = $state(false);
   // "<chapter id>:<step>" of the pinned figure, or null between figures. Read
   // off ScrollySection's anchors rather than redoing its progress maths.
@@ -177,12 +178,15 @@
        collapsed to zero. Padding stays permanent — toggling it shifted the rows
        20px right on open, the horizontal half of the shiver above. left-9 +
        px-5 puts the dots on the same 56px line as a bare left-14. The panel
-       overlaps the chart's y-axis labels, so it can't be transparent; base-100
-       is both surfaces it can sit over here (chapter text and figure alike). -->
+       overlaps the chart's y-axis labels, so it can't be transparent — instead
+       it matches whichever surface is behind it (`overChart`), and the shared
+       colour transition carries it across the seam as the reader scrolls. -->
   <div
     class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
       ? 'w-72'
-      : 'w-max'} {expanded ? 'bg-base-100 shadow-lg' : ''}"
+      : 'w-max'} {expanded
+      ? `shadow-lg ${overChart ? 'bg-base-100' : 'bg-base-200'}`
+      : ''}"
   >
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a
