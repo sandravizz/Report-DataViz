@@ -97,6 +97,26 @@ Inter is in fact already loaded on their site as the Bootstrap package's fallbac
   Notice, Privacy, eAccessibility, plus the contact address and phone number from their
   footer.
 
+## The cover
+
+`Landing.svelte` reproduces the Economic Outlook's own cover page: issue number top
+right, the two-line headline, the report title, the close date, then authors left and
+research group right — all in the cover's blue `#194abb` on the cream page, headline and
+title in Suisse Intl, the small print in Suisse Intl Mono. Measured off the PDF at 200 dpi:
+the headline sits at roughly 10.6 percent of page width with the two lines set solid
+(leading ≈ 0.94), the title at about 4.9 percent, and the artwork fills the bottom half.
+
+`static/kiel-cover-wave.png` is the institute's own cover artwork, extracted with
+`pdfimages -png -f 1 -l 1` from page 1 — the blue "KIEL Institut" wordmark is baked into
+that image at bottom left, exactly as it is on the cover, and its background is the same
+`#f5f1e7`, so it sits seamlessly on `base-100`. A landscape browser window cannot hold a
+portrait A4's proportions, so on screen the artwork is anchored to the bottom edge, full
+width, and cropped from the top, which keeps its dense lower half and the wordmark.
+
+The source PDF is public:
+`kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/c803572d-aaf5-4658-a326-32b5c3956a11-_KKB_133_2026-Q2_Welt_EN.pdf`
+(found through their Solr search, `/search/?tx_solr[q]=…`).
+
 ## Still to swap
 
 - `static/share-image.jpg` is still the previous report's Open Graph image.
