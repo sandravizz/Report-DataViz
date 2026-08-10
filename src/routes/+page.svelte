@@ -26,8 +26,9 @@
       title:
         "Der IW-Wohnindex: Kauf- und Mietpreise für Wohnimmobilien in Deutschland",
       intro: [
-        "Der vorliegende IW-Wohnindex untersucht die Entwicklung der Kauf- und Mietpreise für Wohnimmobilien in Deutschland. Der vierteljährig erscheinende Kurzreport präsentiert die Ergebnisse eines hedonischen Preisindex auf der Basis von mehreren Millionen Wohnimmobilieninseraten. Betrachtet werden dabei sowohl inserierte Kaufpreise als auch Neuvertragsmieten.",
-        "Der Report fokussiert sich regelmäßig auf die allgemeinen Preisentwicklungen auf dem Kauf- und Mietmarkt und die regionalen Auswertungen nach Regionstypen für die größten deutschen Städte. Als Sonderteil wird in dieser Ausgabe zudem die Entwicklung der Inseratszahlen näher betrachtet.",
+        "Der vorliegende IW-Wohnindex untersucht die Entwicklung der Kauf- und Mietpreise für Wohnimmobilien in Deutschland. Der vierteljährig erscheinende Kurzreport präsentiert die Ergebnisse eines hedonischen Preisindex auf der Basis von mehreren Millionen Wohnimmobilieninseraten. Betrachtet werden dabei sowohl inserierte Kaufpreise als auch Neuvertragsmieten. Nähere Informationen zur Methodik finden sich im Anhang. Der Report fokussiert sich regelmäßig auf die allgemeinen Preisentwicklungen auf dem Kauf- und Mietmarkt und die regionalen Auswertungen nach Regionstypen für die größten deutschen Städte. In einem weiteren Kapitel wird die Preisentwicklung für Wohnimmobilien vor dem Hintergrund ausgewählter Sonderthemen näher beleuchtet. Während sich der Kernteil der Studie auf die Darlegung der Ergebnisse konzentriert, rundet das letzte Kapitel die Studie durch eine immobilienökonomische und wohnungspolitische Einordnung ab.",
+        "Als Sonderteil wird in dieser Ausgabe die Entwicklung der Inseratszahlen näher betrachtet. Während Preise Auskunft darüber geben, zu welchen Konditionen Wohnimmobilien angeboten werden, zeigen Inseratszahlen, wie groß das öffentlich sichtbare Angebot ist und wie stark sich die Marktbedingungen auf Käufer und Mieter auswirken. Gerade seit der Zinswende haben sich Kauf- und Mietmärkte deutlich unterschiedlich entwickelt: Das Angebot an Kaufobjekten ist stark gestiegen, während Mietwohnungen in vielen Regionen weiterhin knapp bleiben.",
+        "Vor diesem Hintergrund wird analysiert, wie sich die Zahl der inserierten Eigentumswohnungen, Ein- und Zweifamilienhäuser sowie Mietwohnungen seit dem ersten Quartal 2022 verändert hat. Neben der bundesweiten Entwicklung werden Unterschiede zwischen Regionstypen und den zehn größten Städten betrachtet. Ziel ist es, die Preisentwicklung um eine zentrale Mengenperspektive zu ergänzen und besser einzuordnen, in welchem Maß veränderte Nachfrage, längere Vermarktungszeiten, geringe Umzugsmobilität und schwache Bautätigkeit die aktuelle Marktlage prägen.",
       ],
       charts: [],
     },
@@ -93,9 +94,12 @@
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-      <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:bg-base-100">
-        <div class="lg:flex lg:min-h-full">
+    <!-- min-h rather than h: a short intro still fills the viewport and sticks,
+         a long one (chapter 1) grows the pane instead of being clipped into a
+         nested scroller. -->
+    <section id={section.id} class="font-sans text-base-content lg:min-h-[140vh]">
+      <div class="lg:sticky lg:top-0 lg:min-h-screen lg:bg-base-100">
+        <div class="lg:flex lg:min-h-screen">
           <div
             class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
           >
