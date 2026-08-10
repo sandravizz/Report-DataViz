@@ -93,7 +93,7 @@
 </Header>
 <ChapterRail {sections} />
 
-<Landing />
+<Landing nextId={sections[0].id} />
 
 {#each sections as section (section.id)}
   <section id={section.id} class="h-[140vh] font-sans text-base-content">

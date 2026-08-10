@@ -99,12 +99,14 @@ Inter is in fact already loaded on their site as the Bootstrap package's fallbac
 
 ## The cover
 
-`Landing.svelte` reproduces the Economic Outlook's own cover page: issue number top
-right, the two-line headline, the report title, the close date, then authors left and
-research group right — all in the cover's blue `#194abb` on the cream page, headline and
-title in Suisse Intl, the small print in Suisse Intl Mono. Measured off the PDF at 200 dpi:
-the headline sits at roughly 10.6 percent of page width with the two lines set solid
-(leading ≈ 0.94), the title at about 4.9 percent, and the artwork fills the bottom half.
+`Landing.svelte` carries the Economic Outlook's cover, re-set for the screen as two
+columns: the whole text block ranged flush left in one column (issue number, two-line
+headline, report title, close date, authors, research group, in that order), the artwork
+as a rectangle on the right, and the scroll chevron the other report branches use — in the
+cover's blue here — centred beneath. Everything is the cover's blue `#194abb` on the cream
+page, headline and title in Suisse Intl, the small print in Suisse Intl Mono. Measured off
+the PDF at 200 dpi, the printed headline sets its two lines solid (leading ≈ 0.94) with
+about −0.02em of tracking, which is what the screen version keeps.
 
 `static/kiel-cover-wave.png` is the institute's own cover artwork, extracted with
 `pdfimages -png -f 1 -l 1` from page 1. Its background is the same `#f5f1e7`, so the strip
@@ -114,9 +116,10 @@ sits on `base-100` with no visible edge. Two changes from the printed original:
   out** (that box held no orange, so the wave is untouched). On paper it is the cover's
   signature; on screen the header already carries the logo, and a second one low on the
   page just reads as clutter.
-- A landscape browser window cannot hold a portrait A4's proportions, so the artwork is a
-  band anchored to the bottom edge — full width, cropped from the top, about a quarter of
-  the viewport's height rather than half of it.
+- A landscape browser window cannot hold a portrait A4's proportions, so the artwork is
+  not the full-bleed bottom half it is on paper: it sits as a rectangle in the cover's
+  right-hand column, `object-cover` so the wave keeps its own scale and crops rather than
+  stretching, and drops to a short band under the text on phones.
 
 Everything on the cover is sized against viewport *height* as well as width
 (`min(Nvw, Nvh)` inside each clamp): a cover is one screenful by definition, so on a short
