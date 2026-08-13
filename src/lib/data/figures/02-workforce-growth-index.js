@@ -54,16 +54,23 @@ const stepSeries = (newValue, values) =>
     .filter((s) => values.includes(s.value))
     .map((s) => ({ ...s, drawIn: s.value === newValue }));
 
+// The label rides a fraction of one x-step in from the end so it clears the
+// endpoint dots and end-of-line labels. Doing that inset in data space rather
+// than in pixels means the band's centre is measured at the x the text actually
+// occupies, so it stays centred however narrow or steep the band is.
+const LABEL_INSET = 0.35;
+
 const diffBand = (upperValue, lowerValue) => {
-  const last = data[data.length - 1];
+  const [prev, last] = data.slice(-2);
+  const at = (key) => last[key] + (prev[key] - last[key]) * LABEL_INSET;
   const gap = Math.round(last[upperValue] - last[lowerValue]);
   return {
     y1: upperValue,
     y0: lowerValue,
     color: allSeries.find((s) => s.value === upperValue).color,
     label: `+${gap}%`,
-    labelX: last.year,
-    labelY: (last[upperValue] + last[lowerValue]) / 2,
+    labelX: new Date(last.year - (last.year - prev.year) * LABEL_INSET),
+    labelY: (at(upperValue) + at(lowerValue)) / 2,
   };
 };
 

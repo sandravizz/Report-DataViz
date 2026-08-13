@@ -6,10 +6,9 @@
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
 
-  // Scrolly draw-in for series flagged `drawIn` — see docs/scrolly-line-draw-in.md
-  // for the full mechanism. One-shot per page load: `played` flips on leaving
-  // a step (in the effect's cleanup, not its body) so a revisit shows the
-  // finished state instantly instead of replaying.
+  // Scrolly draw-in for series flagged `drawIn` — docs/scrolly-line-draw-in.md
+  // has the mechanism. One-shot per page load: `played` flips on *leaving* a
+  // step (effect cleanup, not body), so a revisit shows the finished state.
   const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
   let played = $state(false);
   $effect(() => {
@@ -18,35 +17,19 @@
       played = true;
     };
   });
-  const revealClass = $derived(
-    played
-      ? "lc-draw-reveal lc-draw-reveal-done"
-      : active
-        ? "lc-draw-reveal lc-draw-reveal-active"
-        : "lc-draw-reveal"
-  );
-  const drawClass = $derived(
-    played
-      ? "lc-line-draw lc-line-draw-done"
-      : active
-        ? "lc-line-draw lc-line-draw-active"
-        : "lc-line-draw"
-  );
-  // Diff band fades in a beat after the line lands, on its own delay.
-  const bandRevealClass = $derived(
-    played
-      ? "lc-band-reveal lc-band-reveal-done"
-      : active
-        ? "lc-band-reveal lc-band-reveal-active"
-        : "lc-band-reveal"
-  );
+  // Every animation is one class triple: base (hidden), -active (running now),
+  // -done (finished, shown instantly). Delays live in the stylesheet below.
+  const phase = (base) =>
+    played ? `${base} ${base}-done` : active ? `${base} ${base}-active` : base;
+  const revealClass = $derived(phase("lc-draw-reveal"));
+  const drawClass = $derived(phase("lc-line-draw"));
+  const bandRevealClass = $derived(phase("lc-band-reveal"));
   const drawProps = (key) =>
     pair.series.find((s) => s.key === key)?.drawIn
       ? { pathLength: 1, class: drawClass } // pathLength=1 so dashoffset 1 spans the whole path
       : {};
 
-  // Casing (docs/line-chart-casing.md) thins down on mobile — it reads too
-  // heavy at phone plot sizes.
+  // Casing (docs/line-chart-casing.md) thins on mobile — too heavy at phone size.
   const lineStyle = $derived({
     curve: curveMonotoneX,
     strokeWidth: innerWidth < 1024 ? 2 : 2.5,
@@ -65,14 +48,14 @@
     (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
   );
 
-  // No built-in legend: series that opt in via `endLabel` get their name at
-  // the line's end instead. Charts needing a real legend use `legendItems` below.
+  // No built-in legend: series opting in via `endLabel` get their name at the
+  // line's end instead. Charts needing a real one use `legendItems` below.
   const endLabelAnnotations = $derived(
     pair.series
       .filter((s) => s.endLabel)
       .map((s) => {
-        // Anchor to the series' own last observation, not the last row — a
-        // series can end early (null cells in the CSV).
+        // The series' own last observation, not the last row — a series can
+        // end early (null cells in the CSV).
         const last = pair.data.findLast((d) => d[s.value] != null);
         const reveal = s.drawIn ? revealClass : undefined;
         return {
@@ -90,41 +73,28 @@
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },
           },
-          // A series can opt into its own extra mobile nudge (e.g. two close
-          // end values that would otherwise overlap once labels wrap).
+          // A series can add its own mobile nudge (e.g. two close end values
+          // that would overlap once labels wrap).
           mobile: { ...endLabelMobileWrap, ...s.endLabelMobile },
         };
       })
   );
-  // Diff band's percentage label: plain text, no circle or leader line.
-  const diffBandAnnotations = $derived(
+  // Band's percentage label: bare text — r: 0 drops the circle, and the default
+  // "center" placement anchors it middle/middle on the point the band already
+  // inset for it. A pixel nudge in x would pull the text off the mid-line its y
+  // was measured on. dy cancels AnnotationPoint's own -2.
+  const diffBandLabel = $derived(
     pair.diffBand
-      ? resolveAnnotations(
-          [
-            {
-              x: pair.diffBand.labelX,
-              y: pair.diffBand.labelY,
-              r: 0,
-              label: pair.diffBand.label,
-              labelPlacement: "left",
-              labelXOffset: 8,
-              props: {
-                circle: { r: 0, stroke: "none", fill: "none" },
-                label: {
-                  fill: pair.diffBand.color,
-                  textAnchor: "end",
-                  verticalAnchor: "middle",
-                  class: "text-xs font-medium",
-                },
-              },
-              // Nudge down on mobile, clear of the end-of-line labels the
-              // band's own label would otherwise crowd.
-              mobile: { labelYOffset: 8 },
-            },
-          ],
-          innerWidth
-        )
-      : []
+      ? {
+          x: pair.diffBand.labelX,
+          y: pair.diffBand.labelY,
+          r: 0,
+          label: pair.diffBand.label,
+          props: {
+            label: { fill: pair.diffBand.color, dy: 0, class: "text-xs font-medium" },
+          },
+        }
+      : null
   );
   const calloutAnnotations = $derived(
     resolveAnnotations(pair.annotations ?? [], innerWidth)
@@ -150,20 +120,17 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Line charts plot trends (often an index), never a stack — a summed
-    // "total" row is meaningless here, unlike the stacked bar tooltip.
-    // Header is the year alone — the data is annual, so LayerChart's default
-    // "1 January 2035" is precision the figures never had. A figure can still
-    // override it with pair.tooltipHeaderFormat.
+    // Nothing is stacked here, so a summed "total" row would be meaningless;
+    // the data is annual, so the header is the year alone rather than
+    // LayerChart's "1 January 2035" precision the figures never had.
     tooltip: {
       hideTotal: true,
       header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
       ...(pair.valueSuffix && { item: { format: formatValue } }),
     },
-    // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
-    // — that CSS-variable chain is what the PNG export loses on a larger DOM
-    // (several series' worth of casing strokes), falling back to a solid
-    // black un-themed default instead of a faint 10%-opacity line.
+    // Explicit color, not LayerChart's `color-mix(...currentColor...)` — the
+    // PNG export loses that variable chain on a larger DOM (several series'
+    // worth of casing strokes) and falls back to solid black.
     grid: { stroke: "rgba(34, 29, 24, 0.1)" },
   }}
 >
@@ -197,12 +164,12 @@
         <AnnotationPoint {...annotation} />
       {/each}
     </g>
-    <!-- Band's label appears with the band, on its own later delay. -->
-    <g class={bandRevealClass}>
-      {#each diffBandAnnotations as annotation, i (i)}
-        <AnnotationPoint {...annotation} />
-      {/each}
-    </g>
+    {#if diffBandLabel}
+      <!-- Appears with the band, on its own later delay. -->
+      <g class={bandRevealClass}>
+        <AnnotationPoint {...diffBandLabel} />
+      </g>
+    {/if}
     {#each endAnnotations as annotation, i (i)}
       <AnnotationPoint {...annotation} />
     {/each}
@@ -211,9 +178,9 @@
 {/snippet}
 
 {#if pair.legendItems}
-  <!-- Manual legend for charts whose real series list would be useless as
-       one (e.g. many near-identical lines): a few {label, color} entries
-       summarize the groupings instead. pl-9 matches yLabelPadding's gutter. -->
+  <!-- Manual legend for charts whose series list would be useless as one (e.g.
+       many near-identical lines): {label, color} entries summarize the groups
+       instead. pl-9 matches yLabelPadding's gutter. -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}
@@ -245,24 +212,22 @@
   :global(path.lc-line-draw-done) {
     stroke-dashoffset: 0;
   }
-  :global(.lc-draw-reveal) {
-    opacity: 0;
-  }
-  :global(.lc-draw-reveal-active) {
-    opacity: 1;
-    transition: opacity 450ms ease 1350ms;
-  }
-  :global(.lc-draw-reveal-done) {
-    opacity: 1;
-  }
+  /* Callouts and band fade in identically; only the delay differs — the band
+     waits for the line it annotates to finish drawing. */
+  :global(.lc-draw-reveal),
   :global(.lc-band-reveal) {
     opacity: 0;
   }
+  :global(.lc-draw-reveal-done),
+  :global(.lc-band-reveal-done),
+  :global(.lc-draw-reveal-active),
   :global(.lc-band-reveal-active) {
     opacity: 1;
-    transition: opacity 450ms ease 2150ms;
   }
-  :global(.lc-band-reveal-done) {
-    opacity: 1;
+  :global(.lc-draw-reveal-active) {
+    transition: opacity 450ms ease 1350ms;
+  }
+  :global(.lc-band-reveal-active) {
+    transition: opacity 450ms ease 2150ms;
   }
 </style>

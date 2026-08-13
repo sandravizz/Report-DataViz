@@ -3,7 +3,7 @@
 Notes on the scrollytelling mechanics in this project — why sections stay pinned
 while you scroll, what controls how long they stay pinned, and how the chart
 animation is paced. Written 2026-07-05, after equalizing the title and chart
-section stickiness.
+section stickiness; constants updated 2026-08-13.
 
 ## The core trick: a tall container with a sticky, screen-sized child
 
@@ -77,25 +77,26 @@ runway per **chart**, so it paid 120vh for a swap that never happened.
 The new formula counts the actual swaps:
 
 ```
-height = (numberOfCharts − 1) × 120vh + 200vh
+height = (numberOfCharts − 1) × 80vh + 140vh
 ```
 
-- **1-chart section:** zero transitions → just the 200vh base → 100vh of
-  runway, exactly matching the title sections.
-- **3-chart section:** two transitions → 200 + 240 = 440vh → 340vh of runway,
+- **1-chart section:** zero transitions → just the 140vh base → 40vh of
+  runway, matching the title sections.
+- **3-chart section:** two transitions → 140 + 160 = 300vh → 200vh of runway,
   enough to pace both swaps with no dead tail.
 
-The title/intro sections were changed from `h-[150vh]` to `h-[200vh]` at the
-same time, doubling their pause from 50vh to 100vh and making the base feel of
-both section types identical.
+The title/intro sections are `lg:h-[140vh]`, the same base, so both section
+types pause identically. Below `lg` they are auto-height and not pinned;
+chart sections stay pinned at every breakpoint.
 
 ## Tuning knobs
 
 | Feel | Knob | Where |
 | --- | --- | --- |
-| Title/intro pause length | `h-[200vh]` on the section | `src/routes/+page.svelte` |
-| Chart section base pause | the `+ 200` constant | `src/lib/components/ScrollySection.svelte` |
-| Speed of chart swaps | the `× 120` per-transition constant | `src/lib/components/ScrollySection.svelte` |
+| Title/intro pause length | `lg:h-[140vh]` on the section | `src/routes/+page.svelte` |
+| Chart section base pause | the `+ 140` constant | `src/lib/components/ScrollySection.svelte` |
+| Speed of chart swaps | the `* 80` per-transition constant | `src/lib/components/ScrollySection.svelte` |
 
-Rule of thumb: keep per-transition runway comfortably above ~80vh so readers
-can absorb each chart before the next swap.
+Both constants were cut (120→80, 200→140) after the original pacing read as
+too slow. Keep per-transition runway comfortably above ~60vh so readers can
+absorb each chart before the next swap.
