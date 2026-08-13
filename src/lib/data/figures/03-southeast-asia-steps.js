@@ -10,7 +10,7 @@ const data = [
 export default {
   title: "Workforce Keeps Expanding",
   subtitle:
-    "Southeast Asia's Energy Workforce by Sector in the STEPS, Million Workers, 2015–2035",
+    "Southeast Asia's Energy Workforce by Sector in the STEPS, Million Workers, 2015 to 2035",
   description:
     "In the STEPS, employment in renewable energy, grids and energy efficiency in Southeast Asia rises to 1.8 million workers by 2035.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",

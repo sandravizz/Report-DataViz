@@ -14,9 +14,9 @@ const data = [
 export default {
   title: "Clean Energy Jobs growing",
   subtitle:
-    "Average Annual Change in Workforce by Region, 2019–2024",
+    "Average Annual Change in Workforce by Region, 2019 to 2024",
   description:
-    "India leads regional employment growth by a wide margin, with clean energy jobs expanding 6.0% a year on average — nearly 40% faster than second-placed China's 4.3%, whose broader economy-wide workforce actually shrank slightly over the same period.",
+    "India leads regional employment growth by a wide margin, with clean energy jobs expanding 6.0% a year on average, nearly 40% faster than second-placed China's 4.3%, whose broader economy-wide workforce actually shrank slightly over the same period.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   number: "Figure 1",
   kind: "bar-horizontal",

@@ -2,6 +2,8 @@
      `disclosure` is an optional snippet for report-specific licensing text,
      kept out of this component so Footer stays reusable across reports. -->
 <script>
+  import WindTurbinesTall from "./WindTurbinesTall.svelte";
+
   let { disclosure } = $props();
 </script>
 
@@ -57,13 +59,20 @@
       </div>
     </div>
 
-    <!-- Same turbine illustration as Landing, mirrored. Hidden on phones —
-         the bio/CTA/links matter more than a hero echo there. -->
+    <!-- Same turbine illustration as Landing, mirrored — the near-square
+         portrait cut, since this column is only ~half the container and the
+         wide landscape cut would shrink to a sliver in it. Hidden on phones —
+         the bio/CTA/links matter more than a hero echo there. The max-height
+         is the ceiling flex can't supply on its own: the panel is
+         `min-h-screen`, a floor rather than a definite height, so without it
+         the 0.92:1 artwork would push the panel past one viewport.
+         Inlined as a component like Landing's, so nothing here waits on a
+         separate file; no `object-contain`, because an inline <svg> already
+         letterboxes itself inside the box via its preserveAspectRatio. -->
     <div class="hidden md:flex md:flex-1 md:justify-end">
-      <img
-        src="/windmill_row_grid_square.svg"
-        alt="Illustration of a row of wind turbines receding toward the horizon, mirrored"
-        class="w-full scale-x-[-1]"
+      <WindTurbinesTall
+        label="Geometric illustration of a row of wind turbines, mirrored"
+        class="max-h-[calc(100vh-6rem)] w-full scale-x-[-1]"
       />
     </div>
   </div>

@@ -59,7 +59,7 @@ const efficiencyPanel = {
 export default {
   title: "5.6 Million More Clean Energy Jobs by 2035",
   subtitle:
-    "Global Energy Workforce by Sector in the STEPS, Million Workers, 2024–2035",
+    "Global Energy Workforce by Sector in the STEPS, Million Workers, 2024 to 2035",
   description:
     "Renewable energy, grids and energy efficiency employment rises from around 30 million jobs in 2024 to approximately 35 million by 2035 requiring efforts to attract more people to the energy sector and to train them.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",

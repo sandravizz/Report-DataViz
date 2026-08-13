@@ -21,7 +21,7 @@ const data = years.map((year, i) => ({
 export const workforceByRegionA = {
   title: "China Employs a Third of the Global Clean Energy Workforce",
   subtitle:
-    "Energy Workforce by Region, Million Workers, 2019–2024",
+    "Energy Workforce by Region, Million Workers, 2019 to 2024",
   description:
     "China accounts for 34% of the global renewable energy, grids and energy efficiency workforce, and in the sector, it employed about 10 million people in 2024.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
@@ -49,7 +49,7 @@ export const workforceByRegionA = {
 export const workforceByRegionB = {
   title: "China and India Keep Climbing While Europe and North America Flatten Out",
   subtitle:
-    "Energy Workforce by Region, Million Workers, 2019–2024",
+    "Energy Workforce by Region, Million Workers, 2019 to 2024",
   description:
     "China and India's clean energy workforces grew steadily between 2019 and 2024, while Europe's stayed flat and North America's edged up only slightly.",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",

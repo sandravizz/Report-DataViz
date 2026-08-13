@@ -3,7 +3,7 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce — An Interactive Report",
+    title: "Ensuring a Skilled Renewable Energy and Energy Efficiency Workforce: An Interactive Report",
     description:
       "I'm Sandra, a data visualization designer and developer. I build interactive, visualization-first reports for the web (including mobile) as well as static formats.",
   };

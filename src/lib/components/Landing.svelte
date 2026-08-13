@@ -1,7 +1,17 @@
 <script>
+  import WindTurbinesWide from "./WindTurbinesWide.svelte";
+  import WindTurbinesTall from "./WindTurbinesTall.svelte";
+
   // Optional extra content (e.g. the abstract side note) rendered in a text
   // band directly below the hero; the chevron scrolls to it when present.
   let { children } = $props();
+
+  // Sizing shared by both cuts of the illustration, so the two can't drift
+  // apart. There is no `object-contain` here as there was on the old <img>:
+  // that only applies to replaced elements, and an inline <svg> centres and
+  // letterboxes itself inside the box via its default preserveAspectRatio.
+  const art =
+    "max-h-[calc(100vh-22rem)] min-h-0 w-full flex-1 sm:max-h-[calc(100vh-24rem)]";
 </script>
 
 <section class="relative flex flex-1 flex-col bg-base-200 font-sans">
@@ -56,19 +66,17 @@
       <!-- Two cuts of the same artwork: a wide 2.15:1 landscape and a
            near-square 0.92:1 portrait. `orientation: portrait` is literally
            "viewport width < height", so the tall cut serves phones held
-           upright while any landscape window keeps the wide one. `<picture>`
-           re-evaluates on resize and device rotation. -->
-      <picture class="flex min-h-0 flex-1">
-        <source
-          srcset="/eolica-molino-viento-portrait.svg"
-          media="(orientation: portrait)"
-        />
-        <img
-          src="/eolica-molino-viento.svg"
-          alt="Geometric illustration of a row of wind turbines"
-          class="max-h-[calc(100vh-22rem)] min-h-0 w-full flex-1 object-contain sm:max-h-[calc(100vh-24rem)]"
-        />
-      </picture>
+           upright while any landscape window keeps the wide one, and the query
+           re-evaluates on resize and device rotation.
+           Both cuts are inlined as components rather than fetched from /static:
+           together they are a few kB gzipped inside the HTML, which buys the
+           hero image away from a second round trip that would otherwise queue
+           behind the CSS, the JS bundle and the fonts. That wait, not the
+           orientation swap, was what made the drawing arrive late on phones. -->
+      <div class="flex min-h-0 flex-1">
+        <WindTurbinesWide class="{art} portrait:hidden" />
+        <WindTurbinesTall class="{art} landscape:hidden" />
+      </div>
       <p class="mt-2 self-end px-6 text-xs text-base-content/60 sm:px-0">
         Illustration by Cristina Claverol
       </p>

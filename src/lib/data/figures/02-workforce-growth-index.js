@@ -40,7 +40,7 @@ const allSeries = [
 // each step's title/description change while scrolling.
 const base = {
   subtitle:
-    "Global Energy Workforce Growth Index (2019 = 100), 2019–2024",
+    "Global Energy Workforce Growth Index (2019 = 100), 2019 to 2024",
   source: "Source: IEA 2026. Chart shape approximate; CC BY 4.0.",
   kind: "line",
   xKey: "year",
@@ -73,7 +73,7 @@ export const workforceGrowthIndexSteps = [
     number: "Figure 2a",
     title: "Efficiency Jobs Grew Slowly",
     description:
-      "Energy efficiency employment grew just 6% between 2019 and 2024 — a shallow dip in 2020 followed by a slow, steady recovery.",
+      "Energy efficiency employment grew just 6% between 2019 and 2024: a shallow dip in 2020 followed by a slow, steady recovery.",
     series: stepSeries("efficiency", ["efficiency"]),
   },
   {
@@ -81,7 +81,7 @@ export const workforceGrowthIndexSteps = [
     number: "Figure 2b",
     title: "Grid Employment Edged Ahead",
     description:
-      "Grid employment barely dipped in 2020 and grew 10% by 2024 — a touch faster than energy efficiency, but still in the slow lane.",
+      "Grid employment barely dipped in 2020 and grew 10% by 2024, a touch faster than energy efficiency but still in the slow lane.",
     series: stepSeries("grids", ["grids", "efficiency"]),
     diffBand: diffBand("grids", "efficiency"),
   },
@@ -99,7 +99,7 @@ export const workforceGrowthIndexSteps = [
     number: "Figure 2d",
     title: "Solar PV Leads the Workforce",
     description:
-      "Solar PV employment grew about 60% between 2019 and 2024 — far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
+      "Solar PV employment grew about 60% between 2019 and 2024, far ahead of wind (+24%), grids (+10%) and energy efficiency (+6%), which all recovered more slowly from the 2020 dip.",
     series: stepSeries("solar", ["solar", "wind", "grids", "efficiency"]),
     diffBand: diffBand("solar", "wind"),
     annotations: [
