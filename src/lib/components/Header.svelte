@@ -1,8 +1,7 @@
 <script>
   // Permanently solid/blurred: the hero is plain white, so there's no
   // scroll-over-photo transparency to handle (docs/sandraviz-brand.md).
-  // `abstract` is optional; given one, an "Abstract" dropdown joins the TOC.
-  let { links = [], abstract } = $props();
+  let { links = [] } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -31,29 +30,6 @@
 <header class="relative z-50 shrink-0 bg-base-200/80 backdrop-blur-sm">
   <div class="relative flex items-center justify-end gap-4 px-6 py-3">
     <nav class="flex items-center gap-4 text-base-content sm:gap-6 lg:gap-8">
-      {#if abstract}
-        <div class="dropdown dropdown-end">
-          <div
-            tabindex="0"
-            role="button"
-            aria-label="Abstract"
-            class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 decoration-[#76c8a8] underline-offset-8 outline-none hover:underline"
-          >
-            Abstract
-          </div>
-          <div
-            tabindex="-1"
-            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans text-base-content shadow-lg"
-          >
-            <div
-              class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80"
-            >
-              {@render abstract()}
-            </div>
-          </div>
-        </div>
-      {/if}
-
       <div class="dropdown dropdown-end">
         <div
           tabindex="0"

@@ -2,9 +2,6 @@
   import WindTurbinesWide from "./WindTurbinesWide.svelte";
   import WindTurbinesTall from "./WindTurbinesTall.svelte";
 
-  // Optional extra content (e.g. an abstract) in a text band below the hero.
-  let { children } = $props();
-
   // Shared by both cuts of the illustration so they can't drift apart. No
   // `object-contain`: that only applies to replaced elements, and an inline
   // <svg> already letterboxes itself via its default preserveAspectRatio.
@@ -74,13 +71,6 @@
       </p>
     </div>
   </div>
-
-  <!-- Extra content below the hero; expanding it grows the hero downward. -->
-  {#if children}
-    <div class="mx-auto w-full max-w-3xl px-6 pb-8 text-base-content sm:px-10">
-      {@render children()}
-    </div>
-  {/if}
 
   <a
     href="#charts"
