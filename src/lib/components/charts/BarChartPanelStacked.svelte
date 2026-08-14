@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
-  import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisPropsInline, excludeZeroTick, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, bandXScale, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { ink, brand } from "$lib/colors";
 
   let { pair } = $props();
@@ -156,7 +156,6 @@
   legend={false}
   rule={false}
   grid={!hideYAxis}
-  tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     bars: { strokeWidth: 0 },

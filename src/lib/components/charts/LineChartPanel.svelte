@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -115,7 +115,6 @@
   series={pair.series}
   legend={false}
   rule={false}
-  tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },

@@ -45,11 +45,6 @@ export function excludeZeroTick(scale, count) {
   return candidates.filter((tick) => tick !== 0);
 }
 
-// Tooltips are desktop-only — tap-triggered tooltips misbehave on touch.
-export function desktopTooltips(innerWidth) {
-  return innerWidth >= 1024;
-}
-
 // Numeric y tick labels need more than the default 20px left gutter.
 export const yLabelPadding = { left: 36 };
 

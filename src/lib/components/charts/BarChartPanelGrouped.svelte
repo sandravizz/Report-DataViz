@@ -4,7 +4,6 @@
     xAxisProps,
     yAxisProps,
     excludeZeroTick,
-    desktopTooltips,
     yLabelPadding,
     resolveAnnotations,
     endLabelPadding,
@@ -33,7 +32,6 @@
       bandPadding={pair.bandPadding ?? 0.25}
       legend={false}
       rule={false}
-      tooltipContext={desktopTooltips(innerWidth)}
       {padding}
       props={{
         bars: { strokeWidth: 0 },

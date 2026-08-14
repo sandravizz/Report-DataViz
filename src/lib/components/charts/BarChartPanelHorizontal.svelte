@@ -1,6 +1,6 @@
 <script>
   import { BarChart, defaultChartPadding } from "layerchart";
-  import { tickLabelProps, yAxisProps, mutedTickLabelProps, desktopTooltips } from "$lib/chart-theme";
+  import { tickLabelProps, yAxisProps, mutedTickLabelProps } from "$lib/chart-theme";
   import { brand } from "$lib/colors";
 
   let { pair } = $props();
@@ -35,7 +35,6 @@
       rule={true}
       legend={false}
       labels
-      tooltipContext={desktopTooltips(innerWidth)}
       padding={defaultChartPadding({ left: labelGutter, right: 40 })}
       props={{
         bars: { strokeWidth: 0 },

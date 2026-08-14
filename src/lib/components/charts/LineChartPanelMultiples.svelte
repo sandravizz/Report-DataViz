@@ -4,7 +4,7 @@
   // flex-wrap, fixes the column count: 2x2 up to tablet, one row on desktop.
   import { Area, AnnotationPoint, LineChart, Spline, defaultChartPadding } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, endLabelHalo, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   const isMobile = (width) => width < 1024;
 
@@ -95,7 +95,6 @@
           series={[{ key: panel.label, value: panel.value, color: panel.color }]}
           legend={false}
           rule={false}
-          tooltipContext={desktopTooltips(innerWidth)}
           padding={panelPadding(i === pair.panels.length - 1, innerWidth)}
           props={{
             xAxis: { ...xAxisProps, ticks: pair.xTicks, format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
