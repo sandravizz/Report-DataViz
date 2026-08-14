@@ -1,7 +1,7 @@
 import { getChartSvgString } from "layerchart";
 
-// Matches the report's own type ramp and ink color so the exported PNG reads
-// like the on-screen figure, not a generic system-font screenshot.
+// The report's own type ramp and ink, so the PNG reads like the on-screen
+// figure rather than a system-font screenshot.
 const FONT_FAMILY = "IBM Plex Sans, Arial, sans-serif";
 const INK = "#221d18";
 const MUTED = "rgba(34, 29, 24, 0.5)";
@@ -9,9 +9,8 @@ const MUTED_FAINT = "rgba(34, 29, 24, 0.3)";
 const RAIL_TRACK = "rgba(34, 29, 24, 0.1)";
 const BACKGROUND = "#ffffff";
 
-// Extra canvas on every side so labels that overflow the SVG's nominal
-// bounds (invisible on the live page, hard-clipped when rasterized standalone)
-// survive the export — see docs/download-image-overflow-clip-bug.md.
+// Extra canvas on every side so labels overflowing the SVG's nominal bounds
+// survive the export — docs/download-image-overflow-clip-bug.md.
 const CAPTURE_BLEED = 20;
 
 function wrapLines(ctx, text, maxWidth) {
@@ -44,25 +43,21 @@ async function captureChartBleed(root, pixelRatio) {
     .split(/\s+/)
     .map(Number);
 
-  // Bleed math must derive from the viewBox (the content's own coordinate
-  // space), not the width/height attributes: those come from the root
-  // element's clientWidth/clientHeight, which can drift from the viewBox on
-  // a figure whose `.lc-root-container` sits inside extra wrapper markup
-  // (e.g. a legend row) — sizing the output canvas off the mismatched
-  // attribute stretches every stroke/pattern to fit.
+  // Bleed math derives from the viewBox (the content's coordinate space), not
+  // the width/height attributes: those come from clientWidth/clientHeight and
+  // drift from the viewBox when `.lc-root-container` sits inside extra wrapper
+  // markup (e.g. a legend row), stretching every stroke to fit.
   const outWidth = vw + CAPTURE_BLEED * 2;
   const outHeight = vh + CAPTURE_BLEED * 2;
   svg.setAttribute(
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${vw + CAPTURE_BLEED * 2} ${vh + CAPTURE_BLEED * 2}`
   );
-  // Load the SVG at its native 1:1 size (width/height attrs matching the
-  // viewBox exactly) and let createImageBitmap's own resize do the retina
-  // upscale, rather than asking the SVG rasterizer to stretch width/height
-  // attributes past the viewBox itself: a `patternUnits="userSpaceOnUse"`
-  // tile (the projection-band hatch) doesn't reliably scale with that trick
-  // across browsers and was tiling far denser than intended — plain
-  // geometry (e.g. the grid lines) scaled fine, only the pattern didn't.
+  // Load the SVG 1:1 (width/height matching the viewBox) and let
+  // createImageBitmap's resize do the retina upscale, rather than stretching
+  // width/height past the viewBox: `patternUnits="userSpaceOnUse"` tiles (the
+  // projection hatch) don't scale reliably that way across browsers and tiled
+  // far too densely, though plain geometry like gridlines was fine.
   svg.setAttribute("width", String(outWidth));
   svg.setAttribute("height", String(outHeight));
 
@@ -88,11 +83,10 @@ async function captureChartBleed(root, pixelRatio) {
   }
 }
 
-// Composites a figure's chart(s) with the report's title/subtitle/source/
-// wordmark text into one downloadable PNG. Chart roots are auto-discovered
-// via LayerChart's `.lc-root-container` marker and redrawn at their original
-// relative position, so this works unmodified for a single chart, the
-// stacked double panel, and the line-multiples grid alike.
+// Composites a figure's chart(s) plus its title/subtitle/source/wordmark into
+// one downloadable PNG. Chart roots are found via LayerChart's
+// `.lc-root-container` marker and redrawn at their original relative position,
+// so a single chart, the double panel and the multiples grid all work as-is.
 export async function downloadFigureImage({
   figureEl,
   number,
@@ -152,9 +146,8 @@ export async function downloadFigureImage({
   const subtitleLineHeight = subtitleSize * 1.4;
   const footerLineHeight = footerSize * 1.5;
 
-  // Mirrors the on-page reading-progress rail (ChartDisplay.svelte), which
-  // sits above the title — the export used to start at the title, cropping
-  // the figure number and progress bar shown on screen.
+  // Mirrors ChartDisplay's reading-progress rail above the title; the export
+  // used to start at the title and crop both it and the figure number.
   const numberBlockHeight = number ? numberLineHeight + 12 + railHeight + 16 : 0;
 
   const headerHeight =

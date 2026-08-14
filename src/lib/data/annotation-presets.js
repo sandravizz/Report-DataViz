@@ -8,8 +8,7 @@ const projectionPattern = {
 };
 
 // Circled point callout. `filled` tints the ring with the series color for
-// strong emphasis; otherwise a thin ink outline. `labelProps` extends the
-// standard dark-ink label (textAnchor, dx, width, …).
+// emphasis, otherwise a thin ink outline; `labelProps` extends the ink label.
 export function circleCallout({ color = ink, filled = false, labelProps = {}, ...annotation }) {
   return {
     r: filled ? 12 : 10,
@@ -21,9 +20,8 @@ export function circleCallout({ color = ink, filled = false, labelProps = {}, ..
   };
 }
 
-// Hatched range band over the projected years. The label sits just above the
-// plot at the band's left edge ("Projection →"); pass placement/props
-// overrides for bands used as value highlights instead.
+// Hatched range band over the projected years, labeled above the plot at the
+// band's left edge. Bands used as value highlights override placement/props.
 export function projectionRange({ x, label = "Projection →", ...annotation }) {
   return {
     x,

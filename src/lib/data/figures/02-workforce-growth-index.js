@@ -36,8 +36,8 @@ const allSeries = [
   },
 ];
 
-// Shared scaffold for the four reveal steps — only the visible lines and
-// each step's title/description change while scrolling.
+// Shared scaffold for the four reveal steps: only the visible lines and each
+// step's title/description change on scroll.
 const base = {
   subtitle:
     "Global Energy Workforce Growth Index (2019 = 100), 2019 to 2024",
@@ -54,10 +54,10 @@ const stepSeries = (newValue, values) =>
     .filter((s) => values.includes(s.value))
     .map((s) => ({ ...s, drawIn: s.value === newValue }));
 
-// The label rides a fraction of one x-step in from the end so it clears the
-// endpoint dots and end-of-line labels. Doing that inset in data space rather
-// than in pixels means the band's centre is measured at the x the text actually
-// occupies, so it stays centred however narrow or steep the band is.
+// The label rides a fraction of an x-step in from the end, clearing the
+// endpoint dots and end labels. Insetting in data space rather than pixels
+// measures the band's centre at the x the text actually occupies, so it stays
+// centred however narrow or steep the band is.
 const LABEL_INSET = 0.35;
 
 const diffBand = (upperValue, lowerValue) => {

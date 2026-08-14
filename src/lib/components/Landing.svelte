@@ -2,25 +2,22 @@
   import WindTurbinesWide from "./WindTurbinesWide.svelte";
   import WindTurbinesTall from "./WindTurbinesTall.svelte";
 
-  // Optional extra content (e.g. the abstract side note) rendered in a text
-  // band directly below the hero; the chevron scrolls to it when present.
+  // Optional extra content (e.g. an abstract) in a text band below the hero.
   let { children } = $props();
 
-  // Sizing shared by both cuts of the illustration, so the two can't drift
-  // apart. There is no `object-contain` here as there was on the old <img>:
-  // that only applies to replaced elements, and an inline <svg> centres and
-  // letterboxes itself inside the box via its default preserveAspectRatio.
+  // Shared by both cuts of the illustration so they can't drift apart. No
+  // `object-contain`: that only applies to replaced elements, and an inline
+  // <svg> already letterboxes itself via its default preserveAspectRatio.
   const art =
     "max-h-[calc(100vh-22rem)] min-h-0 w-full flex-1 sm:max-h-[calc(100vh-24rem)]";
 </script>
 
 <section class="relative flex flex-1 flex-col bg-base-200 font-sans">
-  <!-- Stacked at every width rather than a text/image row. The illustration is
-       a wide 2.15:1 landscape, so beside the headline it could only ever claim
-       ~half the container; underneath it claims the full width and is limited
-       by height instead. This section is a flex-1 child of `#top` in
-       +page.svelte, so it fills the viewport height left over after the header
-       rather than a flat 100vh stacked underneath it. -->
+  <!-- Stacked at every width, not a text/image row: the illustration is a wide
+       2.15:1 landscape, so beside the headline it could only claim half the
+       container; underneath it claims full width and is height-bound instead.
+       flex-1 child of `#top`, so it fills the viewport height left over after
+       the header rather than adding a flat 100vh under it. -->
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col gap-4 px-6 py-4 sm:gap-6 sm:px-10 sm:py-6 md:px-16 lg:px-24"
   >
@@ -50,29 +47,24 @@
       </p>
     </div>
 
-    <!-- Wind turbine illustration. It grows to claim whatever the headline and
-         credit leave behind, but `#top` is `min-h-screen` — a floor, not a
-         fixed height — so flex alone has no definite height to shrink the
-         image against and its intrinsic 2.15:1 height would push the scroll
-         chevron below the fold. The max-height is that missing ceiling: 22rem
-         is roughly the fixed chrome (headline, credits, credit line, chevron,
-         padding), so the image takes the rest of the viewport and no more. -->
-    <!-- On phones the drawing is width-bound and its turbines get very small,
-         so it bleeds past the section's horizontal padding to the screen
-         edges; the credit keeps the padding so it stays aligned with the
-         headline above. From sm up there is width to spare and both sit
-         inside the normal column. -->
+    <!-- The illustration claims whatever the headline and credit leave behind,
+         but `#top` is min-h-screen — a floor, not a fixed height — so flex has
+         nothing definite to shrink against and the intrinsic 2.15:1 height
+         would push the chevron below the fold. max-h is that missing ceiling:
+         22rem ≈ the fixed chrome (headline, credits, chevron, padding).
+         On phones it's width-bound and the turbines get small, so it bleeds
+         past the horizontal padding to the screen edges; the credit keeps the
+         padding to stay aligned with the headline. From sm up both sit in the
+         normal column. -->
     <div class="-mx-6 flex min-h-0 flex-1 flex-col sm:mx-0">
-      <!-- Two cuts of the same artwork: a wide 2.15:1 landscape and a
-           near-square 0.92:1 portrait. `orientation: portrait` is literally
-           "viewport width < height", so the tall cut serves phones held
-           upright while any landscape window keeps the wide one, and the query
-           re-evaluates on resize and device rotation.
-           Both cuts are inlined as components rather than fetched from /static:
-           together they are a few kB gzipped inside the HTML, which buys the
-           hero image away from a second round trip that would otherwise queue
-           behind the CSS, the JS bundle and the fonts. That wait, not the
-           orientation swap, was what made the drawing arrive late on phones. -->
+      <!-- Two cuts of the same artwork: wide 2.15:1 and near-square 0.92:1.
+           `orientation: portrait` is literally "width < height", so the tall
+           cut serves upright phones while any landscape window keeps the wide
+           one, re-evaluating on resize and rotation.
+           Both are inlined as components rather than fetched from /static: a
+           few kB gzipped in the HTML, versus a second round trip queued behind
+           the CSS, JS and fonts — that wait, not the orientation swap, is what
+           made the drawing arrive late on phones. -->
       <div class="flex min-h-0 flex-1">
         <WindTurbinesWide class="{art} portrait:hidden" />
         <WindTurbinesTall class="{art} landscape:hidden" />
@@ -83,8 +75,7 @@
     </div>
   </div>
 
-  <!-- Extra content (the abstract side note) rendered below the hero;
-       expanding it grows the hero downward. -->
+  <!-- Extra content below the hero; expanding it grows the hero downward. -->
   {#if children}
     <div class="mx-auto w-full max-w-3xl px-6 pb-8 text-base-content sm:px-10">
       {@render children()}

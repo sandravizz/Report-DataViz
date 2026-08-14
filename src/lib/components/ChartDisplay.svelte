@@ -10,10 +10,9 @@
   // this element's LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
 
-  // Multi-step figures (e.g. "Figure 13a/13b/13c") show the shared prefix
-  // only — "Figure 13" — instead of cycling the per-step letter; the
-  // progress rail above the title carries the "how far along" signal instead.
-  // A one-pair group has nothing to strip, so it falls back to the full number.
+  // Multi-step figures ("Figure 13a/13b/13c") show the shared prefix only —
+  // "Figure 13" — since the progress rail already carries "how far along".
+  // A one-pair group has nothing to strip and keeps its full number.
   function commonPrefixLength(strings) {
     if (strings.length < 2) return 0;
     let len = strings[0].length;
@@ -27,16 +26,14 @@
   let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
   let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
   let headerLabel = $derived(pairs.length > 1 ? tabPrefix : (pairs[0]?.number ?? ""));
-  // One step's worth of fill per chart, not raw scroll fraction: chart 1 of 3
-  // lands the rail at 33%, chart 2 at 66%, the last chart always at a flat
-  // 100% (rather than only reaching 100% at the very last pixel of the
-  // pinned scroll range).
+  // One step's worth of fill per chart, not raw scroll fraction: 1 of 3 fills
+  // to 33%, 2 to 66%, and the last sits at a flat 100% rather than only
+  // getting there on the final pixel of the pinned scroll range.
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
-  <!-- Keyed by index, not title: the bar/area comparison pair of Figure 1
-       shares one title, so titles aren't unique. -->
+  <!-- Keyed by index, not title — comparison pairs share one title. -->
   {#each pairs as pair, i (i)}
     <div
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
@@ -59,10 +56,9 @@
         </button>
       </div>
 
-      <!-- Always-present reading-progress rail, not gated to multi-step
-           figures — a single-chart figure is just a flat 100%. Sits above
-           the title (McKinsey-style). Shown at every breakpoint, unlike the
-           chapter rail (desktop-only). -->
+      <!-- Reading-progress rail above the title, on every figure (a
+           single-chart one is just a flat 100%) and every breakpoint —
+           unlike the chapter rail, which is desktop-only. -->
       <div class="mb-3 h-px w-full shrink-0 overflow-hidden rounded-full bg-base-content/10 lg:mb-4">
         <div
           class="h-full rounded-full bg-base-content/50 transition-[width] duration-300 ease-out"

@@ -30,10 +30,9 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        // Re-measure per frame instead of trusting the mount-time values: a
-        // late font or image above this section moves containerTop without
-        // firing resize, and the anchors below (positioned in CSS) would move
-        // with it while a cached containerTop did not.
+        // Re-measure per frame rather than trusting mount-time values: a late
+        // font or image above moves containerTop without firing resize, and the
+        // CSS-positioned anchors below would move with it while a cache did not.
         measure();
         scrollY = window.scrollY;
         ticking = false;
@@ -60,9 +59,9 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
-  // activeIndex is already 0 below the fold, so draw-in animations need a
-  // separate "actually on screen" gate (docs/scrolly-line-draw-in.md).
-  // Both bounds are the same test: the pinned panel is at least 30% on screen.
+  // activeIndex is already 0 below the fold, so draw-in animations need their
+  // own "on screen" gate: the pinned panel is ≥30% visible at either bound
+  // (docs/scrolly-line-draw-in.md).
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop &&
       scrollY < containerTop + containerHeight - vh * 0.7
@@ -74,10 +73,10 @@
   class="relative"
   style:height="{(pairs.length - 1) * 80 + 140}vh"
 >
-  <!-- One invisible scroll target per step, parked at the exact offset where
-       that step is centred. So scrollIntoView({ block: "start" }) lands the
-       right chart, and ChapterRail can read which figure is showing off these
-       positions — no scroll maths duplicated in the caller. -->
+  <!-- One invisible scroll target per step, parked where that step is centred:
+       scrollIntoView({ block: "start" }) lands the right chart, and ChapterRail
+       reads which figure is showing off these positions rather than duplicating
+       the scroll maths. -->
   {#each pairs as pair, i (pair.number ?? i)}
     <div
       id="{sectionId}-chart-{i}"
@@ -90,8 +89,8 @@
         : "0px"}
     ></div>
   {/each}
-  <!-- data-scrolly marks the figure surface; ChapterRail tints its hover panel
-       to match whatever is behind it. -->
+  <!-- data-scrolly marks the figure surface, so ChapterRail can tint its hover
+       panel to match whatever is behind it. -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />

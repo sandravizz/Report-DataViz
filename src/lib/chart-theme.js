@@ -4,24 +4,23 @@ import { ink, brand } from "./colors.js";
 
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
-// Axis numbers are a reference, not the primary readout (series are
-// direct-labeled), so both axes get a muted gray instead of ink.
+// Series are direct-labeled, so axis numbers are secondary: muted, not ink.
 export const mutedTickLabelProps = { fill: brand.grayText, class: "text-xs font-light" };
 
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
 export const yAxisProps = { tickLength: 10, tickMarks: false, rule: false, tickLabelProps: mutedTickLabelProps };
 
-// Mobile keeps only half-century ticks (1800, 1850…) to avoid crowding the
-// narrow x axis; short ranges left with <3 ticks keep the full set instead.
+// Mobile keeps only half-century ticks (1800, 1850…) so the narrow x axis
+// isn't crowded; ranges left with <3 ticks keep the full set.
 export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   if (!ticks || innerWidth >= 1024) return ticks;
   const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
   return halved.length >= 3 ? halved : ticks;
 }
 
-// Mobile abbreviates years to their last two digits ("20", "21"…) except the
-// first tick, which stays a full 4-digit year for orientation.
+// Mobile abbreviates years to two digits ("20", "21"…); the first tick stays
+// 4-digit for orientation.
 export function yearTickFormat(innerWidth, firstYear) {
   return (d) => {
     const year = d.getFullYear();
@@ -30,19 +29,17 @@ export function yearTickFormat(innerWidth, firstYear) {
   };
 }
 
-// Tooltip header for a time x axis: the year alone. The x values are Dates
-// pinned to 1 January, so LayerChart's default header spells that out
-// ("1 January 2035") — a day and a month the annual data never had. Values
-// that aren't Dates (categorical bars) pass through untouched, so a panel can
-// hand this to every tooltip it renders. Figures override via
-// pair.tooltipHeaderFormat.
+// Tooltip header for a time x axis: the year alone. X values are Dates pinned
+// to 1 January, which LayerChart would spell out as "1 January 2035" —
+// precision the annual data never had. Non-Dates pass through, so any panel
+// can hand this to every tooltip. Figures override via pair.tooltipHeaderFormat.
 export function tooltipHeaderYear(d) {
   return d instanceof Date ? String(d.getFullYear()) : d;
 }
 
-// Default y ticks when a figure doesn't pass its own pair.yTicks: the
-// scale's own candidates with 0 dropped (redundant against the flush axis).
-// `count` forwards to scale.ticks() for a specific step.
+// Default y ticks (when a figure passes no pair.yTicks): the scale's own
+// candidates minus 0, redundant against the flush axis. `count` forwards to
+// scale.ticks() for a specific step.
 export function excludeZeroTick(scale, count) {
   const candidates = typeof scale.ticks === "function" ? scale.ticks(count) : scale.domain();
   return candidates.filter((tick) => tick !== 0);
@@ -56,10 +53,9 @@ export function desktopTooltips(innerWidth) {
 // Numeric y tick labels need more than the default 20px left gutter.
 export const yLabelPadding = { left: 36 };
 
-// Report figures store worker counts pre-scaled to millions (1.5 = 1.5
-// million); this spells the magnitude out on the tick label itself. Only
-// shortens to "mil." once a caller passes an actual mobile innerWidth (e.g.
-// the stacked bar's last-bar total, which sits directly on the bar).
+// Figures store worker counts pre-scaled to millions (1.5 = 1.5 million); this
+// spells the magnitude out on the label. Shortens to "mil." only when a caller
+// passes a real mobile innerWidth (e.g. a bar total sitting on the bar).
 export function formatMillions(d, innerWidth = Infinity) {
   if (d === 0) return "0";
   if (Math.abs(d) >= 1) {
@@ -71,8 +67,8 @@ export function formatMillions(d, innerWidth = Infinity) {
   return `${thousands.toLocaleString()}K`;
 }
 
-// A point annotation may carry a `mobile` override (placement/offsets/label
-// props) for narrow viewports where the desktop placement would clip.
+// Applies a point annotation's optional `mobile` override (placement/offsets/
+// label props) where the desktop placement would clip on a narrow viewport.
 export function resolveAnnotations(annotations, innerWidth) {
   return annotations.map(({ mobile, ...annotation }) =>
     innerWidth < 1024 && mobile
@@ -89,16 +85,15 @@ export function resolveAnnotations(annotations, innerWidth) {
   );
 }
 
-// Same-color-as-background text stroke behind every end/direct label, so it
-// stays legible over a projection band, gridline, or another series.
+// Background-colored stroke behind end/direct labels, so they stay legible
+// over a projection band, gridline or another series.
 export function endLabelHalo(innerWidth) {
   return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
 }
 
-// Stacked-bar y tick labels sit inside the plot rather than in a left
-// gutter, so mobile has somewhere for them to go. textAnchor flips to
-// "start" with a small dx so the label reads into the chart instead of
-// hanging left of the axis line; the halo keeps it legible over gridlines.
+// Stacked-bar y ticks sit inside the plot, not a left gutter, so mobile has
+// room for them: textAnchor "start" + dx reads them into the chart, and the
+// halo keeps them legible over gridlines.
 export function yAxisPropsInline(innerWidth) {
   return {
     ...yAxisProps,
@@ -113,8 +108,7 @@ export function yAxisPropsInline(innerWidth) {
   };
 }
 
-// Left padding just needs to clear the SVG edge, since labels above live
-// inside the plot rather than needing gutter width for the longest tick.
+// Only has to clear the SVG edge — the inline labels above need no gutter.
 export const yLabelPaddingInline = { left: 8 };
 
 // Right padding reserved for line charts' end-of-line labels.
@@ -124,25 +118,23 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 }
 
 // Mobile end-label wrap width: fits most series names on one line without
-// eating much bar width; also pins lineHeight (Text's 16px default reads
-// oversized against our text-xs/12px).
+// eating bar width. lineHeight is pinned because Text's 16px default reads
+// oversized against our 12px text-xs.
 export const endLabelMobileWrap = {
   props: { label: { width: 80, truncate: false, lineHeight: "13px" } },
 };
 
-// Extra gap between bars on mobile so a growth arrow and both bars' totals
-// fit in a two-bar panel; scaled relative to the figure's own padding so
-// many-bar figures aren't compressed as aggressively as two-bar ones.
+// Extra gap between bars on mobile, so a growth arrow and both totals fit in a
+// two-bar panel. Scaled off the figure's own padding, so many-bar figures
+// aren't compressed as hard as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
   return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
 }
 
-// scaleBand's `.padding()` setter applies one fraction to both the inner gap
-// (between bars) and outer margin (before/after the first/last bar). A
-// two-bar panel needs a big inner gap (see responsiveBandPadding) but
-// nothing useful fills the outer margin, so passing BarChart this prebuilt
-// scale (via its `xScale` prop) decouples the two: outer stays a small
-// constant and bars get thicker.
+// scaleBand's `.padding()` applies one fraction to both the inner gap and the
+// outer margin. Two-bar panels want a big inner gap (responsiveBandPadding)
+// but nothing useful in the outer margin, so handing BarChart this prebuilt
+// scale (its `xScale` prop) decouples them and lets bars get thicker.
 const bandOuterPadding = 0.1;
 
 export function bandXScale(paddingInner) {

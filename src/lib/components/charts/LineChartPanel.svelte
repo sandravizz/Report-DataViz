@@ -6,9 +6,9 @@
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
 
-  // Scrolly draw-in for series flagged `drawIn` — docs/scrolly-line-draw-in.md
-  // has the mechanism. One-shot per page load: `played` flips on *leaving* a
-  // step (effect cleanup, not body), so a revisit shows the finished state.
+  // Scrolly draw-in for series flagged `drawIn` (docs/scrolly-line-draw-in.md).
+  // One-shot per page load: `played` flips on *leaving* a step (effect cleanup,
+  // not body), so a revisit shows the finished state.
   const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
   let played = $state(false);
   $effect(() => {
@@ -17,8 +17,8 @@
       played = true;
     };
   });
-  // Every animation is one class triple: base (hidden), -active (running now),
-  // -done (finished, shown instantly). Delays live in the stylesheet below.
+  // Each animation is a class triple: base (hidden), -active (running), -done
+  // (finished, shown instantly). Delays live in the stylesheet below.
   const phase = (base) =>
     played ? `${base} ${base}-done` : active ? `${base} ${base}-active` : base;
   const revealClass = $derived(phase("lc-draw-reveal"));
@@ -79,10 +79,10 @@
         };
       })
   );
-  // Band's percentage label: bare text — r: 0 drops the circle, and the default
-  // "center" placement anchors it middle/middle on the point the band already
-  // inset for it. A pixel nudge in x would pull the text off the mid-line its y
-  // was measured on. dy cancels AnnotationPoint's own -2.
+  // Band's percentage label: bare text (r: 0 drops the circle), anchored
+  // middle/middle by the default "center" placement on the point the band
+  // already inset for it — a pixel nudge in x would pull the text off the
+  // mid-line its y was measured on. dy cancels AnnotationPoint's own -2.
   const diffBandLabel = $derived(
     pair.diffBand
       ? {
@@ -120,17 +120,15 @@
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
-    // Nothing is stacked here, so a summed "total" row would be meaningless;
-    // the data is annual, so the header is the year alone rather than
-    // LayerChart's "1 January 2035" precision the figures never had.
+    // Nothing is stacked, so a summed "total" row would be meaningless; the
+    // data is annual, so the header is the year alone.
     tooltip: {
       hideTotal: true,
       header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
       ...(pair.valueSuffix && { item: { format: formatValue } }),
     },
-    // Explicit color, not LayerChart's `color-mix(...currentColor...)` — the
-    // PNG export loses that variable chain on a larger DOM (several series'
-    // worth of casing strokes) and falls back to solid black.
+    // Explicit color, not LayerChart's `color-mix(...currentColor...)`: on a
+    // larger DOM the PNG export loses that chain and falls back to black.
     grid: { stroke: "rgba(34, 29, 24, 0.1)" },
   }}
 >
@@ -178,9 +176,9 @@
 {/snippet}
 
 {#if pair.legendItems}
-  <!-- Manual legend for charts whose series list would be useless as one (e.g.
-       many near-identical lines): {label, color} entries summarize the groups
-       instead. pl-9 matches yLabelPadding's gutter. -->
+  <!-- Manual legend for charts whose series list would be useless as one (many
+       near-identical lines): {label, color} entries summarize the groups.
+       pl-9 matches yLabelPadding's gutter. -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}
@@ -199,8 +197,7 @@
 {/if}
 
 <style>
-  /* Draw-in for scrolly reveal steps — see docs/scrolly-line-draw-in.md for
-     the full mechanism and tuning knobs. */
+  /* Draw-in for scrolly reveal steps — docs/scrolly-line-draw-in.md. */
   :global(path.lc-line-draw) {
     stroke-dasharray: 1 1;
     stroke-dashoffset: 1;
@@ -212,8 +209,8 @@
   :global(path.lc-line-draw-done) {
     stroke-dashoffset: 0;
   }
-  /* Callouts and band fade in identically; only the delay differs — the band
-     waits for the line it annotates to finish drawing. */
+  /* Callouts and band fade in identically; only the delay differs, since the
+     band waits for the line it annotates to finish drawing. */
   :global(.lc-draw-reveal),
   :global(.lc-band-reveal) {
     opacity: 0;

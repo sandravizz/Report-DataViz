@@ -8,8 +8,8 @@
   let innerWidth = $state(1024);
   const formatValue = (d) => `${d.toFixed(1)}${pair.valueSuffix ?? ""}`;
 
-  // Category labels are long; give them a generous, width-based word-wrap
-  // gutter (bars can spare the width) instead of hard \n breaks.
+  // Category labels are long: a generous width-based wrap gutter (the bars can
+  // spare it) rather than hard \n breaks.
   const labelGutter = $derived(innerWidth < 1024 ? 110 : 180);
 
   // Bar value labels read as oversized on mobile's narrow bars.

@@ -1,13 +1,9 @@
 <script>
-  // The wind turbine illustration, near-square 0.92:1 cut, inlined rather than loaded from
-  // /static as an <img src>. Gzipped it is only a few kB, and inline it paints
-  // with the first HTML response instead of costing a second round trip that
-  // queues behind the CSS, the JS bundle and the four font files. Landing.svelte
-  // renders both cuts and lets an orientation media query pick one.
-  //
-  // Illustration by Cristina Claverol.
-  // `label` is the accessible name, overridable because Footer renders the same
-  // drawing mirrored and says so.
+  // Wind turbines, near-square 0.92:1 cut. Illustration by Cristina Claverol.
+  // Inlined rather than an <img src>: a few kB gzipped, and it paints with the
+  // first HTML response instead of a second round trip queued behind the CSS,
+  // JS and fonts. Landing renders both cuts, picked by orientation media query.
+  // `label` is overridable because Footer mirrors the drawing and says so.
   let {
     class: className = "",
     label = "Geometric illustration of a row of wind turbines",

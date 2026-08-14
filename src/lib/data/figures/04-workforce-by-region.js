@@ -29,8 +29,8 @@ export const workforceByRegionA = {
   kind: "bar-stacked",
   xKey: "year",
   yTicks: [5, 10, 15, 20, 30],
-  // Mobile's inline y labels would otherwise crowd the "Rest of world" end
-  // label and topmost bars; direct labels + totals already carry the values.
+  // Inline y labels would crowd the "Rest of world" end label and the topmost
+  // bars on mobile; direct labels + totals already carry the values.
   hideYAxisMobile: true,
   directLabelFill: ink,
   series: [
@@ -43,9 +43,8 @@ export const workforceByRegionA = {
   data,
 };
 
-// Figure 4b: same data, one small-multiple line chart per region instead of
-// everyone's share of one stack. "Rest of world" is a merged catch-all, not
-// a real region, so it's left out here.
+// Figure 4b: same data as small multiples instead of shares of one stack.
+// "Rest of world" is a merged catch-all, not a region, so it's left out.
 export const workforceByRegionB = {
   title: "China and India Keep Climbing While Europe and North America Flatten Out",
   subtitle:
@@ -57,8 +56,8 @@ export const workforceByRegionB = {
   kind: "line-multiples",
   xKey: "year",
   xTicks: [years[0], years[years.length - 1]].map((y) => new Date(y, 0, 1)),
-  // Shared, not auto-scaled per panel — so a flat Europe reads as genuinely
-  // flat against China's actual climb.
+  // Shared, not auto-scaled per panel, so a flat Europe reads as genuinely
+  // flat against China's climb.
   yDomain: [2, 10],
   yTicks: [2, 4, 6, 8, 10],
   data,
@@ -69,5 +68,3 @@ export const workforceByRegionB = {
     { label: "North America", value: "northAmerica", color: iea.regionTints[3] },
   ],
 };
-
-export default workforceByRegionA;

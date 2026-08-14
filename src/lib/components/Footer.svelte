@@ -59,16 +59,13 @@
       </div>
     </div>
 
-    <!-- Same turbine illustration as Landing, mirrored — the near-square
-         portrait cut, since this column is only ~half the container and the
-         wide landscape cut would shrink to a sliver in it. Hidden on phones —
-         the bio/CTA/links matter more than a hero echo there. The max-height
-         is the ceiling flex can't supply on its own: the panel is
-         `min-h-screen`, a floor rather than a definite height, so without it
-         the 0.92:1 artwork would push the panel past one viewport.
-         Inlined as a component like Landing's, so nothing here waits on a
-         separate file; no `object-contain`, because an inline <svg> already
-         letterboxes itself inside the box via its preserveAspectRatio. -->
+    <!-- Landing's turbines, mirrored — the near-square portrait cut, since this
+         column is only half the container and the wide cut would shrink to a
+         sliver. Hidden on phones, where the bio/CTA matter more than a hero
+         echo. max-h is the ceiling flex can't supply: the panel is
+         min-h-screen, a floor, so without it the artwork pushes past one
+         viewport. Inlined and un-`object-contain`ed for the same reasons as
+         Landing's. -->
     <div class="hidden md:flex md:flex-1 md:justify-end">
       <WindTurbinesTall
         label="Geometric illustration of a row of wind turbines, mirrored"

@@ -15,7 +15,6 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-
   const labelWidth = $derived(innerWidth < 1024 ? 40 : 90);
 
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));

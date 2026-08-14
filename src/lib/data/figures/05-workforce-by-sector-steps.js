@@ -1,5 +1,5 @@
 import { iea } from "$lib/colors";
-import { projectionRange } from "$lib/data/annotation-presets.js";
+import { projectionRange } from "../annotation-presets.js";
 
 const scenarioTickFormat = (d) =>
   d.getFullYear() === 2035 ? "2035 STEPS" : String(d.getFullYear());

@@ -1,8 +1,7 @@
 <script>
-  // Permanent solid/blurred bar — the hero is plain white now, so there's no
-  // scroll-over-photo transparency to handle (see docs/sandraviz-brand.md).
-  // `abstract` is an optional snippet; when given, an "Abstract" dropdown
-  // appears next to the TOC with the snippet as its panel content.
+  // Permanently solid/blurred: the hero is plain white, so there's no
+  // scroll-over-photo transparency to handle (docs/sandraviz-brand.md).
+  // `abstract` is optional; given one, an "Abstract" dropdown joins the TOC.
   let { links = [], abstract } = $props();
 
   function closeDropdown(event) {

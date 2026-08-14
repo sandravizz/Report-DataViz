@@ -1,5 +1,5 @@
 import { iea } from "$lib/colors";
-import { projectionRange } from "$lib/data/annotation-presets.js";
+import { projectionRange } from "../annotation-presets.js";
 
 const data = [
   { year: new Date(2015, 0, 1), efficiency: 0.42, grids: 0.4, wind: 0.01, solar: 0.12 },
