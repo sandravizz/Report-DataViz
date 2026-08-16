@@ -96,15 +96,17 @@ export function yAxisPropsInline(innerWidth) {
       ...mutedTickLabelProps,
       textAnchor: "start",
       verticalAnchor: "end",
-      dx: 8,
+      dx: -5,
       dy: -3,
       ...endLabelHalo(innerWidth),
     },
   };
 }
 
-// Only has to clear the SVG edge — the inline labels above need no gutter.
-export const yLabelPaddingInline = { left: 8 };
+// Near-zero so the gridlines start at the far left of the SVG and run *under*
+// the inline labels above (whose halo masks the line behind each number),
+// rather than beginning to their right. The labels' own dx supplies the indent.
+export const yLabelPaddingInline = { left: 1 };
 
 // Right padding reserved for line charts' end-of-line labels.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
