@@ -97,8 +97,18 @@
         labelPlacement: "top",
         props: {
           circle: { r: 0, stroke: "none", fill: "none" },
-          // dy nudges the default -2 down closer to the bar's top edge.
-          label: { fill: ink, textAnchor: "start", dy: 2, class: "text-xs font-light" },
+          // verticalAnchor is pinned, not left to AnnotationPoint: without it
+          // layerchart centres the label on the bar's top edge (its capHeight
+          // bias and Text's "middle" anchor cancel out), so the number half
+          // sits inside the bar. "end" puts the baseline on `y`; dy lifts it
+          // clear — same convention as the inline y ticks in chart-theme.
+          label: {
+            fill: ink,
+            textAnchor: "start",
+            verticalAnchor: "end",
+            dy: -3,
+            class: "text-xs font-light",
+          },
         },
       };
     });
