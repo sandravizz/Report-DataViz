@@ -1,25 +1,29 @@
-<script>
-  import GlobeMark from './GlobeMark.svelte';
-</script>
-
 <footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center md:flex-row md:items-center md:gap-10"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col items-center justify-center"
   >
     <div
-      class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
+      class="w-full max-w-2xl px-6 py-12 text-center sm:px-10 sm:py-16"
     >
-      <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
+      <div class="mb-4 flex items-center justify-center gap-4 sm:mb-6 sm:gap-5">
         <img
           src="/sandra-portrait.jpg"
           alt="Portrait of Sandra"
           class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
         />
-        <img
-          src="/gjp-logo.svg"
-          alt="Global Justice Project"
-          class="h-8 w-auto sm:h-10"
-        />
+        <a
+          href="https://globaljusticeproject.wid.world/insight/summary/"
+          target="_blank"
+          rel="noopener"
+          class="shrink-0 hover:opacity-70"
+          aria-label="Global Justice Project — source report"
+        >
+          <img
+            src="/gjp-logo.svg"
+            alt="Global Justice Project"
+            class="h-8 w-auto sm:h-10"
+          />
+        </a>
       </div>
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
@@ -38,7 +42,7 @@
         class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
         >Get in touch →</a
       >
-      <div class="mt-4 flex items-center gap-5 sm:mt-6">
+      <div class="mt-4 flex items-center justify-center gap-5 sm:mt-6">
         <a
           href="https://github.com/sandravizz"
           target="_blank"
@@ -62,10 +66,6 @@
           </svg>
         </a>
       </div>
-    </div>
-
-    <div class="hidden text-primary/20 md:flex md:flex-1 md:justify-end md:pr-24">
-      <GlobeMark class="w-64 lg:w-80" />
     </div>
   </div>
 </footer>

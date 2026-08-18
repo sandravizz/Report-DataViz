@@ -62,19 +62,19 @@
 <Landing />
 
 {#each sections as section (section.id)}
-  <section id={section.id} class="h-[140vh] font-sans text-base-content">
-    <div class="sticky top-0 h-screen overflow-y-auto bg-base-100">
-      <div class="flex min-h-full">
-        <div
-          class="mx-auto my-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200"
-        >
-          <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
-          {#if section.intro}
-            <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
-              {section.intro}
-            </p>
-          {/if}
-        </div>
+  <!-- Chapter text is NOT pinned: only the figure surface in ScrollySection
+       sticks. The intro is a screen you scroll through once, so it needs no
+       runway (no tall container, no sticky child) — min-h-screen just gives it
+       a full screen of air and centres it. -->
+  <section id={section.id} class="font-sans text-base-content">
+    <div class="flex min-h-screen items-center bg-base-100">
+      <div class="mx-auto w-[88vw] py-24 lg:ml-[calc(43%-400px)] lg:w-200">
+        <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+        {#if section.intro}
+          <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
+            {section.intro}
+          </p>
+        {/if}
       </div>
     </div>
   </section>
