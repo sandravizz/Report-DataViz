@@ -7,22 +7,25 @@
      photo as background with the title block overlaid and centred.
      Header.svelte is absolutely positioned and floats transparently on top of
      this photo — it isn't fixed, so it scrolls away with the hero. -->
-<!-- Cover: a container terminal seen from above (CC0, via Wikimedia Commons:
-     File:Large cargo port (Unsplash).jpg — public domain dedication, no
-     attribution required). The Global Justice Report has no cover photograph
-     of its own; the port was chosen because the whole report is about the
-     world economy as one system — trade, income convergence, and the
-     material throughput that has to fit inside planetary boundaries. -->
+<!-- Cover: a crowd walking out through a station passage, in black and white
+     (CC0, via Wikimedia Commons: File:Train station crowd in black and white
+     (Unsplash).jpg — public domain dedication, no attribution required). The
+     Global Justice Report has no cover photograph of its own; this one was
+     chosen because the report is finally about people rather than aggregates —
+     who works how many hours, who holds which share — and the monochrome keeps
+     it from reading as any single country's story. -->
 <section class="relative flex min-h-screen flex-col font-sans">
   <img
     src="/cover.jpg"
-    alt="A container terminal seen from above, stacked with freight containers and gantry cranes"
+    alt="A crowd of people walking through a railway station passage, photographed in black and white"
     class="absolute inset-0 h-full w-full object-cover"
   />
-  <!-- Scrim: the photo carries bright container blocks throughout, so it
-       darkens top (under the transparent header) and bottom (under the meta
-       lines) more than the middle. -->
-  <div class="absolute inset-0 bg-linear-to-b from-black/55 via-black/45 to-black/65"></div>
+  <!-- Scrim: unusually, this one is heaviest in the MIDDLE rather than at the
+       ends. The photo's bright tunnel wall runs right across the band where the
+       title sits, while the foreground figures at the bottom are already dark —
+       so the gradient goes 50% under the header, 55% behind the title block,
+       and 65% at the foot to settle the meta lines. -->
+  <div class="absolute inset-0 bg-linear-to-b from-black/50 via-black/55 to-black/65"></div>
 
   <div
     class="relative flex flex-1 flex-col items-center px-6 pt-20 pb-8 text-white sm:px-10"
@@ -32,7 +35,7 @@
         Global Justice Project
       </p>
       <h1
-        class="mt-4 max-w-4xl font-display text-3xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl"
+        class="mt-4 max-w-4xl font-display text-4xl leading-tight font-bold text-balance sm:text-6xl lg:text-7xl"
       >
         The Global Justice Report
       </h1>
