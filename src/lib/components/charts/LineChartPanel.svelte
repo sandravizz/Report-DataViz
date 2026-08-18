@@ -8,11 +8,10 @@
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
 
-  // Scrolly draw-in for series flagged `drawIn` — see
-  // docs/scrolly-line-draw-in.md for the full mechanism. One-shot per page
-  // load: `played` flips on leaving an active state (in the effect's
-  // cleanup, not its body) so a revisit shows the finished state instantly
-  // instead of replaying.
+  // Scrolly draw-in for series flagged `drawIn` — full mechanism in
+  // docs/scrolly-line-draw-in.md. One-shot per page load: `played` flips in
+  // the effect's CLEANUP, not its body, so a revisit lands on the finished
+  // state instantly instead of replaying.
   const hasDrawIn = $derived(pair.series.some((s) => s.drawIn));
   let played = $state(false);
   $effect(() => {
@@ -39,9 +38,8 @@
     pair.series.find((s) => s.key === key)?.drawIn
       ? { pathLength: 1, class: drawClass } // pathLength=1 so dashoffset 1 spans the whole path
       : {};
-  // A step's callout annotation (e.g. Figure 13c's "overtakes" marker) waits
-  // a further ~1s after the line/end-labels land, on its own delay — see
-  // lc-annotation-reveal's transition below.
+  // A step's callout (e.g. Figure 13c's "overtakes" marker) waits a further
+  // ~1s after the lines and end labels land — see lc-annotation-reveal below.
   const annotationRevealClass = $derived(
     played
       ? "lc-annotation-reveal lc-annotation-reveal-done"
@@ -50,16 +48,12 @@
         : "lc-annotation-reveal"
   );
 
-  // FT-style line treatment: monotone smoothing (rounds corners without
-  // overshooting the data) plus round joins/caps. Each line is drawn twice in
-  // the marks snippet below — a surface-colored casing under the colored
-  // stroke — so crossings read as "in front of" instead of spaghetti.
-  // De-emphasized background series (colors.regionGray, e.g. figure 2's eight
-  // region lines) get half the line weight of a highlighted line, plus a
-  // much thinner, slightly translucent casing — with that many overlapping
-  // lines, full weight and a full-width opaque halo on every one washes the
-  // chart out in white. Casing width also gets a further reduction on
-  // mobile, same <1024 threshold as the rest of the report.
+  // FT-style line treatment — full rationale in docs/line-chart-casing.md.
+  // Each line is drawn twice in the marks snippet below (surface-colored
+  // casing under the colored stroke) so crossings read as "in front of"
+  // rather than spaghetti. De-emphasized series get half the weight and a
+  // much thinner, translucent casing: at figure 2's eight overlapping lines,
+  // full-width opaque halos wash the chart out in white.
   const lineStyle = (deemphasized) => ({
     curve: curveMonotoneX,
     strokeWidth: deemphasized ? 1.25 : 2.5,
@@ -81,11 +75,10 @@
   const formatYear = timeFormat("%Y");
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-  // There is no built-in legend; series that opt in via an explicit
-  // `endLabel` get their name at the end of the line instead, and right
-  // padding is reserved for them. Series without `endLabel` (e.g.
-  // de-emphasized background lines) get neither — charts where the series
-  // list would make a useless legend supply `legendItems` below instead.
+  // In place of a built-in legend, series opting in with an `endLabel` get
+  // their name at the line's end, with right padding reserved for it. Series
+  // without one (e.g. de-emphasized background lines) get nothing; charts
+  // whose series list makes a useless legend supply `legendItems` instead.
   const endLabelAnnotations = $derived(
     pair.series
       .filter((s) => s.endLabel)
@@ -141,10 +134,9 @@
       item: { format: formatValue },
       hideTotal: pair.hideTooltipTotal,
     },
-    // Explicit color, not LayerChart's default `color-mix(...currentColor...)`
-    // — that CSS-variable chain is what the PNG export was losing on figure
-    // 2's larger DOM (9 series' worth of casing strokes), falling back to a
-    // solid black un-themed default instead of a faint 10%-opacity line.
+    // Explicit color, not LayerChart's `color-mix(...currentColor...)` default
+    // — the PNG export loses that CSS-variable chain and falls back to solid
+    // black instead of a faint 10% line.
     grid: { stroke: "rgba(0, 0, 0, 0.1)" },
   }}
 >
@@ -175,12 +167,10 @@
 {/snippet}
 
 {#if pair.legendItems}
-  <!-- Manual legend for charts whose real series list would make a useless
-       legend (e.g. figure 2's eight identical gray region lines): the figure
-       supplies a few {label, color} entries that summarize the groupings.
-       Rendered below the plot like the built-in bottom-left legend, with the
-       same text size and swatch scale; pl-9 matches yLabelPadding's 36px
-       axis gutter so the swatches align with the plot's left edge. -->
+  <!-- Manual legend for charts whose series list would make a useless one
+       (e.g. figure 2's eight identical gray region lines): the figure supplies
+       a few {label, color} entries summarizing the groupings. pl-9 matches
+       yLabelPadding's 36px gutter so swatches align with the plot's left edge. -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}

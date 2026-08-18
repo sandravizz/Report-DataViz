@@ -1,7 +1,5 @@
 <script>
   import GlobeMark from './GlobeMark.svelte';
-
-  let { disclosure } = $props();
 </script>
 
 <footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
@@ -70,12 +68,4 @@
       <GlobeMark class="w-64 lg:w-80" />
     </div>
   </div>
-
-  {#if disclosure}
-    <div class="mx-auto w-full max-w-350 px-6 pb-4 sm:px-10 sm:pb-6">
-      <div class="text-left text-[10px] leading-relaxed text-base-content/40">
-        {@render disclosure()}
-      </div>
-    </div>
-  {/if}
 </footer>

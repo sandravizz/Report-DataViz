@@ -1,5 +1,5 @@
 <script>
-  let { links = [], abstract } = $props();
+  let { links = [] } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -38,42 +38,23 @@
   ];
 </script>
 
-<header class="absolute inset-x-0 top-0 z-20 bg-base-100/90 backdrop-blur-sm">
+<!-- Absolute, never fixed or sticky: the header belongs to the landing screen
+     and scrolls away with it, leaving the figures the full viewport. It is
+     transparent and white because it now floats on Landing's cover photo;
+     z-20 keeps it under the chapter rail's z-40. -->
+<header class="absolute inset-x-0 top-0 z-20 text-white">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
     <a href="https://globaljusticeproject.wid.world/insight/summary/" class="shrink-0 hover:opacity-70" aria-label="Global Justice Project — source report">
-      <img src="/gjp-logo.svg" alt="Global Justice Project" class="h-9 w-auto sm:h-11" />
+      <img src="/gjp-logo-white.svg" alt="Global Justice Project" class="h-9 w-auto sm:h-11" />
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
-      {#if abstract}
-        <div class="dropdown dropdown-end">
-          <div
-            tabindex="0"
-            role="button"
-            aria-label="Abstract"
-            class="cursor-pointer px-2 py-2 font-sans text-sm decoration-secondary decoration-2 underline-offset-8 outline-none hover:underline"
-          >
-            Abstract
-          </div>
-          <div
-            tabindex="-1"
-            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans text-base-content shadow-lg"
-          >
-            <div
-              class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80"
-            >
-              {@render abstract()}
-            </div>
-          </div>
-        </div>
-      {/if}
-
       <div class="dropdown dropdown-end">
         <div
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-secondary decoration-2 underline-offset-8 outline-none hover:underline"
+          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-white decoration-2 underline-offset-8 outline-none hover:underline"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -116,7 +97,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="text-neutral hover:text-primary"
+            class="text-white/80 hover:text-white"
           >
             <svg class={social.size} viewBox={social.viewBox} fill="currentColor">
               <path d={social.path} />

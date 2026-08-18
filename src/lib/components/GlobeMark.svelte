@@ -1,13 +1,10 @@
 <script>
   /* Decorative stand-in for the report's cover illustration: a wireframe
-     globe (the graticule's evenly divided segments standing in for the
-     equality half of the subtitle) sitting inside a dashed ring — the
-     planetary boundary. Line art only, so it inherits `currentColor` from
-     whatever wraps it and can be dialled down with an opacity utility
-     instead of shipping a second, lighter asset. Geometry is exact rather
-     than eyeballed: the globe's radius is 78, so a latitude drawn dy from
-     the centre spans ±sqrt(78² − dy²) — 64.4 at dy 44 — which keeps every
-     chord landing precisely on the sphere's outline. */
+     globe inside a dashed ring, the planetary boundary. Line art only, so it
+     inherits `currentColor` and dials down with an opacity utility rather
+     than needing a second, lighter asset. Geometry is exact, not eyeballed —
+     with radius 78, a latitude dy from the centre spans ±sqrt(78² − dy²)
+     (64.4 at dy 44), landing every chord on the sphere's outline. */
   let { class: className = '' } = $props();
 </script>
 

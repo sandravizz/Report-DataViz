@@ -28,8 +28,8 @@
         filename: downloadName(pair),
       });
     } catch (error) {
-      // Without this the export's rejections become unhandled: the button
-      // would silently flip back from "Exporting…" with no file and no trace.
+      // Otherwise the button silently flips back from "Exporting…" with no
+      // file and no trace.
       console.error("Figure PNG export failed", error);
     } finally {
       downloading = false;
@@ -41,14 +41,12 @@
   class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
-  <!-- Hover lift borrowed from ChapterRail's panel: instead of darkening in
-       place, the control takes the colour of the surface behind it — the
-       figure's flat white (ScrollySection's data-scrolly block) — and rises on
-       a shadow-lg. Painted with `!` utilities rather than daisyUI's --btn-*
-       variables: .btn composes box-shadow out of --btn-inset + --btn-shadow and
-       .btn-ghost zeroes them, so a plain shadow utility loses. .btn's own
-       200ms transition on background-color/box-shadow already matches the
-       rail's. -->
+  <!-- Hover lift borrowed from ChapterRail's panel: rather than darkening in
+       place, the control takes the flat white of the surface behind it
+       (ScrollySection's data-scrolly block) and rises on a shadow-lg. Needs
+       `!` utilities, not daisyUI's --btn-* variables: .btn composes box-shadow
+       from --btn-inset + --btn-shadow and .btn-ghost zeroes them, so a plain
+       shadow utility loses. -->
   <button
     type="button"
     class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:border-transparent! hover:bg-white! hover:shadow-lg!"
@@ -61,11 +59,11 @@
     {downloading ? "Exporting…" : "PNG"}
   </button>
 </div>
-<!-- Same lift as the PNG button. self-start is what keeps the pill around the
-     text: this <a> is a flex item of ChartDisplay's column, so the default
-     stretch blew its hover surface across the figure's full width. The pill's
-     padding is cancelled by -ml-2.5 and replaces the old mt-1, so the wordmark
-     sits exactly where it did before — only the hover surface is new. -->
+<!-- Same lift as the PNG button. self-start is what keeps the pill wrapped to
+     the text: this <a> is a flex item of ChartDisplay's column, and the
+     default stretch blows the hover surface across the figure's full width.
+     -ml-2.5 cancels the pill's padding so the wordmark sits where it would
+     without it. -->
 <a
   href="https://sandraviz.com"
   target="_blank"

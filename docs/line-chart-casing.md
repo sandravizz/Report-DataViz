@@ -4,6 +4,5 @@ Line charts use the overlap treatment known from Financial Times / Economist cha
 
 On top of that, lines use `curveMonotoneX` smoothing (rounds corners without ever overshooting a data value) and round joins/caps.
 
-![Line casing at overlaps](line-chart-overlap.png)
 
 All of this lives in one place, `src/lib/components/charts/LineChartPanel.svelte`: the `lineStyle`/`casingStyle` functions (both take a `deemphasized` flag — true for series colored `colors.regionGray`, e.g. figure 2's eight region lines) and the `marks` snippet that renders the two strokes per series. Tuning knobs: line width is 2.5 for a highlighted line, 1.25 (half) for a de-emphasized one; casing width comes from `casingWidth(deemphasized, innerWidth)` — 6.5 (desktop) / 5 (mobile) highlighted, 2 / 1.6 de-emphasized, which would wash out in white if it carried a full-width opaque halo across that many overlapping lines — those also get `opacity: 0.7` on the casing. Removing the `curve` property brings back straight segments while keeping the casing.

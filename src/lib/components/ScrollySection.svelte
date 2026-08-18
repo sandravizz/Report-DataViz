@@ -2,7 +2,7 @@
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  // sectionId is the owning chapter's id: it namespaces the per-chart scroll
+  // sectionId is the owning chapter's id, namespacing the per-chart scroll
   // anchors below so ChapterRail can link to an individual figure.
   let { pairs, sectionId = "" } = $props();
 
@@ -54,8 +54,8 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
-  // activeIndex is 0 even while the section is still below the fold, so gate
-  // draw-in animations on it actually being on screen (docs/scrolly-line-draw-in.md).
+  // activeIndex is 0 even while the section is below the fold, so draw-in
+  // animations gate on this instead (docs/scrolly-line-draw-in.md).
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
@@ -66,12 +66,12 @@
   class="relative"
   style:height="{(pairs.length - 1) * 80 + 140}vh"
 >
-  <!-- One invisible scroll target per chart step. A step is active when the
-       page has scrolled (progress × (containerHeight − vh)) past the container
-       top, so an anchor parked at exactly that offset lands the right chart on
-       screen with a plain scrollIntoView({ block: "start" }) — no scroll maths
-       duplicated in the caller. ChapterRail links its hover panel to these and
-       reads their positions to tell which figure is showing. -->
+  <!-- One invisible scroll target per chart step, parked at the exact offset
+       where that step goes active (progress × (containerHeight − vh) past the
+       container top). A plain scrollIntoView({ block: "start" }) therefore
+       lands the right chart, with no scroll maths duplicated in the caller.
+       ChapterRail both links to these and reads their positions to tell which
+       figure is on screen. -->
   {#each pairs as pair, i (pair.number ?? i)}
     <div
       id="{sectionId}-chart-{i}"
@@ -84,9 +84,8 @@
         : "0px"}
     ></div>
   {/each}
-  <!-- data-scrolly marks the white figure surface: ChapterRail reads it to
-       tint its hover panel to whatever is behind the rail (docs below in
-       ChapterRail.svelte). -->
+  <!-- data-scrolly marks the white figure surface, which ChapterRail reads to
+       tint its hover panel to whatever sits behind the rail. -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-white">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />

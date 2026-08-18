@@ -9,10 +9,10 @@
   // this element's LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
 
-  // Multi-step figures (e.g. "Figure 13a/13b/13c") show the shared prefix
-  // only — "Figure 13" — instead of cycling the per-step letter; the
-  // progress rail above the title carries the "how far along" signal instead.
-  // A one-pair group has nothing to strip, so it falls back to the full number.
+  // Multi-step figures ("Figure 13a/13b/13c") show only the shared prefix,
+  // "Figure 13", rather than cycling the per-step letter — the progress rail
+  // above the title already carries the "how far along" signal. A single pair
+  // has no prefix to find, so it falls back to the full number.
   function commonPrefixLength(strings) {
     if (strings.length < 2) return 0;
     let len = strings[0].length;
@@ -23,13 +23,12 @@
     }
     return len;
   }
-  let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
-  let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
-  let headerLabel = $derived(pairs.length > 1 ? tabPrefix : (pairs[0]?.number ?? ""));
-  // One step's worth of fill per chart, not raw scroll fraction: chart 1 of 3
-  // lands the rail at 33%, chart 2 at 66%, the last chart always at a flat
-  // 100% (rather than only reaching 100% at the very last pixel of the
-  // pinned scroll range).
+  let sharedPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
+  let sharedPrefix = $derived(pairs[0]?.number.slice(0, sharedPrefixLength).trim() ?? "");
+  let headerLabel = $derived(pairs.length > 1 ? sharedPrefix : (pairs[0]?.number ?? ""));
+  // One step's worth of fill per chart rather than raw scroll fraction, so
+  // chart 1 of 3 lands the rail at 33%, chart 2 at 66%, and the last chart at
+  // a flat 100% — not only at the final pixel of the pinned scroll range.
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
@@ -58,10 +57,9 @@
         </button>
       </div>
 
-      <!-- Always-present reading-progress rail, not gated to multi-step
-           figures — a single-chart figure is just a flat 100%. Sits above
-           the title (McKinsey-style). Shown at every breakpoint, unlike the
-           chapter rail (desktop-only). -->
+      <!-- Reading-progress rail, above the title. Never gated to multi-step
+           figures — a single-chart figure is simply a flat 100% — and shown at
+           every breakpoint, unlike the desktop-only chapter rail. -->
       <div class="mb-3 h-px w-full shrink-0 overflow-hidden rounded-full bg-base-content/10 lg:mb-4">
         <div
           class="h-full rounded-full bg-base-content/50 transition-[width] duration-300 ease-out"

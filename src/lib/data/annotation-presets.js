@@ -1,7 +1,7 @@
-// Shared visual language for explanatory annotations (Datawrapper-style:
-// dark ink for labels, hatch for projection ranges). Figures compose these
-// via the factories below so every callout inherits the same styling; any
-// AnnotationPoint/Range prop can still be overridden per call.
+// Shared visual language for explanatory annotations (Datawrapper-style: dark
+// ink labels, hatched projection ranges). Figures compose the factories below
+// so every callout inherits the same styling; any AnnotationPoint/Range prop
+// can still be overridden per call.
 
 import { ink, mutedTextGray } from "$lib/colors.js";
 import { endLabelHalo } from "$lib/chart-theme.js";
@@ -10,10 +10,9 @@ import { endLabelHalo } from "$lib/chart-theme.js";
 // with no viewport to react to (unlike endLabelHalo's own per-panel usage).
 const annotationLabel = { ...endLabelHalo(1024), fill: ink, class: "text-xs font-light" };
 const mutedLabel = { ...endLabelHalo(1024), fill: mutedTextGray, class: "text-xs font-light" };
-// Explicit color (not `currentColor`/a CSS variable) — the hatch lines are
-// drawn via an SVG presentation attribute, and the figure download's PNG
-// export re-serializes the chart's SVG outside the page's stylesheet, where
-// a CSS custom property has nothing to resolve against.
+// Explicit color, never `currentColor` or a CSS variable: the PNG export
+// re-serializes the chart's SVG outside the page's stylesheet, where a custom
+// property has nothing left to resolve against.
 const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2, color: "#000000" } };
 
 // Circled point callout. `filled` tints the ring with the series color for

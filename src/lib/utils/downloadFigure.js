@@ -9,13 +9,11 @@ const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
 const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 
-// Extra canvas on every side so labels that overflow the SVG's nominal bounds
-// survive the export. On the live page they spill past the chart box and stay
-// visible; rasterized standalone, that same overflow is hard-clipped at the
-// viewBox edge, beheading end-of-line labels and annotation text.
-// Must stay smaller than `pad` below: charts are composited at
-// `pad - CAPTURE_BLEED`, so a bleed wider than the page margin would push them
-// off the left edge of the canvas instead of giving their labels room.
+// Extra canvas on every side, so labels that overflow the SVG's nominal
+// bounds survive the export — on screen they simply spill past the chart box,
+// but rasterized standalone they get hard-clipped at the viewBox edge.
+// Must stay smaller than `pad` below: charts composite at `pad -
+// CAPTURE_BLEED`, so a wider bleed pushes them off the canvas' left edge.
 const CAPTURE_BLEED = 20;
 
 function wrapLines(ctx, text, maxWidth) {
@@ -44,19 +42,15 @@ async function captureChartBleed(root, scale) {
 
   const svg = new DOMParser().parseFromString(svgStr, "image/svg+xml").documentElement;
 
-  // When a viewBox is present the bleed math must derive from it (the
-  // content's own coordinate space) rather than the width/height attributes:
-  // those come from the root element's clientWidth/clientHeight, which can
-  // drift from the viewBox on a figure whose `.lc-root-container` sits inside
-  // extra wrapper markup (e.g. figure 2's legend row) — sizing the output
-  // canvas off the mismatched attribute stretches every stroke/pattern to fit.
+  // Bleed math must use the viewBox, not width/height: those come from
+  // clientWidth/clientHeight and can drift from it when `.lc-root-container`
+  // sits inside extra wrapper markup (e.g. figure 2's legend row), which
+  // stretches every stroke and pattern to fit the mismatch.
   //
-  // But a viewBox is not guaranteed. LayerChart only adds one when it has to
-  // wrap several SVG layers; a chart that serializes to a single layer comes
-  // back with width/height alone (see layerchart/utils/download.js). Its
-  // content then sits in raw pixel coordinates, so those attributes *are* its
-  // coordinate space — which is exactly what this fallback reconstructs.
-  // Removing it blanks the chart area of every single-layer figure.
+  // The fallback is not optional. LayerChart emits a viewBox only when it
+  // wraps several SVG layers; a single-layer chart serializes with
+  // width/height alone (layerchart/utils/download.js), those attributes being
+  // its coordinate space. Drop the fallback and every such figure exports blank.
   const width = parseFloat(svg.getAttribute("width"));
   const height = parseFloat(svg.getAttribute("height"));
   const [vx, vy, vw, vh] = (svg.getAttribute("viewBox") ?? `0 0 ${width} ${height}`)
@@ -70,24 +64,15 @@ async function captureChartBleed(root, scale) {
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${outWidth} ${outHeight}`
   );
-  // Rasterize at the final export resolution: width/height carry the retina
-  // multiple while the viewBox above stays in CSS units, so the whole user
-  // space (strokes and `patternUnits="userSpaceOnUse"` hatch tiles alike)
-  // scales uniformly. The `<img>` is then already at output size and needs no
-  // resampling on the way to the canvas.
+  // Rasterize straight at export resolution: width/height carry the retina
+  // multiple while the viewBox stays in CSS units, so all of user space
+  // (strokes and `patternUnits="userSpaceOnUse"` hatch tiles alike) scales
+  // uniformly and the `<img>` needs no resampling on the way to the canvas.
   //
-  // The alternative — loading at 1:1 and letting `createImageBitmap`'s
-  // resizeWidth/resizeHeight do the upscale — is what turned every
-  // translucent stroke opaque in Chrome: its resampler mishandles alpha, so
-  // the 10%-black gridlines and the 20%-black projection hatch rasterized as
-  // solid black. Safari and Firefox largely ignore those resize options, which
-  // is why the bug only ever showed up in Chrome.
-  //
-  // Stretching width/height past the viewBox is only unsafe when there is no
-  // viewBox at all — a single-layer chart serializes with width/height alone
-  // (see layerchart/utils/download.js), and without the reconstruction above
-  // its content would stay at 1:1 in the corner of an oversized canvas, which
-  // is what made the hatch look "far denser than intended" before.
+  // Do NOT instead load at 1:1 and upscale via createImageBitmap's
+  // resizeWidth/resizeHeight: Chrome's resampler mishandles alpha there, and
+  // the 10%-black gridlines and 20%-black hatch come out solid black. (Safari
+  // and Firefox ignore those options, so the bug looks Chrome-only.)
   svg.setAttribute("width", String(Math.round(outWidth * scale)));
   svg.setAttribute("height", String(Math.round(outHeight * scale)));
 
@@ -104,8 +89,8 @@ async function captureChartBleed(root, scale) {
       img.onerror = () => reject(new Error("Chart SVG could not be rasterized"));
       img.src = url;
     });
-    // No resize options: the image is already at export resolution, so this
-    // just decodes it. `width`/`height` come back in CSS units — the caller
+    // No resize options — the image is already at export resolution, so this
+    // only decodes. Returned width/height are CSS units; the caller
     // composites onto a context already scaled by `exportScale`.
     const bitmap = await createImageBitmap(img);
     return { bitmap, width: outWidth, height: outHeight };
@@ -128,9 +113,8 @@ export async function downloadFigureImage({
   source,
   filename,
 }) {
-  // Export scale, not the device's own ratio: the floor of 2 keeps the PNG
-  // retina-sharp even when downloaded from a 1x display, since the file
-  // outlives the screen it was made on.
+  // Floored at 2 rather than tracking devicePixelRatio: the file outlives the
+  // screen it was made on, so it stays retina-sharp off a 1x display too.
   const exportScale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([
     document.fonts.load(`500 16px "Satoshi"`),
@@ -168,9 +152,9 @@ export async function downloadFigureImage({
   const wordmarkSize = 12;
   const textWidth = containerRect.width;
 
-  // The output canvas doubles as the measuring surface — line counts decide
-  // its height, so it stays unsized until they are known. Sizing it below
-  // resets every context property, hence all drawing state is set after that.
+  // The output canvas doubles as the measuring surface, so it stays unsized
+  // until the wrapped line counts give it a height. Sizing a canvas resets
+  // every context property, hence all drawing state is set after that point.
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
@@ -249,8 +233,7 @@ export async function downloadFigureImage({
     const drawX = pad + (p.x - unionLeft) - CAPTURE_BLEED;
     const drawY = headerHeight + (p.y - unionTop) - CAPTURE_BLEED;
     ctx.drawImage(capture.bitmap, drawX, drawY, capture.width, capture.height);
-    // A decoded ImageBitmap holds memory (often GPU-side) until it is closed
-    // or collected; release each one as soon as it has been composited.
+    // Decoded bitmaps hold (often GPU-side) memory until closed or collected.
     capture.bitmap.close();
   }
 
