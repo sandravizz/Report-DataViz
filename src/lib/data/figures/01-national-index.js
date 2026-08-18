@@ -45,8 +45,12 @@ const base = {
   title: "Mieten steigen weiter deutlich, Kaufpreise nur moderat",
   subtitle:
     "Entwicklung der inserierten Immobilienpreise, hedonisch, 2018 Q1–2026 Q2",
-  description:
-    "Die Angebotsmieten liegen 4,0 Prozent über dem Vorjahresquartal. Eigentumswohnungen (ETW) und Ein- und Zweifamilienhäuser (EZFH) verteuern sich dagegen nur um jeweils 0,8 Prozent — die Kaufpreise bewegen sich weitgehend seitwärts, nachdem sie seit Mitte 2022 erheblich zurückgegangen waren.",
+  // One string per paragraph. A plain string works too, for single-paragraph
+  // copy — see src/lib/utils/paragraphs.js.
+  description: [
+    "Gegenüber dem Vorjahresquartal verteuern sich sowohl Eigentumswohnungen als auch Ein- und Zweifamilienhäuser um 0,8 Prozent. Im Vergleich zum Vorquartal steigen die Preise für Eigentumswohnungen leicht um 0,2 Prozent, bei Ein- und Zweifamilienhäusern fällt der Zuwachs mit 1,0 Prozent etwas deutlicher aus. Insgesamt bewegen sich die Kaufpreise damit weiterhin weitgehend seitwärts, nachdem sie seit Mitte 2022 erheblich zurückgegangen waren.",
+    "Während sich die Kaufpreise bislang nur leicht erhöhen, setzen die Angebotsmieten ihren deutlich stärkeren Anstieg fort. Gegenüber dem Vorjahresquartal beträgt das Plus 4,0 Prozent, gegenüber dem Vorquartal 1,3 Prozent.",
+  ],
   source: "Quelle: Institut der deutschen Wirtschaft",
   kind: "line",
   xKey: "quarter",

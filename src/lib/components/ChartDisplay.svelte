@@ -2,6 +2,7 @@
   import ChartPanel from "./charts/ChartPanel.svelte";
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
+  import { toParagraphs } from "$lib/utils/paragraphs.js";
 
   let { pairs, activeIndex, inView = true } = $props();
 
@@ -98,9 +99,11 @@
       <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium text-base-content">
         {pairs[activeIndex].title}
       </div>
-      <p class="font-sans text-sm leading-relaxed text-base-content">
-        {pairs[activeIndex].description}
-      </p>
+      <div class="space-y-3 font-sans text-sm leading-relaxed text-base-content">
+        {#each toParagraphs(pairs[activeIndex].description) as paragraph, i (i)}
+          <p>{paragraph}</p>
+        {/each}
+      </div>
     </div>
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
