@@ -1,9 +1,7 @@
 <script>
-  // FT-style composite figure: pair.panels stacked vertically in one figure
-  // block. The outer ChartDisplay header carries the figure's single big
-  // title and the first panel's subtitle; every following panel brings only
-  // a subtitle as a mid-block heading (styled and spaced exactly like the
-  // header subtitle), and the figure's single source line closes the block.
+  // FT-style composite figure: pair.panels stacked in one block. ChartDisplay's
+  // header carries the title and the first panel's subtitle; later panels bring
+  // only a subtitle as a mid-block heading.
   import ChartPanel from "./ChartPanel.svelte";
 
   let { pair } = $props();

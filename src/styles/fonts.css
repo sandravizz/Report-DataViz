@@ -1,10 +1,6 @@
-/* IW (Institut der deutschen Wirtschaft) brand fonts, self-hosted from
-   iwkoeln.de's own default.css (dist/Stylesheets/Default/default.css):
-   - Source Sans Pro — body text (site stack: Source Sans Pro, helvetica,
-     arial, sans-serif). Open-source (SIL OFL), self-hosted woff2 files taken
-     from iwkoeln.de/dist/Fonts/Default/, in static/fonts/.
-   - Acherus Grotesque — headings only, bold/black weights (site stack:
-     Acherus Grotesque, Source Sans Pro, helvetica, arial, sans-serif). */
+/* IW brand fonts, self-hosted from iwkoeln.de's own default.css:
+   Source Sans Pro for body text (SIL OFL), Acherus Grotesque for headings
+   only, in bold/black weights. Files in static/fonts/. */
 
 @font-face {
 	font-family: 'Source Sans Pro';

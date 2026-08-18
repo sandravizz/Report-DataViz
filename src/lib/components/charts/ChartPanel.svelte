@@ -1,15 +1,14 @@
 <script>
-  // Kind → panel dispatch, extracted from ChartDisplay so composite figures
-  // (DoubleChartPanel) can render sub-panels without duplicating the chain.
+  // Kind → panel dispatch, kept out of ChartDisplay so DoubleChartPanel can
+  // render sub-panels without duplicating the chain.
   import BarChartPanelGrouped from "./BarChartPanelGrouped.svelte";
   import BarChartPanelHorizontal from "./BarChartPanelHorizontal.svelte";
   import BarChartPanelStacked from "./BarChartPanelStacked.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
   import LineChartPanelMultiples from "./LineChartPanelMultiples.svelte";
 
-  // `active` = this panel is the current scrolly step. Passed through from
-  // ScrollySection (via ChartDisplay); only LineChartPanel consumes it, for
-  // the draw-in animation of series flagged `drawIn`.
+  // `active` = current scrolly step; only LineChartPanel consumes it, for the
+  // draw-in of series flagged `drawIn`.
   let { pair, active = false } = $props();
 </script>
 

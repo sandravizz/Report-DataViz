@@ -1,16 +1,13 @@
 <script>
-  // No cover photograph came with this report (it's a text/chart-only IW
-  // Kurzreport, unlike the IEA template's photo-led cover) — the hero is a
-  // plain white field (matching iwkoeln.de's own white page/header
-  // background) with the title in the brand blue (iw.blue / text-secondary)
-  // instead of a colored background with white text.
+  // No cover photograph came with this Kurzreport, so the hero is a plain white
+  // field (iwkoeln.de's own page background) with the title in brand blue,
+  // rather than white type on a colored ground.
   const authors = [
     { name: "Pekka Sagner" },
     { name: "Michael Voigtländer" },
   ];
 
-  // Optional extra content (e.g. the abstract side note) rendered in a text
-  // band directly below the hero; the chevron scrolls to it when present.
+  // Optional extra content rendered below the hero (e.g. an abstract block).
   let { children } = $props();
 </script>
 
@@ -46,8 +43,8 @@
       <p class="mt-2 text-sm text-base-content/60 sm:text-base">20. Juli 2026 | Köln</p>
     </div>
 
-    <!-- Extra content (the abstract side note) overlaid at the bottom of the
-         hero; expanding it grows the hero downward. -->
+    <!-- Extra content at the bottom of the hero; expanding it grows the hero
+         downward. -->
     {#if children}
       <div class="w-full max-w-3xl">
         {@render children()}

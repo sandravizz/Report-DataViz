@@ -1,25 +1,19 @@
 import { iw } from "$lib/colors";
 import { verticalRule } from "../annotation-presets.js";
 
-// From the IW-Report 34/2026 "IW-Wohnindex Q2 2026" (Institut der deutschen
-// Wirtschaft, 20.07.2026), p. 6, Figure 2-1: hedonic price index for German
-// residential property, 2022 Q1 = 100. Values digitized from the published
-// chart's own pixel coordinates (each series' line color was sampled from its
-// legend swatch, then matched against the plot at each quarter's x position
-// and converted back to a value via the y-axis gridline calibration) — not
-// read off by eye. Cross-checked against the report's own stated QoQ/YoY
-// percentage changes (p. 7), which it reproduces to within ~0.1-0.4
-// percentage points. To be replaced with the exact series if IW supplies the
-// underlying data table.
+// IW-Report 34/2026 "IW-Wohnindex Q2 2026", p. 6, Figure 2-1: hedonic price
+// index for German residential property, 2022 Q1 = 100. Values digitized from
+// the published chart's own pixel coordinates, not read off by eye, and
+// cross-checked against the report's stated QoQ/YoY changes (p. 7) to within
+// ~0.1-0.4pp. Replace with the exact series if IW supplies the data table.
 const quarters = [];
 for (let year = 2018; year <= 2026; year++) {
   const maxQ = year === 2026 ? 2 : 4;
   for (let q = 1; q <= maxQ; q++) quarters.push([year, q]);
 }
 
-// Index 16 in each series below is 2022 Q1 — by the chart's own definition
-// ("Index: 2022 Q1 = 100") every series must equal exactly 100.0 there. Keep
-// that value pinned if these numbers are ever adjusted.
+// Index 16 is 2022 Q1, where every series must read exactly 100.0 by the
+// chart's own definition. Keep that pinned if these numbers are adjusted.
 const seriesValues = {
   miete: [
     88.6, 89.4, 90.2, 90.9, 91.3, 92.1, 92.7, 93.1, 93.8, 94.6, 95.1, 96.0,
@@ -45,9 +39,8 @@ const data = quarters.map(([year, q], i) => ({
   ezfh: seriesValues.ezfh[i],
 }));
 
-// Shared scaffold for the static chart (below) and the animated reveal
-// (nationalIndexAnimatedSteps): same data, axes, title and description — only
-// which lines are visible (and whether the newest one draws in) changes.
+// Shared by the static chart and the animated reveal below: same data, axes
+// and copy — only which lines are visible changes.
 const base = {
   title: "Mieten steigen weiter deutlich, Kaufpreise nur moderat",
   subtitle:
@@ -70,17 +63,15 @@ const allSeries = [
     endLabel: "ETW",
     value: "etw",
     color: iw.navy,
-    // ETW (93.4) and EZFH (92.6) end within a point of each other, close
-    // enough on this 60-130 scale that their end labels overlap — nudge ETW
-    // up clear of EZFH below it.
+    // ETW (93.4) and EZFH (92.6) end within a point of each other, so their
+    // end labels would overlap — nudge ETW clear.
     endLabelYOffset: -14,
   },
   { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: iw.gold },
 ];
 
-// Marks the index's own base quarter (2022 Q1 = 100, per the subtitle) with a
-// dashed vertical rule, so the base period reads directly off the chart
-// rather than only from the subtitle text.
+// The index's base quarter, so it reads off the chart and not just the
+// subtitle.
 const indexBaseRule = verticalRule({ x: new Date(2022, 0, 1), label: "2022 Q1 = 100" });
 
 export default {
@@ -90,16 +81,15 @@ export default {
   ruleAnnotations: [indexBaseRule],
 };
 
-// Each step shows `values` and flags `newValue` with `drawIn`, which
-// LineChartPanel animates left-to-right when the step becomes active.
+// Each step shows `values`; `newValue` gets `drawIn`, which LineChartPanel
+// animates left-to-right once the step is active.
 const stepSeries = (newValue, values) =>
   allSeries
     .filter((s) => values.includes(s.value))
     .map((s) => ({ ...s, drawIn: s.value === newValue }));
 
-// Same chart as above, split into a 3-step scrolly reveal: rent first (the
-// report's headline line), then each purchase-price series in turn. Full
-// mechanism write-up: docs/scrolly-line-draw-in.md.
+// The same chart as a 3-step scrolly reveal: rent (the headline) first, then
+// each purchase-price series. Mechanism: docs/scrolly-line-draw-in.md.
 export const nationalIndexAnimatedSteps = [
   {
     ...base,
@@ -115,9 +105,7 @@ export const nationalIndexAnimatedSteps = [
     ...base,
     number: "Abbildung 2-1 (animiert)",
     series: stepSeries("ezfh", ["miete", "etw", "ezfh"]),
-    // Only the final step has all three lines on screen, so the index-base
-    // rule (see the static chart above) appears here, not on the earlier
-    // steps.
+    // Only the final step carries the index-base rule.
     ruleAnnotations: [indexBaseRule],
   },
 ];

@@ -1,5 +1,4 @@
-<!-- Closing panel — text only, no hero echo: the turbine illustration belongs to
-     Landing and reads as decoration here.
+<!-- Closing pitch panel — text only, no decorative echo of the landing screen.
      `disclosure` is an optional snippet for report-specific licensing text,
      kept out of this component so Footer stays reusable across reports. -->
 <script>
@@ -13,8 +12,8 @@
     <div
       class="max-w-3xl px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:py-0 md:pl-24"
     >
-      <!-- Portrait and the report's own logo side by side: the credit line
-           reads as "this work, for that client" before the copy says it. -->
+      <!-- Portrait beside the client's logo: "this work, for that client",
+           before the copy says it. -->
       <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
         <img
           src="/sandra-portrait.jpg"

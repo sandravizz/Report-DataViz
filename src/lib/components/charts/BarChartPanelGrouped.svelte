@@ -15,7 +15,6 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-
   const labelWidth = $derived(innerWidth < 1024 ? 40 : 90);
 
   const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
@@ -59,8 +58,7 @@
     </BarChart>
   </div>
   <!-- Grouped bars have no last-bar edge to hang direct labels from, so the
-       color legend renders on every viewport (same block as the stacked
-       panel's mobile fallback), ordered to match the bars. -->
+       legend renders on every viewport, ordered to match the bars. -->
   {#if pair.series.length > 1}
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
       {#each pair.series as item (item.key)}

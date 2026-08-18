@@ -6,15 +6,13 @@
   let { pairs, activeIndex, inView = true } = $props();
 
   let interpretationModal;
-  // One ref per pair, bound below — FigureFooter's download button walks
-  // this element's LayerChart chart(s) to build the exported PNG.
+  // One ref per pair; FigureFooter's download button walks this element's
+  // LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
 
-  // Multi-step figures (here "Abbildung 2-1" plus its three animated steps)
-  // show the shared prefix only — "Abbildung 2-1" — instead of cycling the
-  // per-step suffix; the progress rail below the header carries the "how far
-  // along" signal instead. A one-pair group has nothing to strip, so it falls
-  // back to the full number.
+  // Multi-step figures show their shared prefix only ("Abbildung 2-1") rather
+  // than cycling a per-step suffix; the progress rail carries the "how far
+  // along" signal. A single pair keeps its full number.
   function commonPrefixLength(strings) {
     if (strings.length < 2) return 0;
     let len = strings[0].length;
@@ -29,15 +27,13 @@
   let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
   let headerLabel = $derived(pairs.length > 1 ? tabPrefix : (pairs[0]?.number ?? ""));
   // One step's worth of fill per chart, not raw scroll fraction: chart 1 of 4
-  // lands the rail at 25%, chart 2 at 50%, the last chart always at a flat
-  // 100% (rather than only reaching 100% at the very last pixel of the
-  // pinned scroll range).
+  // sits at 25%, and the last chart is a flat 100% rather than only filling at
+  // the very last pixel of the pinned range.
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
 <div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
-  <!-- Keyed by index, not by number or title: the animated steps of
-       Abbildung 2-1 deliberately share both. -->
+  <!-- Keyed by index: the animated steps share number and title. -->
   {#each pairs as pair, i (i)}
     <div
       class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
@@ -60,10 +56,9 @@
         </button>
       </div>
 
-      <!-- Always-present reading-progress rail, not gated to multi-step
-           figures — a single-chart figure is just a flat 100%. Sits above
-           the title (McKinsey-style). Shown at every breakpoint, unlike the
-           chapter rail (desktop-only). -->
+      <!-- Reading-progress rail, above the title and shown at every
+           breakpoint (unlike the desktop-only chapter rail). A single-chart
+           figure is simply a flat 100%. -->
       <div class="mb-3 h-px w-full shrink-0 overflow-hidden rounded-full bg-base-content/10 lg:mb-4">
         <div
           class="h-full rounded-full bg-base-content/50 transition-[width] duration-300 ease-out"
@@ -82,9 +77,8 @@
         {#if pair.kind === "double"}
           <DoubleChartPanel {pair} />
         {:else}
-          <!-- `active` tells the panel it is the current scrolly step (and
-               the section is actually on screen) — line charts use it to
-               trigger the draw-in animation of series flagged `drawIn`. -->
+          <!-- `active` = current step, section on screen; line charts use it
+               to trigger the draw-in of series flagged `drawIn`. -->
           <ChartPanel {pair} active={i === activeIndex && inView} />
         {/if}
       </div>

@@ -7,12 +7,8 @@
   themes: iw --default;
 }
 
-/* IW (Institut der deutschen Wirtschaft) colors, taken directly from
-   iwkoeln.de's own default.css: body text #1b4160, navy #2e4964 as the
-   site's own link/`.btn--primary` color, brand blue #0069b4 (the logo mark,
-   `.btn--secondary`) and teal #106b71 (`.btn--tertiary`) as the next two
-   brand hues, amber #f59d0f as the site's own --accent-color. See
-   docs/iw-brand.md. */
+/* IW colors, taken from iwkoeln.de's own default.css. See docs/iw-brand.md
+   and src/lib/colors.js, which repeats them for the charts. */
 @plugin "daisyui/theme" {
   name: 'iw';
   default: true;

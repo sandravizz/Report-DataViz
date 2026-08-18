@@ -2,12 +2,10 @@
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  // sectionId is the owning chapter's id: it namespaces the per-chart scroll
-  // anchors below so ChapterRail can link to an individual figure.
-  // indexOffset is how many of the chapter's figures ran before this instance.
-  // A chapter split by an Interlude renders two ScrollySections but is still
-  // ONE list of figures to ChapterRail, so the anchors have to keep counting
-  // from where the first run stopped instead of restarting at 0.
+  // sectionId namespaces the scroll anchors below so ChapterRail can link to
+  // one figure. indexOffset is how many of the chapter's figures ran before
+  // this instance: an Interlude splits a chapter into two ScrollySections but
+  // ChapterRail still sees ONE list, so anchors must keep counting.
   let { pairs, sectionId = "", indexOffset = 0 } = $props();
 
   let containerEl;
@@ -58,23 +56,19 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
-  // The first pair is "active" (activeIndex 0) even while the section is still
-  // below the fold — gate draw-in animations on the section actually being on
-  // screen so they don't play unseen before the user arrives.
+  // activeIndex is 0 even while the section is below the fold, so draw-in
+  // animations are gated on the section actually being on screen.
   let inView = $derived(
     scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
   );
 </script>
 
 <div bind:this={containerEl} class="relative" style:height="{(pairs.length - 1) * 80 + 140}vh">
-  <!-- One invisible scroll target per chart step. A step is active when the
-       page has scrolled (progress × (containerHeight − vh)) past the container
-       top, so an anchor parked at exactly that offset lands the right chart on
-       screen with a plain scrollIntoView({ block: "start" }) — no scroll maths
-       duplicated in the caller. ChapterRail links its hover panel to these and
-       reads their positions to tell which figure is showing. Keyed by index,
-       not by number: this report's animated steps deliberately share one
-       figure number ("Abbildung 2-1 (animiert)"). -->
+  <!-- One invisible scroll target per step, parked at the exact offset where
+       that step becomes active — so a plain scrollIntoView({ block: "start" })
+       lands the right chart and no caller repeats the scroll maths. ChapterRail
+       both links to these and reads them to tell which figure is showing.
+       Keyed by index, not number: the animated steps share a figure number. -->
   {#each pairs as _, i (i)}
     <div
       id="{sectionId}-chart-{i + indexOffset}"
@@ -87,8 +81,8 @@
         : "0px"}
     ></div>
   {/each}
-  <!-- data-scrolly marks the figure surface: ChapterRail reads it to know
-       which surface sits behind the rail (see ChapterRail.svelte). -->
+  <!-- data-scrolly marks the figure surface, so ChapterRail knows what sits
+       behind it. -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />

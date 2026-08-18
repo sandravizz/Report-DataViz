@@ -1,14 +1,9 @@
-<!-- A full-screen text pause between two figure runs, in the DEMO's own voice
-     rather than the report's. It exists because a chapter can show the same
-     figure twice (finished, then rebuilt step by step) and nothing else on
-     screen says so: same title, same subtitle, same description column, only
-     the figure number differs. Without this the second run reads as a new,
-     emptier chart.
-     It sits in the SAME text column as a chapter (same left edge, same width —
-     see +page.svelte) and on the same tinted base-200 surface, because a second
-     column geometry mid-report reads as a layout glitch, not as a change of
-     voice. What marks it as commentary rather than IW's report text is only the
-     muted kicker, where the chapters' is primary. -->
+<!-- A full-screen text pause between two figure runs, in the DEMO's voice
+     rather than the report's: a chapter can show the same figure twice
+     (finished, then rebuilt step by step) and nothing else on screen says so.
+     Same column geometry and tinted surface as a chapter — a second geometry
+     mid-report reads as a glitch — with only the muted kicker (chapters' is
+     primary) marking it as commentary. -->
 <script>
   let { kicker, title, paragraphs = [] } = $props();
 </script>

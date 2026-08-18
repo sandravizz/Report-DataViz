@@ -14,12 +14,9 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
 
-  // First pass: chapters 1-2 of the IW-Wohnindex Q2 2026 (IW-Report 34/2026,
-  // Institut der deutschen Wirtschaft, 20.07.2026). Section titles and intro
-  // paragraphs are the report's own text, verbatim. `intro` takes an array of
-  // paragraphs. Ids are assigned automatically (chapter-1, chapter-2, ...)
-  // below. Chapters 3-5 (regional/city breakdowns and the offer-count special
-  // section) are not built yet.
+  // The story order. Titles and `intro` paragraphs are the report's own text
+  // (IW-Report 34/2026), verbatim; ids are assigned below as chapter-1, -2, …
+  // Chapters 3-5 (regional/city breakdowns, offer counts) are not built yet.
   const sections = [
     {
       kicker: "Kapitel 1. Einleitung",
@@ -41,9 +38,8 @@
         "Die Wohnkosten steigen damit inzwischen wieder recht kontinuierlich in beiden Marktsegmenten. Während sich die Kaufpreise bislang nur leicht erhöhen, setzen die Angebotsmieten ihren deutlich stärkeren Anstieg fort. Gegenüber dem Vorjahresquartal beträgt das Plus 4,0 Prozent, gegenüber dem Vorquartal 1,3 Prozent.",
       ],
       charts: [figures.nationalIndex, ...figures.nationalIndexAnimatedSteps],
-      // Abbildung 2-1 runs twice here: finished, then rebuilt step by step.
-      // `after` is how many figures precede the note, so the split below stays
-      // right if figures are added or reordered.
+      // Abbildung 2-1 runs twice: finished, then rebuilt step by step.
+      // `after` = how many figures precede the pause.
       interlude: {
         after: 1,
         kicker: "Hinweis zur Demo",
@@ -72,11 +68,8 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <!-- Absolute URLs: scrapers (Slack, WhatsApp, LinkedIn) don't resolve
-       relative image paths, hence the origin prefix. TODO: static/share-image.jpg
-       does not exist on this branch yet — drop an IW-Wohnindex share card there
-       (1200×630 is the safe default; update the width/height below if the file
-       Sandra supplies has other dimensions). -->
+  <!-- Absolute URLs: link scrapers don't resolve relative image paths.
+       TODO: static/share-image.jpg does not exist yet (1200×630). -->
   <meta property="og:image" content="{page.url.origin}/share-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -94,13 +87,11 @@
 
   <div id="charts"></div>
   {#each sections as section (section.id)}
-    <!-- min-h rather than h: a short intro still fills the viewport and sticks,
-         a long one (chapter 1) grows the pane instead of being clipped into a
-         nested scroller. -->
-    <!-- Chapter text sits on the tinted surface (base-200, the footer's and the
-         interlude's fill) at EVERY breakpoint, never lg:-scoped: text is tinted,
-         figures are flat white, and that pairing is what the reader — and the
-         chapter rail's panel — uses to tell the two surfaces apart. -->
+    <!-- min-h, not h: a long intro grows the pane instead of being clipped
+         into a nested scroller.
+         Chapter text sits on tinted base-200 at EVERY breakpoint, never
+         lg:-scoped — tinted text vs. flat white figures is how the reader (and
+         the chapter rail) tells the two surfaces apart. -->
     <section
       id={section.id}
       class="bg-base-200 font-sans text-base-content lg:min-h-[140vh]"
@@ -125,9 +116,8 @@
         </div>
       </div>
     </section>
-    <!-- An `interlude` splits the chapter's figures into two scrolly runs with
-         a text pause between them; the second run continues the figure
-         numbering via indexOffset (see ScrollySection). -->
+    <!-- An `interlude` splits the figures into two scrolly runs with a text
+         pause between; indexOffset keeps the second run's anchors counting. -->
     {#if section.interlude}
       <ScrollySection
         pairs={section.charts.slice(0, section.interlude.after)}

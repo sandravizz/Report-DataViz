@@ -1,8 +1,7 @@
 <script>
-  // Header: IW logo left (links back to top), TOC dropdown and IW's real
-  // social profiles (from iwkoeln.de's own footer) right. `abstract` is an
-  // optional snippet; when given, an "Abstract" dropdown appears next to the
-  // TOC with the snippet as its panel content.
+  // IW logo left (links to top); TOC dropdown and IW's own social profiles
+  // right. `abstract` is an optional snippet — when given, a "Zusammenfassung"
+  // dropdown appears next to the TOC.
   let { links = [], abstract } = $props();
 
   function closeDropdown(event) {
@@ -10,7 +9,7 @@
     event.currentTarget.blur();
   }
 
-  // IW's real profiles, taken from iwkoeln.de's own footer.
+  // From iwkoeln.de's own footer.
   const socials = [
     {
       label: "LinkedIn",
@@ -32,8 +31,8 @@
 </script>
 
 <!-- Absolute, never fixed or sticky: the header belongs to the landing screen
-     and scrolls away with it, leaving the pinned figures the full viewport.
-     z-20 keeps it under the chapter rail's z-40. -->
+     and scrolls away with it, leaving the figures the full viewport. z-20 keeps
+     it under the chapter rail's z-40. -->
 <header class="absolute inset-x-0 top-0 z-20 bg-base-100/90 backdrop-blur-sm">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
     <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">

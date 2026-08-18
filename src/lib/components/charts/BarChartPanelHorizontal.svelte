@@ -8,9 +8,8 @@
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
 
-  // Category labels are long; give them a generous left gutter and let them
-  // word-wrap to fit it (bars can spare the width). Wrapping is width-based,
-  // so labels reflow per breakpoint instead of relying on hard \n breaks.
+  // Category labels are long, so they get a generous left gutter and wrap to
+  // fit it. Wrapping is width-based, so labels reflow per breakpoint.
   const labelGutter = $derived(innerWidth < 1024 ? 110 : 180);
 </script>
 
@@ -42,8 +41,8 @@
             dx: -labelGutter,
             width: labelGutter,
             truncate: false,
-            // Axis defaults tick labels to an 11px line height, which is tighter
-            // than the 12px text-xs font and makes wrapped lines overlap.
+            // The axis default is 11px, tighter than text-xs, so wrapped
+            // lines overlap.
             lineHeight: "12px",
           },
         },
@@ -52,8 +51,8 @@
       }}
     />
   </div>
-  <!-- Grouped bars have no free spot for per-series direct labels, so the
-       color legend renders on every viewport, ordered to match the bars. -->
+  <!-- Grouped bars have no free spot for direct labels, so the legend renders
+       on every viewport, ordered to match the bars. -->
   {#if pair.series.length > 1}
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
       {#each pair.series as item (item.key)}

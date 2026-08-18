@@ -10,9 +10,9 @@
 		/>
 		<meta name="robots" content="noindex, nofollow" />
 		<style>
-			/* Pin Tailwind's cascade layer order before any bundled CSS loads.
-			   Vite 8 (Rolldown) hoists the empty `@layer components;` statement above
-			   `base` in the built CSS, which makes base styles beat component styles. */
+			/* Pin Tailwind's layer order before any bundled CSS loads: Vite 8
+			   (Rolldown) hoists the empty `@layer components;` above `base`, which
+			   lets base styles beat component styles. */
 			@layer properties, theme, base, components, utilities;
 
 			html,
