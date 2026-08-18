@@ -5,10 +5,13 @@
      mid-report reads as a glitch — with only the muted kicker (chapters' is
      primary) marking it as commentary. -->
 <script>
-  let { kicker, title, paragraphs = [] } = $props();
+  // `id` makes this an anchor the ChapterRail can jump to — it opens the second
+  // figure run, so the reader lands on the explanation, not mid-animation.
+  let { id = undefined, kicker, title, paragraphs = [] } = $props();
 </script>
 
 <section
+  {id}
   class="flex min-h-screen items-center bg-base-200 font-sans text-base-content"
 >
   <div class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200">

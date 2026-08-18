@@ -36,16 +36,18 @@ export function lineCallout({ labelProps = {}, lineProps = {}, ...annotation }) 
   };
 }
 
-// Dashed vertical reference line (e.g. an index's base period). Muted like
-// axis ticks since it's a reference mark, not a data callout; spans the full
-// plot height unless y1/y2 shorten it.
+// Dashed vertical reference line (e.g. an index's base period). Light gray so
+// it reads as a reference mark, not a data callout; spans the full plot height
+// unless y1/y2 shorten it. Note: layerchart's <Line> renders stroke-dasharray
+// from its own `dashArray` prop after spreading the rest, so a plain
+// `strokeDasharray` here is silently overwritten and the line comes out solid.
 export function verticalRule({ labelProps = {}, ...annotation }) {
   return {
     labelPlacement: "top",
     labelYOffset: 4,
     ...annotation,
     props: {
-      line: { stroke: iw.grayText, strokeWidth: 1, strokeDasharray: "4 3" },
+      line: { stroke: iw.gray, strokeWidth: 1, dashArray: [4, 3] },
       label: { ...mutedLabel, textAnchor: "middle", ...labelProps },
     },
   };

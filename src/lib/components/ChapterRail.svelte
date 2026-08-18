@@ -199,7 +199,8 @@
         </button>
 
         {#if expanded && section.charts?.length}
-          <!-- Keyed by index: the animated steps share a figure number. -->
+          <!-- Keyed by index: the animated steps share a figure number (and
+               title, hence `stepLabel`). -->
           <ul
             transition:fade={{ duration: FADE_MS }}
             class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
@@ -218,7 +219,7 @@
                     : 'text-base-content/45 hover:text-base-content'}"
                 >
                   <span class="opacity-70">{chart.number}</span>
-                  {chart.title}
+                  {chart.stepLabel ?? chart.title}
                 </button>
               </li>
             {/each}

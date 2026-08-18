@@ -44,7 +44,7 @@ const data = quarters.map(([year, q], i) => ({
 const base = {
   title: "Mieten steigen weiter deutlich, Kaufpreise nur moderat",
   subtitle:
-    "Entwicklung der inserierten Immobilienpreise, hedonisch, Index: 2022 Q1 = 100, 2018 Q1–2026 Q2",
+    "Entwicklung der inserierten Immobilienpreise, hedonisch, 2018 Q1–2026 Q2",
   description:
     "Die Angebotsmieten liegen 4,0 Prozent über dem Vorjahresquartal. Eigentumswohnungen (ETW) und Ein- und Zweifamilienhäuser (EZFH) verteuern sich dagegen nur um jeweils 0,8 Prozent — die Kaufpreise bewegen sich weitgehend seitwärts, nachdem sie seit Mitte 2022 erheblich zurückgegangen waren.",
   source: "Quelle: Institut der deutschen Wirtschaft",
@@ -70,9 +70,12 @@ const allSeries = [
   { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: iw.gold },
 ];
 
-// The index's base quarter, so it reads off the chart and not just the
-// subtitle.
-const indexBaseRule = verticalRule({ x: new Date(2022, 0, 1), label: "2022 Q1 = 100" });
+// The index's base quarter. This carries the index definition now, so the
+// subtitle no longer repeats it.
+const indexBaseRule = verticalRule({
+  x: new Date(2022, 0, 1),
+  label: "Index: 2022 Q1 = 100",
+});
 
 export default {
   ...base,
@@ -82,7 +85,9 @@ export default {
 };
 
 // Each step shows `values`; `newValue` gets `drawIn`, which LineChartPanel
-// animates left-to-right once the step is active.
+// animates left-to-right once the step is active. `stepLabel` is what the
+// ChapterRail lists — the steps share one number and title, so without it the
+// hover panel repeats the same row three times.
 const stepSeries = (newValue, values) =>
   allSeries
     .filter((s) => values.includes(s.value))
@@ -94,16 +99,19 @@ export const nationalIndexAnimatedSteps = [
   {
     ...base,
     number: "Abbildung 2-1 (animiert)",
+    stepLabel: "Schritt 1 — Angebotsmieten",
     series: stepSeries("miete", ["miete"]),
   },
   {
     ...base,
     number: "Abbildung 2-1 (animiert)",
+    stepLabel: "Schritt 2 — Eigentumswohnungen",
     series: stepSeries("etw", ["miete", "etw"]),
   },
   {
     ...base,
     number: "Abbildung 2-1 (animiert)",
+    stepLabel: "Schritt 3 — Ein- und Zweifamilienhäuser",
     series: stepSeries("ezfh", ["miete", "etw", "ezfh"]),
     // Only the final step carries the index-base rule.
     ruleAnnotations: [indexBaseRule],

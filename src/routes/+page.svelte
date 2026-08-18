@@ -3,9 +3,9 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "IW-Wohnindex Q2 2026 — An Interactive Report",
+    title: "IW-Wohnindex Q2 2026 — ein interaktiver Report",
     description:
-      "An interactive report on the IW-Wohnindex Q2 2026 (Institut der deutschen Wirtschaft): German residential property prices and listing volumes. Web development and data visualization by SandraViz.",
+      "Der IW-Wohnindex Q2 2026 (Institut der deutschen Wirtschaft) als interaktive Webpublikation: Kauf- und Mietpreise für Wohnimmobilien in Deutschland. Interaktive Designstudie von SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Interlude from "$lib/components/Interlude.svelte";
@@ -16,19 +16,10 @@
 
   // The story order. Titles and `intro` paragraphs are the report's own text
   // (IW-Report 34/2026), verbatim; ids are assigned below as chapter-1, -2, …
-  // Chapters 3-5 (regional/city breakdowns, offer counts) are not built yet.
+  // This is a sales demo, so it opens straight on the report's Kapitel 2 (the
+  // first one with a figure) — the text-only Kapitel 1 (Einleitung) is cut, as
+  // are Kapitel 3-5 (regional/city breakdowns, offer counts).
   const sections = [
-    {
-      kicker: "Kapitel 1. Einleitung",
-      title:
-        "Der IW-Wohnindex: Kauf- und Mietpreise für Wohnimmobilien in Deutschland",
-      intro: [
-        "Der vorliegende IW-Wohnindex untersucht die Entwicklung der Kauf- und Mietpreise für Wohnimmobilien in Deutschland. Der vierteljährig erscheinende Kurzreport präsentiert die Ergebnisse eines hedonischen Preisindex auf der Basis von mehreren Millionen Wohnimmobilieninseraten. Betrachtet werden dabei sowohl inserierte Kaufpreise als auch Neuvertragsmieten. Nähere Informationen zur Methodik finden sich im Anhang. Der Report fokussiert sich regelmäßig auf die allgemeinen Preisentwicklungen auf dem Kauf- und Mietmarkt und die regionalen Auswertungen nach Regionstypen für die größten deutschen Städte. In einem weiteren Kapitel wird die Preisentwicklung für Wohnimmobilien vor dem Hintergrund ausgewählter Sonderthemen näher beleuchtet. Während sich der Kernteil der Studie auf die Darlegung der Ergebnisse konzentriert, rundet das letzte Kapitel die Studie durch eine immobilienökonomische und wohnungspolitische Einordnung ab.",
-        "Als Sonderteil wird in dieser Ausgabe die Entwicklung der Inseratszahlen näher betrachtet. Während Preise Auskunft darüber geben, zu welchen Konditionen Wohnimmobilien angeboten werden, zeigen Inseratszahlen, wie groß das öffentlich sichtbare Angebot ist und wie stark sich die Marktbedingungen auf Käufer und Mieter auswirken. Gerade seit der Zinswende haben sich Kauf- und Mietmärkte deutlich unterschiedlich entwickelt: Das Angebot an Kaufobjekten ist stark gestiegen, während Mietwohnungen in vielen Regionen weiterhin knapp bleiben.",
-        "Vor diesem Hintergrund wird analysiert, wie sich die Zahl der inserierten Eigentumswohnungen, Ein- und Zweifamilienhäuser sowie Mietwohnungen seit dem ersten Quartal 2022 verändert hat. Neben der bundesweiten Entwicklung werden Unterschiede zwischen Regionstypen und den zehn größten Städten betrachtet. Ziel ist es, die Preisentwicklung um eine zentrale Mengenperspektive zu ergänzen und besser einzuordnen, in welchem Maß veränderte Nachfrage, längere Vermarktungszeiten, geringe Umzugsmobilität und schwache Bautätigkeit die aktuelle Marktlage prägen.",
-      ],
-      charts: [],
-    },
     {
       kicker: "Kapitel 2. Entwicklung der Wohnimmobilienpreise in Deutschland",
       title: "Kaufpreise leicht im Plus, Mieten steigen weiter deutlich",
@@ -42,6 +33,9 @@
       // `after` = how many figures precede the pause.
       interlude: {
         after: 1,
+        // What the two runs are called in the rail and the TOC (see
+        // `railSections`) — the demo's two points, not the report's.
+        railLabels: ["Statische Abbildung", "Dynamische Abbildung"],
         kicker: "Hinweis zur Demo",
         title: "Dieselbe Abbildung, zweimal gezeigt",
         paragraphs: [
@@ -57,7 +51,30 @@
     paragraphs: Array.isArray(section.intro) ? section.intro : [section.intro],
   }));
 
-  const tocLinks = sections.map((section) => ({
+  // What the rail and the TOC navigate. This demo carries one chapter whose
+  // figure is shown twice — finished, then rebuilt step by step — so the two
+  // runs, not the chapter, are what a reader moves between: an interlude
+  // chapter contributes two points, a plain one contributes itself. The ids
+  // must match the elements below and the `sectionId` each ScrollySection
+  // stamps on its anchors, which is how the rail lights up in step.
+  const railSections = sections.flatMap((section) =>
+    section.interlude
+      ? [
+          {
+            id: section.id,
+            title: section.interlude.railLabels[0],
+            charts: section.charts.slice(0, section.interlude.after),
+          },
+          {
+            id: `${section.id}-steps`,
+            title: section.interlude.railLabels[1],
+            charts: section.charts.slice(section.interlude.after),
+          },
+        ]
+      : [{ id: section.id, title: section.title, charts: section.charts }]
+  );
+
+  const tocLinks = railSections.map((section) => ({
     href: `#${section.id}`,
     label: section.title,
   }));
@@ -80,7 +97,7 @@
 </svelte:head>
 
 <Header links={tocLinks} />
-<ChapterRail {sections} />
+<ChapterRail sections={railSections} />
 
 <div id="top">
   <Landing />
@@ -123,11 +140,10 @@
         pairs={section.charts.slice(0, section.interlude.after)}
         sectionId={section.id}
       />
-      <Interlude {...section.interlude} />
+      <Interlude {...section.interlude} id="{section.id}-steps" />
       <ScrollySection
         pairs={section.charts.slice(section.interlude.after)}
-        sectionId={section.id}
-        indexOffset={section.interlude.after}
+        sectionId="{section.id}-steps"
       />
     {:else if section.charts.length > 0}
       <ScrollySection pairs={section.charts} sectionId={section.id} />
@@ -135,4 +151,18 @@
   {/each}
 </div>
 
-<Footer />
+<Footer>
+  {#snippet disclosure()}
+    <p>
+      Grundlage: Pekka Sagner / Michael Voigtländer, „IW-Wohnindex Q2 2026“,
+      IW-Report 34/2026, Institut der deutschen Wirtschaft, Köln 2026,
+      <a href="https://www.iwkoeln.de" target="_blank" rel="noopener" class="link link-hover"
+        >www.iwkoeln.de</a
+      >. Daten und Befunde stammen aus dem Report, die Abbildungen wurden aus den
+      veröffentlichten Grafiken rekonstruiert. Diese interaktive Fassung ist eine
+      eigenständige Designstudie von Sandra Becker, die allein dafür verantwortlich
+      ist; sie ist vom Institut der deutschen Wirtschaft weder geprüft noch
+      autorisiert.
+    </p>
+  {/snippet}
+</Footer>
