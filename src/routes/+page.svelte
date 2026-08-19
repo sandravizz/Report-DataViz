@@ -45,6 +45,18 @@
     },
   ];
 
+  // The fade between the chapter ground and the white figure surface.
+  // 256px, 384px on desktop — long on purpose. The two surfaces are close
+  // enough in value that a short ramp between them reads as an edge with a
+  // blur on it; over this distance the change is slow enough that there is no
+  // moment where it happens.
+  // Each end also HOLDS its own colour for the first and last 15%, so the ramp
+  // starts and finishes away from the seam: what meets the chapter is chapter
+  // colour, what meets the figure is figure colour, and all the change happens
+  // mid-band where there is no boundary to draw attention to it.
+  const BAND = "h-64 bg-linear-to-b lg:h-96";
+  const INTO_TEXT = `${BAND} from-white from-15% to-base-100 to-85%`;
+  const INTO_FIGURE = `${BAND} from-base-100 from-15% to-white to-85%`;
 </script>
 
 <svelte:head>
@@ -76,16 +88,16 @@
   <section id={section.id} class="font-sans text-base-content">
     <!-- Fade OUT of the white figure surface above. Chapter 1 has no band: it
          follows the dark photo cover, where the cut is meant to be hard.
-         h-20 = 80px, the full white-to-grey ramp: just enough to take the blade
-         off the edge without reading as a gradient in its own right. At this
-         length a plain two-colour ramp is right — the fade-to-transparent
-         trick only earns its keep over a long band, where a hard stop at the
-         end of the ramp would show a seam. -->
+         See INTO_TEXT / INTO_FIGURE above for the band's length and shape. -->
     {#if i > 0 && sections[i - 1].charts.length > 0}
-      <div class="h-20 bg-linear-to-b from-white to-base-100"></div>
+      <div class={INTO_TEXT}></div>
     {/if}
     <div class="bg-base-100">
-      <div class="mx-auto w-[88vw] py-28 lg:w-200 lg:py-40">
+      <!-- py-16/lg:py-28. The air above and below the copy was cut back from
+           28/40: at the old values a short chapter was mostly padding, and on
+           a phone — where the column is 88vw and the type is smaller — it
+           pushed the text down past the fold before it started. -->
+      <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
         <h2 class="text-3xl font-semibold sm:text-4xl lg:text-5xl lg:leading-[1.08]">
           {section.title}
         </h2>
@@ -109,9 +121,9 @@
         {/each}
       </div>
     </div>
-    <!-- ...and back INTO it, same 20px the other way round. -->
+    <!-- ...and back INTO it, the same band the other way round. -->
     {#if section.charts.length > 0}
-      <div class="h-20 bg-linear-to-b from-base-100 to-white"></div>
+      <div class={INTO_FIGURE}></div>
     {/if}
   </section>
   {#if section.charts.length > 0}
@@ -120,6 +132,6 @@
 {/each}
 
 <!-- Last figure surface back into the footer, which is base-100 too. -->
-<div class="h-20 bg-linear-to-b from-white to-base-100"></div>
+<div class={INTO_TEXT}></div>
 
 <Footer />
