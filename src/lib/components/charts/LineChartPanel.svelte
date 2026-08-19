@@ -3,7 +3,7 @@
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
-  import { colors } from "$lib/colors";
+  import { colors, gridLine } from "$lib/colors";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -125,7 +125,11 @@
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
-    yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
+    // A figure can pin exact y ticks (pair.yTicks); otherwise the scale's own
+    // candidates minus 0. Either way the same values go to the grid below —
+    // LayerChart's Grid defaults to 4 y ticks of its own, which leaves the
+    // gridlines landing between the axis labels on most domains.
+    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     // Tooltip header shows just the year (no month/day, since the data has
     // no finer granularity); rows show the same unit suffix as the y-axis
     // (e.g. "28%"), as whole numbers.
@@ -137,13 +141,13 @@
     // Explicit color, not LayerChart's `color-mix(...currentColor...)` default
     // — the PNG export loses that CSS-variable chain and falls back to solid
     // black instead of a faint 10% line.
-    grid: { stroke: "rgba(0, 0, 0, 0.1)" },
+    grid: { stroke: gridLine, yTicks: pair.yTicks },
   }}
 >
   {#snippet marks({ context })}
     {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
-      {@const deemphasized = s.color === colors.regionGray}
+      {@const deemphasized = s.color === colors.quiet}
       <Spline seriesKey={s.key} {...casingStyle(deemphasized)} {...draw} />
       <Spline seriesKey={s.key} {...lineStyle(deemphasized)} {...draw} />
     {/each}

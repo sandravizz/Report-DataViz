@@ -7,38 +7,52 @@
   themes: globaljustice --default;
 }
 
-/* Colors lifted from globaljusticeproject.wid.world's theme CSS, except the
-   surfaces: #f4ddd6 is this report's original pink (kept on purpose, also
-   behind the header and footer), with the original #efccc2/#e9bcae as its
-   darker tints. #362e4f is the GJP logo purple; #00371f the dark green of
-   their nav indicator bar; #fbedf5 the pink of their chapter table of
-   contents. */
+/* Palette "Spring & Grey".
+   The rule: COLOR MEANS SOMETHING. Anything the reader is not meant to look at
+   is a grey, and every one of those greys comes from a single ramp so "not
+   important" reads as one visual class. The ramp is not neutral — it carries a
+   trace of hue 103, the ink's own hue, at 7-8% saturation, which is what keeps
+   it reading as part of this palette rather than a generic grey.
+
+   #F4F6F4 is the chapter ground, with #EFF1EF/#E6E9E5 as its darker tints.
+   (It replaced an ivory #FFFFF2 taken from the source palette: next to the
+   white figure surface that ivory read as yellow rather than as a quiet
+   ground.) #103900 does duty as body ink, 12:1 on the ground; it is a green,
+   so the ink and the accent are the same hue family and the accent never reads
+   as a foreign object on the page.
+
+   #0FFF95 is `accent` and is RESERVED. It is spent only on things that point:
+   credits and social links over the cover photo, and the underline in running
+   text and on hovered navigation. It is 1.3:1 on white, so it can never be
+   small text on a light ground or a thin rule on its own — and it is
+   deliberately absent from src/lib/colors.js so no chart series can pick it
+   up. The chart greys live there; this file only carries the UI theme. */
 @plugin "daisyui/theme" {
   name: 'globaljustice';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
-  --color-base-100: #f4ddd6;
-  --color-base-200: #efccc2;
-  --color-base-300: #e9bcae;
-  --color-base-content: #000000;
-  --color-primary: #362e4f;
-  --color-primary-content: #ffffff;
-  --color-secondary: #00371f;
-  --color-secondary-content: #ffffff;
-  --color-accent: #fbedf5;
-  --color-accent-content: #000000;
-  --color-neutral: #1d1d1b;
-  --color-neutral-content: #ffffff;
-  --color-info: #e2f3f6;
-  --color-info-content: #000000;
-  --color-success: #337357;
-  --color-success-content: #ffffff;
-  --color-warning: #ffcc00;
-  --color-warning-content: #000000;
-  --color-error: #cc0000;
-  --color-error-content: #ffffff;
+  --color-base-100: #F4F6F4;
+  --color-base-200: #EFF1EF;
+  --color-base-300: #E6E9E5;
+  --color-base-content: #103900;
+  --color-primary: #103900;
+  --color-primary-content: #F4F6F4;
+  --color-secondary: #611C35;
+  --color-secondary-content: #F4F6F4;
+  --color-accent: #0FFF95;
+  --color-accent-content: #103900;
+  --color-neutral: #5C6C56;
+  --color-neutral-content: #F4F6F4;
+  --color-info: #A390E4;
+  --color-info-content: #103900;
+  --color-success: #103900;
+  --color-success-content: #0FFF95;
+  --color-warning: #C5CCC2;
+  --color-warning-content: #103900;
+  --color-error: #F42C04;
+  --color-error-content: #F4F6F4;
 }
 
 @theme {
@@ -49,19 +63,25 @@
      off `lg` — chart position, description column, chapter rail, the mobile
      "Interpretation" button — so this one number decides where the
      side-by-side desktop layout takes over from the stacked tablet one.
-     Desktop is built from two fixed offsets (ChartDisplay `left-[43%] w-200`,
-     DescriptionColumn `left-[calc(43%+464px)] right-8`), leaving the
-     description whatever remains: 0.57 × viewport − 544px. That collapses
-     below ~1400px (185px of text at 1280, 83px at 1100) while the 800px chart
+     Desktop is built from two fixed offsets (ChartDisplay `left-[40%] w-200`,
+     DescriptionColumn `left-[calc(40%+464px)] right-16`), leaving the
+     description whatever remains: 0.60 × viewport − 576px. That collapses
+     below ~1400px (192px of text at 1280, 84px at 1100) while the 800px chart
      never shrinks, sliding left until it sits under the chapter rail. Making
      the chart elastic was tried and spoils the wide-desktop composition, so
-     tablet stays in charge until there is genuinely room. */
+     tablet stays in charge until there is genuinely room.
+
+     The anchor is a PERCENTAGE but the chart width is FIXED, so the left
+     gutter (0.40 × viewport − 400px) grows with the screen while the right one
+     stays put at right-16. The composition is therefore balanced around
+     ~1400–1500px and drifts left-heavy on very wide monitors; the left gutter
+     is also where the chapter rail lives, so some extra air there is wanted. */
   --breakpoint-lg: 1400px;
 }
 
 /* LayerChart's Axis gives every label a 2px halo stroke by default
    (Axis.base.svelte, `components` layer) colored via `--color-surface-100` —
-   here the report's pink base-100, so every axis label wears a pink halo. No
+   here the report's grey base-100, so every axis label wears a grey halo. No
    `stroke` prop can undo it: an SVG presentation attribute never outranks a
    stylesheet rule, even a zero-specificity one. Cascade layer order
    (layerchart core.css: theme, base, components, utilities) is the only lever
@@ -70,5 +90,22 @@
 @layer utilities {
   :where(.lc-text) {
     stroke: none;
+  }
+}
+
+/* Accent underline for a marked phrase in running text. A real underline, not
+   a highlighter band: 0.12em is ~2.4px at the 20px body size, sitting clear of
+   the descenders. It stays a `mark` for semantics, with the browser's default
+   yellow ground stripped. Note the accent is only 1.3:1 on the ground, so this
+   line is quiet by nature — thickness is the only lever it has. */
+@layer components {
+  mark.accent-mark {
+    background: none;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.22em;
+    text-decoration-skip-ink: none;
   }
 }

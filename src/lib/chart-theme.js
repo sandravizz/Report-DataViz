@@ -2,7 +2,7 @@ import { defaultChartPadding } from "layerchart";
 import { ink } from "$lib/colors.js";
 
 // Chart panels sit on plain white (ScrollySection), not the theme's base-100
-// — that pink is only behind header/footer/landing. Line casings and any
+// — that grey is only behind header/footer/landing. Line casings and any
 // halo must match against this.
 export const chartSurface = "#ffffff";
 

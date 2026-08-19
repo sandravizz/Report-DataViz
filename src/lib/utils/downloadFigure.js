@@ -3,10 +3,10 @@ import { getChartSvgString } from "layerchart";
 // Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot.
 const FONT_FAMILY = "Satoshi, sans-serif";
-const INK = "#000000";
-const MUTED = "rgba(0, 0, 0, 0.5)";
-const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
-const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
+const INK = "#103900";
+const MUTED = "rgba(16, 57, 0, 0.5)";
+const MUTED_FAINT = "rgba(16, 57, 0, 0.3)";
+const RAIL_TRACK = "rgba(16, 57, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 
 // Extra canvas on every side, so labels that overflow the SVG's nominal

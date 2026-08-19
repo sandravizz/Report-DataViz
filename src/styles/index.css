@@ -1,2 +1,21 @@
 @import './fonts.css';
 @import './tailwind.css';
+
+/* LayerChart's daisyUI bridge (layerchart/daisyui-5.css) wires
+   `--color-surface-100` to `--color-base-100`, and the tooltip paints its
+   panel with that variable — so on this theme the tooltip came out in the
+   report's pink instead of reading as a floating white card. Re-point the
+   surface variables to white on the tooltip root only (the bridge sets them
+   there too, for portaled tooltips), leaving every other chart surface on the
+   theme. Deliberately unlayered so it outranks the bridge's own rule. */
+.lc-tooltip-root {
+  --color-surface-100: #ffffff;
+  --color-surface-200: #ffffff;
+}
+
+/* The panel itself is mixed 90% into transparent (plus a backdrop blur), so
+   even on white it would still let a tenth of the pink page through. Paint it
+   fully opaque so the card reads as plain white over any background. */
+.lc-tooltip-container[data-variant='default'] {
+  background-color: #ffffff;
+}

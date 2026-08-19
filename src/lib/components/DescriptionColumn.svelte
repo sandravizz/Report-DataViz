@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="absolute top-10 left-[calc(43%+464px)] right-8 hidden flex-col px-6 lg:top-36 lg:flex"
+  class="absolute top-10 right-16 left-[calc(40%+464px)] hidden flex-col px-6 lg:top-36 lg:flex"
 >
   <div class="relative h-56">
     {#each items as item, i (i)}

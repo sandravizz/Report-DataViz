@@ -31,33 +31,38 @@
     class="relative flex flex-1 flex-col items-center px-6 pt-20 pb-8 text-white sm:px-10"
   >
     <div class="flex flex-1 flex-col items-center justify-center text-center">
-      <p class="text-sm font-medium tracking-wide text-white/75 uppercase">
-        Global Justice Project
-      </p>
       <h1
-        class="mt-4 max-w-4xl font-display text-4xl leading-tight font-bold text-balance sm:text-6xl lg:text-7xl"
+        class="max-w-4xl font-display text-4xl leading-tight font-bold text-balance sm:text-6xl lg:text-7xl"
       >
         The Global Justice Report
       </h1>
       <p class="mt-4 max-w-2xl text-lg text-white/90 sm:text-xl">
         A Plan for Equality &amp; Prosperity Within Planetary Boundaries
       </p>
-      <p class="mt-6 text-lg text-white/90 sm:text-xl">
+      <!-- The two credit lines carry a deliberate hierarchy: the design credit
+           below is the one this page exists to make, so it takes the larger
+           size and this one steps down to secondary. -->
+      <p class="mt-6 text-sm text-white/75 sm:text-base">
         Content &amp; data:
         <a
           href="https://gjp.wid.world"
           target="_blank"
           rel="noopener"
-          class="link-hover underline-offset-4">WID</a
+          class="link-hover decoration-accent decoration-2 underline-offset-4">WID</a
         > (2026)
       </p>
-      <p class="mt-2 text-sm text-white/75 sm:text-base">
+      <!-- Same treatment as the Table of Contents in the header: white text,
+           green rule, underlined always rather than on hover. `decoration-*`
+           is what keeps the rule green while the text stays white — colouring
+           the text would drag the underline with it, since the rule paints in
+           `currentColor` by default. -->
+      <p class="mt-2 text-lg text-white sm:text-xl">
         Interactive design study ·
         <a
           href="https://www.sandraviz.com/"
           target="_blank"
           rel="noopener"
-          class="underline underline-offset-4">SandraViz</a
+          class="underline decoration-accent decoration-2 underline-offset-4">SandraViz</a
         >
       </p>
     </div>
@@ -73,7 +78,7 @@
     <a
       href="#ensuring-equality"
       aria-label="Scroll to content"
-      class="mt-8 text-white/80 hover:text-white"
+      class="mt-8 text-accent/80 hover:text-accent"
     >
       <svg
         class="h-8 w-8"

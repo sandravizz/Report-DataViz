@@ -13,7 +13,12 @@ const mutedLabel = { ...endLabelHalo(1024), fill: mutedTextGray, class: "text-xs
 // Explicit color, never `currentColor` or a CSS variable: the PNG export
 // re-serializes the chart's SVG outside the page's stylesheet, where a custom
 // property has nothing left to resolve against.
-const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.2, color: "#000000" } };
+// #7E8E77 at 0.45 over white renders exactly #C5CCC2 — colors.quiet — so the
+// projection hatch, the unimportant bars and the background region lines are
+// all literally the same tone. The mix is why this is not just colors.quiet
+// with an opacity: the pattern's lines are drawn at partial alpha, so the
+// stated color has to be pre-compensated to LAND on the quiet grey.
+const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.45, color: "#7E8E77" } };
 
 // Circled point callout. `filled` tints the ring with the series color for
 // strong emphasis; otherwise a thin ink outline. `labelProps` extends the

@@ -19,15 +19,19 @@
           aria-label="Global Justice Project — source report"
         >
           <img
-            src="/gjp-logo.svg"
+            src="/gjp-logo-ink.svg"
             alt="Global Justice Project"
             class="h-8 w-auto sm:h-10"
           />
         </a>
       </div>
+      <!-- The one marked phrase in the footer. On this light ground the accent
+           is ~1.2:1, so it works as a rule under text and nowhere else — which
+           is exactly why the logos and social icons here stay dark. -->
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports for the web, mobile, and static downloads too.
+        <mark class="accent-mark">visualization-first reports for the web, mobile</mark>, and
+        static downloads too.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
         This is one example of what that looks like in practice, built on real content and data
@@ -39,7 +43,7 @@
         href="https://sandraviz.com"
         target="_blank"
         rel="noopener"
-        class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
+        class="mt-4 inline-block text-base font-semibold underline decoration-accent decoration-2 underline-offset-4 sm:mt-6 sm:text-xl"
         >Get in touch →</a
       >
       <div class="mt-4 flex items-center justify-center gap-5 sm:mt-6">

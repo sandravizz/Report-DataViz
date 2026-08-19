@@ -15,6 +15,10 @@
   // max-content with wide labels still in it: they stop wrapping, two-line
   // rows collapse to one, and the dots hop before settling.
   const WIDTH_HOLD_MS = FADE_MS + 80;
+  // How far down the cover the reader has to be before the rail fades in.
+  // Small enough to read as "the moment you scroll", big enough that a stray
+  // trackpad nudge at rest doesn't flash it.
+  const LANDING_LEAD_PX = 80;
 
   let activeIndex = $state(0);
   let expanded = $state(false);
@@ -24,7 +28,7 @@
   let closeTimer;
   let showRail = $state(false);
   // The panel overlaps the chart's y-axis labels, so it can't be transparent —
-  // it matches whatever is behind it: base-100 pink over a chapter, flat white
+  // it matches whatever is behind it: base-100 grey over a chapter, flat white
   // over a pinned figure.
   let overChart = $state(false);
   // "<chapter id>:<step>" of the pinned figure, or null between figures. Read
@@ -54,10 +58,18 @@
     function update() {
       const mid = window.innerHeight / 2;
 
-      // Visible from chapter 1 reaching the top until the footer reaches the
-      // rail's own line — testing against the viewport bottom instead blanks
-      // the rail for the whole last figure, which is pinned against the footer.
-      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      // Visible from the moment the reader leaves the cover until the footer
+      // reaches the rail's own line — testing against the viewport bottom
+      // instead blanks the rail for the whole last figure, which is pinned
+      // against the footer.
+      // The cover is one screen tall and chapter 1 follows it directly, so
+      // chapter 1's top starts at innerHeight and counts down as you scroll:
+      // subtracting LANDING_LEAD_PX lights the rail after that many pixels of
+      // scroll, not after a whole screen of it (waiting for top <= 0 kept the
+      // dots hidden through the entire cover).
+      const pastLanding =
+        firstEl.getBoundingClientRect().top <=
+        window.innerHeight - LANDING_LEAD_PX;
       const beforeFooter = footerEl.getBoundingClientRect().top > mid;
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
@@ -183,10 +195,18 @@
           <!-- Hovering a non-current chapter previews its selected state, so
                the row reads as clickable without a link underline. mt-0.5
                optically centres the dot on the label's first line (titles
-               wrap, so the row is not always one line tall). -->
+               wrap, so the row is not always one line tall).
+
+               The active dot is a green fill behind a 1px dark stroke, and
+               NO halo. The halo was the thing that made this read as a sticker
+               — it put a 4px ring around the dot and made the active row twice
+               the visual size of its neighbours. Without it, the same green
+               fill sits quietly. The hairline stroke is what makes the fill
+               legible at all: the accent is ~1.2:1 against both surfaces the
+               rail passes over, so green alone has no edge to read against. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
+              ? 'h-3 w-3 border border-primary bg-accent'
               : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
           ></span>
           {#if expanded}
@@ -205,7 +225,7 @@
         {#if expanded && section.charts?.length}
           <ul
             transition:fade={{ duration: FADE_MS }}
-            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l-2 border-accent py-0.5 pl-4"
           >
             {#each section.charts as chart, j (chart.number ?? j)}
               <li>
@@ -218,9 +238,12 @@
                   class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
                   `${section.id}:${j}`
                     ? 'font-medium text-primary'
-                    : 'text-base-content/45 hover:text-base-content'}"
+                    : 'text-base-content/70 hover:text-base-content'}"
                 >
-                  <span class="opacity-70">{chart.number}</span>
+                  <!-- The figure number is set apart by WEIGHT, not colour: at
+                       this size a second, lighter tint on top of an already
+                       de-emphasized row stopped being readable. -->
+                  <span class="font-medium">{chart.number}</span>
                   {chart.title}
                 </button>
               </li>
