@@ -64,14 +64,15 @@
   // must match the elements below and the `sectionId` each ScrollySection
   // stamps on its anchors, which is how the rail lights up in step.
   // The fade between the tinted text ground and the flat figure surface.
-  // Two things make it gentle. It is LONG — 192px, 256px on desktop, where an
-  // earlier 80px band changed the whole surface inside a flick of the wheel
-  // and read as a hard edge with a blur on it. And each end HOLDS its own
+  // Two things make it gentle. It is LONG — 256px, 384px on desktop. The two
+  // surfaces are close enough in value that a short ramp between them reads as
+  // an edge with a blur on it; over this distance the change is slow enough
+  // that there is no moment where it happens. And each end HOLDS its own
   // colour for the first and last 15%, so the ramp starts and finishes away
   // from the seam: what meets the chapter is chapter colour, what meets the
   // figure is figure colour, and all the change happens in the middle where
   // there is no boundary to draw attention to it.
-  const BAND = "h-48 bg-linear-to-b lg:h-64";
+  const BAND = "h-64 bg-linear-to-b lg:h-96";
   const INTO_TEXT = `${BAND} from-base-100 from-15% to-base-200 to-85%`;
   const INTO_FIGURE = `${BAND} from-base-200 from-15% to-base-100 to-85%`;
 
@@ -141,7 +142,11 @@
              of centre (ChartDisplay `lg:left-[40%]`): the chapter is a full
              page of reading, the figure is a composition with its description
              column to the right. -->
-        <div class="mx-auto w-[88vw] py-28 lg:w-200 lg:py-40">
+        <!-- py-16/lg:py-28. The air above and below the copy was cut back
+             from 28/40: at the old values a short chapter was mostly padding,
+             and on a phone — where the column is 88vw and the type is smaller
+             — it pushed the text down past the fold before it started. -->
+        <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
           {#if section.kicker}
             <p class="mb-3 text-xs font-medium tracking-wide text-primary uppercase">
               {section.kicker}

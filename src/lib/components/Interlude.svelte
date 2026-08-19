@@ -18,7 +18,7 @@
 </script>
 
 <section {id} class="bg-base-200 font-sans text-base-content">
-  <div class="mx-auto w-[88vw] py-28 lg:w-200 lg:py-40">
+  <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
     {#if kicker}
       <p class="mb-3 text-xs font-medium tracking-wide text-base-content/50 uppercase">
         {kicker}
