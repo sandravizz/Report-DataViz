@@ -51,23 +51,42 @@
     },
   ];
 
-  // The fade between the tinted text ground and the white figure surface.
-  // Each end HOLDS its own colour for the first and last 15%, so the ramp
-  // starts and finishes away from the seam and all the change happens
-  // mid-band, where there is no boundary to draw attention to it.
+  // The fade between the tinted text ground and the white figure surface is
+  // painted ON THE TEXT BLOCK, not as a spacer div between the two.
   //
-  // 256px, 384px on desktop — long on purpose. The two surfaces are close
-  // enough in value that a short ramp between them reads as an edge with a
-  // blur on it; over this distance the change is slow enough that there is no
-  // moment where it happens. The earlier attempt to fix a too-tall chapter by
-  // shortening the band was the wrong lever — the height belonged to the
-  // section's own padding, which is where it was taken from instead.
-  const BAND = "h-64 bg-linear-to-b lg:h-96";
-  const INTO_TEXT = `${BAND} from-white from-15% to-base-200 to-85%`;
-  const INTO_FIGURE = `${BAND} from-base-200 from-15% to-white to-85%`;
-  // The cover is not a figure: it is base-100 cream, so its seam into the
-  // first chapter ramps from the cream rather than from white.
-  const COVER_INTO_TEXT = `${BAND} from-base-100 from-15% to-base-200 to-85%`;
+  // That is the whole point. A dedicated band element can only make the fade
+  // longer by making the GAP longer — at 384px it left most of a screen of
+  // empty page between a chapter's last line and the figure under it. As a
+  // background on the block itself the ramp costs no height whatsoever: it
+  // runs up behind the copy, which is dark enough that a light-to-light wash
+  // underneath changes nothing about reading it. So the fade can be as long
+  // as it likes and the text still sits directly above its figure.
+  //
+  // The stops are PERCENTAGES, so the ramp scales with the chapter: a long
+  // chapter gets a long fade, a short one a proportionally shorter one, and
+  // neither ever shows a seam.
+  const FIGURE_SURFACE = "#ffffff";
+  const TEXT_SURFACE = "var(--color-base-200)";
+  // The cover is not a figure: it is base-100 cream, so chapter 1 ramps out of
+  // the cream rather than out of white. Unlike the branches with a dark photo
+  // cover — where the cut into chapter 1 is deliberately hard — this cover is
+  // a pale page, and without a ramp it would meet the tint on a visible line a
+  // few pixels under the scroll chevron.
+  const COVER_SURFACE = "var(--color-base-100)";
+
+  // `from` is whatever surface sits above the block, or null if nothing above
+  // it needs a ramp. `rampBottom` is false when no figure follows.
+  function textSurface(from, rampBottom) {
+    const stops = from
+      ? [`${from} 0%`, `${TEXT_SURFACE} 35%`]
+      : [`${TEXT_SURFACE} 0%`];
+    stops.push(
+      ...(rampBottom
+        ? [`${TEXT_SURFACE} 65%`, `${FIGURE_SURFACE} 100%`]
+        : [`${TEXT_SURFACE} 100%`])
+    );
+    return `background-image:linear-gradient(to bottom,${stops.join(",")})`;
+  }
 </script>
 
 <svelte:head>
@@ -99,19 +118,21 @@
        lg:-scoped: tinted text against the flat cream figure surface is how the
        reader (and the chapter rail) tells the two apart. -->
   <section id={section.id} class="font-sans text-base-content">
-    <!-- Fade out of the surface above. Unlike the branches with a dark photo
-         cover — where the cut into chapter 1 is deliberately hard — the cover
-         here is a pale cream page, so chapter 1 gets a band too; without one
-         the cover would meet the tint on a visible line a few pixels under the
-         scroll chevron. It just ramps from a different colour than the others,
-         since what sits above chapter 1 is the cover and what sits above every
-         other chapter is a white figure. -->
-    {#if i === 0}
-      <div class={COVER_INTO_TEXT}></div>
-    {:else if sections[i - 1].charts.length > 0}
-      <div class={INTO_TEXT}></div>
-    {/if}
-    <div class="bg-base-200">
+    <!-- The fade into and out of the surfaces either side lives in this
+         block's own background — see textSurface() above. What sits above
+         chapter 1 is the cream cover; above every other chapter, a white
+         figure. -->
+    <div
+      class="bg-base-200"
+      style={textSurface(
+        i === 0
+          ? COVER_SURFACE
+          : sections[i - 1].charts.length > 0
+            ? FIGURE_SURFACE
+            : null,
+        section.charts.length > 0
+      )}
+    >
       <!-- Centred in the viewport, while the figure surface below sits left of
            centre (ChartDisplay `lg:left-[40%]`): the chapter is a full page of
            reading, the figure is a composition with its description column to
@@ -147,17 +168,10 @@
         {/each}
       </div>
     </div>
-    <!-- ...and back into it, the same band the other way round. -->
-    {#if section.charts.length > 0}
-      <div class={INTO_FIGURE}></div>
-    {/if}
   </section>
   {#if section.charts.length > 0}
     <ScrollySection pairs={section.charts} sectionId={section.id} />
   {/if}
 {/each}
-
-<!-- Last figure surface into the footer, which is base-200 like the chapters. -->
-<div class={INTO_TEXT}></div>
 
 <Footer />

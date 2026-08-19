@@ -2,7 +2,10 @@
      text, not a figure. Nothing sits below the pitch — no source line, no
      licensing note, no credits. These reports go to one client as a private
      demo and are never published, so there is no audience for fine print. -->
-<footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+<footer
+  class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content"
+  style="background-image:linear-gradient(to bottom,#ffffff 0%,var(--color-base-200) 35%,var(--color-base-200) 100%)"
+>
   <!-- Centred on one column: the pitch is the last thing read and it is short,
        so it sits in the middle of the screen rather than hugging a margin.
        max-w-2xl is the measure that keeps the centred lines trackable. -->
