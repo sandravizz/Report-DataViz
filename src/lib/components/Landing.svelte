@@ -20,7 +20,9 @@
      The chevron is the same scroll cue the other report branches use, in the
      brand orange rather than the cover's blue: it is the one thing here that
      invites an action rather than asking to be read, and against a page of
-     blue the orange is what makes it register. The text block sits low,
+     blue the orange is what makes it register. That is exactly the job
+     `--color-accent` names, so it is written as `text-accent` — the same
+     token the underlines and the rail's dot use, not a second orange. The text block sits low,
      justified to the bottom of its row, so the cue reads as the end of the
      cover rather than as something floating below it. -->
 
@@ -64,7 +66,8 @@
           href="https://www.sandraviz.com/"
           target="_blank"
           rel="noopener"
-          class="underline underline-offset-4">sandraviz.com</a
+          class="underline decoration-accent decoration-2 underline-offset-4"
+          >sandraviz.com</a
         >
       </p>
     </div>
@@ -85,7 +88,7 @@
   <a
     href="#{nextId}"
     aria-label="Scroll to content"
-    class="mx-auto mb-5 text-primary hover:text-primary/70 sm:mb-8"
+    class="mx-auto mb-5 text-accent hover:text-accent/70 sm:mb-8"
   >
     <svg
       class="h-9 w-9"

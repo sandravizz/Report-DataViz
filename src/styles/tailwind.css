@@ -35,8 +35,22 @@
   --color-primary-content: #ffffff;
   --color-secondary: #194abb;
   --color-secondary-content: #ffffff;
-  --color-accent: #dfe0e3;
-  --color-accent-content: #1d1815;
+  /* The brand orange, promoted to `accent` (it stays `primary` too — here
+     they are one role seen twice). It is RESERVED for things that point: the
+     underline under a marked phrase, link rules, the cover's scroll chevron,
+     the rail's active dot and its figure connectors. The institute's own
+     cover already works this way — a page of blue type with a single orange
+     cue on it — so this is their logic, not an imported one.
+     Unlike the other branches the orange DOES also appear in
+     src/lib/colors.js, as `highlight`. That is deliberate here: in the
+     Economic Outlook's own figures the orange already means "the series this
+     chart is about", so spending it on "look here" in the prose is the same
+     instruction in another medium, not a competing one.
+     #dfe0e3, the institute's cool-grey tertiary, was what sat here before —
+     nothing referenced it, and as a pale grey it could not have carried an
+     underline anyway. */
+  --color-accent: #ff6a00;
+  --color-accent-content: #ffffff;
   --color-neutral: #212121;
   --color-neutral-content: #dedede;
   --color-info: #287f9a;
@@ -65,14 +79,18 @@
      one number decides where the side-by-side desktop layout takes over from
      the stacked tablet one. It is deliberately NOT Tailwind's stock 1024px.
      The desktop layout is built from two fixed offsets (ChartDisplay's
-     `left-[43%] w-200`, DescriptionColumn's `left-[calc(43%+464px)] right-8`),
+     `left-[40%] w-200`, DescriptionColumn's `left-[calc(40%+464px)] right-16`),
      which means the description column is whatever is left over:
-     0.57 × viewport − 544px. Below ~1400px that leftover collapses — 185px of
-     text at 1280, 83px at 1100 — while the 800px chart, which never shrinks,
+     0.60 × viewport − 576px. Below ~1400px that leftover collapses — 192px of
+     text at 1280, 84px at 1100 — while the 800px chart, which never shrinks,
      slides left until it sits under the chapter rail at 56px. Rather than make
      the chart elastic (tried; it spoils the wide-desktop composition), the
-     tablet layout simply stays in charge until there is genuinely room:
-     1400px leaves the description ~254px and the chart's left edge at 202px.
+     tablet layout simply stays in charge until there is genuinely room.
+     The anchor is a PERCENTAGE while the chart width is FIXED, so the left
+     gutter (0.40 × viewport − 400px) grows with the screen while the right one
+     stays at right-16: the composition balances around ~1400–1500px and drifts
+     left-heavy on very wide monitors, which is wanted — the chapter rail lives
+     in that left gutter.
      Nothing else in the project uses lg except Header's nav gap; layerchart
      ships no responsive classes, so it is unaffected. */
   --breakpoint-lg: 1400px;
@@ -92,5 +110,25 @@
 @layer utilities {
   :where(.lc-text) {
     stroke: none;
+  }
+}
+
+/* Accent underline for a marked phrase in running text. A real underline, not
+   a highlighter band: 0.12em is ~2.4px at the 20px body size, sitting clear of
+   the descenders. It stays a `mark` for semantics, with the browser's default
+   yellow ground stripped. The rule paints in the brand orange while the text
+   keeps its own ink — the accent is spent on the LINE, never on the text. The
+   running prose here is Suisse Works, a serif, so the underline sits under
+   thinner strokes than on the sans branches; 0.12em still reads clearly
+   against the cream without thickening into a highlighter. */
+@layer components {
+  mark.accent-mark {
+    background: none;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.22em;
+    text-decoration-skip-ink: none;
   }
 }

@@ -187,7 +187,11 @@
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: formatYear },
-    yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
+    // A figure can pin exact y ticks (pair.yTicks); otherwise the scale's own
+    // candidates minus 0. Either way the same values go to the grid below —
+    // LayerChart's Grid defaults to 4 y ticks of its own, which leaves the
+    // gridlines landing between the axis labels on most domains.
+    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     // Tooltip header shows the year by default — no month/day, since most
     // figures here are annual — and month + year for figures that set
     // `tooltipDateFormat`. Rows show the same unit suffix as the y-axis
@@ -201,7 +205,7 @@
     // — that CSS-variable chain is what the PNG export was losing on figure
     // 2's larger DOM (9 series' worth of casing strokes), falling back to a
     // solid black un-themed default instead of a faint 10%-opacity line.
-    grid: { stroke: "rgba(0, 0, 0, 0.1)" },
+    grid: { stroke: "rgba(0, 0, 0, 0.1)", yTicks: pair.yTicks },
   }}
 >
   {#snippet marks({ context })}

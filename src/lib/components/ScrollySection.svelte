@@ -90,7 +90,7 @@
        cream report page rather than onto white cards, so the stage is
        base-100 here — kept in step with `chartSurface` in chart-theme.js,
        which the line casings are drawn in. -->
-  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-white">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>

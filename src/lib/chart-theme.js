@@ -7,7 +7,7 @@ import { ink } from "$lib/colors.js";
 // halos are drawn in this color to knock out what sits behind them, so it
 // has to stay in step with the chart background or the casings show up as
 // pale ghosts on every crossing.
-export const chartSurface = "#f5f1e7";
+export const chartSurface = "#ffffff";
 
 // No stroke here: an SVG presentation attribute can't outrank a stylesheet
 // rule, so a `stroke` prop set here would lose to LayerChart's own default

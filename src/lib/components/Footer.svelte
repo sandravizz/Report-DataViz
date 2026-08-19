@@ -1,23 +1,39 @@
-<footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
-  <div class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center">
-    <div
-      class="px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:w-[48%] md:shrink-0 md:py-0 md:pl-24"
-    >
-      <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
+<!-- Closing pitch panel, on the same tinted ground as the chapters: it is
+     text, not a figure. Nothing sits below the pitch — no source line, no
+     licensing note, no credits. These reports go to one client as a private
+     demo and are never published, so there is no audience for fine print. -->
+<footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+  <!-- Centred on one column: the pitch is the last thing read and it is short,
+       so it sits in the middle of the screen rather than hugging a margin.
+       max-w-2xl is the measure that keeps the centred lines trackable. -->
+  <div class="mx-auto flex w-full max-w-350 flex-1 flex-col items-center justify-center">
+    <div class="w-full max-w-2xl px-6 py-12 text-center sm:px-10 sm:py-16">
+      <div class="mb-4 flex items-center justify-center gap-4 sm:mb-6 sm:gap-5">
         <img
           src="/sandra-portrait.jpg"
           alt="Portrait of Sandra"
           class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
         />
-        <img
-          src="/kiel-logo.svg"
-          alt="Kiel Institute for the World Economy"
-          class="h-7 w-auto sm:h-9"
-        />
+        <a
+          href="https://www.kielinstitut.de/"
+          target="_blank"
+          rel="noopener"
+          class="shrink-0 hover:opacity-70"
+          aria-label="Kiel Institute for the World Economy"
+        >
+          <img
+            src="/kiel-logo.svg"
+            alt="Kiel Institute for the World Economy"
+            class="h-7 w-auto sm:h-9"
+          />
+        </a>
       </div>
+      <!-- The one marked phrase in the footer, and the only thing here the
+           accent is spent on: the logos and social icons stay dark. -->
       <p class="font-serif text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports for the web, mobile, and static downloads too.
+        <mark class="accent-mark">visualization-first reports for the web, mobile</mark>, and
+        static downloads too.
       </p>
       <p class="mt-4 font-serif text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
         This is one example of what that looks like in practice, built on content and data from
@@ -28,10 +44,10 @@
         href="https://sandraviz.com"
         target="_blank"
         rel="noopener"
-        class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
+        class="mt-4 inline-block text-base font-semibold underline decoration-accent decoration-2 underline-offset-4 sm:mt-6 sm:text-xl"
         >Get in touch →</a
       >
-      <div class="mt-4 flex items-center gap-5 sm:mt-6">
+      <div class="mt-4 flex items-center justify-center gap-5 sm:mt-6">
         <a
           href="https://github.com/sandravizz"
           target="_blank"

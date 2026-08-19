@@ -33,7 +33,7 @@
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[40%] lg:w-200">
   <!-- Keyed by index, not title: a future multi-panel figure could share one
        title across its panels, so titles aren't guaranteed unique. -->
   {#each pairs as pair, i (i)}

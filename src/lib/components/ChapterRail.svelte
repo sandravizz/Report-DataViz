@@ -16,6 +16,10 @@
   // wide labels are still in it: they stop wrapping, every two-line row becomes
   // one, and the dots hop for those frames before settling.
   const WIDTH_HOLD_MS = FADE_MS + 80;
+  // How far down the cover the reader has to be before the rail fades in.
+  // Small enough to read as "the moment you scroll", big enough that a stray
+  // trackpad nudge at rest doesn't flash it.
+  const LANDING_LEAD_PX = 80;
 
   let activeIndex = $state(0);
   let expanded = $state(false);
@@ -26,8 +30,8 @@
   let closeTimer;
   let showRail = $state(false);
   // The panel overlaps the chart's y-axis labels, so it can't be transparent;
-  // instead it matches whichever surface is behind it — base-100 pink over a
-  // chapter, flat white over a pinned figure.
+  // instead it matches whichever surface is behind it — the tinted base-200
+  // over a chapter, flat white over a pinned figure.
   let overChart = $state(false);
   // "<chapter id>:<step>" of the pinned figure, or null between figures. Read
   // off ScrollySection's anchors rather than redoing its progress maths.
@@ -62,7 +66,14 @@
       // bottom: the last figure is pinned right up against the footer, so
       // "footer not on screen at all" blanked the rail — including the dots —
       // for the whole of that figure. It hides once the footer reaches it.
-      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      // The cover is one screen tall and chapter 1 follows it directly, so
+      // chapter 1's top starts at innerHeight and counts down as you scroll:
+      // subtracting LANDING_LEAD_PX lights the rail after that many pixels of
+      // scroll rather than after a whole screen of it (waiting for top <= 0
+      // kept the dots hidden through the entire cover).
+      const pastLanding =
+        firstEl.getBoundingClientRect().top <=
+        window.innerHeight - LANDING_LEAD_PX;
       const beforeFooter = footerEl.getBoundingClientRect().top > mid;
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
@@ -180,7 +191,9 @@
   <div
     class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
       ? 'w-72'
-      : 'w-max'} {expanded ? 'bg-base-100 shadow-lg' : ''}"
+      : 'w-max'} {expanded
+      ? `shadow-lg ${overChart ? 'bg-white' : 'bg-base-200'}`
+      : ''}"
   >
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a
@@ -196,17 +209,27 @@
                tints and darkens, label goes to full contrast) so the row reads
                as clickable without a link underline. mt-0.5 optically centres
                the dot on the label's first line, since titles can wrap. -->
+          <!-- The active dot is a solid orange fill and NO halo. The halo was
+               what made this read as a sticker — a 4px ring that left the
+               active row twice the visual size of its neighbours. The other
+               branches need a hairline stroke to give their accent an edge;
+               orange on cream has contrast to spare, so it goes without. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
+              ? 'h-3 w-3 bg-accent'
               : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
           ></span>
+          <!-- The accent lives in the CIRCLE and nowhere else: an active label
+               goes to full-contrast ink and picks up weight, never colour.
+               Colouring the text as well made the accent a second way of
+               saying the same thing, and put the brand orange on a run of
+               small type it has no business carrying. -->
           {#if expanded}
             <span
               transition:fade={{ duration: FADE_MS }}
               class="text-sm leading-snug transition-colors duration-200 {activeIndex ===
               i
-                ? 'font-semibold text-primary'
+                ? 'font-semibold text-base-content'
                 : 'text-base-content/55 group-hover:text-base-content'}"
             >
               {section.title}
@@ -217,7 +240,7 @@
         {#if expanded && section.charts?.length}
           <ul
             transition:fade={{ duration: FADE_MS }}
-            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l-2 border-accent py-0.5 pl-4"
           >
             {#each section.charts as chart, j (chart.number ?? j)}
               <li>
@@ -229,10 +252,13 @@
                     : undefined}
                   class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
                   `${section.id}:${j}`
-                    ? 'font-medium text-primary'
-                    : 'text-base-content/45 hover:text-base-content'}"
+                    ? 'font-medium text-base-content'
+                    : 'text-base-content/70 hover:text-base-content'}"
                 >
-                  <span class="opacity-70">{chart.number}</span>
+                  <!-- The figure number is set apart by WEIGHT, not colour: at
+                       this size a second, lighter tint on top of an already
+                       de-emphasized row stopped being readable. -->
+                  <span class="font-medium">{chart.number}</span>
                   {chart.title}
                 </button>
               </li>

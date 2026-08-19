@@ -51,7 +51,7 @@
        rail's. -->
   <button
     type="button"
-    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:border-transparent! hover:bg-white! hover:shadow-lg!"
+    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/50 normal-case hover:border-transparent! hover:bg-base-200! hover:shadow-lg!"
     disabled={downloading}
     onclick={handleDownload}
   >
@@ -70,7 +70,7 @@
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="-ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/30 transition-[background-color,box-shadow,color] duration-200 hover:bg-white hover:text-base-content/50 hover:shadow-lg"
+  class="-ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/30 transition-[background-color,box-shadow,color] duration-200 hover:bg-base-200 hover:text-base-content/50 hover:shadow-lg"
 >
   sandraviz.com
 </a>
