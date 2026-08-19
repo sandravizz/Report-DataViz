@@ -1,4 +1,9 @@
-<footer class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content">
+<!-- Fades in from the white figure surface above, in its own background so
+     the seam costs no height. No ramp at the bottom — the page ends here. -->
+<footer
+  class="relative flex min-h-screen flex-col bg-base-100 font-sans text-base-content"
+  style="background-image:linear-gradient(to bottom,#ffffff 0%,var(--color-base-100) 35%,var(--color-base-100) 100%)"
+>
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col items-center justify-center"
   >
