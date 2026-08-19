@@ -13,6 +13,10 @@
   // max-content while wide labels are still in it, so they stop wrapping and
   // the dots hop for a few frames.
   const WIDTH_HOLD_MS = FADE_MS + 80;
+  // How far down the cover the reader has to be before the rail fades in.
+  // Small enough to read as "the moment you scroll", big enough that a stray
+  // trackpad nudge at rest doesn't flash it.
+  const LANDING_LEAD_PX = 80;
 
   let activeIndex = $state(0);
   let expanded = $state(false);
@@ -53,10 +57,18 @@
     function update() {
       const mid = window.innerHeight / 2;
 
-      // The footer test is against the rail's own line, not the viewport
-      // bottom: the last figure is pinned against the footer, so "footer off
-      // screen" blanked the rail for that whole figure.
-      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      // Visible from the moment the reader leaves the cover until the footer
+      // reaches the rail's own line. The footer test is against that line and
+      // not the viewport bottom: the last figure is pinned against the footer,
+      // so "footer off screen" blanked the rail for that whole figure.
+      // The cover is one screen tall and chapter 1 follows it directly, so
+      // chapter 1's top starts at innerHeight and counts down as you scroll:
+      // subtracting LANDING_LEAD_PX lights the rail after that many pixels of
+      // scroll, not after a whole screen of it (waiting for top <= 0 kept the
+      // dots hidden through the entire cover).
+      const pastLanding =
+        firstEl.getBoundingClientRect().top <=
+        window.innerHeight - LANDING_LEAD_PX;
       const beforeFooter = footerEl.getBoundingClientRect().top > mid;
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
@@ -179,10 +191,18 @@
         >
           <!-- Hovering a non-current chapter previews the selected state, so
                the row reads as clickable without a link underline. mt-0.5
-               centres the dot on the label's first line. -->
+               centres the dot on the label's first line.
+
+               The active dot is an amber fill behind a 1px navy stroke, and
+               NO halo. The halo was the thing that made this read as a sticker
+               — it put a 4px ring around the dot and made the active row twice
+               the visual size of its neighbours. Without it the same fill sits
+               quietly. The hairline stroke is what makes it legible at all:
+               the accent is light against both surfaces the rail passes over,
+               so amber alone has no edge to read against. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 bg-primary ring-4 ring-primary/15'
+              ? 'h-3 w-3 border border-primary bg-accent'
               : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
           ></span>
           {#if expanded}
@@ -203,7 +223,7 @@
                title, hence `stepLabel`). -->
           <ul
             transition:fade={{ duration: FADE_MS }}
-            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l-2 border-accent py-0.5 pl-4"
           >
             {#each section.charts as chart, j (j)}
               <li>
@@ -216,9 +236,12 @@
                   class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
                   `${section.id}:${j}`
                     ? 'font-medium text-primary'
-                    : 'text-base-content/45 hover:text-base-content'}"
+                    : 'text-base-content/70 hover:text-base-content'}"
                 >
-                  <span class="opacity-70">{chart.number}</span>
+                  <!-- The figure number is set apart by WEIGHT, not colour: at
+                       this size a second, lighter tint on top of an already
+                       de-emphasized row stopped being readable. -->
+                  <span class="font-medium">{chart.number}</span>
                   {chart.stepLabel ?? chart.title}
                 </button>
               </li>

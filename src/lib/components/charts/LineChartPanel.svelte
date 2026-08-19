@@ -164,7 +164,11 @@
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
-    yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
+    // A figure can pin exact y ticks (pair.yTicks); otherwise the scale's own
+    // candidates minus 0. Either way the same values go to the grid below —
+    // LayerChart's Grid defaults to 4 y ticks of its own, which leaves the
+    // gridlines landing between the axis labels on most domains.
+    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     tooltip:
       pair.valueSuffix || pair.tooltipHeaderFormat
         ? {
@@ -178,7 +182,7 @@
     // that CSS-variable chain is lost when the PNG export re-serializes the
     // SVG outside the page stylesheet, and gridlines rasterize solid black.
     // Same value it resolves to on screen: 10% of --color-base-content.
-    grid: { stroke: "rgba(27, 65, 96, 0.1)" },
+    grid: { stroke: "rgba(27, 65, 96, 0.1)", yTicks: pair.yTicks },
   }}
 >
   {#snippet marks({ context })}

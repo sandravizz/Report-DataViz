@@ -1,34 +1,47 @@
-<!-- Closing pitch panel — text only, no decorative echo of the landing screen.
-     `disclosure` is an optional snippet for report-specific licensing text,
-     kept out of this component so Footer stays reusable across reports. -->
-<script>
-  let { disclosure } = $props();
-</script>
-
+<!-- Closing pitch panel — text only, no decorative echo of the landing screen,
+     and NOTHING below the pitch: no source line, no licensing note, no
+     credits. These reports go to one client as a private demo and are never
+     published, so there is no audience for fine print, and a block of grey
+     6-point type under the pitch only weakens the last thing read. The
+     `disclosure` snippet prop that used to hang here was removed with it
+     (Sandra, 2026-08-19). -->
 <footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+  <!-- Centred, on one column: the closing pitch is the last thing read and
+       it is short, so it sits in the middle of the screen rather than hugging
+       a margin. max-w-2xl is the measure that keeps the centred lines from
+       running too long to track. -->
   <div
-    class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center"
+    class="mx-auto flex w-full max-w-350 flex-1 flex-col items-center justify-center"
   >
-    <div
-      class="max-w-3xl px-6 pt-12 pb-6 sm:px-10 sm:py-16 md:py-0 md:pl-24"
-    >
+    <div class="w-full max-w-2xl px-6 py-12 text-center sm:px-10 sm:py-16">
       <!-- Portrait beside the client's logo: "this work, for that client",
            before the copy says it. -->
-      <div class="mb-4 flex items-center gap-4 sm:mb-6 sm:gap-5">
+      <div class="mb-4 flex items-center justify-center gap-4 sm:mb-6 sm:gap-5">
         <img
           src="/sandra-portrait.jpg"
           alt="Porträt von Sandra"
           class="h-20 w-20 shrink-0 rounded-full object-cover sm:h-28 sm:w-28"
         />
-        <img
-          src="/iw-logo.svg"
-          alt="IW Institut der deutschen Wirtschaft"
-          class="h-8 w-auto sm:h-10"
-        />
+        <a
+          href="https://www.iwkoeln.de"
+          target="_blank"
+          rel="noopener"
+          class="shrink-0 hover:opacity-70"
+          aria-label="Institut der deutschen Wirtschaft"
+        >
+          <img
+            src="/iw-logo.svg"
+            alt="IW Institut der deutschen Wirtschaft"
+            class="h-8 w-auto sm:h-10"
+          />
+        </a>
       </div>
+      <!-- The one marked phrase in the footer, and the only thing here the
+           accent is spent on: the logos and social icons stay dark. -->
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         Ich bin Sandra, Designerin und Entwicklerin für Datenvisualisierung. Ich setze
-        Studien und Reports als interaktive Webpublikationen um, in denen die
+        Studien und Reports als
+        <mark class="accent-mark">interaktive Webpublikationen</mark> um, in denen die
         fachliche Interpretation der Daten bereits in den Grafiken steckt. So werden
         die Ergebnisse schneller und genauer erfasst.
       </p>
@@ -42,10 +55,10 @@
         href="https://sandraviz.com"
         target="_blank"
         rel="noopener"
-        class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
+        class="mt-4 inline-block text-base font-semibold underline decoration-accent decoration-2 underline-offset-4 sm:mt-6 sm:text-xl"
         >Kontakt aufnehmen →</a
       >
-      <div class="mt-4 flex items-center gap-5 sm:mt-6">
+      <div class="mt-4 flex items-center justify-center gap-5 sm:mt-6">
         <a
           href="https://github.com/sandravizz"
           target="_blank"
@@ -71,12 +84,4 @@
       </div>
     </div>
   </div>
-
-  {#if disclosure}
-    <div class="mx-auto w-full max-w-350 px-6 pb-4 sm:px-10 sm:pb-6">
-      <div class="text-left text-[10px] leading-relaxed text-base-content/40">
-        {@render disclosure()}
-      </div>
-    </div>
-  {/if}
 </footer>

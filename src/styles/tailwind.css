@@ -23,8 +23,15 @@
   --color-primary-content: #ffffff;
   --color-secondary: #0069b4;
   --color-secondary-content: #ffffff;
-  --color-accent: #f59d0f;
-  --color-accent-content: #000000;
+  /* IW's own #0069b4 — the fill on their logo SVG and their .btn--secondary,
+     independently confirmed by pixel-sampling the logo on the report's PDF
+     cover. It is RESERVED: spent only on things that point (the underline in
+     running text, link rules, the rail's active dot and its figure
+     connectors) and deliberately kept out of src/lib/colors.js, so no chart
+     series can pick it up. --color-secondary is the same blue, by design:
+     they are the same brand role seen from two sides. */
+  --color-accent: #0069b4;
+  --color-accent-content: #ffffff;
   --color-neutral: #6f6f6f;
   --color-neutral-content: #ffffff;
   --color-info: #106b71;
@@ -40,4 +47,45 @@
 @theme {
   --font-sans: 'Source Sans Pro', helvetica, arial, sans-serif;
   --font-display: 'Acherus Grotesque', 'Source Sans Pro', helvetica, arial, sans-serif;
+
+  /* Tailwind's `lg` is 1024px; here it is 1400. Everything in the scrolly
+     chart system branches off `lg` — chart position, description column,
+     chapter rail, the mobile "Interpretation" button — so this one number
+     decides where the side-by-side desktop layout takes over from the stacked
+     tablet one.
+     Desktop is built from two fixed offsets (ChartDisplay `left-[40%] w-200`,
+     DescriptionColumn `left-[calc(40%+464px)] right-16`), leaving the
+     description whatever remains: 0.60 × viewport − 576px. That collapses
+     below ~1400px (192px of text at 1280, 84px at 1100) while the 800px chart
+     never shrinks, sliding left until it sits under the chapter rail. Making
+     the chart elastic was tried and spoils the wide-desktop composition, so
+     tablet stays in charge until there is genuinely room.
+
+     The anchor is a PERCENTAGE but the chart width is FIXED, so the left
+     gutter (0.40 × viewport − 400px) grows with the screen while the right one
+     stays put at right-16. The composition is therefore balanced around
+     ~1400–1500px and drifts left-heavy on very wide monitors; the left gutter
+     is also where the chapter rail lives, so some extra air there is wanted. */
+  --breakpoint-lg: 1400px;
+}
+
+/* Accent underline for a marked phrase in running text. A real underline, not
+   a highlighter band: 0.12em is ~2.4px at the 20px body size, sitting clear of
+   the descenders. It stays a `mark` for semantics, with the browser's default
+   yellow ground stripped. The rule paints in IW's blue while the text keeps
+   its own colour — the accent is spent on the LINE, never on the text itself.
+   0.12em here, and 2px (`decoration-2`) wherever a utility sets it on a light
+   ground. The cover photo is the one exception: the blue is 5.6:1 on white but
+   only ~3.7:1 on black, so the rules over the photo go to 3px and the scrim
+   beneath them is deepened to match. */
+@layer components {
+  mark.accent-mark {
+    background: none;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.22em;
+    text-decoration-skip-ink: none;
+  }
 }

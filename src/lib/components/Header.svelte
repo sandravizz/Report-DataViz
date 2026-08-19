@@ -1,7 +1,9 @@
 <script>
-  // IW logo left (links to top); TOC dropdown and IW's own social profiles
-  // right.
-  let { links = [] } = $props();
+  // IW logo left (links to iwkoeln.de); TOC dropdown and IW's own social
+  // profiles right. `sections` is the same list the ChapterRail navigates, so the TOC
+  // can show the figures nested under their chapter rather than a flat list of
+  // chapter links.
+  let { sections = [] } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -34,7 +36,19 @@
      it under the chapter rail's z-40. -->
 <header class="absolute inset-x-0 top-0 z-20 text-white">
   <div class="flex items-center justify-between gap-4 px-6 py-3">
-    <a href="#top" class="shrink-0 hover:opacity-70" aria-label="Back to top">
+    <!-- The client's mark goes to the CLIENT, not back up this page: it is
+         their logo, so the only thing a reader can expect from clicking it is
+         iwkoeln.de. (It used to jump to #top, which is why that id is still on
+         the page wrapper — nothing points at it now.) Their own site is all
+         the repo has; no deep link to the IW-Wohnindex report page was ever
+         captured, and I have not guessed one. -->
+    <a
+      href="https://www.iwkoeln.de"
+      target="_blank"
+      rel="noopener"
+      class="shrink-0 hover:opacity-70"
+      aria-label="Institut der deutschen Wirtschaft — iwkoeln.de"
+    >
       <img
         src="/iw-logo-white.svg"
         alt="IW — Institut der deutschen Wirtschaft"
@@ -48,7 +62,7 @@
           tabindex="0"
           role="button"
           aria-label="Inhaltsverzeichnis"
-          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-white decoration-2 underline-offset-8 outline-none hover:underline sm:px-4"
+          class="cursor-pointer px-2 py-2 font-sans text-sm underline decoration-accent decoration-[3px] underline-offset-8 outline-none sm:px-4"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -72,13 +86,59 @@
             </svg>
           </span>
         </div>
+        <!-- The button above wears the accent at 3px rather than the 2px used
+             on light grounds: it rides the dark cover photo, where the blue
+             has far less contrast to work with, so the rule buys back in area
+             what it cannot get in contrast (same treatment as the credit link
+             in Landing.svelte). Inside this panel the ground is light again
+             and the accent behaves normally.
+             Same panel as ChapterRail's hover flyout, deliberately:
+             rounded-2xl on px-5 py-4, a hollow dot per entry, and the figures
+             nested under an amber connector. daisyUI's `menu` class is dropped
+             rather than restyled — its own padding and hover rules would fight
+             every one of those. The dots are all idle here; unlike the rail
+             this panel is a destination list, not a position indicator. -->
         <ul
           tabindex="-1"
-          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans text-base-content shadow-lg"
+          class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-100 px-5 py-4 font-sans text-base-content shadow-lg"
         >
-          {#each links as link (link.href)}
-            <li>
-              <a href={link.href} onclick={closeDropdown}>{link.label}</a>
+          {#each sections as section (section.id)}
+            <li class="flex flex-col">
+              <a
+                href="#{section.id}"
+                onclick={closeDropdown}
+                class="group -m-1.5 flex items-start gap-3 p-1.5 text-left"
+              >
+                <span
+                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover:border-base-content/70 group-hover:bg-base-content/15"
+                ></span>
+                <span
+                  class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
+                >
+                  {section.title}
+                </span>
+              </a>
+
+              <!-- Keyed by index: the animated steps share a figure number
+                   (and title, hence `stepLabel`). -->
+              {#if section.charts?.length}
+                <ul
+                  class="mt-2 ml-1.5 flex list-none flex-col gap-1.5 border-l-2 border-accent py-0.5 pl-4"
+                >
+                  {#each section.charts as chart, i (i)}
+                    <li>
+                      <a
+                        href="#{section.id}-chart-{i}"
+                        onclick={closeDropdown}
+                        class="block text-xs leading-snug text-base-content/70 transition-colors duration-200 hover:text-base-content"
+                      >
+                        <span class="font-medium">{chart.number}</span>
+                        {chart.stepLabel ?? chart.title}
+                      </a>
+                    </li>
+                  {/each}
+                </ul>
+              {/if}
             </li>
           {/each}
         </ul>
