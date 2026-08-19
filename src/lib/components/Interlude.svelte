@@ -17,7 +17,15 @@
   let { id = undefined, kicker, title, paragraphs = [] } = $props();
 </script>
 
-<section {id} class="bg-base-200 font-sans text-base-content">
+<!-- The fade to the white figure surface at either end is painted on this
+     block's own background rather than as spacer divs around it, so a long
+     ramp costs no height — same technique and same 35%/65% stops as a chapter
+     in +page.svelte. -->
+<section
+  {id}
+  class="bg-base-200 font-sans text-base-content"
+  style="background-image:linear-gradient(to bottom,#ffffff 0%,var(--color-base-200) 35%,var(--color-base-200) 65%,#ffffff 100%)"
+>
   <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
     {#if kicker}
       <p class="mb-3 text-xs font-medium tracking-wide text-base-content/50 uppercase">

@@ -83,7 +83,7 @@
   {/each}
   <!-- data-scrolly marks the figure surface, so ChapterRail knows what sits
        behind it. -->
-  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-white">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>

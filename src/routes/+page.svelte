@@ -63,18 +63,36 @@
   // chapter contributes two points, a plain one contributes itself. The ids
   // must match the elements below and the `sectionId` each ScrollySection
   // stamps on its anchors, which is how the rail lights up in step.
-  // The fade between the tinted text ground and the flat figure surface.
-  // Two things make it gentle. It is LONG — 256px, 384px on desktop. The two
-  // surfaces are close enough in value that a short ramp between them reads as
-  // an edge with a blur on it; over this distance the change is slow enough
-  // that there is no moment where it happens. And each end HOLDS its own
-  // colour for the first and last 15%, so the ramp starts and finishes away
-  // from the seam: what meets the chapter is chapter colour, what meets the
-  // figure is figure colour, and all the change happens in the middle where
-  // there is no boundary to draw attention to it.
-  const BAND = "h-64 bg-linear-to-b lg:h-96";
-  const INTO_TEXT = `${BAND} from-base-100 from-15% to-base-200 to-85%`;
-  const INTO_FIGURE = `${BAND} from-base-200 from-15% to-base-100 to-85%`;
+  // The fade between the tinted text ground and the white figure surface is
+  // painted ON THE TEXT BLOCK, not as a spacer div between the two.
+  //
+  // That is the whole point. A dedicated band element can only make the fade
+  // longer by making the GAP longer — at 384px it left most of a screen of
+  // empty page between a chapter's last line and the figure under it. As a
+  // background on the block itself the ramp costs no height whatsoever: it
+  // runs up behind the copy, which is dark enough that a light-to-light wash
+  // underneath changes nothing about reading it. So the fade can be as long
+  // as it likes and the text still sits directly above its figure.
+  //
+  // The stops are PERCENTAGES, so the ramp scales with the chapter: a long
+  // three-paragraph chapter gets a ~350px fade, a short one gets a
+  // proportionally shorter one, and neither ever shows a seam.
+  const FIGURE_SURFACE = "#ffffff";
+  const TEXT_SURFACE = "var(--color-base-200)";
+
+  // `rampTop` is false for chapter 1 — it follows the dark photo cover, where
+  // the cut is meant to be hard. `rampBottom` is false when no figure follows.
+  function textSurface(rampTop, rampBottom) {
+    const stops = rampTop
+      ? [`${FIGURE_SURFACE} 0%`, `${TEXT_SURFACE} 35%`]
+      : [`${TEXT_SURFACE} 0%`];
+    stops.push(
+      ...(rampBottom
+        ? [`${TEXT_SURFACE} 65%`, `${FIGURE_SURFACE} 100%`]
+        : [`${TEXT_SURFACE} 100%`])
+    );
+    return `background-image:linear-gradient(to bottom,${stops.join(",")})`;
+  }
 
   const railSections = sections.flatMap((section) =>
     section.interlude
@@ -129,15 +147,12 @@
          lg:-scoped — tinted text vs. flat white figures is how the reader (and
          the chapter rail) tells the two surfaces apart. -->
     <section id={section.id} class="font-sans text-base-content">
-      <!-- Fade OUT of the white figure surface above. Chapter 1 has no band:
-           it follows the dark photo cover, where the cut is meant to be hard.
-           The ramp runs between the two SURFACE TOKENS, not literal white and
-           a tint, so it keeps matching if the theme's surfaces are retuned.
-           See INTO_TEXT / INTO_FIGURE above for its length and shape. -->
-      {#if i > 0 && sections[i - 1].charts.length > 0}
-        <div class={INTO_TEXT}></div>
-      {/if}
-      <div class="bg-base-200">
+      <!-- The fade into and out of the white figure surface lives in this
+           block's own background — see textSurface() above. -->
+      <div
+        class="bg-base-200"
+        style={textSurface(i > 0 && sections[i - 1].charts.length > 0, section.charts.length > 0)}
+      >
         <!-- Centred in the viewport, while the figure surface below sits left
              of centre (ChartDisplay `lg:left-[40%]`): the chapter is a full
              page of reading, the figure is a composition with its description
@@ -173,22 +188,16 @@
           {/each}
         </div>
       </div>
-      <!-- ...and back INTO it, the same band the other way round. -->
-      {#if section.charts.length > 0}
-        <div class={INTO_FIGURE}></div>
-      {/if}
     </section>
     <!-- An `interlude` splits the figures into two scrolly runs with a text
-         pause between, so the surface changes twice more: figure → tint →
-         figure, each seam carrying the same band. -->
+         pause between. It carries its own fade at both ends, the same way this
+         chapter does — see Interlude.svelte. -->
     {#if section.interlude}
       <ScrollySection
         pairs={section.charts.slice(0, section.interlude.after)}
         sectionId={section.id}
       />
-      <div class={INTO_TEXT}></div>
       <Interlude {...section.interlude} id="{section.id}-steps" />
-      <div class={INTO_FIGURE}></div>
       <ScrollySection
         pairs={section.charts.slice(section.interlude.after)}
         sectionId="{section.id}-steps"
@@ -197,8 +206,6 @@
       <ScrollySection pairs={section.charts} sectionId={section.id} />
     {/if}
   {/each}
-  <!-- Last figure surface back into the footer, which is base-200 too. -->
-  <div class={INTO_TEXT}></div>
 </div>
 
 <Footer />

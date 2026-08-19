@@ -5,7 +5,12 @@
      6-point type under the pitch only weakens the last thing read. The
      `disclosure` snippet prop that used to hang here was removed with it
      (Sandra, 2026-08-19). -->
-<footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+<!-- Fades in from the white figure surface above, in its own background so
+     the seam costs no height. No ramp at the bottom — the page ends here. -->
+<footer
+  class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content"
+  style="background-image:linear-gradient(to bottom,#ffffff 0%,var(--color-base-200) 35%,var(--color-base-200) 100%)"
+>
   <!-- Centred, on one column: the closing pitch is the last thing read and
        it is short, so it sits in the middle of the screen rather than hugging
        a margin. max-w-2xl is the measure that keeps the centred lines from
