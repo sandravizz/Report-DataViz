@@ -39,7 +39,7 @@ function wrapLines(ctx, text, maxWidth) {
   return lines;
 }
 
-// Captures one chart's own `.lc-root-container` as a bitmap with
+// Captures one chart's own `.lc-root-container` as a rasterized image with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here) or
 // one whose SVG reports no usable dimensions at all; the caller skips those.
 async function captureChartBleed(root, scale) {
@@ -80,13 +80,6 @@ async function captureChartBleed(root, scale) {
   // scales uniformly. The `<img>` is then already at output size and needs no
   // resampling on the way to the canvas.
   //
-  // The alternative — loading at 1:1 and letting `createImageBitmap`'s
-  // resizeWidth/resizeHeight do the upscale — is what turned every
-  // translucent stroke opaque in Chrome: its resampler mishandles alpha, so
-  // the 10%-black gridlines and the 20%-black projection hatch rasterized as
-  // solid black. Safari and Firefox largely ignore those resize options, which
-  // is why the bug only ever showed up in Chrome.
-  //
   // Stretching width/height past the viewBox is only unsafe when there is no
   // viewBox at all — a single-layer chart serializes with width/height alone
   // (see layerchart/utils/download.js), and without the reconstruction above
@@ -99,8 +92,8 @@ async function captureChartBleed(root, scale) {
     type: "image/svg+xml;charset=utf-8",
   });
   const url = URL.createObjectURL(blob);
+  const img = new Image();
   try {
-    const img = new Image();
     await new Promise((resolve, reject) => {
       img.onload = resolve;
       // `onerror` hands back an Event, not an Error, which surfaces as an
@@ -108,14 +101,25 @@ async function captureChartBleed(root, scale) {
       img.onerror = () => reject(new Error("Chart SVG could not be rasterized"));
       img.src = url;
     });
-    // No resize options: the image is already at export resolution, so this
-    // just decodes it. `width`/`height` come back in CSS units — the caller
-    // composites onto a context already scaled by `exportScale`.
-    const bitmap = await createImageBitmap(img);
-    return { bitmap, width: outWidth, height: outHeight };
-  } finally {
+  } catch (error) {
     URL.revokeObjectURL(url);
+    throw error;
   }
+
+  // The loaded `<img>` is handed back as-is, NOT decoded into an ImageBitmap
+  // first. Chrome drops the alpha channel when `createImageBitmap` decodes an
+  // SVG-backed image, so anything whose lightness lives in alpha rather than
+  // in its color — the projection hatch above all — composites at full
+  // strength. No option combination avoids it: premultiplyAlpha and
+  // colorSpaceConversion make no difference, and it reproduces at scale 1 with
+  // no bleed. Firefox and Safari decode correctly, so the bug reads as
+  // Chrome-only.
+  //
+  // Returned width/height are CSS units; the caller composites onto a context
+  // already scaled for export. `url` stays live until the caller has drawn:
+  // revoking it can let the browser evict the decoded frame out from under a
+  // later `drawImage`.
+  return { img, url, width: outWidth, height: outHeight };
 }
 
 // Composites a figure's chart(s) with the report's title/subtitle/source/
@@ -252,10 +256,9 @@ export async function downloadFigureImage({
     const p = placements[i];
     const drawX = pad + (p.x - unionLeft) - CAPTURE_BLEED;
     const drawY = headerHeight + (p.y - unionTop) - CAPTURE_BLEED;
-    ctx.drawImage(capture.bitmap, drawX, drawY, capture.width, capture.height);
-    // A decoded ImageBitmap holds memory (often GPU-side) until it is closed
-    // or collected; release each one as soon as it has been composited.
-    capture.bitmap.close();
+    ctx.drawImage(capture.img, drawX, drawY, capture.width, capture.height);
+    // Safe now: drawImage is synchronous, so the frame is already committed.
+    URL.revokeObjectURL(capture.url);
   }
 
   let fy = headerHeight + unionHeight + 20;
