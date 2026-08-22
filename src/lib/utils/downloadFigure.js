@@ -34,7 +34,7 @@ function wrapLines(ctx, text, maxWidth) {
   return lines;
 }
 
-// Captures one chart's own `.lc-root-container` as a bitmap with
+// Captures one chart's own `.lc-root-container` as a rasterized image with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here).
 async function captureChartBleed(root, pixelRatio) {
   const svgStr = getChartSvgString(root);
@@ -59,36 +59,51 @@ async function captureChartBleed(root, pixelRatio) {
     "viewBox",
     `${vx - CAPTURE_BLEED} ${vy - CAPTURE_BLEED} ${vw + CAPTURE_BLEED * 2} ${vh + CAPTURE_BLEED * 2}`
   );
-  // Load the SVG at its native 1:1 size (width/height attrs matching the
-  // viewBox exactly) and let createImageBitmap's own resize do the retina
-  // upscale, rather than asking the SVG rasterizer to stretch width/height
-  // attributes past the viewBox itself: a `patternUnits="userSpaceOnUse"`
-  // tile (the projection-band hatch) doesn't reliably scale with that trick
-  // across browsers and was tiling far denser than intended — plain
-  // geometry (e.g. the grid lines) scaled fine, only the pattern didn't.
-  svg.setAttribute("width", String(outWidth));
-  svg.setAttribute("height", String(outHeight));
+  // Rasterize straight at export resolution: width/height carry the retina
+  // multiple while the viewBox stays in CSS units, so all of user space
+  // (strokes and `patternUnits="userSpaceOnUse"` hatch tiles alike) scales
+  // uniformly and the `<img>` needs no resampling on the way to the canvas.
+  //
+  // This replaces an earlier 1:1 load + createImageBitmap resize, which was
+  // adopted back when stretching width/height past the viewBox tiled the
+  // projection hatch far denser than intended. That density was caused by a
+  // missing viewBox, not by the stretch: a single-layer chart serializes with
+  // width/height alone, so without the reconstruction above its content sat
+  // at 1:1 in the corner of an oversized canvas. The reconstruction is in
+  // place, so the stretch is safe.
+  svg.setAttribute("width", String(Math.round(outWidth * pixelRatio)));
+  svg.setAttribute("height", String(Math.round(outHeight * pixelRatio)));
 
   const blob = new Blob([new XMLSerializer().serializeToString(svg)], {
     type: "image/svg+xml;charset=utf-8",
   });
   const url = URL.createObjectURL(blob);
+  const img = new Image();
   try {
-    const img = new Image();
     await new Promise((resolve, reject) => {
       img.onload = resolve;
       img.onerror = reject;
       img.src = url;
     });
-    const bitmap = await createImageBitmap(img, {
-      resizeWidth: Math.round(outWidth * pixelRatio),
-      resizeHeight: Math.round(outHeight * pixelRatio),
-      resizeQuality: "high",
-    });
-    return { bitmap, width: outWidth, height: outHeight };
-  } finally {
+  } catch (error) {
     URL.revokeObjectURL(url);
+    throw error;
   }
+
+  // The loaded `<img>` is handed back as-is, NOT decoded into an ImageBitmap
+  // first. Chrome drops the alpha channel when `createImageBitmap` decodes an
+  // SVG-backed image, so anything whose lightness lives in alpha rather than
+  // in its color — the projection hatch above all — composites at full
+  // strength. No option combination avoids it: premultiplyAlpha and
+  // colorSpaceConversion make no difference, and it reproduces at scale 1 with
+  // no bleed. Firefox and Safari decode correctly, so the bug reads as
+  // Chrome-only.
+  //
+  // Returned width/height are CSS units; the caller composites onto a context
+  // already scaled for export. `url` stays live until the caller has drawn:
+  // revoking it can let the browser evict the decoded frame out from under a
+  // later `drawImage`.
+  return { img, url, width: outWidth, height: outHeight };
 }
 
 // Composites a figure's chart(s) with the report's title/subtitle/source/
@@ -219,7 +234,9 @@ export async function downloadFigureImage({
     const p = placements[i];
     const drawX = pad + (p.x - unionLeft) - CAPTURE_BLEED;
     const drawY = headerHeight + (p.y - unionTop) - CAPTURE_BLEED;
-    ctx.drawImage(capture.bitmap, drawX, drawY, capture.width, capture.height);
+    ctx.drawImage(capture.img, drawX, drawY, capture.width, capture.height);
+    // Safe now: drawImage is synchronous, so the frame is already committed.
+    URL.revokeObjectURL(capture.url);
   }
 
   let fy = headerHeight + unionHeight + 20;
