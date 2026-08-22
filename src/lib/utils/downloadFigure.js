@@ -32,7 +32,7 @@ function wrapLines(ctx, text, maxWidth) {
   return lines;
 }
 
-// Captures one chart's own `.lc-root-container` as a bitmap with
+// Captures one chart's own `.lc-root-container` as a rasterized image with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here).
 async function captureChartBleed(root, pixelRatio) {
   const svgStr = getChartSvgString(root);
@@ -58,18 +58,32 @@ async function captureChartBleed(root, pixelRatio) {
     type: "image/svg+xml;charset=utf-8",
   });
   const url = URL.createObjectURL(blob);
+  const img = new Image();
   try {
-    const img = new Image();
     await new Promise((resolve, reject) => {
       img.onload = resolve;
       img.onerror = reject;
       img.src = url;
     });
-    const bitmap = await createImageBitmap(img);
-    return { bitmap, width: outWidth, height: outHeight };
-  } finally {
+  } catch (error) {
     URL.revokeObjectURL(url);
+    throw error;
   }
+
+  // The loaded `<img>` is handed back as-is, NOT decoded into an ImageBitmap
+  // first. Chrome drops the alpha channel when `createImageBitmap` decodes an
+  // SVG-backed image, so anything whose lightness lives in alpha rather than
+  // in its color — the projection hatch above all — composites at full
+  // strength. No option combination avoids it: premultiplyAlpha and
+  // colorSpaceConversion make no difference, and it reproduces at scale 1 with
+  // no bleed. Firefox and Safari decode correctly, so the bug reads as
+  // Chrome-only.
+  //
+  // Returned width/height are CSS units; the caller composites onto a context
+  // already scaled for export. `url` stays live until the caller has drawn:
+  // revoking it can let the browser evict the decoded frame out from under a
+  // later `drawImage`.
+  return { img, url, width: outWidth, height: outHeight };
 }
 
 // Composites a figure's chart(s) with the report's title/subtitle/source/
@@ -167,7 +181,9 @@ export async function downloadFigureImage({ figureEl, title, subtitle, source, f
     const p = placements[i];
     const drawX = pad + (p.x - unionLeft) - CAPTURE_BLEED;
     const drawY = headerHeight + (p.y - unionTop) - CAPTURE_BLEED;
-    ctx.drawImage(capture.bitmap, drawX, drawY, capture.width, capture.height);
+    ctx.drawImage(capture.img, drawX, drawY, capture.width, capture.height);
+    // Safe now: drawImage is synchronous, so the frame is already committed.
+    URL.revokeObjectURL(capture.url);
   }
 
   let fy = headerHeight + unionHeight + 20;
