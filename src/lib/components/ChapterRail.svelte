@@ -15,10 +15,13 @@
   // max-content with wide labels still in it: they stop wrapping, two-line
   // rows collapse to one, and the dots hop before settling.
   const WIDTH_HOLD_MS = FADE_MS + 80;
-  // How far down the cover the reader has to be before the rail fades in.
-  // Small enough to read as "the moment you scroll", big enough that a stray
-  // trackpad nudge at rest doesn't flash it.
-  const LANDING_LEAD_PX = 80;
+  // How far down the cover the reader has to be before the rail fades in, as a
+  // fraction of the viewport. A fixed 80px lit the rail while the whole cover
+  // was still on screen, so the dots read as part of the title page. Just over
+  // half a screen holds them back until the cover is genuinely on its way out
+  // and the first chapter is rising into view. A fraction, not pixels, so it
+  // lands at the same point on a laptop and a tall monitor.
+  const LANDING_LEAD_VH = 0.55;
 
   let activeIndex = $state(0);
   let expanded = $state(false);
@@ -64,12 +67,12 @@
       // against the footer.
       // The cover is one screen tall and chapter 1 follows it directly, so
       // chapter 1's top starts at innerHeight and counts down as you scroll:
-      // subtracting LANDING_LEAD_PX lights the rail after that many pixels of
-      // scroll, not after a whole screen of it (waiting for top <= 0 kept the
-      // dots hidden through the entire cover).
+      // subtracting the lead lights the rail after that much scrolling, not
+      // after a whole screen of it (waiting for top <= 0 kept the dots hidden
+      // through the entire cover).
       const pastLanding =
         firstEl.getBoundingClientRect().top <=
-        window.innerHeight - LANDING_LEAD_PX;
+        window.innerHeight * (1 - LANDING_LEAD_VH);
       const beforeFooter = footerEl.getBoundingClientRect().top > mid;
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
@@ -197,16 +200,16 @@
                optically centres the dot on the label's first line (titles
                wrap, so the row is not always one line tall).
 
-               The active dot is a green fill behind a 1px dark stroke, and
-               NO halo. The halo was the thing that made this read as a sticker
-               — it put a 4px ring around the dot and made the active row twice
-               the visual size of its neighbours. Without it, the same green
-               fill sits quietly. The hairline stroke is what makes the fill
-               legible at all: the accent is ~1.2:1 against both surfaces the
-               rail passes over, so green alone has no edge to read against. -->
+               The active dot is a bare accent fill: no halo, no stroke. Both
+               were tried and both made it a sticker — the halo put a 4px ring
+               around it and doubled the active row's visual size, and even a
+               1px stroke read as an outline drawn on top rather than one dot
+               that had simply filled in. What separates it from its neighbours
+               is fill and size (12px solid vs 10px hairline ring), not an
+               added edge. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 border border-primary bg-accent'
+              ? 'h-3 w-3 bg-accent'
               : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
           ></span>
           {#if expanded}

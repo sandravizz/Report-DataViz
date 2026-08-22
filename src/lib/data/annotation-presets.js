@@ -4,21 +4,25 @@
 // can still be overridden per call.
 
 import { ink, mutedTextGray } from "$lib/colors.js";
-import { endLabelHalo } from "$lib/chart-theme.js";
 
-// Desktop-width halo: these presets are built once at figure-definition time,
-// with no viewport to react to (unlike endLabelHalo's own per-panel usage).
-const annotationLabel = { ...endLabelHalo(1024), fill: ink, class: "text-xs font-light" };
-const mutedLabel = { ...endLabelHalo(1024), fill: mutedTextGray, class: "text-xs font-light" };
+// No halo here on purpose. These presets are evaluated once at module scope,
+// where there is no viewport to size one against; chart-theme's
+// resolveAnnotations adds the breakpoint-correct halo as each point callout
+// passes through it on its way into a panel. `mutedLabel` never gets one and
+// needs none — the range band's label sits on clear white above the plot,
+// not over the data.
+const annotationLabel = { fill: ink, class: "text-xs font-light" };
+const mutedLabel = { fill: mutedTextGray, class: "text-xs font-light" };
 // Explicit color, never `currentColor` or a CSS variable: the PNG export
 // re-serializes the chart's SVG outside the page's stylesheet, where a custom
 // property has nothing left to resolve against.
-// #7E8E77 at 0.45 over white renders exactly #C5CCC2 — colors.quiet — so the
-// projection hatch, the unimportant bars and the background region lines are
-// all literally the same tone. The mix is why this is not just colors.quiet
-// with an opacity: the pattern's lines are drawn at partial alpha, so the
-// stated color has to be pre-compensated to LAND on the quiet grey.
-const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.45, color: "#7E8E77" } };
+// Same hue family as everything else de-emphasized: this is colors.quietLine
+// drawn at partial alpha, which over white lands around #D8DDD6 — a shade
+// lighter than colors.quiet. That ranking is deliberate. The band is not
+// data, it is a backdrop saying "everything right of here is modelled", so it
+// has to sit UNDER the faintest series in the plot; at equal weight the hatch
+// competes with the region lines drawn across it.
+const projectionPattern = { size: 8, lines: { rotate: -45, opacity: 0.3, color: "#7E8E77" } };
 
 // Circled point callout. `filled` tints the ring with the series color for
 // strong emphasis; otherwise a thin ink outline. `labelProps` extends the

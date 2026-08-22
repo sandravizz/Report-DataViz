@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { timeFormat } from "d3-time-format";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
   import { colors, gridLine } from "$lib/colors";
 
   let { pair, active = false } = $props();
@@ -51,20 +51,43 @@
   // FT-style line treatment — full rationale in docs/line-chart-casing.md.
   // Each line is drawn twice in the marks snippet below (surface-colored
   // casing under the colored stroke) so crossings read as "in front of"
-  // rather than spaghetti. De-emphasized series get half the weight and a
+  // rather than spaghetti. De-emphasized series get a hairline weight (1px) and a
   // much thinner, translucent casing: at figure 2's eight overlapping lines,
-  // full-width opaque halos wash the chart out in white.
+  // full-width opaque halos wash the chart out in white, and anything heavier
+  // competes with the one line the reader is meant to follow.
+  //
+  // Stroke widths are the template branch's (2 / 2.5). Casing is stated as the
+  // SHOULDER — the white showing on each side — rather than as a total width,
+  // because that is the thing being judged. The template runs a 1.25px
+  // shoulder on mobile and 2px on desktop; 2px is what read as too heavy once
+  // figure 2's region lines went dark, so the mobile figure is now used at
+  // both breakpoints.
+  const strokeWidth = (deemphasized, mobile) =>
+    deemphasized ? 1 : mobile ? 2 : 2.5;
+  const shoulder = (deemphasized) => (deemphasized ? 0.375 : 1.25);
   const lineStyle = (deemphasized) => ({
     curve: curveMonotoneX,
-    strokeWidth: deemphasized ? 1.25 : 2.5,
+    strokeWidth: strokeWidth(deemphasized, innerWidth < 1024),
     "stroke-linejoin": "round",
     "stroke-linecap": "round",
   });
   function casingWidth(deemphasized, innerWidth) {
-    const mobile = innerWidth < 1024;
-    if (deemphasized) return mobile ? 1.6 : 2;
-    return mobile ? 5 : 6.5;
+    return strokeWidth(deemphasized, innerWidth < 1024) + shoulder(deemphasized) * 2;
   }
+  // A series is de-emphasized by virtue of being painted in one of the two
+  // greys — no separate flag in the figure data. `quiet` is here as well as
+  // `quietLine` so a figure that reaches for the bar-chart grey still gets the
+  // thin treatment rather than a full-weight 2.5px line.
+  const deemphasizedColors = [colors.quiet, colors.quietLine];
+  // Emphasis, not list order, decides what ends up on top: a de-emphasized
+  // series painted after a full-weight one would lay its casing across it
+  // (figure 2's eight region lines nicking the world line where they cross).
+  // A stable partition — greys first, emphasized last — keeps every other
+  // ordering decision (including the draw-in reversal) intact.
+  const emphasizedLast = (series) => [
+    ...series.filter((s) => deemphasizedColors.includes(s.color)),
+    ...series.filter((s) => !deemphasizedColors.includes(s.color)),
+  ];
   const casingStyle = (deemphasized) => ({
     ...lineStyle(deemphasized),
     stroke: chartSurface,
@@ -95,7 +118,6 @@
           props: {
             circle: { fill: s.color, stroke: "none", class: reveal },
             label: {
-              ...endLabelHalo(innerWidth),
               fill: s.color,
               class: reveal ? `text-xs font-light ${reveal}` : "text-xs font-light",
             },
@@ -145,9 +167,9 @@
   }}
 >
   {#snippet marks({ context })}
-    {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
+    {#each emphasizedLast(hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries) as s (s.key)}
       {@const draw = drawProps(s.key)}
-      {@const deemphasized = s.color === colors.quiet}
+      {@const deemphasized = deemphasizedColors.includes(s.color)}
       <Spline seriesKey={s.key} {...casingStyle(deemphasized)} {...draw} />
       <Spline seriesKey={s.key} {...lineStyle(deemphasized)} {...draw} />
     {/each}
@@ -173,19 +195,28 @@
 {#if pair.legendItems}
   <!-- Manual legend for charts whose series list would make a useless one
        (e.g. figure 2's eight identical gray region lines): the figure supplies
-       a few {label, color} entries summarizing the groupings. pl-9 matches
-       yLabelPadding's 36px gutter so swatches align with the plot's left edge. -->
-  <div class="flex min-w-0 flex-1 flex-col">
-    <div class="min-h-0 flex-1">
-      {@render chart()}
-    </div>
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+       a few {label, color} entries summarizing the groupings. No left padding:
+       it lines up with the figure title and subtitle, flush with the panel's
+       left edge, rather than with the plot area inside yLabelPadding's gutter.
+
+       Positioned absolutely at `bottom-full` rather than as a flex row above
+       the chart, for two reasons: in flow it ate ~30px off the plot, so a
+       figure with a legend was visibly shorter than every figure without one;
+       and out of flow it can sit in the air ChartDisplay already leaves under
+       the subtitle (mb-10/lg:mb-20) instead of pushing the plot down. Nothing
+       else lives in that gap, and the PNG export reads the chart SVG only, so
+       it is unaffected. -->
+  <div class="relative flex min-w-0 flex-1 flex-col">
+    <div class="absolute inset-x-0 bottom-full mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-light lg:mb-8">
       {#each pair.legendItems as item (item.label)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
           <span>{item.label}</span>
         </div>
       {/each}
+    </div>
+    <div class="min-h-0 flex-1">
+      {@render chart()}
     </div>
   </div>
 {:else}

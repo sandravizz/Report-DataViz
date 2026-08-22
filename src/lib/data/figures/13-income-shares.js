@@ -25,9 +25,9 @@ const data = [
 ];
 
 const allSeries = [
-  { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.wine },
-  { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.lilac },
-  { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.vermilion },
+  { key: "Share of Top 10%", endLabel: "Top 10%", value: "top10", color: colors.negative },
+  { key: "Share of Middle 40%", endLabel: "Middle 40%", value: "middle40", color: colors.middle },
+  { key: "Share of Bottom 50%", endLabel: "Bottom 50%", value: "bottom50", color: colors.positive },
 ];
 
 const base = {
@@ -38,6 +38,9 @@ const base = {
   valueSuffix: "%",
   xTicks: quarterCenturyTicks(1800, 2100),
   yDomain: [0, 60],
+  // Whole ten-point steps: the scale's own candidates land on 5s, which gives
+  // twelve labelled gridlines for a chart whose story is a single long fall.
+  yTicks: [10, 20, 30, 40, 50, 60],
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
   ],
@@ -78,7 +81,7 @@ export const incomeSharesSteps = [
         x: new Date(2050, 0, 1),
         y: 28,
         filled: true,
-        color: colors.purple,
+        color: colors.positive,
         label: "Bottom 50% overtakes the top 10% around 2050",
         labelPlacement: "bottom-left",
         labelXOffset: 30,

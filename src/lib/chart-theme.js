@@ -55,31 +55,49 @@ export function desktopTooltips(innerWidth) {
 // them inside the container so plot and legend stay flush with the title.
 export const yLabelPadding = { left: 36 };
 
-// Halo behind end/direct labels — currently off, and moot anyway: tailwind's
-// `@layer utilities` strips `stroke` from every LayerChart text element.
-// Kept as a seam (all 3 call sites already pass `innerWidth`, which the halo
-// width used to depend on) so bringing it back is a one-line change here.
+// Halo behind end/direct labels and annotation callouts, so a label stays
+// legible where it crosses a gridline, a projection band or another series.
+// Painted in the surface color rather than knocked out, and `paint-order:
+// stroke` (layerchart's own base rule on .lc-text-svg) keeps it behind the
+// glyphs. Real props, not CSS: the PNG export re-serializes the SVG outside
+// the stylesheet, and only attributes survive that trip.
+//
+// Requires tailwind.css's halo rule to stay scoped to `:not([stroke])` — see
+// the comment there. Mobile takes a narrower halo; 8px around 12px text is
+// right on a wide plot but swallows the gap between neighbours on a phone.
 export function endLabelHalo(innerWidth) {
-  return { strokeWidth: 0 };
+  return { stroke: chartSurface, strokeWidth: innerWidth < 1024 ? 3 : 8 };
 }
 
 // Applies a point annotation's optional `mobile` override on narrow
 // viewports, where the desktop placement would run past the plot edge — SVG
 // text neither clips nor wraps on its own, so it has to be repositioned.
 export function resolveAnnotations(annotations, innerWidth) {
-  return annotations.map(({ mobile, ...annotation }) =>
-    innerWidth < 1024 && mobile
-      ? {
-          ...annotation,
-          ...mobile,
-          props: {
-            ...annotation.props,
-            ...mobile.props,
-            label: { ...annotation.props?.label, ...mobile.props?.label },
-          },
-        }
-      : annotation
-  );
+  // The halo is applied here, not baked into the presets in
+  // annotation-presets.js: those are built once at module scope, with no
+  // viewport to read, so anything baked in there is stuck at one breakpoint.
+  // Every annotation in the report reaches its panel through this function,
+  // which does have `innerWidth`. Merged UNDER the annotation's own label
+  // props, so a figure can still override or drop it.
+  const halo = endLabelHalo(innerWidth);
+  return annotations.map(({ mobile, ...annotation }) => {
+    const resolved =
+      innerWidth < 1024 && mobile
+        ? {
+            ...annotation,
+            ...mobile,
+            props: {
+              ...annotation.props,
+              ...mobile.props,
+              label: { ...annotation.props?.label, ...mobile.props?.label },
+            },
+          }
+        : annotation;
+    return {
+      ...resolved,
+      props: { ...resolved.props, label: { ...halo, ...resolved.props?.label } },
+    };
+  });
 }
 
 // Right-hand padding reserved for LineChartPanel's end-of-line labels.

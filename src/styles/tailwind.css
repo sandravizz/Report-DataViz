@@ -26,7 +26,12 @@
    text and on hovered navigation. It is 1.3:1 on white, so it can never be
    small text on a light ground or a thin rule on its own — and it is
    deliberately absent from src/lib/colors.js so no chart series can pick it
-   up. The chart greys live there; this file only carries the UI theme. */
+   up. The chart greys live there; this file only carries the UI theme.
+
+   daisyUI's secondary/info/error slots mirror colors.js's three series tones
+   (middle / positive / negative) rather than holding hues of their own. No
+   component currently uses them — they are kept in step so that the day one
+   does, it cannot introduce a fourth colour to the report. */
 @plugin "daisyui/theme" {
   name: 'globaljustice';
   default: true;
@@ -39,19 +44,19 @@
   --color-base-content: #103900;
   --color-primary: #103900;
   --color-primary-content: #F4F6F4;
-  --color-secondary: #611C35;
+  --color-secondary: #705DC8;
   --color-secondary-content: #F4F6F4;
   --color-accent: #0FFF95;
   --color-accent-content: #103900;
   --color-neutral: #5C6C56;
   --color-neutral-content: #F4F6F4;
-  --color-info: #A390E4;
-  --color-info-content: #103900;
+  --color-info: #009580;
+  --color-info-content: #F4F6F4;
   --color-success: #103900;
   --color-success-content: #0FFF95;
   --color-warning: #C5CCC2;
   --color-warning-content: #103900;
-  --color-error: #F42C04;
+  --color-error: #D9553F;
   --color-error-content: #F4F6F4;
 }
 
@@ -81,14 +86,20 @@
 
 /* LayerChart's Axis gives every label a 2px halo stroke by default
    (Axis.base.svelte, `components` layer) colored via `--color-surface-100` —
-   here the report's grey base-100, so every axis label wears a grey halo. No
-   `stroke` prop can undo it: an SVG presentation attribute never outranks a
-   stylesheet rule, even a zero-specificity one. Cascade layer order
-   (layerchart core.css: theme, base, components, utilities) is the only lever
-   that wins, so this sits in `utilities` and strips the stroke from every
-   LayerChart text element — ticks, end labels and annotations alike. */
+   here the report's grey base-100, so every axis label would wear a grey halo.
+   An SVG presentation attribute never outranks a stylesheet rule, even a
+   zero-specificity one, so cascade layer order (layerchart core.css: theme,
+   base, components, utilities) is the only lever that wins.
+
+   `:not([stroke])` is what makes this a default rather than a ban. Text.svg's
+   own rule is `:where(...):not([stroke]) { stroke: var(--stroke-color) }`, so
+   matching that selector strips the inherited grey halo from every label that
+   asks for nothing — the axis ticks — while a label that passes a real
+   `stroke` prop (endLabelHalo, on end labels and annotations) is left alone
+   by both rules and paints its own. Drop the `:not(...)` and no chart text
+   can ever carry a halo again. */
 @layer utilities {
-  :where(.lc-text) {
+  :where(.lc-text):not([stroke]) {
     stroke: none;
   }
 }

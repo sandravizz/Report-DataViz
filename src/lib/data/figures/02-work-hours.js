@@ -59,13 +59,13 @@ export default {
   // The series list would make a useless legend (eight identical gray lines),
   // so the figure summarizes the two groupings itself.
   legendItems: [
-    { label: "World", color: colors.wine },
-    { label: "Regions", color: colors.quiet },
+    { label: "World", color: colors.middle },
+    { label: "Regions", color: colors.quietLine },
   ],
   // World last, so it is drawn on top of the eight gray region lines.
   series: [
-    ...regions.map((r) => ({ ...r, color: colors.quiet })),
-    { key: "World", value: "world", color: colors.wine },
+    ...regions.map((r) => ({ ...r, color: colors.quietLine })),
+    { key: "World", value: "world", color: colors.middle },
   ],
   rangeAnnotations: [
     projectionRange({ x: [new Date(2025, 0, 1), new Date(2100, 0, 1)] }),
@@ -75,7 +75,7 @@ export default {
       x: new Date(2025, 0, 1),
       y: 2100,
       filled: true,
-      color: colors.wine,
+      color: colors.middle,
       label: "2,100 hours in 2025",
       labelPlacement: "right",
       labelXOffset: 30,
@@ -101,7 +101,7 @@ export default {
       x: new Date(2100, 0, 1),
       y: 1000,
       filled: true,
-      color: colors.wine,
+      color: colors.middle,
       label: "1,000 hours by 2100",
       labelPlacement: "bottom-left",
       labelXOffset: 30,
