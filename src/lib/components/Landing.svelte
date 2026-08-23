@@ -14,7 +14,10 @@
 <!-- Interim cover: lone figure on Preikestolen (CC0, via Wikimedia Commons:
      File:Preikestolen (Unsplash).jpg — public domain, no attribution needed).
      Final cover image is an open client question (docs/fdl-client-meeting.md). -->
-<section class="relative flex min-h-screen flex-col font-sans">
+<!-- `data-accent-cursor` marks this block as the one place the accent dot
+     cursor replaces the system pointer. CursorDot.svelte looks for the
+     attribute, so moving or removing the zone is done here, not there. -->
+<section data-accent-cursor class="relative flex min-h-screen flex-col font-sans">
   <img
     src="/cover.jpg"
     alt="A lone person standing at the edge of the Preikestolen cliff, high above a fjord"

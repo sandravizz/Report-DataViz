@@ -60,3 +60,29 @@
      ships no responsive classes, so it is unaffected. */
   --breakpoint-lg: 1400px;
 }
+
+/* Accent underline for a marked phrase in running text. A real underline, not
+   a highlighter band: the text keeps its own ink and only the RULE is painted
+   in the accent rust, which is how the accent stays reserved for things that
+   point. It stays a `mark` for semantics, with the browser's default yellow
+   ground stripped — without this rule a `<mark>` would render as a highlighter
+   band, so the rule has to exist before any copy uses one.
+
+   A flat 2px rule 4px under the baseline, both absolute rather than em-based
+   on purpose: an em thickness grows with the 18px body copy and turns the
+   quiet rule into a bar.
+
+   `skip-ink` stays at its `auto` default: a long marked phrase in running text
+   is full of descenders, and a rule ploughing through every g and p has to sit
+   far below the baseline to clear them, which is what makes it read as
+   detached from its words. Letting it break around them lets it sit close. */
+@layer components {
+  mark.accent-mark {
+    background: none;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+}

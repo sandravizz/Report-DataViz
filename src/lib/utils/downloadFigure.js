@@ -8,7 +8,6 @@ import { getChartSvgString } from "layerchart";
 const FONT_FAMILY = "Barlow, sans-serif";
 const INK = "#000000";
 const MUTED = "rgba(0, 0, 0, 0.5)";
-const MUTED_FAINT = "rgba(0, 0, 0, 0.3)";
 const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 
@@ -247,7 +246,9 @@ export async function downloadFigureImage({
     fy += footerLineHeight;
   }
   fy += 8;
-  ctx.fillStyle = MUTED_FAINT;
+  // Same grey as the source line above it, matching the page: all of a
+  // figure's furniture sits at one weight.
+  ctx.fillStyle = MUTED;
   ctx.font = `400 ${wordmarkSize}px ${FONT_FAMILY}`;
   ctx.fillText("sandraviz.com", pad, fy);
 

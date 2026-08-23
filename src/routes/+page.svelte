@@ -12,6 +12,7 @@
   import ChapterRail from "$lib/components/ChapterRail.svelte";
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import CursorDot from "$lib/components/CursorDot.svelte";
 
   // Sections follow the IDA_GIZ_KAdequacyModel presentation's narrative:
   // IDA's growth, financing that growth, and IDA's future.
@@ -69,6 +70,12 @@
   <meta name="twitter:image" content="{page.url.origin}/og-image-fdl.jpg" />
 </svelte:head>
 
+<!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
+     `data-accent-cursor` attribute on Landing.svelte's root section, and the
+     report proper keeps the system pointer. Mounts itself only for a real
+     mouse — see CursorDot.svelte. Nothing else on the page depends on it. -->
+<CursorDot />
+
 <Header links={tocLinks} />
 <ChapterRail {sections} />
 
@@ -89,7 +96,12 @@
                    the chapter title reads as the block's left edge and the
                    body text as a subordinate column under it. -->
               <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
-                {section.intro}
+                <!-- Rendered as HTML so the intro can carry a
+                     `mark.accent-mark` — the accent underline defined in
+                     tailwind.css. The strings come from the chapter list in
+                     this file, editorial copy authored in this repo; nothing
+                     fetched, routed or user-supplied. -->
+                {@html section.intro}
               </p>
             {/if}
           </div>
