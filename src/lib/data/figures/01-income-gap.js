@@ -4,7 +4,7 @@ export default {
   title: "Large Gaps in Average Monthly Income Between Regions",
   subtitle: "Monthly Gross National Disposable Income, 2025 Euros PPP",
   description:
-    "The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. Incomes are projected to reach 5,000 Euros in all countries by 2100.",
+    "The Global Justice Platform aims to combine equality & prosperity for all countries with planetary habitability (global warming below 2°C). In 2025, per capita monthly gross national incomes range from 290 Euros in Sub-Saharan Africa to 4,590 Euros in North America/Oceania. <mark class=\"accent-mark\">Incomes are projected to reach 5,000 Euros in all countries by 2100</mark>.",
   source:
     "Sources & series: gjp.wid.world (F1)",
   number: "Figure 1",

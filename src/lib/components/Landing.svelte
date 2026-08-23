@@ -14,7 +14,10 @@
      chosen because the report is finally about people rather than aggregates —
      who works how many hours, who holds which share — and the monochrome keeps
      it from reading as any single country's story. -->
-<section class="relative flex min-h-screen flex-col font-sans">
+<!-- `data-accent-cursor` marks this block as the one place the accent dot
+     cursor replaces the system pointer. CursorDot.svelte looks for the
+     attribute, so moving or removing the zone is done here, not there. -->
+<section data-accent-cursor class="relative flex min-h-screen flex-col font-sans">
   <img
     src="/cover.jpg"
     alt="A crowd of people walking through a railway station passage, photographed in black and white"

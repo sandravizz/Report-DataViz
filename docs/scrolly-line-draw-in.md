@@ -44,6 +44,10 @@ Series without the flag render normally, with no animation.
     `stroke-dashoffset` from 1 to 0 — the line "draws" left to right.
   - The casing stroke (see `line-chart-casing.md`) gets the same classes, so
     it never wipes ahead of the colored line underneath.
+  - In a multi-step figure, the series being drawn in is painted last, so the
+    arriving line lands on top of the lines already standing (`drawnLast`).
+    Emphasis still wins over this: `emphasizedLast` runs after it, so a
+    de-emphasized grey line drawing in stays behind the full-weight ones.
   - The end label/dot for a `drawIn` series is held at `opacity: 0` until the
     draw completes, then fades in.
   - A step's callout annotation (e.g. Figure 13c's "overtakes" marker) waits
@@ -77,6 +81,8 @@ landing. The `inView` threshold (0.7 × viewport height) is in
 Flag a series with `drawIn: true` in its figure file — nothing else. Figures
 without the flag are untouched. Porting the step-by-step reveal (multiple
 figures introducing one line at a time, with a diff band between steps) as
-well means also porting the `hasDrawIn`-driven series reversal, `diffBand`
-handling, and `lc-band-reveal` classes from the `template`/`iea` branches'
-`LineChartPanel.svelte`.
+well means also porting `diffBand` handling and the `lc-band-reveal` classes
+from the `template`/`iea` branches' `LineChartPanel.svelte`. Those branches
+list the new series first and reverse the list to get it on top; this branch
+appends it last and orders it explicitly with `drawnLast`, which holds
+whichever way a figure lists its series.

@@ -58,7 +58,7 @@ export const incomeSharesSteps = [
     number: "Figure 13a",
     title: "The Top 10% Share Has Swung Widely, and Is Set to Shrink",
     description:
-      "The world's top 10% has held 50–59% of post-tax income since 1800. Under the Global Justice Platform's projections, that share falls sharply after 2025, from 52% in 2025 to 18% in 2100.",
+      "The world's top 10% has held 50–59% of post-tax income since 1800. Under the <mark class=\"accent-mark\">Global Justice Platform's projections, that share falls sharply after 2025</mark>, from 52% in 2025 to 18% in 2100.",
     series: stepSeries("top10", ["top10"]),
   },
   {
@@ -66,7 +66,7 @@ export const incomeSharesSteps = [
     number: "Figure 13b",
     title: "The Middle 40% Holds Roughly Steady",
     description:
-      "The middle 40%'s share has stayed in a narrower band, 32–45%, over the same two centuries. It's projected to rise only modestly, from 40% today to 44% by 2100.",
+      "The middle 40%'s share has stayed in a narrower band, 32–45%, over the same two centuries. <mark class=\"accent-mark\">It's projected to rise only modestly, from 40% today to 44%</mark> by 2100.",
     series: stepSeries("middle40", ["top10", "middle40"]),
   },
   {
@@ -74,7 +74,7 @@ export const incomeSharesSteps = [
     number: "Figure 13c",
     title: "The Bottom 50% Overtakes the Top 10% Around 2050",
     description:
-      "The bottom 50%'s share, squeezed to as little as 6% in the 1970s, is projected to grow more than fourfold from 8% in 2025 to 38% in 2100, overtaking the shrinking top 10% around 2050.",
+      "The bottom 50%'s share, squeezed to as little as 6% in the 1970s, <mark class=\"accent-mark\">is projected to grow more than fourfold from 8% in 2025 to 38% in 2100</mark>, overtaking the shrinking top 10% around 2050.",
     series: stepSeries("bottom50", ["top10", "middle40", "bottom50"]),
     annotations: [
       circleCallout({

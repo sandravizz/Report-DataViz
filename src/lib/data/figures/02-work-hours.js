@@ -41,7 +41,7 @@ export default {
   title: "Using Productivity Gains to Reduce Work Hours",
   subtitle: "Average Annual Labour Hours per Employed Individual, 1800–2100",
   description:
-    "In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation).",
+    "In the Sustainable Convergence scenario, annual labour hours decline from about 2100 to 1000 hours globally between 2025 and 2100 so as to reduce material production and consumption. Annual hours around 3000 ≈ 60 hours per week all year long; <mark class=\"accent-mark\">around 1000 ≈ 25 hours per week during 40 weeks (12 weeks in paid vacation)</mark>.",
   source: "Sources & series: gjp.wid.world (F2)",
   number: "Figure 2",
   kind: "line",

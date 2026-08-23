@@ -83,10 +83,23 @@
   // series painted after a full-weight one would lay its casing across it
   // (figure 2's eight region lines nicking the world line where they cross).
   // A stable partition — greys first, emphasized last — keeps every other
-  // ordering decision (including the draw-in reversal) intact.
+  // ordering decision (including the draw-in ordering below) intact.
   const emphasizedLast = (series) => [
     ...series.filter((s) => deemphasizedColors.includes(s.color)),
     ...series.filter((s) => !deemphasizedColors.includes(s.color)),
+  ];
+  // The line being drawn in on this step is the new information, so it goes on
+  // top of the lines already standing rather than under them (figure 13b's
+  // middle 40% arriving beneath the top 10% it crosses). The template branch
+  // reversed the list here instead, because its step figures name the new
+  // series first; this branch's `stepSeries` appends it last, so ordering it
+  // explicitly — rather than reversing — holds either way. Read off
+  // `pair.series` for the same reason `drawProps` does: `drawIn` is our own
+  // field, not one LayerChart carries through `visibleSeries`.
+  const isDrawIn = (key) => Boolean(pair.series.find((s) => s.key === key)?.drawIn);
+  const drawnLast = (series) => [
+    ...series.filter((s) => !isDrawIn(s.key)),
+    ...series.filter((s) => isDrawIn(s.key)),
   ];
   const casingStyle = (deemphasized) => ({
     ...lineStyle(deemphasized),
@@ -167,7 +180,7 @@
   }}
 >
   {#snippet marks({ context })}
-    {#each emphasizedLast(hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries) as s (s.key)}
+    {#each emphasizedLast(hasDrawIn ? drawnLast(context.series.visibleSeries) : context.series.visibleSeries) as s (s.key)}
       {@const draw = drawProps(s.key)}
       {@const deemphasized = deemphasizedColors.includes(s.color)}
       <Spline seriesKey={s.key} {...casingStyle(deemphasized)} {...draw} />

@@ -12,6 +12,7 @@
   import ChapterRail from "$lib/components/ChapterRail.svelte";
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import CursorDot from "$lib/components/CursorDot.svelte";
 
   // `intro` is a list of paragraphs, not one string: each entry renders as its
   // own <p> so the chapter opener can carry several paragraphs with real space
@@ -23,7 +24,7 @@
       intro: [
         "The Global Justice Report attempts to set out a new vision for global progress in the 21st century: <mark class=\"accent-mark\">grounding human development and equality in planetary habitability</mark>. It explores the conditions under which the world could move toward this horizon and traces an economically and ecologically consistent transition path from 2026 to 2100.",
         "Its main conclusion is simple: it is possible to reconcile planetary habitability and high well-being for all, but only if the transformation rests on three pillars simultaneously. Fast decarbonization of energy systems is necessary. But we also need a major shift toward sufficiency \u2013 understood as a sharp reduction in labour hours and material footprint and large changes in consumption patterns, food habits, land use, and forest cover. In addition, neither decarbonization nor sufficiency can be financed and politically sustained without a drastic reduction in inequality of income, wealth and power, both between countries and within them. The compression of global inequality is not only compatible with deep decarbonization; it is a necessary condition for shared prosperity on a finite planet.",
-        "The Global Justice Report is the first attempt to propose a fully quantified plan going in this direction, combining four dimensions that today's debates often treat separately: redistribution at the world scale, a deep reform of the international financial and economic order, a radical transformation of energy systems, and substantial shifts in consumption patterns. Compared to most climate scenarios, including by the Intergovernmental Panel on Climate Change (IPCC), the main novelty is that we model all four dimensions together and place inequality and sufficiency at the center of the analysis.",
+        "The Global Justice Report is the first attempt to propose a fully quantified plan going in this direction, combining four dimensions that today's debates often treat separately: redistribution at the world scale, a deep reform of the international financial and economic order, a radical transformation of energy systems, and substantial shifts in consumption patterns. Compared to most climate scenarios, including by the Intergovernmental Panel on Climate Change (IPCC), <mark class=\"accent-mark\">the main novelty is that we model all four dimensions together and place inequality and sufficiency at the center of the analysis</mark>.",
       ],
       charts: [figures.incomeGap],
     },
@@ -90,6 +91,12 @@
   <meta name="twitter:description" content={meta.description} />
   <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
 </svelte:head>
+
+<!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
+     `data-accent-cursor` attribute on Landing.svelte's root section, and the
+     report proper keeps the system pointer. Mounts itself only for a real
+     mouse — see CursorDot.svelte. Nothing else on the page depends on it. -->
+<CursorDot />
 
 <Header {sections} />
 <ChapterRail {sections} />
