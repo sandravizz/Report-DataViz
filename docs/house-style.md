@@ -69,7 +69,10 @@ system pointer over the Landing only — a 9px accent dot inside a 28px
 cover is uniformly dark, so the accent reads at full strength with no rescuing
 hairline, and it has no charts for a filled disc to cover and no running text to
 lose an I-beam over. The report proper keeps the pointer the reader came with.
-The zone is an attribute on Landing's root section, not an id in the component:
+The zone is an attribute on Landing's root section, not an id in the component.
+The *paint* is decided per branch, because it is a contrast decision against
+that branch's cover — the dot is whatever reads there, the halo is always the
+accent at 35%. Table of what each branch uses, and why:
 [cursor-dot.md](cursor-dot.md).
 
 **The landing fits one screen.** Cover type is sized against `vh` as well as
@@ -96,6 +99,16 @@ running text, hovered navigation, credit links — and is kept **out of
 **Never pure `#000000` for body text on a warm or tinted ground.** Tint the ink
 toward the accent's hue family instead (here `#103900`, a green, 12:1 on the
 ground) so the accent never reads as a foreign object on the page.
+
+**Two filled controls, one device.** The PNG button and the Interpretation
+button both wear the accent as a *fill* — `bg-accent/25` at rest, full accent on
+hover, the glyph one step stronger than the label — so the report has exactly
+one way of saying "this is a control". Links take the accent as a *rule*
+instead: a 1px underline at caption size, 2px in running text. Whether the
+hover keeps `text-base-content` or flips to `text-accent-content` is measured
+per branch, never inferred from the hue — `kiel-institute`'s saturated orange
+keeps the ink at 6.1:1 while white reaches only 2.9:1, and `iw`'s blue is the
+other way round: [figure-footer-controls.md](figure-footer-controls.md).
 
 ## Charts
 

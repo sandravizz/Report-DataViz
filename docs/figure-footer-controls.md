@@ -155,13 +155,28 @@ silently drifts.
 Copy `FigureFooter.svelte`'s two class strings across. The tokens resolve to
 that branch's palette automatically, with one thing to check by hand:
 
-**Does the branch's `accent` work as a *background* for ink text?** This
-branch's accent (`#0FFF95`) is 1.3:1 on white — far too light to be text or a
-thin rule on its own, which is exactly why it makes a good fill with dark ink
-on top. A branch whose accent is dark or heavily saturated (an orange, a deep
-blue) inverts that: `hover:text-base-content` on it will fail contrast. On
-those branches, swap the hover text to `hover:text-accent-content!`, which the
-theme already defines as the readable counterpart to `accent`.
+**Does the branch's `accent` work as a *background* for ink text? Measure it;
+do not infer it from the hue.** This branch's accent (`#0FFF95`) is 1.3:1 on
+white — far too light to be text or a thin rule on its own, which is exactly
+why it makes a good fill with dark ink on top. A dark accent inverts that:
+`hover:text-base-content` on it fails, and the hover text has to become
+`hover:text-accent-content!` — with the glyph moved to
+`group-hover:text-accent-content` (and `group` added to the button), or it
+stays dark under the fill and disappears.
+
+What each branch landed on, and why it is worth measuring:
+
+| Branch | Accent | Hover text | Measured |
+| --- | --- | --- | --- |
+| `main` | `#0FFF95` light green | `base-content` | accent 1.3:1 on white; ink on accent is the only readable pairing |
+| `template` | `#8fcb7e` turbine green | `base-content` | ink on accent 9.6:1 |
+| `kiel-institute` | `#ff6a00` orange | `base-content` | ink **6.1:1**, white only **2.9:1** — the saturated hue looks like an `accent-content` case and is not |
+| `findevlab` | `#c24c2c` rust | `accent-content` | white 4.8:1, ink 4.4:1 |
+| `iw` | `#0069b4` blue | `accent-content` | white 5.7:1, ink 1.9:1 |
+
+`kiel-institute` is the reason the rule is "measure", not "a saturated accent
+takes `accent-content`". A theme's declared `accent-content` is a palette
+convenience, not a contrast guarantee.
 
 Also check the branch's own `mark.accent-mark` geometry before copying the
 underline numbers — if its body copy is set smaller than 20px, the 1px/3px

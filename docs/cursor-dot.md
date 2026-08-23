@@ -97,6 +97,36 @@ hidden anywhere.
 Removing the feature from a branch entirely is one line: delete `<CursorDot />`
 from `+page.svelte`.
 
+## Applying to a branch
+
+The component itself is portable — it reads `--color-accent` and
+`--color-base-*`, so it needs no edit. The **paint** is not portable, because
+it is a contrast decision against a cover, and the covers are not alike. The
+rule:
+
+> The dot is whatever reads on that branch's cover; the halo is always the
+> accent at 35%.
+
+| Branch | Cover | Dot |
+| --- | --- | --- |
+| `main` | B/W photo under a `black/50–65` scrim, uniformly dark | `accent` — a bright green that needs nothing propping it up |
+| `kiel-institute` | flat cream page, blue type, one orange chevron | `accent` — the orange is the only warm thing on screen |
+| `findevlab` | sky/fjord photo, `black/20→65` scrim, white type | `accent` — the rust is the one saturated hue and is mid-dark, so it holds at 4.8:1 on the sky and 4.4:1 on the scrim |
+| `iw` | rooftop photo, `black/55–70` plus a 0.58 radial, white type | `base-100` — IW's blue is ~3.7:1 on black; the dot takes the cover's own type colour instead |
+| `template` | turbine illustration on `base-200`, light throughout | `base-content` — the accent is a light green and would disappear |
+
+Two things follow from the table. A **light** accent needs a dark cover and a
+**dark** accent needs a light one; where the cover and the accent are on the
+same side of the ramp, the dot borrows the colour that cover already uses for
+type. And on a photograph, what matters is not the accent's contrast on white
+but its contrast across the photo's *range* — a mid-luminance accent survives
+one, a light or dark one does not.
+
+The halo is `accent/35` everywhere. Where the accent is dark and the cover is
+dark (`iw`), that halo is subtle by construction; raising it on that branch is
+fine, but raise it in `.cursor-halo` only — the two buttons that share the
+number sit on white and have a different problem.
+
 ## Cost on the frame budget
 
 Position never touches Svelte's reactivity — it is written straight to
