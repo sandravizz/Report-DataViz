@@ -71,14 +71,14 @@
           class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-200 px-5 py-4 font-sans text-base-content shadow-lg"
         >
           {#each sections as section (section.id)}
-            <li class="flex flex-col">
+            <li class="group/chapter flex flex-col">
               <a
                 href="#{section.id}"
                 onclick={closeDropdown}
                 class="group -m-1.5 flex items-start gap-3 p-1.5 text-left"
               >
                 <span
-                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover:border-base-content/70 group-hover:bg-base-content/15"
+                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover/chapter:border-base-content group-hover/chapter:bg-base-content group-hover/chapter:ring-4 group-hover/chapter:ring-base-content/10"
                 ></span>
                 <span
                   class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
@@ -98,7 +98,7 @@
                         onclick={closeDropdown}
                         class="block text-xs leading-snug text-base-content/45 transition-colors duration-200 hover:text-base-content"
                       >
-                        <span class="opacity-70">{chart.number}</span>
+                        {chart.number}
                         {chart.title}
                       </a>
                     </li>

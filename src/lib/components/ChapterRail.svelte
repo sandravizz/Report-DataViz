@@ -169,7 +169,7 @@
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a
            chapter-to-chapter rhythm. -->
-      <div class="flex flex-col">
+      <div class="group/chapter flex flex-col">
         <button
           type="button"
           onclick={() => jumpTo(i)}
@@ -180,11 +180,21 @@
                the row reads as clickable without a link underline. mt-0.5
                optically centres the dot on the first line of a wrapping title.
                Current is base-content, NOT primary — the rail is deliberately
-               colourless, greys and the near-black only. -->
+               colourless, greys and the near-black only.
+
+               Hover fills the dot with the near-black and adds a soft
+               translucent halo around it. The halo, not a stroke, is what
+               tells hover from current: hovered is the fill with air around
+               it, current is the fill alone.
+
+               The dot keys off `group/chapter` — the wrapper around the
+               chapter button AND its figure list — so hovering any figure
+               lights its chapter's dot. The title keeps the button's own
+               `group`, so a figure hover does not darken the heading. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 bg-base-content ring-4 ring-base-content/10'
-              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
+              ? 'h-3 w-3 bg-base-content'
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:border-base-content group-hover/chapter:bg-base-content group-hover/chapter:ring-4 group-hover/chapter:ring-base-content/10'}"
           ></span>
           {#if expanded}
             <span
@@ -217,7 +227,7 @@
                     ? 'font-medium text-base-content'
                     : 'text-base-content/45 hover:text-base-content'}"
                 >
-                  <span class="opacity-70">{chart.number}</span>
+                  {chart.number}
                   {chart.title}
                 </button>
               </li>
