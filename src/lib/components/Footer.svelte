@@ -7,7 +7,13 @@
   let { disclosure } = $props();
 </script>
 
-<footer class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content">
+<!-- Fades in from the white figure surface above, painted in its own
+     background so the seam costs no height (the same trick as the chapter
+     blocks in +page.svelte). No ramp at the bottom — the page ends here. -->
+<footer
+  class="relative flex min-h-screen flex-col bg-base-200 font-sans text-base-content"
+  style="background-image:linear-gradient(to bottom,var(--color-base-100) 0%,var(--color-base-200) 35%,var(--color-base-200) 100%)"
+>
   <div
     class="mx-auto flex w-full max-w-350 flex-1 flex-col justify-center md:flex-row md:items-center md:gap-10"
   >
@@ -19,9 +25,13 @@
         alt="Portrait of Sandra"
         class="mb-4 h-20 w-20 rounded-full object-cover sm:mb-6 sm:h-28 sm:w-28"
       />
+      <!-- The one marked phrase in the footer. The accent is quiet on this
+           light ground, so it works as a rule under text and nowhere else —
+           which is exactly why the social icons below stay dark. -->
       <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
-        visualization-first reports for the web, mobile, and static downloads too.
+        <mark class="accent-mark">visualization-first reports for the web, mobile</mark>, and
+        static downloads too.
       </p>
       <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
         This is one example of what that looks like in practice. If you've got a report that deserves to be more than a PDF, let's talk.
@@ -30,7 +40,7 @@
         href="https://sandraviz.com"
         target="_blank"
         rel="noopener"
-        class="mt-4 inline-block text-base font-semibold underline-offset-4 hover:underline sm:mt-6 sm:text-xl"
+        class="mt-4 inline-block text-base font-semibold underline decoration-accent decoration-2 underline-offset-4 sm:mt-6 sm:text-xl"
         >Get in touch →</a
       >
       <div class="mt-4 flex items-center gap-5 sm:mt-6">

@@ -30,16 +30,20 @@
           href="https://www.iea.org"
           target="_blank"
           rel="noopener"
-          class="link-hover underline-offset-4">IEA</a
+          class="underline decoration-accent decoration-2 underline-offset-4">IEA</a
         > (2026)
       </p>
+      <!-- Both credit links carry the accent rule, the same treatment as the
+           Table of Contents in the header: the text keeps the body ink and
+           only the underline is accent — `decoration-*` is what keeps it that
+           way, since the rule paints in `currentColor` by default. -->
       <p class="mt-2 text-sm text-base-content/60 sm:text-base">
         Interactive design study ·
         <a
           href="https://www.sandraviz.com/"
           target="_blank"
           rel="noopener"
-          class="underline underline-offset-4">SandraViz</a
+          class="underline decoration-accent decoration-2 underline-offset-4">SandraViz</a
         >
       </p>
     </div>

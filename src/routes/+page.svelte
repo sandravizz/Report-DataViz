@@ -70,10 +70,37 @@
     paragraphs: Array.isArray(section.intro) ? section.intro : [section.intro],
   }));
 
-  const tocLinks = sections.map((section) => ({
-    href: `#${section.id}`,
-    label: section.shortTitle,
-  }));
+  // The fade between the chapter ground and the white figure surface is
+  // painted ON THE CHAPTER BLOCK, not as a spacer div between the two.
+  //
+  // That is the whole point. A dedicated band element can only make the fade
+  // longer by making the GAP longer — at 384px it left most of a screen of
+  // empty page between a chapter's last line and the figure under it. As a
+  // background on the block itself the ramp costs no height whatsoever: it
+  // runs up behind the copy, which is dark enough that a light-to-light wash
+  // underneath changes nothing about reading it. So the fade can be as long
+  // as it likes and the text still sits directly above its figure.
+  //
+  // The stops are PERCENTAGES, so the ramp scales with the chapter: a long
+  // three-paragraph chapter gets a ~350px fade, a short one a proportionally
+  // shorter one, and neither ever shows a seam.
+  const FIGURE_SURFACE = "var(--color-base-100)";
+  const TEXT_SURFACE = "var(--color-base-200)";
+
+  // `rampTop` is false for chapter 1 — it follows the landing screen, which is
+  // already on the chapter ground, so there is nothing to fade from.
+  // `rampBottom` is false when no figure follows.
+  function textSurface(rampTop, rampBottom) {
+    const stops = rampTop
+      ? [`${FIGURE_SURFACE} 0%`, `${TEXT_SURFACE} 35%`]
+      : [`${TEXT_SURFACE} 0%`];
+    stops.push(
+      ...(rampBottom
+        ? [`${TEXT_SURFACE} 65%`, `${FIGURE_SURFACE} 100%`]
+        : [`${TEXT_SURFACE} 100%`])
+    );
+    return `background-image:linear-gradient(to bottom,${stops.join(",")})`;
+  }
 </script>
 
 <svelte:head>
@@ -91,38 +118,54 @@
 </svelte:head>
 
 <div id="top" class="flex min-h-screen flex-col">
-  <Header links={tocLinks} />
+  <Header {sections} />
   <Landing />
 </div>
 
 <ChapterRail {sections} />
 
 <div id="charts"></div>
-{#each sections as section (section.id)}
-  <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-    <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-      <div class="lg:flex lg:min-h-full lg:flex-col lg:justify-center">
-        <div class="bg-base-200/50 px-6 py-8 sm:px-10 sm:py-10">
-          <div class="w-full lg:ml-[calc(43%-440px)] lg:w-220">
-            {#if section.kicker}
-              <p class="text-xs tracking-wide text-base-content/50 uppercase">
-                {section.kicker}
-              </p>
-            {/if}
-            <h2 class="mt-5 text-2xl leading-snug font-medium text-balance">
-              {section.shortTitle}
-            </h2>
-          </div>
-        </div>
-        <div class="w-full pb-16 lg:ml-[calc(43%-440px)] lg:w-220">
-          <div class="flex flex-col gap-4 px-6 pt-2 pb-10 sm:px-10 lg:pl-16">
-            {#each section.paragraphs as paragraph (paragraph)}
-              <p class="text-base leading-relaxed text-base-content/80">
-                {paragraph}
-              </p>
-            {/each}
-          </div>
-        </div>
+{#each sections as section, i (section.id)}
+  <!-- Chapter text is NOT pinned and NOT sized to the viewport: only the
+       figure surface in ScrollySection sticks. This is long-form copy, so the
+       block is exactly as tall as its own paragraphs — a three-paragraph
+       chapter runs past a screen, a one-paragraph chapter is much shorter.
+       You scroll until the text ends and the next section begins; nothing is
+       padded out to fill a screen it does not need. -->
+  <section id={section.id} class="font-sans text-base-content">
+    <!-- The fade into and out of the white figure surface lives in this
+         block's own background — see textSurface() above. -->
+    <div
+      class="bg-base-200"
+      style={textSurface(i > 0 && sections[i - 1].charts.length > 0, section.charts.length > 0)}
+    >
+      <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
+        {#if section.kicker}
+          <p class="mb-5 text-xs tracking-wide text-base-content/50 uppercase">
+            {section.kicker}
+          </p>
+        {/if}
+        <h2
+          class="font-display text-3xl leading-tight font-semibold text-balance sm:text-4xl lg:text-5xl lg:leading-[1.08]"
+        >
+          {section.title}
+        </h2>
+        <!-- mt-8/lg:mt-10 opens the gap under the heading; the paragraphs
+             after the first sit on a tighter mt-4, half a line of extra air.
+
+             Paragraphs render as HTML so one can carry a `mark.accent-mark` —
+             the accent underline. Safe here and nowhere near a general licence:
+             every string in `sections` above is editorial copy authored in this
+             file, never anything fetched, routed or user-supplied. -->
+        {#each section.paragraphs as paragraph, pIndex (pIndex)}
+          <p
+            class="text-lg leading-relaxed text-base-content/80 lg:text-xl {pIndex === 0
+              ? 'mt-8 lg:mt-10'
+              : 'mt-4'}"
+          >
+            {@html paragraph}
+          </p>
+        {/each}
       </div>
     </div>
   </section>
@@ -140,7 +183,7 @@
         href="https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce"
         target="_blank"
         rel="noopener"
-        class="link link-hover"
+        class="underline decoration-accent underline-offset-2"
       >https://www.iea.org/reports/ensuring-a-skilled-renewable-energy-and-energy-efficiency-workforce</a>,
       as modified by Sandra Becker. Sandra Becker is solely liable and responsible for this
       derived work, which is not endorsed by the IEA or its Member countries in any manner.

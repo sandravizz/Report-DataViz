@@ -54,3 +54,21 @@
      tablet layout stays in charge until there is genuinely room. */
   --breakpoint-lg: 1400px;
 }
+
+/* Accent underline for a marked phrase in running text, and the rule shared by
+   every link in the report chrome (header table of contents, cover credits,
+   footer). A real underline, not a highlighter band: 0.12em is ~2.4px at the
+   20px body size, sitting clear of the descenders. It stays a `mark` for
+   semantics, with the browser's default yellow ground stripped. The accent is
+   a quiet tan on this ground, so thickness is the only lever it has. */
+@layer components {
+  mark.accent-mark {
+    background: none;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.22em;
+    text-decoration-skip-ink: none;
+  }
+}

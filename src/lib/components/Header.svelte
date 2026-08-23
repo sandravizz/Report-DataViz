@@ -1,7 +1,7 @@
 <script>
   // Permanently solid/blurred: the hero is plain white, so there's no
   // scroll-over-photo transparency to handle (docs/sandraviz-brand.md).
-  let { links = [] } = $props();
+  let { sections = [] } = $props();
 
   function closeDropdown(event) {
     event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
@@ -35,7 +35,7 @@
           tabindex="0"
           role="button"
           aria-label="Table of Contents"
-          class="cursor-pointer px-2 py-2 font-sans text-sm decoration-2 decoration-[#76c8a8] underline-offset-8 outline-none hover:underline"
+          class="cursor-pointer px-2 py-2 font-sans text-sm underline decoration-accent decoration-2 underline-offset-8 outline-none"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -59,13 +59,52 @@
             </svg>
           </span>
         </div>
+        <!-- Same panel as ChapterRail's hover flyout, deliberately: rounded-2xl
+             on px-5 py-4, a hollow dot per chapter, and the figures nested
+             under the same hairline connector. daisyUI's `menu` class is
+             dropped rather than restyled — its own padding and hover rules
+             would fight every one of those. The dots are all idle here; unlike
+             the rail this panel is a destination list, not a position
+             indicator. -->
         <ul
           tabindex="-1"
-          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans text-base-content shadow-lg"
+          class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-200 px-5 py-4 font-sans text-base-content shadow-lg"
         >
-          {#each links as link (link.href)}
-            <li>
-              <a href={link.href} onclick={closeDropdown}>{link.label}</a>
+          {#each sections as section (section.id)}
+            <li class="flex flex-col">
+              <a
+                href="#{section.id}"
+                onclick={closeDropdown}
+                class="group -m-1.5 flex items-start gap-3 p-1.5 text-left"
+              >
+                <span
+                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover:border-base-content/70 group-hover:bg-base-content/15"
+                ></span>
+                <span
+                  class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
+                >
+                  {section.shortTitle}
+                </span>
+              </a>
+
+              {#if section.charts?.length}
+                <ul
+                  class="mt-2 ml-1.5 flex list-none flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+                >
+                  {#each section.charts as chart, i (chart.number ?? i)}
+                    <li>
+                      <a
+                        href="#{section.id}-chart-{i}"
+                        onclick={closeDropdown}
+                        class="block text-xs leading-snug text-base-content/45 transition-colors duration-200 hover:text-base-content"
+                      >
+                        <span class="opacity-70">{chart.number}</span>
+                        {chart.title}
+                      </a>
+                    </li>
+                  {/each}
+                </ul>
+              {/if}
             </li>
           {/each}
         </ul>
