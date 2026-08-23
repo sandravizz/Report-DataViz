@@ -9,7 +9,15 @@
 
 /* SandraViz brand colors, sampled from the cover photo (docs/sandraviz-brand.md):
    warm near-black #221d18 on white (not pure black — Sandra's call), tan-grey
-   surfaces, and the photo's sunset/tidal-flat tones as primary and secondary. */
+   surfaces, and the photo's sunset/tidal-flat tones as primary and secondary.
+
+   The accent is the ONE exception to "sampled from the photo": it is the green
+   out of Cristina Claverol's turbine illustration on the cover (#8fcb7e, the
+   `.st4/.st6` fill in WindTurbines*.svelte). The light khaki it replaced was a
+   near-neighbour of `secondary` and of the tan surfaces, so the one colour the
+   report reserves for things that POINT was the hardest one on the page to
+   pick out. The green is the only hue on this cover that belongs to it and is
+   used nowhere else, which is exactly what an accent has to be. */
 @plugin "daisyui/theme" {
   name: 'sandraviz';
   default: true;
@@ -24,7 +32,7 @@
   --color-primary-content: #ffffff;
   --color-secondary: #8a6f4f;
   --color-secondary-content: #ffffff;
-  --color-accent: #b79a6e;
+  --color-accent: #8fcb7e;
   --color-accent-content: #221d18;
   --color-neutral: #6b5a4a;
   --color-neutral-content: #ffffff;
@@ -57,18 +65,26 @@
 
 /* Accent underline for a marked phrase in running text, and the rule shared by
    every link in the report chrome (header table of contents, cover credits,
-   footer). A real underline, not a highlighter band: 0.12em is ~2.4px at the
-   20px body size, sitting clear of the descenders. It stays a `mark` for
-   semantics, with the browser's default yellow ground stripped. The accent is
-   a quiet tan on this ground, so thickness is the only lever it has. */
+   footer). A real underline, not a highlighter band. It stays a `mark` for
+   semantics, with the browser's default yellow ground stripped.
+
+   The geometry is the landing page's: a flat 2px rule 4px under the baseline,
+   the same as `decoration-2 underline-offset-4` on the cover credits, so the
+   two underlines read as one device at both sizes. Both numbers are absolute
+   rather than em-based on purpose — an em thickness grows with the 20px body
+   copy and turns the quiet rule into a bar.
+
+   `skip-ink` stays at its `auto` default: a long marked phrase in running text
+   is full of descenders, and a rule ploughing through every g and p has to sit
+   far below the baseline to clear them, which is what made it read as detached
+   from its words. Letting it break around them lets it sit close. */
 @layer components {
   mark.accent-mark {
     background: none;
     color: inherit;
     text-decoration-line: underline;
     text-decoration-color: var(--color-accent);
-    text-decoration-thickness: 0.12em;
-    text-underline-offset: 0.22em;
-    text-decoration-skip-ink: none;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
 }

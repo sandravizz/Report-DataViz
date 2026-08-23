@@ -77,13 +77,29 @@ runway per **chart**, so it paid 120vh for a swap that never happened.
 The new formula counts the actual swaps:
 
 ```
-height = (numberOfCharts − 1) × 80vh + 140vh
+height = (numberOfCharts − 1) × 80vh + 140vh + (multi-step ? 60vh hold : 0)
 ```
 
 - **1-chart section:** zero transitions → just the 140vh base → 40vh of
   runway, matching the title sections.
-- **3-chart section:** two transitions → 140 + 160 = 300vh → 200vh of runway,
-  enough to pace both swaps with no dead tail.
+- **3-chart section:** two transitions → 140 + 160 = 300vh, plus the 60vh
+  last-step hold → 260vh of runway, enough to pace both swaps with no dead
+  stretch.
+
+### The last-step hold
+
+`activeIndex` rounds `progress`, so each swap happens midway between two
+anchors: an interior step is on screen for a full 80vh, but the first and last
+are on screen for only 40vh. That is too short for the final step's draw-in
+(the line, its end label, then a callout ~2.8s in) — the reader starts the
+animation and is already scrolling out of the figure.
+
+`HOLD_VH` adds 60vh to a multi-step section and keeps it OUT of the step
+maths: `progress` is computed over `containerHeight − 100vh − hold`, clamps at
+1, so those 60vh are spent with the last step simply held. The first step
+needs no equivalent — it animates on entry, while the section is still
+arriving — and a single-chart section has no mid-pin step, so its height is
+unchanged.
 
 The title/intro sections are `lg:h-[140vh]`, the same base, so both section
 types pause identically. Below `lg` they are auto-height and not pinned;
@@ -94,8 +110,9 @@ chart sections stay pinned at every breakpoint.
 | Feel | Knob | Where |
 | --- | --- | --- |
 | Title/intro pause length | `lg:h-[140vh]` on the section | `src/routes/+page.svelte` |
-| Chart section base pause | the `+ 140` constant | `src/lib/components/ScrollySection.svelte` |
-| Speed of chart swaps | the `* 80` per-transition constant | `src/lib/components/ScrollySection.svelte` |
+| Chart section base pause | the `BASE_VH` constant | `src/lib/components/ScrollySection.svelte` |
+| Speed of chart swaps | the `STEP_VH` per-transition constant | `src/lib/components/ScrollySection.svelte` |
+| Dwell after the last step's animation | the `HOLD_VH` constant | `src/lib/components/ScrollySection.svelte` |
 
 Both constants were cut (120→80, 200→140) after the original pacing read as
 too slow. Keep per-transition runway comfortably above ~60vh so readers can

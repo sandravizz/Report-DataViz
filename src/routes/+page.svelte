@@ -12,6 +12,7 @@
   import ChapterRail from "$lib/components/ChapterRail.svelte";
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import CursorDot from "$lib/components/CursorDot.svelte";
 
   const sections = [
     {
@@ -116,6 +117,12 @@
   <meta name="twitter:description" content={meta.description} />
   <meta name="twitter:image" content="{page.url.origin}/og-image.jpg" />
 </svelte:head>
+
+<!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
+     `data-accent-cursor` attribute on Landing.svelte's root section, and the
+     report proper keeps the system pointer. Mounts itself only for a real
+     mouse — see CursorDot.svelte. Nothing else on the page depends on it. -->
+<CursorDot />
 
 <div id="top" class="flex min-h-screen flex-col">
   <Header {sections} />

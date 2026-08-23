@@ -6,6 +6,25 @@
   // one figure.
   let { pairs, sectionId = "" } = $props();
 
+  // Pinned-scroll budget, in vh. The figure sticks for (height - 100vh), and
+  // one step goes active every STEP_VH of that.
+  //
+  // HOLD_VH is extra scroll spent on the LAST step after it has gone active.
+  // activeIndex rounds, so a step's boundary sits midway between anchors: an
+  // interior step gets a full STEP_VH of dwell, but the first and last get
+  // half of one. Half a step is not enough for the last step's draw-in — the
+  // line, its end label, then a callout ~2.8s in — so the reader scrolls a
+  // little to start it and is already leaving the figure. The hold gives the
+  // final step slightly more dwell than an interior one. The first step needs
+  // no such padding: it animates on entry, while the section is still
+  // arriving. Single-figure sections have no mid-pin step at all and keep
+  // their original height.
+  const STEP_VH = 80;
+  const BASE_VH = 140;
+  const HOLD_VH = 60;
+  let holdVh = $derived(pairs.length > 1 ? HOLD_VH : 0);
+  let heightVh = $derived((pairs.length - 1) * STEP_VH + BASE_VH + holdVh);
+
   let containerEl;
 
   let scrollY = $state(0);
@@ -52,10 +71,12 @@
     };
   });
 
+  // Steps are spread over the pinned range MINUS the hold, so the hold is
+  // scrolled through at a clamped progress of 1 — the last step holding, not
+  // a slower run through all of them.
+  let stepRange = $derived(containerHeight - vh - (holdVh / 100) * vh);
   let progress = $derived(
-    containerHeight > vh
-      ? Math.min(1, Math.max(0, (scrollY - containerTop) / (containerHeight - vh)))
-      : 0
+    stepRange > 0 ? Math.min(1, Math.max(0, (scrollY - containerTop) / stepRange)) : 0
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
@@ -71,7 +92,7 @@
 <div
   bind:this={containerEl}
   class="relative"
-  style:height="{(pairs.length - 1) * 80 + 140}vh"
+  style:height="{heightVh}vh"
 >
   <!-- One invisible scroll target per step, parked where that step is centred:
        scrollIntoView({ block: "start" }) lands the right chart, and ChapterRail
@@ -85,7 +106,7 @@
       data-step={i}
       class="pointer-events-none absolute left-0 h-px w-px"
       style:top={pairs.length > 1
-        ? `calc(${i / (pairs.length - 1)} * (100% - 100vh))`
+        ? `calc(${i / (pairs.length - 1)} * (100% - ${100 + holdVh}vh))`
         : "0px"}
     ></div>
   {/each}

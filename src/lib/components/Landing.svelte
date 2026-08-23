@@ -9,7 +9,10 @@
     "max-h-[calc(100vh-22rem)] min-h-0 w-full flex-1 sm:max-h-[calc(100vh-24rem)]";
 </script>
 
-<section class="relative flex flex-1 flex-col bg-base-200 font-sans">
+<!-- `data-accent-cursor` marks this block as the one place the accent dot
+     cursor replaces the system pointer. CursorDot.svelte looks for the
+     attribute, so moving or removing the zone is done here, not there. -->
+<section data-accent-cursor class="relative flex flex-1 flex-col bg-base-200 font-sans">
   <!-- Stacked at every width, not a text/image row: the illustration is a wide
        2.15:1 landscape, so beside the headline it could only claim half the
        container; underneath it claims full width and is height-bound instead.

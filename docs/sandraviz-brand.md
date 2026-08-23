@@ -17,10 +17,22 @@ instead — the palette below is pixel-sampled from `static/cover.jpg`
 | Warm near-black | `#221d18` | text/ink, axes, `base-content` — not pure black, Sandra's call | — |
 | Burnt orange | `#8f4d28` | signature accent, featured series, `primary` | sunset glow band |
 | Khaki | `#8a6f4f` | secondary accent, `secondary` | lit wet sand, mid-tone |
-| Light khaki | `#b79a6e` | `accent` — UI only, never a chart line | lit wet sand, highlight |
+| Turbine green | `#8fcb7e` | `accent` — UI only, never a chart line | the cover illustration, not the photo |
 | Warm gray-brown | `#6b5a4a` | secondary text, muted annotation ink, `neutral`/`grayText` | tidal-flat shadow |
 | Warm tan-gray | `#e7dfd4` | borders/grid, `base-300`/`grayLight` | — (lightened neutral) |
 | Warm cream | `#f6f2ee` | section backgrounds, `base-200` | — (lightened neutral) |
+
+The accent is the one colour here that is **not** from the photo. It was a
+light khaki `#b79a6e` sampled off the wet sand, which put the report's one
+reserved "this points at something" colour a shade away from `secondary` and
+from the tan surfaces it had to sit on — an accent nobody could find. It is now
+the green out of Cristina Claverol's turbine illustration on the cover (the
+`.st4`/`.st6` fill in `WindTurbinesWide.svelte` / `WindTurbinesTall.svelte`):
+the only hue on the cover that belongs to the artwork and appears nowhere else
+in the palette. Like the light khaki it replaced it is a *light* colour — about
+1.7:1 on white — which makes it a good translucent fill under dark ink (the PNG
+and Interpretation buttons) and a quiet rule as an underline, and keeps
+`accent-content` at the warm near-black.
 
 `src/lib/colors.js`'s `brand.*` originally carried a full categorical set
 (blue/royal/teal/purple/etc., key names kept from the previous
