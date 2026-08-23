@@ -5,7 +5,6 @@ import { getChartSvgString } from "layerchart";
 const FONT_FAMILY = "'Suisse Intl', sans-serif";
 const INK = "#1d1815";
 const MUTED = "rgba(29, 24, 21, 0.5)";
-const MUTED_FAINT = "rgba(29, 24, 21, 0.3)";
 const RAIL_TRACK = "rgba(29, 24, 21, 0.1)";
 // Matches the on-screen chart stage (chart-theme.js's `chartSurface`) — the
 // institute prints its figures onto the cream report page, and the exported
@@ -269,7 +268,9 @@ export async function downloadFigureImage({
     fy += footerLineHeight;
   }
   fy += 8;
-  ctx.fillStyle = MUTED_FAINT;
+  // Same grey as the source line above it, matching the page: all of a
+  // figure's furniture sits at one weight.
+  ctx.fillStyle = MUTED;
   ctx.font = `400 ${wordmarkSize}px ${FONT_FAMILY}`;
   ctx.fillText("sandraviz.com", pad, fy);
 

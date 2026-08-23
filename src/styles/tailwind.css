@@ -114,21 +114,29 @@
 }
 
 /* Accent underline for a marked phrase in running text. A real underline, not
-   a highlighter band: 0.12em is ~2.4px at the 20px body size, sitting clear of
-   the descenders. It stays a `mark` for semantics, with the browser's default
-   yellow ground stripped. The rule paints in the brand orange while the text
-   keeps its own ink — the accent is spent on the LINE, never on the text. The
-   running prose here is Suisse Works, a serif, so the underline sits under
-   thinner strokes than on the sans branches; 0.12em still reads clearly
-   against the cream without thickening into a highlighter. */
+   a highlighter band. It stays a `mark` for semantics, with the browser's
+   default yellow ground stripped. The rule paints in the brand orange while
+   the text keeps its own ink — the accent is spent on the LINE, never on the
+   text.
+
+   The geometry is the cover's: a flat 2px rule 4px under the baseline, the
+   same as `decoration-2 underline-offset-4` on the cover credits, so the two
+   underlines read as one device at both sizes. Both numbers are absolute
+   rather than em-based on purpose — an em thickness grows with the 20px body
+   copy and turns the quiet rule into a bar.
+
+   `skip-ink` stays at its `auto` default: the running prose here is Suisse
+   Works, a serif, and a long marked phrase in it is full of descenders. A rule
+   ploughing through every g and p has to sit far below the baseline to clear
+   them, which is what made it read as detached from its words. Letting it
+   break around them lets it sit close. */
 @layer components {
   mark.accent-mark {
     background: none;
     color: inherit;
     text-decoration-line: underline;
     text-decoration-color: var(--color-accent);
-    text-decoration-thickness: 0.12em;
-    text-underline-offset: 0.22em;
-    text-decoration-skip-ink: none;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
 }

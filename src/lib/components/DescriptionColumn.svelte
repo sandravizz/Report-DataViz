@@ -8,11 +8,21 @@
   <div class="relative h-56">
     {#each items as item, i (i)}
       <p
-        class="absolute inset-0 flex items-start font-serif text-base leading-relaxed text-base-content transition-opacity duration-500 ease-[ease]"
+        class="absolute inset-0 font-serif text-base leading-relaxed text-base-content transition-opacity duration-500 ease-[ease]"
         style:opacity={i === activeIndex ? 1 : 0}
         style:pointer-events={i === activeIndex ? "auto" : "none"}
       >
-        {item}
+        <!-- Rendered as HTML so a description can carry a `mark.accent-mark`
+             — the same accent underline the chapter copy uses. Every string
+             here comes from `$lib/data/figures/*`, editorial copy authored in
+             this repo; nothing fetched, routed or user-supplied.
+
+             The <p> is a plain block, NOT `flex items-start`. A flex container
+             promotes the `mark` to a flex item, which tears the marked phrase
+             out of the sentence and stacks it in its own column beside the
+             rest of the copy. `absolute inset-0` already pins the text to the
+             top of the box, so the flex bought nothing here. -->
+        {@html item}
       </p>
     {/each}
   </div>

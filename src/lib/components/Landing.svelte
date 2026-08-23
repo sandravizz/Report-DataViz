@@ -26,7 +26,11 @@
      justified to the bottom of its row, so the cue reads as the end of the
      cover rather than as something floating below it. -->
 
+<!-- `data-accent-cursor` marks this block as the one place the accent dot
+     cursor replaces the system pointer. CursorDot.svelte looks for the
+     attribute, so moving or removing the zone is done here, not there. -->
 <section
+  data-accent-cursor
   class="relative flex min-h-screen flex-col overflow-hidden bg-base-100 font-sans text-secondary"
 >
   <div
