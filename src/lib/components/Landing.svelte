@@ -17,7 +17,10 @@
      attribution needed). No cover photograph came with the Kurzreport itself;
      the aerial was chosen because the top-down view shows many dwellings at
      once, which is what an index measures. -->
-<section class="relative flex min-h-screen flex-col font-sans">
+<!-- `data-accent-cursor` marks this block as the one place the accent dot
+     cursor replaces the system pointer. CursorDot.svelte looks for the
+     attribute, so moving or removing the zone is done here, not there. -->
+<section data-accent-cursor class="relative flex min-h-screen flex-col font-sans">
   <img
     src="/cover.jpg"
     alt="Blick von oben auf die Dächer eines dicht bebauten Wohnviertels"

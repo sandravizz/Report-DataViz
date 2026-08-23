@@ -42,18 +42,52 @@
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
-      <div class="mb-1 flex items-center justify-between gap-1 lg:mb-3">
+      <!-- mb-2 rather than mb-1 below lg: the Interpretation button is a 24px
+           circle, taller than the eyebrow text it shares the row with, so at
+           4px its bottom edge nearly touched the progress rail underneath.
+           Only the mobile value moves — lg:mb-3 already had the room, and the
+           button is hidden at that breakpoint anyway. -->
+      <div class="mb-2 flex items-center justify-between gap-1 lg:mb-3">
         <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/50 uppercase">
           {headerLabel}
         </span>
+        <!-- Same device as FigureFooter's PNG button — accent wash at rest,
+             full accent on hover, glyph one step stronger than the label — so
+             the report has exactly one way of saying "this is a control". It
+             matters more here than on PNG: this is the only route to the
+             interpretation text below lg, and as flat grey caption text it did
+             not read as pressable at all. Glyph only, in a 24px circle: any
+             label at all — "Interpretation", "The read" — crowded the FIGURE
+             eyebrow it shares the line with on a 330px phone, and the accent
+             pill now carries the "this is pressable" signal on its own, so the
+             words were doing less work than the room they took. 24px is the
+             floor, not a target: it is already under the 44px touch guidance,
+             so do not shrink it further. aria-label carries the name for
+             screen readers. See docs/figure-footer-controls.md. -->
         <button
-          class="btn btn-ghost btn-xs shrink-0 gap-1 px-1.5 font-sans text-xs font-normal tracking-wide text-base-content/50 normal-case lg:hidden"
+          class="group btn btn-circle btn-ghost btn-xs shrink-0 bg-accent/25! text-base-content/75 hover:border-transparent! hover:bg-accent! hover:text-accent-content! hover:shadow-lg! lg:hidden"
+          aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
+          <!-- Heroicons bars-3-bottom-left, the 24px STROKE set — not the 20px
+               solid set the rest of the report's glyphs come from. A filled
+               disc reads as a stamp from an older generation of UI; at 1.5px
+               the glyph sits at caption weight rather than shouting over the
+               eyebrow. Three stacked rules are also the only glyph that says
+               "there is writing behind this", which is what the button opens —
+               an info circle would say "meta-information about the page". -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-3.5 text-base-content group-hover:text-accent-content"
+          >
+            <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>
-          Interpretation
         </button>
       </div>
 
@@ -101,7 +135,9 @@
       </div>
       <div class="space-y-3 font-sans text-sm leading-relaxed text-base-content">
         {#each toParagraphs(pairs[activeIndex].description) as paragraph, i (i)}
-          <p>{paragraph}</p>
+          <!-- HTML for the same reason as DescriptionColumn: a paragraph may
+               carry a `mark.accent-mark`. Authored copy from $lib/data/figures. -->
+          <p>{@html paragraph}</p>
         {/each}
       </div>
     </div>

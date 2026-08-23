@@ -18,7 +18,11 @@
         style:pointer-events={i === activeIndex ? "auto" : "none"}
       >
         {#each toParagraphs(item) as paragraph, j (j)}
-          <p>{paragraph}</p>
+          <!-- Rendered as HTML so a description can carry a `mark.accent-mark`
+               — the same accent underline the chapter copy uses. Every string
+               here comes from `$lib/data/figures/*`, editorial copy authored in
+               this repo; nothing fetched, routed or user-supplied. -->
+          <p>{@html paragraph}</p>
         {/each}
       </div>
     {/each}
