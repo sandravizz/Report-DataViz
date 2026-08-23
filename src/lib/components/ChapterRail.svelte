@@ -198,7 +198,7 @@
     {#each sections as section, i (section.id)}
       <!-- Dot row + chart list as one flex item, so the panel's gap-4 stays a
            chapter-to-chapter rhythm. -->
-      <div class="flex flex-col">
+      <div class="group/chapter flex flex-col">
         <button
           type="button"
           onclick={() => jumpTo(i)}
@@ -213,11 +213,21 @@
                what made this read as a sticker — a 4px ring that left the
                active row twice the visual size of its neighbours. The other
                branches need a hairline stroke to give their accent an edge;
-               orange on cream has contrast to spare, so it goes without. -->
+               orange on cream has contrast to spare, so it goes without.
+
+               Hover fills the dot with the orange and adds a soft translucent
+               halo around it. The halo, not a stroke, is what tells hover from
+               current: hovered is the fill with air around it, current is the
+               fill alone.
+
+               The dot keys off `group/chapter` — the wrapper around the
+               chapter button AND its figure list — so hovering any figure
+               lights its chapter's dot. The title keeps the button's own
+               `group`, so a figure hover does not darken the heading. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
               ? 'h-3 w-3 bg-accent'
-              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-base-content/70 group-hover:bg-base-content/15'}"
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-4 group-hover/chapter:ring-accent/30'}"
           ></span>
           <!-- The accent lives in the CIRCLE and nowhere else: an active label
                goes to full-contrast ink and picks up weight, never colour.
@@ -255,10 +265,12 @@
                     ? 'font-medium text-base-content'
                     : 'text-base-content/70 hover:text-base-content'}"
                 >
-                  <!-- The figure number is set apart by WEIGHT, not colour: at
-                       this size a second, lighter tint on top of an already
-                       de-emphasized row stopped being readable. -->
-                  <span class="font-medium">{chart.number}</span>
+                  <!-- One uniform row: the figure number gets no weight or
+                       colour of its own. Bolder or lighter text inside an
+                       already de-emphasized row reads as a second COLOUR, so
+                       the panel had two resting tones at once. Selection is
+                       the only thing that changes a row's tone. -->
+                  {chart.number}
                   {chart.title}
                 </button>
               </li>
