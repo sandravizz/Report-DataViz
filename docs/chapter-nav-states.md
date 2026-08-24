@@ -13,29 +13,38 @@ by **fill and air**, never by an added edge.
 | State | Geometry | Paint |
 | --- | --- | --- |
 | Idle | 10px (`h-2.5 w-2.5`) | hollow — `border-[1.5px] border-base-content/35`, transparent fill |
-| Hover | 10px | accent fill, border goes `accent` so it vanishes, plus `ring-4 ring-accent/30` |
+| Hover | ~6px core (`scale-[0.6]`) inside a ~5px halo | accent fill, border goes `accent` so it vanishes, plus `ring-[9px] ring-accent/25` |
 | Current | 12px (`h-3 w-3`) | bare `bg-accent`, no ring, no halo |
 
 ```html
 <span
   class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {isCurrent
     ? 'h-3 w-3 bg-accent'
-    : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:border-accent group-hover:bg-accent group-hover:ring-4 group-hover:ring-accent/30'}"
+    : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover:scale-[0.6] group-hover:border-accent group-hover:bg-accent group-hover:ring-[9px] group-hover:ring-accent/25'}"
 ></span>
 ```
 
 Why it is built this way:
 
-- **The halo is what separates hover from current**, not a stroke. A grey ring
+- **Hover inverts the current dot's proportions, it does not approach them.**
+  The first version kept the dot at 10px and just filled it in with a halo
+  around it — accent-plus-air next to accent-alone, only 2px apart in size.
+  That read as a slightly dressed-up version of the current dot, and at a
+  glance the two states were hard to tell apart. Shrinking the core to a
+  pinpoint while widening the halo makes them opposites instead: **the current
+  chapter is mostly ink, a hovered one is mostly air.**
+- **The halo, not a stroke, is what separates hover from current.** A grey ring
   left around a green fill reads as dirt at 10px, and any visible outline reads
   as an edge drawn *on top of* the dot rather than a dot that has filled in.
-  Hover = accent with air around it. Current = accent alone.
+- **The shrink is a `scale` transform, never smaller `h`/`w`.** The dot is a
+  flex item next to the chapter title; changing its box would slide the title
+  ~4px left on every hover. A transform costs no layout.
+- **The ring's px value is pre-multiplied.** A ring scales with the element it
+  is on, so `ring-[9px]` at `scale-[0.6]` paints a ~5px band. Ask for the band
+  you want, then divide by the scale.
 - **The border turns `accent` on hover rather than being removed.** Dropping
   `border-width` would resize the content box and make the dot jump; recolouring
   it to the fill keeps the geometry and hides the edge.
-- **The ring is drawn outside the box**, so the halo costs no layout and nothing
-  in the row shifts. `transition-all duration-200` animates fill and halo
-  together.
 - **The current dot never gets a halo or a stroke.** Both were tried: the halo
   doubled the active row's visual weight and turned it into a sticker; the
   stroke read as an outline. Size plus solid fill is enough.
@@ -99,11 +108,17 @@ for its **current** dot is its selected colour, and hover uses that same colour:
 
 | Branch | Selected colour | Notes |
 | --- | --- | --- |
-| `main` | `accent` (bright green) | halo at `/30` |
-| `kiel-institute` | `accent` (orange) | halo at `/30` |
-| `iw` | `accent` (amber) over a `border-primary` stroke | the amber is light on both surfaces the rail crosses, so it keeps its hairline stroke in *both* the hover and the current state; the halo is still what separates them |
-| `findevlab` | `primary` (navy) | halo at `/15` — a dark fill needs a fainter halo than a bright one |
+| `main` | `accent` (bright green) | halo at `/25` |
+| `kiel-institute` | `accent` (orange) | halo at `/25` |
+| `iw` | `accent` (amber) over a `border-primary` stroke | the amber is light on both surfaces the rail crosses, so it keeps its hairline stroke in *both* the hover and the current state; the halo is still what separates them. The stroke scales with the core, so on hover it paints at ~0.9px — a hairline, which is all it needs to be |
+| `findevlab` | `primary` (navy) | halo at `/15` — a dark fill needs a fainter halo than a bright one, and it stays `/15` at the wider band |
 | `template` | `base-content` | halo at `/10`; this rail is deliberately colourless, greys and near-black only |
+
+`scale-[0.6]` and `ring-[9px]` are the same everywhere; only the colour and the
+halo's opacity are per-branch. The opacities did not all move when the band
+widened: `/30` dropped to `/25` because a wide band of saturated accent at 30%
+started to read as a second dot, while the already-faint `/15` and `/10` needed
+the extra area to stay visible at all.
 
 `findevlab` and `template` already had the halo — on the *current* dot. Applying
 this model moves it: the current dot loses its ring and hover gains one.

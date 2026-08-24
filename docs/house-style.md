@@ -120,6 +120,13 @@ the main way these charts drift apart from each other.
 PDF is good enough to render the shape of the chart. Every *number* that appears
 in the copy comes from the source text, never off the trace.
 
+**Thousands take a comma.** 4,590, not 4590 — as the source PDF and the
+report copy write it. Axis labels, value labels and tooltips get it from
+`formatNumber` in `src/lib/format.js`, which every chart panel routes its value
+formatter through; hand-written copy (descriptions, annotation labels, chapter
+text) is written that way by hand to match. Years are the exception and stay
+bare: 2100, never 2,100.
+
 ## How work lands
 
 Verification is visual and it is Sandra's. Agents do not start a dev server,

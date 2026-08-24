@@ -83,13 +83,20 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/share-image.jpg" />
+  <!-- PNG, not JPEG: the share image is a chart — flat ground, hairlines,
+       small type — and JPEG's lossy pass smears exactly that. The extension
+       here has to match the real encoding; scrapers that trust the URL (or the
+       Content-Type derived from it) show no preview at all when it lies.
+       Dimensions must track the file: scrapers reserve layout from them, so a
+       stale pair is worse than none at all. Re-measure on any swap. -->
+  <meta property="og:image" content="{page.url.origin}/share-image.png" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1712" />
-  <meta property="og:image:height" content="1517" />
+  <meta property="og:image:height" content="1827" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
+  <meta name="twitter:image" content="{page.url.origin}/share-image.png" />
 </svelte:head>
 
 <!-- The accent dot cursor, which applies to the COVER ONLY: it follows the

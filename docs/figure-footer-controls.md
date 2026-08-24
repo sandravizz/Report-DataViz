@@ -43,7 +43,10 @@ kinds of thing:**
   glyph at full ink supplies the focal point.
 - The **wordmark** is a *link* — it navigates — so it takes the accent as a
   **rule**: a 1px underline at a 3px offset, the same device as
-  `mark.accent-mark` in the running text. Hover is the lift alone.
+  `mark.accent-mark` in the running text. Nothing changes on hover: like the
+  chapter nav in `Header.svelte`, the pointer cursor is the whole affordance.
+  A link that already wears a permanent underline has nothing left to reveal,
+  and a fill on hover would make it read as a control.
 
 The source line beside them gets neither, which is what makes the distinction
 legible: in a row of identical grey, the two things wearing accent are the two
@@ -104,11 +107,14 @@ with the glyph one step stronger than the label it sits beside:
 The wordmark:
 
 ```html
-class="… text-base-content/50
-       underline decoration-accent decoration-1 underline-offset-[3px]
-       transition-[background-color,box-shadow] duration-200
-       hover:bg-white hover:shadow-lg"
+class="… cursor-pointer text-base-content/50
+       underline decoration-accent decoration-1 underline-offset-[3px]"
 ```
+
+No hover utilities, no transition — and therefore none of the pill geometry
+(`rounded-full`, `px-2.5`, `-ml-2.5`) that only existed to shape a hover
+surface. `-mt-1` replaces the old `-mt-2`, which had been pulling back against
+that pill's own `py-1`; the text lands in the same place.
 
 ### The `!` are not cargo cult
 
@@ -132,12 +138,16 @@ colour at a specificity above a utility in the resting state.
 
 ### The hover lift
 
-Both hovers lift rather than darken: instead of deepening in place, the control
-takes the flat white of the surface behind it (ScrollySection's `data-scrolly`
-block) and rises on a `shadow-lg`. The explicit `bg-white` is what keeps the
-pill opaque as it rises, so the shadow reads as cast *by* it rather than
-showing through it. Borrowed from ChapterRail's panel, so that "this is
-interactive" is one gesture across the whole report.
+The button hovers lift rather than darken: instead of deepening in place, the
+control takes the flat white of the surface behind it (ScrollySection's
+`data-scrolly` block) and rises on a `shadow-lg`. The explicit `bg-white` is
+what keeps the pill opaque as it rises, so the shadow reads as cast *by* it
+rather than showing through it. Borrowed from ChapterRail's panel, so that
+"this is interactive" is one gesture across the whole report.
+
+The lift is for controls only. The wordmark had it once and lost it: a link
+whose accent rule is already permanent gains nothing from a hover state, and
+the lift was quietly filing it with the buttons.
 
 ## The exported PNG mirrors the page
 

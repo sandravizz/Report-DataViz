@@ -4,6 +4,7 @@
   import { max } from "d3-array";
   import { tickLabelProps, yAxisProps, desktopTooltips } from "$lib/chart-theme";
   import { colors, nameInk } from "$lib/colors";
+  import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
 
@@ -74,13 +75,13 @@
       // from weight instead of colour.
       ...tickLabelProps,
       class: "text-xs font-normal",
-      format: (d) => `${pair.valuePrefix ?? ""}${d}`,
+      format: (d) => `${pair.valuePrefix ?? ""}${formatNumber(d)}`,
     },
     tooltip: {
       item: {
         label: "",
         color: null,
-        format: (d) => `${pair.valuePrefix ?? ""}${d}`,
+        format: (d) => `${pair.valuePrefix ?? ""}${formatNumber(d)}`,
       },
     },
   }}

@@ -4,6 +4,7 @@
   import { timeFormat } from "d3-time-format";
   import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, chartSurface, desktopTooltips, halfCenturyTicksOnMobile } from "$lib/chart-theme";
   import { colors, gridLine } from "$lib/colors";
+  import { formatNumber } from "$lib/format";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -109,7 +110,9 @@
   });
 
   const formatYear = timeFormat("%Y");
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Values carry the report's thousands grouping (see $lib/format.js); the
+  // year axis does not, and is formatted by formatYear above.
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
 
   // In place of a built-in legend, series opting in with an `endLabel` get
   // their name at the line's end, with right padding reserved for it. Series
@@ -217,8 +220,10 @@
        figure with a legend was visibly shorter than every figure without one;
        and out of flow it can sit in the air ChartDisplay already leaves under
        the subtitle (mb-10/lg:mb-20) instead of pushing the plot down. Nothing
-       else lives in that gap, and the PNG export reads the chart SVG only, so
-       it is unaffected. -->
+       else lives in that gap. Being DOM rather than SVG, it is invisible to
+       the PNG export's chart capture, so downloadFigure.js redraws it onto the
+       canvas from these same `pair.legendItems` entries — change the shape of
+       an entry here and it has to change there too. -->
   <div class="relative flex min-w-0 flex-1 flex-col">
     <div class="absolute inset-x-0 bottom-full mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-light lg:mb-8">
       {#each pair.legendItems as item (item.label)}

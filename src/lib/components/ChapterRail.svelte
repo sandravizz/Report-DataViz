@@ -195,10 +195,10 @@
           aria-current={activeIndex === i ? "true" : undefined}
           class="group flex cursor-pointer items-start gap-3 p-1.5 -m-1.5 text-left"
         >
-          <!-- Hovering a non-current chapter previews its selected state, so
-               the row reads as clickable without a link underline. mt-0.5
-               optically centres the dot on the label's first line (titles
-               wrap, so the row is not always one line tall).
+          <!-- Hovering a non-current chapter marks it without imitating that
+               state, so the row reads as clickable without a link underline.
+               mt-0.5 optically centres the dot on the label's first line
+               (titles wrap, so the row is not always one line tall).
 
                The active dot is a bare accent fill: no halo, no stroke. Both
                were tried and both made it a sticker — the halo put a 4px ring
@@ -208,12 +208,20 @@
                is fill and size (12px solid vs 10px hairline ring), not an
                added edge.
 
-               Hover fills the dot with the accent straight away and adds a
-               soft translucent accent halo around it. The halo, not a stroke,
-               is what tells hover from current: a hovered dot is accent with
-               air around it, the current one is accent alone. The hairline
-               border goes accent-coloured on hover so it disappears into the
-               fill instead of drawing an edge inside the halo.
+               Hover inverts the current dot's proportions instead of
+               approaching them: the accent core shrinks to a pinpoint while
+               the translucent halo widens around it. Same-size-accent-plus-
+               halo read as a slightly dressed-up version of the current dot;
+               a small core in a lot of air reads as a different STATE — the
+               current chapter is mostly ink, a hovered one is mostly air. The
+               hairline border goes accent-coloured on hover so it disappears
+               into the core instead of drawing an edge inside the halo.
+
+               The shrink is a scale transform, not smaller h/w: the dot sits
+               in a flex row, so changing its box would slide the title 4px
+               left on every hover. Because the ring scales with the element,
+               its px value is pre-multiplied — ring-[9px] at scale-60 paints
+               a ~5px band.
 
                The dot listens to `group/chapter` — the wrapper around the
                chapter button AND its figure list — not to the button. Hovering
@@ -224,7 +232,7 @@
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
               ? 'h-3 w-3 bg-accent'
-              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-4 group-hover/chapter:ring-accent/30'}"
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:scale-[0.6] group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-[9px] group-hover/chapter:ring-accent/25'}"
           ></span>
           {#if expanded}
             <span
