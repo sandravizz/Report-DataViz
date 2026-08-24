@@ -70,10 +70,21 @@ cover is uniformly dark, so the accent reads at full strength with no rescuing
 hairline, and it has no charts for a filled disc to cover and no running text to
 lose an I-beam over. The report proper keeps the pointer the reader came with.
 The zone is an attribute on Landing's root section, not an id in the component.
+Inside it, links and buttons keep the system hand — the dot owns empty space
+only, never an affordance.
 The *paint* is decided per branch, because it is a contrast decision against
 that branch's cover — the dot is whatever reads there, the halo is always the
 accent at 35%. Table of what each branch uses, and why:
 [cursor-dot.md](cursor-dot.md).
+
+**The Table of Contents is a `<details>`, never a focus-driven dropdown.**
+daisyUI's focus version holds its panel open with `:focus-within`, so on a phone
+the first tap anywhere else is spent blurring the trigger and never reaches what
+is under it — which is what made the cover's credit links need two taps and read
+as blocked by the menu. `<details>` has no focus to spend, and daisyUI excludes
+it from the closed-state rule because the element hides its own content. Restore
+outside-tap closing with a `pointerdown` listener in the **capture** phase,
+which closes the panel without consuming the tap.
 
 **The landing fits one screen.** Cover type is sized against `vh` as well as
 `vw` so it never pushes past the fold, and it does not repeat a logo the header
