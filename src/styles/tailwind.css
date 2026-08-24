@@ -7,17 +7,38 @@
   themes: sandraviz --default;
 }
 
-/* SandraViz brand colors, sampled from the cover photo (docs/sandraviz-brand.md):
-   warm near-black #221d18 on white (not pure black — Sandra's call), tan-grey
-   surfaces, and the photo's sunset/tidal-flat tones as primary and secondary.
+/* SandraViz brand colors. The warm tones — burnt orange `primary`, khaki
+   `secondary`, the warm near-black ink (#221d18, not pure black, Sandra's
+   call) — are pixel-sampled from the cover photo (docs/sandraviz-brand.md).
+   The accent and the surfaces are NOT: they are slate grey, off the figures'
+   own palette.
 
-   The accent is the ONE exception to "sampled from the photo": it is the green
-   out of Cristina Claverol's turbine illustration on the cover (#8fcb7e, the
-   `.st4/.st6` fill in WindTurbines*.svelte). The light khaki it replaced was a
-   near-neighbour of `secondary` and of the tan surfaces, so the one colour the
-   report reserves for things that POINT was the hardest one on the page to
-   pick out. The green is the only hue on this cover that belongs to it and is
-   used nowhere else, which is exactly what an accent has to be. */
+   The accent had three previous lives, all of them wrong in a different way.
+   A light khaki #b79a6e sampled off the wet sand was a near-neighbour of
+   `secondary` and of the surfaces it sat on, so the one colour the report
+   reserves for things that POINT was the hardest on the page to find. The
+   turbine green #8fcb7e that replaced it was findable but never agreed with
+   the orange and khaki around it. A deep navy #1b4a6b read as blue but as a
+   heavy, corporate blue.
+
+   It is now slate grey #7d8597 — `iea.heatPumps`, the light step of the
+   efficiency series. Slate is a quiet accent by design: it does not compete
+   with the orange, and it is cool where everything warm on the page is warm,
+   which is what makes it findable without raising its voice.
+
+   THE SURFACES FOLLOW THE ACCENT, AND THIS IS THE WHOLE TRICK. base-200 and
+   base-300 used to be warm cream and tan (#f6f2ee / #e7dfd4), lightened out of
+   the photo's browns. Against a slate accent that beige read as dirty, so both
+   are now the accent's own hue diluted into white: base-200 is ~11% slate,
+   base-300 ~25%. They are kept DELIBERATELY PALE — accent and ground are the
+   same hue now, so every step the ground takes toward the accent is a step the
+   accent loses. Do not deepen base-200 much past this without checking what
+   happens to the underlines on the cover.
+
+   `accent-content` stays the warm near-black: slate at full strength is a
+   mid-tone, so a filled control takes dark ink better than white (4.5:1 vs
+   3.7:1). The two filled controls still say `accent-content` rather than
+   `base-content` so the token, not the markup, decides that. */
 @plugin "daisyui/theme" {
   name: 'sandraviz';
   default: true;
@@ -25,14 +46,14 @@
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f6f2ee;
-  --color-base-300: #e7dfd4;
+  --color-base-200: #f1f2f4;
+  --color-base-300: #dee0e5;
   --color-base-content: #221d18;
   --color-primary: #8f4d28;
   --color-primary-content: #ffffff;
   --color-secondary: #8a6f4f;
   --color-secondary-content: #ffffff;
-  --color-accent: #8fcb7e;
+  --color-accent: #7d8597;
   --color-accent-content: #221d18;
   --color-neutral: #6b5a4a;
   --color-neutral-content: #ffffff;

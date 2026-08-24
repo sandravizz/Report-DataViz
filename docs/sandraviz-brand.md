@@ -17,22 +17,50 @@ instead — the palette below is pixel-sampled from `static/cover.jpg`
 | Warm near-black | `#221d18` | text/ink, axes, `base-content` — not pure black, Sandra's call | — |
 | Burnt orange | `#8f4d28` | signature accent, featured series, `primary` | sunset glow band |
 | Khaki | `#8a6f4f` | secondary accent, `secondary` | lit wet sand, mid-tone |
-| Turbine green | `#8fcb7e` | `accent` — UI only, never a chart line | the cover illustration, not the photo |
+| Slate grey | `#7d8597` | `accent` — UI only, never a chart line | the figures' palette (`iea.heatPumps`), not the photo |
 | Warm gray-brown | `#6b5a4a` | secondary text, muted annotation ink, `neutral`/`grayText` | tidal-flat shadow |
-| Warm tan-gray | `#e7dfd4` | borders/grid, `base-300`/`grayLight` | — (lightened neutral) |
-| Warm cream | `#f6f2ee` | section backgrounds, `base-200` | — (lightened neutral) |
+| Pale slate | `#dee0e5` | borders/grid, `base-300` | — (25% slate accent in white) |
+| Palest slate | `#f1f2f4` | section backgrounds, `base-200` | — (11% slate accent in white) |
 
-The accent is the one colour here that is **not** from the photo. It was a
-light khaki `#b79a6e` sampled off the wet sand, which put the report's one
-reserved "this points at something" colour a shade away from `secondary` and
-from the tan surfaces it had to sit on — an accent nobody could find. It is now
-the green out of Cristina Claverol's turbine illustration on the cover (the
-`.st4`/`.st6` fill in `WindTurbinesWide.svelte` / `WindTurbinesTall.svelte`):
-the only hue on the cover that belongs to the artwork and appears nowhere else
-in the palette. Like the light khaki it replaced it is a *light* colour — about
-1.7:1 on white — which makes it a good translucent fill under dark ink (the PNG
-and Interpretation buttons) and a quiet rule as an underline, and keeps
-`accent-content` at the warm near-black.
+The accent is the one colour here that is **not** from the photo, and it has
+been re-picked three times. It started as a light khaki `#b79a6e` sampled off
+the wet sand, which put the report's one reserved "this points at something"
+colour a shade away from `secondary` and from the tan surfaces it had to sit on
+— an accent nobody could find. It then became the green out of Cristina
+Claverol's turbine illustration on the cover (the `.st4`/`.st6` fill in
+`WindTurbinesWide.svelte` / `WindTurbinesTall.svelte`): findable, but a cool
+green that never agreed with the burnt orange and khaki around it. A deep navy
+`#1b4a6b` followed, which read as blue but as a heavy, corporate blue.
+
+It is now **slate grey `#7d8597`** — `iea.heatPumps`, the light step of the
+efficiency series (Sandra's call, 2026-08-24, from a live comparison of five
+candidates out of the `iea` palette rendered into every place the accent
+actually appears: credit underlines, TOC rule, marked phrases, both filled
+controls, the cursor halo). Slate is a deliberately quiet accent: it does not
+compete with the orange, and it is cool where everything else warm on the page
+is warm, which is what makes it findable without raising its voice.
+
+**The surfaces then followed the accent, and that is the substantive part of
+the change.** `base-200` and `base-300` had been warm cream and tan (`#f6f2ee`
+/ `#e7dfd4`), lightened out of the photo's browns. Against a slate accent that
+beige read as dirty, so both are now the accent's own hue diluted into white:
+`base-200` is ~11% slate (`#f1f2f4`), `base-300` ~25% (`#dee0e5`). They are
+kept **deliberately pale**, because accent and ground now share a hue — every
+step the ground takes toward the accent is a step the accent loses. Don't
+deepen `base-200` much past this without checking the cover's underlines.
+
+Slate at full strength is a mid-tone, so unlike the navy a filled control takes
+dark ink better than white (4.5:1 against `#221d18`, vs 3.7:1 against white):
+`accent-content` is the warm near-black. The two filled controls (the PNG
+button in `FigureFooter.svelte`, the Interpretation button in
+`ChartDisplay.svelte`) name `accent-content` for both label and glyph on hover
+rather than `base-content`, so the theme token — not the markup — decides that
+if the accent ever goes dark again.
+
+Still warm, and deliberately left that way: `primary` `#8f4d28`, `secondary`
+`#8a6f4f`, `base-content` `#221d18`, and the muted `#6b5a4a` annotation ink in
+`colors.js`. The report is warm type and warm signature colour on a cool
+ground; only the surfaces and the accent went slate.
 
 `src/lib/colors.js`'s `brand.*` originally carried a full categorical set
 (blue/royal/teal/purple/etc., key names kept from the previous

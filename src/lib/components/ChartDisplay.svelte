@@ -64,7 +64,7 @@
              so do not shrink it further. aria-label carries the name for
              screen readers. See docs/figure-footer-controls.md. -->
         <button
-          class="btn btn-circle btn-ghost btn-xs shrink-0 bg-accent/25! text-base-content/75 hover:border-transparent! hover:bg-accent! hover:text-base-content hover:shadow-lg! lg:hidden"
+          class="group btn btn-circle btn-ghost btn-xs shrink-0 bg-accent/25! text-base-content/75 hover:border-transparent! hover:bg-accent! hover:text-accent-content hover:shadow-lg! lg:hidden"
           aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
@@ -83,7 +83,7 @@
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="size-3.5 text-base-content"
+            class="size-3.5 text-base-content group-hover:text-accent-content"
           >
             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>

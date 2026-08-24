@@ -6,11 +6,13 @@ the same behaviour in its own colours — see [Porting to another
 branch](#porting-to-another-branch) for the one contrast check that is not
 automatic.
 
-**This branch's accent is the turbine green `#8fcb7e`** — light (about 1.7:1
-on white), which is exactly the shape of accent this mechanism was designed
+**This branch's accent is slate grey `#7d8597`** — a mid-tone (3.7:1 on
+white), which still fits the shape of accent this mechanism was designed
 around: a good translucent fill under dark ink, a quiet rule as an underline.
-So the classes below are used verbatim, with `hover:text-base-content` rather
-than the `hover:text-accent-content!` a dark accent would need.
+The classes below name `accent-content` for the hover label and glyph rather
+than `base-content`; on this branch the theme defines `accent-content` AS the
+warm near-black, so the rendered result is the same, but a branch whose accent
+is dark gets white there without touching the markup.
 
 ## The problem
 
@@ -43,8 +45,8 @@ kinds of thing:**
 
 - The **buttons** — PNG and Interpretation — are *controls*; they perform an
   action, so they take the accent as a **fill**. At rest, `bg-accent/25`: a
-  wash strong enough to read as green, faint enough that it does not pull the
-  eye off the chart. On hover it goes to the full accent plus the shadow lift.
+  wash strong enough to read as a raised surface, faint enough that it does not
+  pull the eye off the chart. On hover it goes to the full accent plus the shadow lift.
   No border — the fill alone carries the shape, and the download
   glyph at full ink supplies the focal point.
 - The **wordmark** is a *link* — it navigates — so it takes the accent as a
@@ -62,16 +64,16 @@ The label sits at `text-base-content/75` but the download glyph is set to full
 11px a flat wash with everything inside it at one weight reads as a highlighted
 word rather than as a button, and the glyph is the part that says *action*.
 
-The obvious next idea — paint the glyph in the bright accent so it pops — is
+The obvious next idea — paint the glyph in the accent so it pops — is
 geometrically impossible, not merely a taste call. The resting fill *is* the
 accent at low alpha, so the glyph and its own background are the same hue by
 construction, and no tint of a colour can contrast with that colour. Measured on this branch:
-`#8fcb7e` on its own resting tint over white (`#e3f2df`) is **1.5:1**.
+`#7d8597` on its own resting tint over white (`#dee0e5`) is **1.8:1**.
 Deepening the tint makes it worse, not better, because the ground climbs toward
 the glyph. Every combination is invisible.
 
-The accent here is a light green — about 1.7:1 on white — which is exactly what
-makes it a good *fill* under dark ink and a hopeless *foreground* on anything
+The accent here is a mid-tone slate — 3.7:1 on white — which is what
+makes it a good *fill* under dark ink and a weak *foreground* on anything
 pale. If a branch genuinely wants a bright accent glyph, the ground under it
 has to be dark: invert the pill to an ink fill with the glyph knocked out in
 accent. That is a much louder object in the footer, which is why it is not the
@@ -99,7 +101,7 @@ Both buttons carry the same class string:
 ```html
 class="btn btn-ghost btn-xs … rounded-full
        bg-accent/25! text-base-content/75
-       hover:border-transparent! hover:bg-accent! hover:text-base-content hover:shadow-lg!"
+       hover:border-transparent! hover:bg-accent! hover:text-accent-content hover:shadow-lg!"
 ```
 
 with the glyph one step stronger than the label it sits beside:
@@ -166,12 +168,13 @@ Copy `FigureFooter.svelte`'s two class strings across. The tokens resolve to
 that branch's palette automatically, with one thing to check by hand:
 
 **Does the branch's `accent` work as a *background* for ink text?** This
-branch's accent (`#8fcb7e`) is about 1.7:1 on white — far too light to be text or a
-thin rule on its own, which is exactly why it makes a good fill with dark ink
-on top. A branch whose accent is dark or heavily saturated (an orange, a deep
-blue) inverts that: `hover:text-base-content` on it will fail contrast. On
-those branches, swap the hover text to `hover:text-accent-content!`, which the
-theme already defines as the readable counterpart to `accent`.
+branch's accent (`#7d8597`) is 3.7:1 on white — light enough that a full-strength
+fill still takes the near-black ink (4.5:1), which is why `accent-content` here
+is that near-black. A branch whose accent is dark or heavily saturated (an
+orange, a deep blue) inverts it: dark ink on the fill will fail contrast, and
+`accent-content` must be white. Because the markup already says
+`hover:text-accent-content`, that is a theme change, not a markup change — set
+`--color-accent-content` correctly and both controls follow.
 
 Also check the branch's own `mark.accent-mark` geometry before copying the
 underline numbers — if its body copy is set smaller than 20px, the 1px/3px
@@ -179,7 +182,7 @@ caption values may already be close to the body rule and lose their distinction.
 
 ## The Interpretation button's glyph and label
 
-Two things were changed after the fill landed, because a green pill that is
+Two things were changed after the fill landed, because a washed pill that is
 easy to *see* still has to be easy to *understand*:
 
 **The glyph moved from the 20px solid Heroicons set to the 24px stroke set.**
@@ -191,7 +194,7 @@ keep this.
 
 **The label went away entirely.** "Interpretation" took roughly a third of a
 330px line on a phone, and even a two-word replacement crowded the `FIGURE 13`
-eyebrow it shares that line with. The green pill now carries the "this is
+eyebrow it shares that line with. The washed pill now carries the "this is
 pressable" signal by itself, so the words were doing less work than the room
 they cost. The button is a 24px circle with the glyph alone and an `aria-label`
 for screen readers.

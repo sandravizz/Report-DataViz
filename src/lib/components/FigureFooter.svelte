@@ -46,9 +46,11 @@
        and the download glyph at full ink is what gives the pill a focal point
        at 11px. See docs/figure-footer-controls.md.
 
-       This branch's accent is the green out of the turbine illustration
-       (#8fcb7e), light enough to take dark ink on top, so the hover keeps
-       `text-base-content` rather than flipping to `accent-content`.
+       This branch's accent is slate grey (#7d8597), a mid-tone: a filled
+       control takes the warm near-black better than white, so `accent-content`
+       IS that near-black and the hover reads as a darkening, not a flip. Label
+       and glyph both name `accent-content` rather than `base-content` so the
+       theme token stays in charge if the accent ever goes dark again.
 
        Hover needs `!` on every property, not daisyUI's --btn-* variables:
        daisyUI's own `.btn:hover` is a two-class selector, so a plain hover
@@ -57,19 +59,21 @@
        carries `!` for the same reason applied to `.btn-ghost`, which sets its
        own transparent fill.
 
-       DIAL THE GREEN HERE: the `/25` in `bg-accent/25!` below is the resting
-       strength, as a percentage — lower is fainter, higher is greener. Any
+       DIAL THE WASH HERE: the `/25` in `bg-accent/25!` below is the resting
+       strength, as a percentage — lower is fainter, higher is greyer. Any
        integer works. Keep it under about /50 or it stops reading as a step up
-       to the full-accent hover. The Interpretation button in
+       to the full-accent hover. Note that a slate wash on white lands close to
+       `base-300`, which is the same hue: the pill reads as a raised surface
+       rather than a tint, which is the intent. The Interpretation button in
        ChartDisplay.svelte carries the same value; change both together or the
        report's two controls drift apart. -->
   <button
     type="button"
-    class="btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full bg-accent/25! px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/75 normal-case hover:border-transparent! hover:bg-accent! hover:text-base-content hover:shadow-lg!"
+    class="group btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full bg-accent/25! px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/75 normal-case hover:border-transparent! hover:bg-accent! hover:text-accent-content hover:shadow-lg!"
     disabled={downloading}
     onclick={handleDownload}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-base-content">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-base-content group-hover:text-accent-content">
       <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
     </svg>
     {downloading ? "Exporting…" : "PNG"}

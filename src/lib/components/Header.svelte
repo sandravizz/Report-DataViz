@@ -1,12 +1,45 @@
 <script>
+  import { onMount } from "svelte";
+
   // Permanently solid/blurred: the hero is plain white, so there's no
   // scroll-over-photo transparency to handle (docs/sandraviz-brand.md).
   let { sections = [] } = $props();
 
-  function closeDropdown(event) {
-    event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
-    event.currentTarget.blur();
+  // The Table of Contents is a real <details>, not daisyUI's focus-driven
+  // dropdown. The focus version is what made the cover's credit links
+  // untappable on a phone: the panel is held open by `:focus-within`, so the
+  // first tap anywhere else is spent blurring the trigger and never reaches
+  // the link under it — you have to tap sandraviz.com twice, which reads as
+  // the menu blocking the link. <details> has no focus to spend, and daisyUI
+  // excludes `details` from its closed-state rule precisely because the
+  // element already hides its own content, so a shut menu is not in the
+  // document's way at all.
+  let toc = $state(null);
+
+  function closeToc() {
+    if (toc) toc.open = false;
   }
+
+  onMount(() => {
+    // Native <details> does not close when you tap elsewhere, so restore that.
+    // `pointerdown` in the CAPTURE phase is the whole trick: it closes the
+    // panel before the tap resolves but never consumes it, so the same tap
+    // still activates whatever it landed on.
+    function onPointerDown(event) {
+      if (toc?.open && event.target instanceof Node && !toc.contains(event.target)) {
+        toc.open = false;
+      }
+    }
+    function onKeydown(event) {
+      if (event.key === "Escape") closeToc();
+    }
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("keydown", onKeydown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("keydown", onKeydown);
+    };
+  });
 
   // Matches Footer.svelte's pair.
   const socials = [
@@ -30,12 +63,14 @@
 <header class="relative z-50 shrink-0 bg-base-200/80 backdrop-blur-sm">
   <div class="relative flex items-center justify-end gap-4 px-6 py-3">
     <nav class="flex items-center gap-4 text-base-content sm:gap-6 lg:gap-8">
-      <div class="dropdown dropdown-end">
-        <div
-          tabindex="0"
-          role="button"
+      <details class="dropdown dropdown-end" bind:this={toc}>
+        <!-- `list-none` plus the webkit marker rule strip the disclosure
+             triangle a <summary> paints by default; without both, Safari keeps
+             showing one. `cursor-pointer` is explicit because a summary does
+             not get the hand on its own the way a link does. -->
+        <summary
           aria-label="Table of Contents"
-          class="cursor-pointer px-2 py-2 font-sans text-sm underline decoration-accent decoration-2 underline-offset-8 outline-none"
+          class="[&::-webkit-details-marker]:hidden cursor-pointer list-none px-2 py-2 font-sans text-sm underline decoration-accent decoration-2 underline-offset-8 outline-none"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -58,7 +93,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
             </svg>
           </span>
-        </div>
+        </summary>
         <!-- Same panel as ChapterRail's hover flyout, deliberately: rounded-2xl
              on px-5 py-4, a hollow dot per chapter, and the figures nested
              under the same hairline connector. daisyUI's `menu` class is
@@ -67,14 +102,13 @@
              the rail this panel is a destination list, not a position
              indicator. -->
         <ul
-          tabindex="-1"
           class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-200 px-5 py-4 font-sans text-base-content shadow-lg"
         >
           {#each sections as section (section.id)}
             <li class="group/chapter flex flex-col">
               <a
                 href="#{section.id}"
-                onclick={closeDropdown}
+                onclick={closeToc}
                 class="group -m-1.5 flex items-start gap-3 p-1.5 text-left"
               >
                 <span
@@ -95,7 +129,7 @@
                     <li>
                       <a
                         href="#{section.id}-chart-{i}"
-                        onclick={closeDropdown}
+                        onclick={closeToc}
                         class="block text-xs leading-snug text-base-content/45 transition-colors duration-200 hover:text-base-content"
                       >
                         {chart.number}
@@ -108,7 +142,7 @@
             </li>
           {/each}
         </ul>
-      </div>
+      </details>
 
       <div class="hidden items-center gap-4 md:flex">
         {#each socials as social (social.href)}

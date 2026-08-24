@@ -26,9 +26,10 @@ under a `black/50–65` scrim — uniformly dark, no bright patches — so a bri
 accent reads at full strength with nothing propping it up.
 
 This cover is the opposite. It is Cristina Claverol's turbine illustration on
-`base-200`, light from edge to edge, and the accent is a light green (about
-1.7:1 on white). An accent dot on it would need a dark hairline to survive, and
-that hairline is what makes a dot read as a bordered bead rather than a mark.
+`base-200`, light from edge to edge, and the accent is a mid-tone slate grey
+(3.7:1 on white) on a `base-200` that is itself a pale dilution of that same
+slate. An accent dot on it would need a dark hairline to survive, and that
+hairline is what makes a dot read as a bordered bead rather than a mark.
 
 So the dot takes **`base-content`** — the cover's own type colour, the ink the
 headline and the credits are already set in — and the halo keeps the accent.

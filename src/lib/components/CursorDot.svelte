@@ -16,12 +16,16 @@
   // an accent halo, which works there because its cover is a photograph under
   // a black/50-65 scrim: uniformly dark, so a bright accent reads at full
   // strength with nothing propping it up. This cover is the opposite — the
-  // turbine illustration on `base-200`, light everywhere — and the accent is a
-  // light green, so an accent dot would disappear into it. The dot therefore
+  // turbine illustration on `base-200`, light everywhere. The dot therefore
   // takes the cover's own type colour (`base-content`, the ink the headline and
   // credits are already set in) and the halo keeps the accent. Same rule, read
   // off a different ground: the dot is whatever reads on this cover, the halo
   // is always the accent.
+  //
+  // This survived every accent change since, and slate makes it structural:
+  // the accent is now a grey, so a slate dot inside a slate halo would be one
+  // soft blob at 9px. The near-black core against the halo's pale haze is what
+  // keeps the two parts legible as two parts. The dot stays ink.
   //
   // The halo is `accent/35`, the same fill as the PNG button in
   // FigureFooter.svelte and the Interpretation button in ChartDisplay.svelte —
@@ -31,6 +35,14 @@
   // else does; an attribute rather than a hard-coded id so a branch can move
   // the zone without touching this component.
   const ZONE = "[data-accent-cursor]";
+
+  // Inside the zone these keep the system pointer instead. A link has one job
+  // — to say "this is clickable" — and the hand is how it says it. Replacing
+  // that with a decorative dot takes away a real affordance to gain nothing,
+  // and it made the cover's two credit links read as plain text. So the dot
+  // owns the cover's empty space and hands the pointer back the moment it is
+  // over something you can actually press.
+  const INTERACTIVE = 'a, button, summary, [role="button"]';
 
   let enabled = $state(false);
   // False until the pointer is inside the zone. Ordinary state — it changes on
@@ -69,8 +81,7 @@
         recheck = false;
         // Ask the document what is under the pointer now. The layer itself is
         // `pointer-events: none`, so it never answers its own question.
-        const under = document.elementFromPoint(x, y);
-        visible = under instanceof Element && under.closest(ZONE) !== null;
+        visible = showsDotAt(document.elementFromPoint(x, y));
       }
       if (!dotEl || !haloEl) return;
       // translate3d is written first, so it applies LAST: each circle centres
@@ -87,13 +98,18 @@
       if (!frame) frame = requestAnimationFrame(update);
     }
 
+    // In the zone, and not over something the system pointer should own.
+    function showsDotAt(el) {
+      if (!(el instanceof Element)) return false;
+      return el.closest(ZONE) !== null && el.closest(INTERACTIVE) === null;
+    }
+
     function onMove(event) {
       x = event.clientX;
       y = event.clientY;
       known = true;
       // The event already knows what it hit, so no elementFromPoint here.
-      visible =
-        event.target instanceof Element && event.target.closest(ZONE) !== null;
+      visible = showsDotAt(event.target);
       schedule();
     }
 
@@ -154,6 +170,16 @@
   :global(html.has-dot-cursor [data-accent-cursor]),
   :global(html.has-dot-cursor [data-accent-cursor] *) {
     cursor: none !important;
+  }
+
+  /* ...but anything pressable inside the cover keeps the hand. This has to
+     out-specify the rule above, which it does on the strength of the `:is()`
+     — that group's specificity is its heaviest member, `[role="button"]`, so
+     these land at (0,3,1) against (0,2,1) and win without a second
+     `!important` fight. The trailing `*` covers the icon inside a link. */
+  :global(html.has-dot-cursor [data-accent-cursor] :is(a, button, summary, [role='button'])),
+  :global(html.has-dot-cursor [data-accent-cursor] :is(a, button, summary, [role='button']) *) {
+    cursor: pointer !important;
   }
 
   .cursor-layer {
