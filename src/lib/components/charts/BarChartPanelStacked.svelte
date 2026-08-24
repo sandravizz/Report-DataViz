@@ -138,7 +138,13 @@
   const directLabels = $derived(resolveAnnotations(directLabelAnnotations, innerWidth));
   // `hideYAxisMobile` drops the y axis below 1024 — direct labels and bar
   // totals already carry the values, so inline ticks are pure clutter.
-  const hideYAxis = $derived(pair.hideYAxisMobile && innerWidth < 1024);
+  // `hideYAxis` does the same at EVERY breakpoint, for figures where the axis
+  // is not just redundant but actively in the way: it takes the gridlines with
+  // it (grid={!hideYAxis} below), and a gridline is the one thing a bar total
+  // can collide with. A bar topping out just under a tick puts its number on
+  // the line, and no offset fixes that — lifting the label further only walks
+  // it toward the next line up.
+  const hideYAxis = $derived(pair.hideYAxis || (pair.hideYAxisMobile && innerWidth < 1024));
   // With the ticks gone there's nothing to gutter for: collapse padding to 0
   // so bars sit flush with the title's left edge.
   const padding = $derived(

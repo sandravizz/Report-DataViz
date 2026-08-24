@@ -18,6 +18,9 @@ const powerPanel = {
   bandPadding: 0.6,
   hideYAxisMobile: true, // direct labels + bar totals already carry the values
   endLabelGap: 20, // extra gap between the last bar and its direct labels
+  // Both panels' 2024 totals (14.3, 15.2) land within a hair of the 15
+  // gridline, so the bar totals get the extra lift and the halo.
+  clearGridlines: true,
   yDomain: [0, 25],
   series: [
     { key: "Grids", value: "grids", color: iea.grids },
@@ -43,6 +46,7 @@ const efficiencyPanel = {
   bandPadding: 0.6,
   hideYAxisMobile: true,
   endLabelGap: 20,
+  clearGridlines: true,
   yDomain: [0, 25],
   series: [
     { key: "Other efficiency", value: "other", color: iea.efficiency },
