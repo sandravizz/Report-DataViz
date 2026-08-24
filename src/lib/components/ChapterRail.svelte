@@ -192,24 +192,30 @@
           aria-current={activeIndex === i ? "true" : undefined}
           class="group flex cursor-pointer items-start gap-3 p-1.5 -m-1.5 text-left"
         >
-          <!-- Hovering a non-current chapter previews the selected state (dot
-               tints and darkens, label goes to full contrast) so the row reads
-               as clickable without a link underline. mt-0.5 optically centres
-               the dot on the label's first line, since titles can wrap.
+          <!-- Hovering a non-current chapter marks it without imitating the
+               selected state (the dot shrinks into a halo, the label goes to
+               full contrast), so the row reads as clickable without a link
+               underline. mt-0.5 optically centres the dot on the label's first
+               line, since titles can wrap.
 
-               Hover fills the dot with the selected navy and adds a soft
-               translucent halo around it. The halo, not a stroke, is what
-               tells hover from current: hovered is the fill with air around
-               it, current is the fill alone.
+               Hover no longer approaches that state, it inverts it: the core
+               shrinks to a pinpoint while the translucent halo widens around it,
+               so the current chapter is mostly ink and a hovered one is mostly
+               air. At equal size, fill-plus-halo beside fill-alone read as two
+               versions of one state. The shrink is a scale transform, never
+               smaller h/w — the dot is a flex item beside the title, which would
+               slide left on every hover. The ring scales with the dot, so its px
+               value is pre-multiplied: ring-[9px] at scale-60 paints a ~5px
+               band.
 
-               The dot keys off `group/chapter` — the wrapper around the
-               chapter button AND its figure list — so hovering any figure
-               lights its chapter's dot. The title keeps the button's own
-               `group`, so a figure hover does not darken the heading. -->
+               The dot keys off `group/chapter` — the wrapper around the chapter
+               button AND its figure list — so hovering any figure lights its
+               chapter's dot. The title keeps the button's own `group`, so a
+               figure hover does not darken the heading. -->
           <span
             class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
               ? 'h-3 w-3 bg-primary'
-              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-4 group-hover/chapter:ring-primary/15'}"
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:scale-[0.6] group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-[9px] group-hover/chapter:ring-primary/15'}"
           ></span>
           {#if expanded}
             <span
