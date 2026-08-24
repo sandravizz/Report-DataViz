@@ -3,7 +3,7 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "An interactive, visualization-first report by SandraViz",
+    title: "An interactive, visualization-first report demo by sandraviz.com",
     description:
       "Reports don't have to be static PDFs. An interactive, visualization-first version of the Global Justice Report, built for web and mobile.",
   };
@@ -79,7 +79,11 @@
 </script>
 
 <svelte:head>
-  <meta property="og:type" content="website" />
+  <!-- `article`, not `website`: the article:* pair below (author, published
+       time) is only defined for article-type pages, and scrapers that check
+       will skip them otherwise. LinkedIn already classified this page as an
+       Article on its own, so this makes the declaration match. -->
+  <meta property="og:type" content="article" />
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
@@ -93,6 +97,15 @@
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1712" />
   <meta property="og:image:height" content="896" />
+  <!-- Author and publication date, the two fields LinkedIn's Post Inspector
+       reported as missing. `name="author"` is the generic form most scrapers
+       read; `article:author` is the OG form. Both carry the same value so
+       neither reader has to guess.
+       The timestamp is midday, not midnight: a client rendering 00:00+01:00
+       in UTC lands on 23:00 the PREVIOUS day and displays the wrong date. -->
+  <meta name="author" content="sandraviz.com" />
+  <meta property="article:author" content="https://sandraviz.com" />
+  <meta property="article:published_time" content="2026-08-24T12:00:00+01:00" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
