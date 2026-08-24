@@ -118,7 +118,7 @@
                 class="group -m-1.5 flex items-start gap-3 p-1.5 text-left"
               >
                 <span
-                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-4 group-hover/chapter:ring-accent/30"
+                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover/chapter:scale-[0.6] group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-[9px] group-hover/chapter:ring-accent/25"
                 ></span>
                 <span
                   class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
