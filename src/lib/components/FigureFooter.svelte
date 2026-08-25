@@ -83,25 +83,33 @@
 <!-- The wordmark is a link, not a control, so it takes the accent as a rule
      rather than a fill: the same underline as `mark.accent-mark` in the
      running text, at 1px instead of 2px because 11px text sits much closer to
-     its baseline and a 2px rule there reads as a bar. Hover is the lift alone.
+     its baseline and a 2px rule there reads as a bar.
 
-     self-start keeps the pill around the text: as a flex item of
-     ChartDisplay's column, the default stretch blew the hover surface across
-     the figure's full width. -ml-2.5 cancels the pill's padding so the
-     wordmark sits where it did before the pill existed.
+     NO HOVER SURFACE. It used to lift onto a white pill with a shadow, which
+     gave an 11px credit line the same "raised control" gesture as the PNG
+     button beside it — two different weights of thing saying the same thing.
+     The pointer cursor plus the standing accent rule are the whole hover
+     affordance now. Don't reintroduce a background or box-shadow here; the
+     filled pill is reserved for the two actual controls.
+
+     The padding and negative margins are geometry, not a leftover surface.
+     self-start keeps the box around the text: as a flex item of
+     ChartDisplay's column, the default stretch blew it across the figure's
+     full width. -ml-2.5 cancels px-2.5 so the wordmark sits flush with the
+     source line above it.
 
      -mt-2 closes the gap to the source line above. The row above is 24px tall
      because the PNG button sets its height, while the source text beside it is
      only ~15px, so there is dead space under the source that has nothing to do
-     with the spacing anyone intended. Pulling back 8px against this pill's own
-     py-1 lands the two lines about 5px apart, so source + wordmark read as one
-     footer block and the space above the block (mt-10 / lg:mt-20) is what
+     with the spacing anyone intended. Pulling back 8px against this element's
+     own py-1 lands the two lines about 5px apart, so source + wordmark read as
+     one footer block and the space above the block (mt-10 / lg:mt-20) is what
      separates it from the chart. -->
 <a
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="-mt-2 -ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px] transition-[background-color,box-shadow] duration-200 hover:bg-base-100 hover:shadow-lg"
+  class="-mt-2 -ml-2.5 inline-block self-start px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px]"
 >
   sandraviz.com
 </a>
