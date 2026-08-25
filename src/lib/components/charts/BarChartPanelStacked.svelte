@@ -116,6 +116,9 @@
 
   // Growth arrow (opt-in via pair.growthArrow): first bar's total to the last,
   // labeled with the gain, so readers don't have to subtract it themselves.
+  // The bend is set here rather than left to Link's default because the label
+  // placement below solves for the same arc; the two must agree.
+  const arrowBend = 22.5;
   const growthArrow = $derived.by(() => {
     if (!pair.growthArrow || pair.percent || pair.data.length < 2) return null;
     const sumRow = (d) => pair.series.reduce((sum, s) => sum + d[s.value], 0);
@@ -239,12 +242,26 @@
       {@const sourceY = context.yScale(growthArrow.y) - lift}
       {@const targetX = context.xScale(growthArrow.targetX)}
       {@const targetY = context.yScale(growthArrow.targetY) - lift}
+      <!-- The label rides the curve's own crown, not the chord: a swoop is a
+           circular arc, so it bulges a sagitta above the straight line between
+           the two ends. Offsetting from the endpoints (what this used to do)
+           lands the text somewhere on the arc, because how far the arc rises
+           depends on how far apart the bars are. Solving for the crown puts
+           the number in the pocket the arc opens under itself, at any width. -->
+      {@const dx = targetX - sourceX}
+      {@const dy = targetY - sourceY}
+      {@const chord = Math.hypot(dx, dy) || 1}
+      {@const bendRad = (arrowBend * Math.PI) / 180}
+      {@const sagitta = (chord / (2 * Math.sin(bendRad))) * (1 - Math.cos(bendRad))}
+      {@const crownX = (sourceX + targetX) / 2 + (dy / chord) * sagitta}
+      {@const crownY = (sourceY + targetY) / 2 - (dx / chord) * sagitta}
       <Link
         x1={sourceX}
         y1={sourceY}
         x2={targetX}
         y2={targetY}
         type="swoop"
+        bend={arrowBend}
         stroke={brand.grayText}
         strokeWidth={1.5}
         fill="none"
@@ -252,8 +269,8 @@
       />
       <Text
         value={growthArrow.label}
-        x={(sourceX + targetX) / 2 - 20}
-        y={Math.min(sourceY, targetY) - 14}
+        x={crownX}
+        y={Math.max(crownY - 8, 10)}
         textAnchor="middle"
         verticalAnchor="end"
         fill={brand.grayText}

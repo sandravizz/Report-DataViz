@@ -151,7 +151,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="text-neutral hover:text-primary"
+            class="text-base-content/60 transition-colors duration-200 hover:text-base-content"
           >
             <svg class={social.size} viewBox={social.viewBox} fill="currentColor">
               <path d={social.path} />

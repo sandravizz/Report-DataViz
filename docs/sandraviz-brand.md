@@ -18,7 +18,8 @@ instead — the palette below is pixel-sampled from `static/cover.jpg`
 | Burnt orange | `#8f4d28` | signature accent, featured series, `primary` | sunset glow band |
 | Khaki | `#8a6f4f` | secondary accent, `secondary` | lit wet sand, mid-tone |
 | Slate grey | `#7d8597` | `accent` — UI only, never a chart line | the figures' palette (`iea.heatPumps`), not the photo |
-| Warm gray-brown | `#6b5a4a` | secondary text, muted annotation ink, `neutral`/`grayText` | tidal-flat shadow |
+| Slate ink | `#555d71` | secondary text, muted annotation ink, `neutral`/`grayText` | — (was `#6b5a4a`, rotated to the accent's hue) |
+| Light slate | `#959dad` | hatch fill, soft rules, de-emphasized series, `brand.gray` | — (was `#a89a8c`, same rotation) |
 | Pale slate | `#dee0e5` | borders/grid, `base-300` | — (25% slate accent in white) |
 | Palest slate | `#f1f2f4` | section backgrounds, `base-200` | — (11% slate accent in white) |
 
@@ -58,9 +59,23 @@ rather than `base-content`, so the theme token — not the markup — decides th
 if the accent ever goes dark again.
 
 Still warm, and deliberately left that way: `primary` `#8f4d28`, `secondary`
-`#8a6f4f`, `base-content` `#221d18`, and the muted `#6b5a4a` annotation ink in
-`colors.js`. The report is warm type and warm signature colour on a cool
-ground; only the surfaces and the accent went slate.
+`#8a6f4f`, and `base-content` `#221d18`. The report is warm type and warm
+signature colour on a cool ground.
+
+**The muted greys are no longer among them** (2026-08-24). `brand.gray`
+`#a89a8c` and `brand.grayText` `#6b5a4a` were the last warm tones sampled out
+of the photo, and they carried exactly the roles that should read as *absence
+of colour* — the hatched projection band, axis numbers, the growth arrow, the
+"rest of world" bucket, the header/footer social links. Next to the burnt
+orange they didn't read as neutral; they read as a second, muddier warm colour,
+which put emphasis on the parts of a figure that are explicitly not being
+asserted. Each was rotated to the accent's hue (266) at its **exact** original
+OKLCH lightness and chroma, so contrast against every surface is unchanged and
+only the temperature moved: `#a89a8c` → `#959dad`, `#6b5a4a` → `#555d71`. The
+`neutral` token in `tailwind.css` mirrors `grayText` and moved with it, as did
+`iea.regionTints`' warm greige residual (`#cfc0bd` → `#bec4d0`). The rule that
+falls out: **warm is for what the report asserts, slate for everything that
+recedes.**
 
 `src/lib/colors.js`'s `brand.*` originally carried a full categorical set
 (blue/royal/teal/purple/etc., key names kept from the previous

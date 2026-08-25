@@ -38,7 +38,12 @@
    `accent-content` stays the warm near-black: slate at full strength is a
    mid-tone, so a filled control takes dark ink better than white (4.5:1 vs
    3.7:1). The two filled controls still say `accent-content` rather than
-   `base-content` so the token, not the markup, decides that. */
+   `base-content` so the token, not the markup, decides that.
+
+   `neutral` follows the same move the charts made: it mirrors `brand.grayText`
+   in src/lib/colors.js, which went from the warm brown #6b5a4a to slate #555d71
+   (same OKLCH lightness, accent's hue). It carries the header and footer social
+   links, so a brown there would have been the last warm grey on the page. */
 @plugin "daisyui/theme" {
   name: 'sandraviz';
   default: true;
@@ -55,7 +60,7 @@
   --color-secondary-content: #ffffff;
   --color-accent: #7d8597;
   --color-accent-content: #221d18;
-  --color-neutral: #6b5a4a;
+  --color-neutral: #555d71;
   --color-neutral-content: #ffffff;
   --color-info: #7a95a8;
   --color-info-content: #ffffff;
