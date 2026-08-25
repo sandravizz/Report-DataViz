@@ -10,9 +10,11 @@ automatic.
 white), which still fits the shape of accent this mechanism was designed
 around: a good translucent fill under dark ink, a quiet rule as an underline.
 The classes below name `accent-content` for the hover label and glyph rather
-than `base-content`; on this branch the theme defines `accent-content` AS the
-warm near-black, so the rendered result is the same, but a branch whose accent
-is dark gets white there without touching the markup.
+than `base-content`, so the theme decides what the hover ink is. On this branch
+it is **white**: the full-strength fill reads as a dark chip against the white
+page, and near-black on it looks like the control went out instead of lighting
+up. A branch with a paler accent can set `accent-content` to its near-black
+without touching the markup.
 
 ## The problem
 
@@ -168,13 +170,14 @@ Copy `FigureFooter.svelte`'s two class strings across. The tokens resolve to
 that branch's palette automatically, with one thing to check by hand:
 
 **Does the branch's `accent` work as a *background* for ink text?** This
-branch's accent (`#7d8597`) is 3.7:1 on white — light enough that a full-strength
-fill still takes the near-black ink (4.5:1), which is why `accent-content` here
-is that near-black. A branch whose accent is dark or heavily saturated (an
-orange, a deep blue) inverts it: dark ink on the fill will fail contrast, and
-`accent-content` must be white. Because the markup already says
-`hover:text-accent-content`, that is a theme change, not a markup change — set
-`--color-accent-content` correctly and both controls follow.
+branch's accent (`#7d8597`) is 3.7:1 on white — on the numbers a full-strength
+fill takes near-black ink slightly better (4.5:1 vs 3.7:1), but it was judged
+by eye as a dark chip, so `accent-content` here is **white**. A branch whose
+accent is dark or heavily saturated (an orange, a deep blue) needs white for
+contrast, not just appearance; only a genuinely pale accent should go back to
+near-black. Because the markup already says `hover:text-accent-content`, that
+is a theme change, not a markup change — set `--color-accent-content`
+correctly and both controls follow.
 
 Also check the branch's own `mark.accent-mark` geometry before copying the
 underline numbers — if its body copy is set smaller than 20px, the 1px/3px

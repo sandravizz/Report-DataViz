@@ -46,11 +46,12 @@
        and the download glyph at full ink is what gives the pill a focal point
        at 11px. See docs/figure-footer-controls.md.
 
-       This branch's accent is slate grey (#7d8597), a mid-tone: a filled
-       control takes the warm near-black better than white, so `accent-content`
-       IS that near-black and the hover reads as a darkening, not a flip. Label
-       and glyph both name `accent-content` rather than `base-content` so the
-       theme token stays in charge if the accent ever goes dark again.
+       This branch's accent is slate grey (#7d8597): filled at full strength
+       it reads as a dark chip against the white page, so `accent-content` IS
+       white and the hover flips label and glyph to it — near-black on that
+       fill looks like the control went out rather than lit up. Both name
+       `accent-content` rather than a literal white so the theme token stays
+       in charge if the accent is ever re-cut lighter.
 
        Hover needs `!` on every property, not daisyUI's --btn-* variables:
        daisyUI's own `.btn:hover` is a two-class selector, so a plain hover
