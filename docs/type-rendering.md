@@ -70,7 +70,7 @@ use that.
 | branch | ink | `/50` was | locked | now |
 |---|---|---|---|---|
 | `iw` | `#1b4160` | 2.70:1 | **`/70`** | 4.49:1 |
-| `main` | `#103900` | 2.89:1 | **`/70`** | 5.00:1 |
+| `main` | `#1F281D` | 3.03:1 | **`/70`** | 5.45:1 |
 | `kiel-institute` | `#1d1815` | 3.27:1 | **`/65`** | 5.20:1 |
 | `template` | `#221d18` | 3.26:1 | **`/65`** | 5.21:1 |
 | `findevlab` | `#000000` | 3.98:1 | **`/55`** | 4.76:1 |
@@ -79,6 +79,14 @@ use that.
 `iw` lands at 4.49 rather than over 4.5 because the next step up starts to
 compete with the body copy; at 11px on white it is the accepted edge of the
 rule, not a miss to be fixed later.
+
+`main` is the one row where the locked alpha is no longer the *smallest* one
+that clears. Its ink was darkened from `#103900` to `#1F281D` to take the green
+out of the running text, and `/65` now clears at 4.68:1, so the rule as written
+would call for `/65`. `/70` is kept on purpose: it is already locked across the
+branch, and the extra step costs nothing at this ink. If the quiet text ever
+starts competing with the body copy, `/65` is the move — it restores almost
+exactly the 4.98:1 the old ink gave at `/70`.
 
 The surface matters: on `kiel-institute` and `main` the chapter ground is
 tinted, not white, so the figure-surface and chapter-ground readings differ
@@ -169,7 +177,7 @@ on every branch:
 | branch | ink | `/80` | full | decision |
 |---|---|---|---|---|
 | `iw` | `#1b4160` | 5.57:1 | 9.65:1 | **full ink** |
-| `main` | `#103900` | 6.53:1 | 11.51:1 | **full ink** |
+| `main` | `#1F281D` | 7.34:1 | 13.41:1 | **full ink** |
 | `kiel-institute` | `#1d1815` | 8.09:1 | 14.17:1 | left at `/80` |
 | `template` | `#221d18` | 8.14:1 | 14.91:1 | left at `/80` |
 | `findevlab` | `#000000` | 11.05:1 | 17.20:1 | left at `/80` |

@@ -17,9 +17,23 @@
    #F4F6F4 is the chapter ground, with #EFF1EF/#E6E9E5 as its darker tints.
    (It replaced an ivory #FFFFF2 taken from the source palette: next to the
    white figure surface that ivory read as yellow rather than as a quiet
-   ground.) #103900 does duty as body ink, 12:1 on the ground; it is a green,
-   so the ink and the accent are the same hue family and the accent never reads
-   as a foreign object on the page.
+   ground.) #1F281D does duty as body ink, 13.4:1 on the chapter ground. It is
+   a green, so the ink and the accent stay in one hue family and the accent
+   never reads as a foreign object on the page — but it is a green you are not
+   meant to notice.
+
+   It was #103900, and that was too green to read as ink. At OKLCH chroma
+   0.095 (HSL: fully saturated) the running text announced its hue before it
+   announced its words — the page read as green text rather than as black text
+   on a green-grey palette. #1F281D holds the same OKLCH hue, 138.7°, and cuts
+   the chroma to 0.024 with the lightness down one step. At body size it reads
+   as a near-black; the hue only surfaces in a large heading, which is where a
+   trace of it is wanted. Contrast goes UP, not down: 12.0:1 → 14.0:1 on
+   base-100, 11.5:1 → 13.4:1 on the base-200 chapter ground.
+
+   The house rule against pure #000000 on a tinted ground still applies, and
+   this is how it is kept: near-black, but carrying the accent's hue rather
+   than nothing at all. See docs/house-style.md.
 
    #0FFF95 is `accent` and is RESERVED. It is spent only on things that point:
    credits and social links over the cover photo, and the underline in running
@@ -41,21 +55,21 @@
   --color-base-100: #F4F6F4;
   --color-base-200: #EFF1EF;
   --color-base-300: #E6E9E5;
-  --color-base-content: #103900;
-  --color-primary: #103900;
+  --color-base-content: #1F281D;
+  --color-primary: #1F281D;
   --color-primary-content: #F4F6F4;
   --color-secondary: #705DC8;
   --color-secondary-content: #F4F6F4;
   --color-accent: #0FFF95;
-  --color-accent-content: #103900;
+  --color-accent-content: #1F281D;
   --color-neutral: #5C6C56;
   --color-neutral-content: #F4F6F4;
   --color-info: #009580;
   --color-info-content: #F4F6F4;
-  --color-success: #103900;
+  --color-success: #1F281D;
   --color-success-content: #0FFF95;
   --color-warning: #C5CCC2;
-  --color-warning-content: #103900;
+  --color-warning-content: #1F281D;
   --color-error: #D9553F;
   --color-error-content: #F4F6F4;
 }

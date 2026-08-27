@@ -3,12 +3,12 @@ import { getChartSvgString } from "layerchart";
 // Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot.
 const FONT_FAMILY = "Satoshi, sans-serif";
-const INK = "#103900";
+const INK = "#1F281D";
 // Alpha matches the page's quiet-text value for this branch's ink, so the
 // exported source line is as legible as the one under the figure.
 // Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
-const MUTED = "rgba(16, 57, 0, 0.7)";
-const RAIL_TRACK = "rgba(16, 57, 0, 0.1)";
+const MUTED = "rgba(31, 40, 29, 0.7)";
+const RAIL_TRACK = "rgba(31, 40, 29, 0.1)";
 // The reserved accent (--color-accent). In the export it is spent on exactly
 // one thing, as on the page: the rule under the sandraviz.com wordmark.
 const ACCENT = "#0FFF95";

@@ -108,8 +108,16 @@ running text, hovered navigation, credit links — and is kept **out of
 `colors.js`** so no chart series can ever pick it up.
 
 **Never pure `#000000` for body text on a warm or tinted ground.** Tint the ink
-toward the accent's hue family instead (here `#103900`, a green, 12:1 on the
+toward the accent's hue family instead (here `#1F281D`, 13.4:1 on the chapter
 ground) so the accent never reads as a foreign object on the page.
+
+**But tint it, do not colour it.** The ink carries the accent's hue; it does not
+wear it. `main` started at `#103900` — the same hue at OKLCH chroma 0.095 — and
+the running text read as *green text* rather than as ink. The working range for
+a tinted near-black is roughly **chroma 0.015–0.03**: below that it is a neutral
+grey and the relationship to the accent is lost, above it the hue starts
+arriving before the words. Hold the hue, cut the chroma, drop the lightness a
+step to buy back the contrast.
 
 **Two filled controls, one device.** The PNG button and the Interpretation
 button both wear the accent as a *fill* — `bg-accent/25` at rest, full accent on

@@ -153,7 +153,7 @@ the lift was quietly filing it with the buttons.
 
 `src/lib/utils/downloadFigure.js` redraws the source line and wordmark onto the
 canvas rather than screenshotting them, so it carries its own colours. Both now
-use the single `MUTED` constant (`rgba(16, 57, 0, 0.5)` = `base-content/50`),
+use the single `MUTED` constant (`rgba(31, 40, 29, 0.7)` = `base-content/70`),
 matching the page. There is no underline and no button in the export — nothing
 in a PNG is clickable, and the accent would be decoration there.
 

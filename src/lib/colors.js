@@ -7,9 +7,12 @@
 // grey, and they are all the SAME grey family, so "not important" reads as one
 // visual class rather than as several different muted colours.
 //
-// The greys are not neutral: they carry a trace of hue 103, the ink #103900's
-// own hue, at 7–12% saturation. That is what keeps them reading as part of
-// this palette instead of a generic grey dropped in from outside.
+// The greys are not neutral: they carry a trace of hue 103, the ink's own hue
+// family, at 7–12% saturation. That is what keeps them reading as part of this
+// palette instead of a generic grey dropped in from outside. (The ink itself is
+// now #1F281D at hue 109 and only 16% saturation — so the greys and the ink sit
+// closer together than they used to, which is the point: nothing in the quiet
+// half of this palette should announce a colour.)
 //
 // Spring green #0FFF95 is deliberately absent from this file. It is reserved
 // for accent duty (the logo over the cover, the underline in running text) and
@@ -74,9 +77,9 @@ export const colors = {
   quietLine: "#7E8E77",
 };
 
-// The report's own body ink (#103900, same as --color-base-content). Reserved
+// The report's own body ink (#1F281D, same as --color-base-content). Reserved
 // for chart text that NAMES the data rather than referencing it — the category
 // labels down the side of a horizontal bar chart, which the reader has to read
 // as carefully as a sentence. Everything else in a chart stays on `ink`, so
 // this darker tone marks a real distinction instead of just being "darker".
-export const nameInk = "#103900";
+export const nameInk = "#1F281D";
