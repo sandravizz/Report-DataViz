@@ -148,7 +148,13 @@
            28/40: at the old values a single-paragraph chapter was mostly
            padding, and on a phone — where the column is 88vw and the type is
            smaller — it pushed the text down past the fold before it started. -->
-      <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
+      <!-- max-w-200 caps the reading column at the same 800px the desktop
+           layout uses. Without it the column is 88vw the whole way up to the
+           1400px breakpoint, so a 1399px window sets 18px type across 1231px
+           — about 130 characters a line, against the 55–75 that is comfortable
+           to read. The cap bites from ~909px upward; below that 88vw still
+           governs, so the phone column is exactly as it was. -->
+      <div class="mx-auto w-[88vw] max-w-200 py-16 lg:w-200 lg:py-28">
         <!-- Institute heading style kept exactly — Suisse Intl Medium,
              line-height 1.166, -1px letter-spacing (their --typo-header-2-*
              tokens) — only the size ramp is the template's. -->
