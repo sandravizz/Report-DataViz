@@ -121,6 +121,31 @@ per branch, never inferred from the hue — `kiel-institute`'s saturated orange
 keeps the ink at 6.1:1 while white reaches only 2.9:1, and `iw`'s blue is the
 other way round: [figure-footer-controls.md](figure-footer-controls.md).
 
+## Type
+
+**Grayscale antialiasing is on, in the base layer, on every branch.**
+`-webkit-font-smoothing: antialiased` + `-moz-osx-font-smoothing: grayscale` on
+`html` in `tailwind.css`. Browsers default to subpixel antialiasing, which
+fringes every glyph edge with colour and reads as a smear at caption sizes.
+Next.js scaffolds this for free by writing Tailwind's `antialiased` onto
+`<body>`; SvelteKit scaffolds nothing, so it is written once by hand. On `html`
+in `@layer base`, never as a utility on one element — a class can be missed by
+whatever is added next, an inherited base rule cannot.
+
+**Quiet text clears 4.5:1, and the alpha is computed per branch — never
+copied.** Grayscale antialiasing draws glyphs a hair lighter, so faint text has
+to carry enough contrast to still have an edge. `text-base-content/50` was the
+old default and it fails everywhere: 2.70:1 on `iw`, 3.98:1 even on a
+pure-black branch. But the replacement is not one number — `/50` is an alpha on
+each branch's own ink, so `/70` rescues `iw`'s light navy and overshoots pure
+black to 8.5:1, turning a quiet caption into near-body-weight grey. Compute the
+smallest alpha clearing 4.5:1 against the surface the text sits on, round up to
+the nearest 5. Controls stay one step above the captions beside them.
+
+Locked spec, the per-branch table, and the list of files it touches
+(`downloadFigure.js`'s `MUTED` is the easy one to miss):
+[type-rendering.md](type-rendering.md).
+
 ## Charts
 
 **Trace the element to its LayerChart `props.<key>` hook before writing custom
