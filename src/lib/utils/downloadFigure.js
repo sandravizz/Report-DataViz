@@ -14,6 +14,17 @@ const RAIL_TRACK = "rgba(29, 24, 21, 0.1)";
 // PNG has to carry the same ground or the line casings, which are drawn in
 // that colour, show up as white ghosts at every crossing.
 const BACKGROUND = "#ffffff";
+// Tailwind's `tracking-wide`, which every caption-sized line on the page
+// carries: the figure eyebrow, the source line, the wordmark. Canvas2D
+// letterSpacing is recent (Chrome 99+, Safari 17.4+), so `withTracking` is a
+// no-op where it is missing and the export is simply what shipped before.
+//
+// It affects MEASUREMENT as well as drawing, so it has to be set before the
+// wrapLines pass too, or a source line wraps at a width it will not occupy.
+const TRACKING_WIDE = "0.025em";
+function withTracking(ctx, on) {
+  if ("letterSpacing" in ctx) ctx.letterSpacing = on ? TRACKING_WIDE : "0px";
+}
 
 // Extra canvas on every side so labels that overflow the SVG's nominal bounds
 // survive the export. On the live page they spill past the chart box and stay
@@ -174,17 +185,13 @@ export async function downloadFigureImage({
   // same size the legend below already matches with `legendSize`. It was the
   // one metric in the header that had drifted off its page value.
   const numberSize = 12;
-  // `tracking-wide`, the eyebrow's letter-spacing on the page. Canvas2D
-  // letterSpacing is recent (Chrome 99+, Safari 17.4+), so it is applied only
-  // where supported and reset straight after — without it the glyphs sit
-  // tighter than on the page, which is part of why the exported eyebrow read
-  // as a denser, more saturated tone than the one on screen.
-  const numberTracking = "0.025em";
   const railHeight = 1;
   const titleSize = 20;
   const subtitleSize = 14;
-  const footerSize = 12;
-  const wordmarkSize = 12;
+  // 11px, not 12: the source line and the wordmark are `text-[11px]` on the
+  // page (FigureFooter.svelte), the one caption size that is not `text-xs`.
+  const footerSize = 11;
+  const wordmarkSize = 11;
   const textWidth = containerRect.width;
 
   // The output canvas doubles as the measuring surface — line counts decide
@@ -198,12 +205,16 @@ export async function downloadFigureImage({
   ctx.font = `400 ${subtitleSize}px ${FONT_FAMILY}`;
   const subtitleLines = subtitle ? wrapLines(ctx, subtitle, textWidth) : [];
   ctx.font = `400 ${footerSize}px ${FONT_FAMILY}`;
+  withTracking(ctx, true);
   const sourceLines = source ? wrapLines(ctx, source, textWidth) : [];
+  withTracking(ctx, false);
 
   const numberLineHeight = numberSize * 1.4;
   const titleLineHeight = titleSize * 1.3;
   const subtitleLineHeight = subtitleSize * 1.4;
-  const footerLineHeight = footerSize * 1.5;
+  // `leading-snug` (1.375) — the class on the source <span>, not the 1.5 that
+  // was standing in for it. Only shows on a source long enough to wrap.
+  const footerLineHeight = footerSize * 1.375;
 
   // Mirrors the on-page reading-progress rail (ChartDisplay.svelte), which
   // sits above the title — the export used to start at the title, cropping
@@ -238,10 +249,9 @@ export async function downloadFigureImage({
     // the same MUTED ink reads bolder and darker in the PNG than the light
     // tone it is on screen — it looked like a different colour.
     ctx.font = `400 ${numberSize}px ${FONT_FAMILY}`;
-    const canTrack = "letterSpacing" in ctx;
-    if (canTrack) ctx.letterSpacing = numberTracking;
+    withTracking(ctx, true);
     ctx.fillText(number.toUpperCase(), pad, y);
-    if (canTrack) ctx.letterSpacing = "0px";
+    withTracking(ctx, false);
     y += numberLineHeight + 12;
 
     ctx.fillStyle = RAIL_TRACK;
@@ -282,16 +292,20 @@ export async function downloadFigureImage({
   let fy = headerHeight + unionHeight + 20;
   ctx.fillStyle = MUTED;
   ctx.font = `400 ${footerSize}px ${FONT_FAMILY}`;
+  withTracking(ctx, true);
   for (const line of sourceLines) {
     ctx.fillText(line, pad, fy);
     fy += footerLineHeight;
   }
+  withTracking(ctx, false);
   fy += 8;
   // Same grey as the source line above it, matching the page: all of a
   // figure's furniture sits at one weight.
   ctx.fillStyle = MUTED;
   ctx.font = `400 ${wordmarkSize}px ${FONT_FAMILY}`;
+  withTracking(ctx, true);
   ctx.fillText("sandraviz.com", pad, fy);
+  withTracking(ctx, false);
 
   // toBlob yields null rather than throwing when encoding fails; without this
   // the failure surfaces as a confusing error inside createObjectURL.
