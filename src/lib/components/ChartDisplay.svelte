@@ -49,7 +49,7 @@
            Only the mobile value moves — lg:mb-3 already had the room, and the
            button is hidden at that breakpoint anyway. -->
       <div class="mb-2 flex items-center justify-between gap-1 lg:mb-3">
-        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/50 uppercase">
+        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/65 uppercase">
           {headerLabel}
         </span>
         <!-- Same device as FigureFooter's PNG button — accent wash at rest,
@@ -127,7 +127,7 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">✕</button>
       </form>
-      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/50 uppercase">
+      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/65 uppercase">
         {pairs[activeIndex].number}
       </div>
       <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium tracking-[-0.5px] text-base-content">

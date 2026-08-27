@@ -4,7 +4,10 @@ import { getChartSvgString } from "layerchart";
 // like the on-screen figure, not a generic system-font screenshot.
 const FONT_FAMILY = "'Suisse Intl', sans-serif";
 const INK = "#1d1815";
-const MUTED = "rgba(29, 24, 21, 0.5)";
+// Alpha matches the page's quiet-text value for this branch's ink, so the
+// exported source line is as legible as the one under the figure.
+// Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
+const MUTED = "rgba(29, 24, 21, 0.65)";
 const RAIL_TRACK = "rgba(29, 24, 21, 0.1)";
 // Matches the on-screen chart stage (chart-theme.js's `chartSurface`) — the
 // institute prints its figures onto the cream report page, and the exported

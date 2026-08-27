@@ -38,7 +38,7 @@
 </script>
 
 <div
-  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
+  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/65 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
   <!-- The one filled control in the report: a faint accent wash at rest that
@@ -97,7 +97,7 @@
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="-mt-2 -ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px] transition-[background-color,box-shadow] duration-200 hover:bg-base-200 hover:shadow-lg"
+  class="-mt-2 -ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/65 underline decoration-accent decoration-1 underline-offset-[3px] transition-[background-color,box-shadow] duration-200 hover:bg-base-200 hover:shadow-lg"
 >
   sandraviz.com
 </a>
