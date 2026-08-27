@@ -117,3 +117,28 @@
     text-underline-offset: 4px;
   }
 }
+
+/* Grayscale antialiasing, on every branch. LOCKED — see docs/type-rendering.md.
+
+   macOS/Safari and Chrome default to SUBPIXEL antialiasing, which fattens each
+   glyph with a red/blue fringe. At 20px body copy that is invisible; at the
+   11px source line and the uppercase eyebrows it is a meaningful share of the
+   stroke, and reads as a smear rather than an edge. Grayscale draws the same
+   glyph a hair lighter but with a clean edge.
+
+   Nothing in React does this by itself — a React prototype looks crisper only
+   because `create-next-app` writes Tailwind's `antialiased` class onto <body>
+   in the layout it scaffolds, which compiles to these same two declarations.
+   SvelteKit scaffolds no such class, so it is written here once instead.
+
+   On `html` in @layer base, not as a utility on one element: a class can be
+   missed by whatever is added next, an inherited base rule cannot.
+
+   `text-rendering: optimizeLegibility` is deliberately NOT set — a documented
+   source of layout jank, and not what "crisp" means here. */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

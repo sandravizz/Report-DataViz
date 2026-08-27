@@ -4,7 +4,10 @@ import { getChartSvgString } from "layerchart";
 // figure rather than a system-font screenshot.
 const FONT_FAMILY = "IBM Plex Sans, Arial, sans-serif";
 const INK = "#221d18";
-const MUTED = "rgba(34, 29, 24, 0.5)";
+// Alpha matches the page's quiet-text value for this branch's ink, so the
+// exported source line is as legible as the one under the figure.
+// Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
+const MUTED = "rgba(34, 29, 24, 0.65)";
 const RAIL_TRACK = "rgba(34, 29, 24, 0.1)";
 const BACKGROUND = "#ffffff";
 

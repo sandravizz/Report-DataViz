@@ -148,7 +148,7 @@
     >
       <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
         {#if section.kicker}
-          <p class="mb-5 text-xs tracking-wide text-base-content/50 uppercase">
+          <p class="mb-5 text-xs tracking-wide text-base-content/65 uppercase">
             {section.kicker}
           </p>
         {/if}
