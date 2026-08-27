@@ -166,15 +166,23 @@
 >
   <div class="pointer-events-none h-32 w-14" aria-hidden="true"></div>
 
-  <!-- w-72 must be a definite width: an absolute box otherwise shrink-wraps
+  <!-- w-96 must be a definite width: an absolute box otherwise shrink-wraps
        against its containing block (the 56px hover target) and squeezes the
        labels to a sliver. Padding stays permanent — toggling it shifted the
        rows 20px on open. left-9 + px-5 puts the dots on the same line as a bare
        left-14. The panel overlaps the chart's y-axis labels, so it is opaque and
-       matches whichever surface is behind it (`overChart`). -->
+       matches whichever surface is behind it (`overChart`).
+
+       WIDTH: w-72 gave the title 224px — about 32 characters at text-sm — and
+       a German chapter title runs past 55, so every row wrapped to two lines
+       and the panel read as a wall. w-96 gives it 320px, and at text-base that
+       is ~40 characters: the short and mid-length titles now sit on one line
+       and only the longest still turns. It has room to grow — the rail starts
+       at left-9 and the chart at 40%, so on the 1400px breakpoint this panel
+       ends 140px clear of the plot. -->
   <div
     class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
-      ? 'w-72'
+      ? 'w-96'
       : 'w-max'} {expanded
       ? `shadow-lg ${overChart ? 'bg-base-100' : 'bg-base-200'}`
       : ''}"
@@ -225,10 +233,10 @@
           {#if expanded}
             <span
               transition:fade={{ duration: FADE_MS }}
-              class="text-sm leading-snug transition-colors duration-200 {activeIndex ===
+              class="text-base leading-snug transition-colors duration-200 {activeIndex ===
               i
                 ? 'font-semibold text-primary'
-                : 'text-base-content/55 group-hover:text-base-content'}"
+                : 'text-base-content/70 group-hover:text-base-content'}"
             >
               {section.title}
             </span>
@@ -250,7 +258,7 @@
                   aria-current={activeChart === `${section.id}:${j}`
                     ? "true"
                     : undefined}
-                  class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
+                  class="cursor-pointer text-left text-sm leading-snug transition-colors duration-200 {activeChart ===
                   `${section.id}:${j}`
                     ? 'font-medium text-primary'
                     : 'text-base-content/70 hover:text-base-content'}"
@@ -259,7 +267,16 @@
                        colour of its own. Bolder or lighter text inside an
                        already de-emphasized row reads as a second COLOUR, so
                        the panel had two resting tones at once. Selection is
-                       the only thing that changes a row's tone. -->
+                       the only thing that changes a row's tone.
+
+                       That rule now holds across the whole panel, not just
+                       within a row: chapters and their figures share ONE
+                       resting alpha. They had drifted apart — chapters at /55
+                       and figures at /70 — which put the nested rows a step
+                       DARKER than the headings they sit under, sub-items
+                       reading stronger than their own chapter. The shared
+                       value is this branch's quiet-text alpha from
+                       docs/type-rendering.md. -->
                   {chart.number}
                   {chart.stepLabel ?? chart.title}
                 </button>

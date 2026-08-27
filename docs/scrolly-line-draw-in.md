@@ -29,7 +29,9 @@ replay.
 **1. Content: one figure file, several step objects.** The figure file builds
 a shared `base` (data, axes, subtitle, source) and exports an array of steps
 that spread it, each with its own `number`/`title`/`description` and a series
-list. A helper flags the step's newcomer:
+list. Give every step a `title` describing *its own* new line — the figure's
+summarizing headline is only true once the last series is on screen, so it
+belongs to the last step, not to all of them. A helper flags the step's newcomer:
 
 ```js
 const stepSeries = (newValue, values) =>
@@ -55,7 +57,14 @@ diffBand: diffBand("wind", "grids"),
 
 The band is filled with the new line's color at 0.3 opacity, revealed on its
 own delay a beat after the labels, and lives only on its own step's panel, so
-it disappears with the crossfade when the reader moves on. The steps array is
+it disappears with the crossfade when the reader moves on.
+
+Anything that frames the chart rather than commenting on one step — an index
+base rule, a recession band, a target line — belongs on the shared `base`, not
+on a single step. Rule and range annotations render in `belowMarks` with no
+reveal class, so a rule on `base` is on screen from the first step, before any
+line draws: the reader learns what the lines are indexed to *before* they start
+moving, rather than after the last one lands. The steps array is
 registered in `src/lib/data/index.js` and used directly as a section's
 `charts` in `+page.svelte` — to ScrollySection it is just a sequence of
 figures, like any other chapter. See
@@ -101,9 +110,10 @@ Details that make it look right:
   `line-chart-casing.md`); both the background-colored casing stroke and the
   colored line get the same classes, so the casing never wipes over the lines
   underneath ahead of its own line.
-- **The new line paints on top.** Draw-in figures list series in tooltip
-  order (largest final value first) while the steps introduce them in the
-  reverse order, so the marks snippet renders the list reversed — each step's
+- **The new line paints on top.** The marks snippet sorts a draw-in figure's
+  visible series into the figure's own `series` order — which is the order the
+  steps introduce them in — rather than trusting the order LayerChart hands
+  back (that one follows the tooltip). Painting last = on top, so each step's
   newly drawn line lands above every line already on screen.
 - **Labels wait for the line.** The drawn-in series' end label/dot and any
   figure-level callout are held at opacity 0 (`lc-draw-reveal`) and fade in

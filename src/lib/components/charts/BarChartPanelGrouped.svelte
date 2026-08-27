@@ -9,11 +9,12 @@
     resolveAnnotations,
     endLabelPadding,
   } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
 
   const labelWidth = $derived(innerWidth < 1024 ? 40 : 90);
 

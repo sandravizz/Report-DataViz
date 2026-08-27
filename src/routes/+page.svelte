@@ -115,19 +115,32 @@
 </script>
 
 <svelte:head>
-  <meta property="og:type" content="website" />
+  <!-- `article`, not `website`: the article:* pair below (author, published
+       time) is only defined for article-type pages, and scrapers that check
+       will skip them otherwise. LinkedIn classifies a page like this one as an
+       Article on its own, so this makes the declaration match. -->
+  <meta property="og:type" content="article" />
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <!-- Absolute URLs: link scrapers don't resolve relative image paths.
-       TODO: static/share-image.jpg does not exist yet (1200×630). -->
-  <meta property="og:image" content="{page.url.origin}/share-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <!-- Absolute URLs: link scrapers don't resolve relative image paths. -->
+  <meta property="og:image" content="{page.url.origin}/share-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1712" />
+  <meta property="og:image:height" content="896" />
+  <!-- Author and publication date, the two fields LinkedIn's Post Inspector
+       reports as missing without them. `name="author"` is the generic form
+       most scrapers read; `article:author` is the OG form. Both carry the same
+       value so neither reader has to guess.
+       The timestamp is midday, not midnight: a client rendering 00:00+01:00
+       in UTC lands on 23:00 the PREVIOUS day and displays the wrong date. -->
+  <meta name="author" content="sandraviz.com" />
+  <meta property="article:author" content="https://sandraviz.com" />
+  <meta property="article:published_time" content="2026-08-27T12:00:00+01:00" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/share-image.jpg" />
+  <meta name="twitter:image" content="{page.url.origin}/share-image.png" />
 </svelte:head>
 
 <!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
@@ -184,9 +197,20 @@
                Rendering them as HTML is what lets one carry its accent
                underline — see the note on `sections` above for why that is
                safe here. -->
+          <!-- Full ink, no alpha. This was `/80` and it was backwards: the
+               description column beside the chart is plain `text-base-content`,
+               so the short annotation read at 10.65:1 while the running text
+               you actually read at length sat at 5.57:1 on base-200 — half the
+               contrast for the passage doing the most work. Grayscale
+               antialiasing (docs/type-rendering.md) thins glyphs slightly and
+               hits 400-weight body copy at this size hardest, which is what
+               finally made it noticeable. The tell was that it read fine when
+               selected: selection paints text at full opacity, i.e. this.
+               Reading text is the strongest ink on the page; the greys are for
+               things you are not meant to look at. -->
           {#each section.paragraphs as paragraph, pIndex (pIndex)}
             <p
-              class="text-lg leading-relaxed text-base-content/80 lg:text-xl {pIndex === 0
+              class="text-lg leading-relaxed text-base-content lg:text-xl {pIndex === 0
                 ? 'mt-8 lg:mt-10'
                 : 'mt-4'}"
             >

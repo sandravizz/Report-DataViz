@@ -5,7 +5,7 @@
 import { ink, iw, colors } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };
-const mutedLabel = { fill: colors.lavender, class: "text-xs font-light" };
+const mutedLabel = { fill: colors.muted, class: "text-xs font-light" };
 
 // Circled point callout. `filled` tints the ring with the series color for
 // strong emphasis, otherwise a thin ink outline. `labelProps` extends the
@@ -27,7 +27,7 @@ export function circleCallout({ color = ink, filled = false, labelProps = {}, ..
 export function lineCallout({ labelProps = {}, lineProps = {}, ...annotation }) {
   const dx = annotation.labelPlacement?.includes("left") ? -4 : 4;
   return {
-    link: { stroke: colors.lavender, ...lineProps },
+    link: { stroke: colors.muted, ...lineProps },
     ...annotation,
     props: {
       circle: { r: 0, stroke: "none", fill: "none" },

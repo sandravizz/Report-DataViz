@@ -24,6 +24,9 @@
         title: pair.title,
         subtitle: pair.subtitle,
         source: pair.source,
+        // The legend is DOM, not part of any chart SVG, so the exporter has to
+        // redraw it from the same entries LineChartPanel renders.
+        legendItems: pair.legendItems,
         filename: downloadName(pair),
       });
     } catch (error) {
@@ -37,7 +40,7 @@
 </script>
 
 <div
-  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
+  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/70 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
   <!-- The one filled control in the report: a faint accent wash at rest that
@@ -78,26 +81,30 @@
 </div>
 <!-- The wordmark is a link, not a control, so it takes the accent as a rule
      rather than a fill: the same underline as `mark.accent-mark` in the
-     running text, at 1px instead of 2px because 11px text sits much closer to
-     its baseline and a 2px rule there reads as a bar. Hover is the lift alone.
+     running text, at the same 2px. 1px was tried first — 11px text sits close
+     to its baseline, so a thinner rule seemed right — but a hairline under
+     small grey text reads as a smudge rather than a link. The rule is only
+     worth drawing if it can be seen, so thickness wins over the tighter fit.
 
-     self-start is what keeps the pill wrapped to the text: this <a> is a flex
-     item of ChartDisplay's column, and the default stretch blows the hover
-     surface across the figure's full width. -ml-2.5 cancels the pill's
-     padding so the wordmark sits where it would without it.
+     Nothing changes on hover — like the chapter nav in Header.svelte, the
+     pointer cursor is the whole affordance. No fill, no lift, no transition.
 
-     -mt-2 closes the gap to the source line above. The row above is 24px tall
+     self-start keeps the link wrapped to its text: this <a> is a flex item of
+     ChartDisplay's column, and the default stretch blows it across the
+     figure's full width.
+
+     -mt-1 closes the gap to the source line above. The row above is 24px tall
      because the PNG button sets its height, while the source text beside it is
      only ~15px, so there is dead space under the source that has nothing to do
-     with the spacing anyone intended. Pulling back 8px against this pill's own
-     py-1 lands the two lines about 5px apart, so source + wordmark read as one
-     footer block and the space above the block (mt-10 / lg:mt-20) is what
-     separates it from the chart. -->
+     with the spacing anyone intended. Pulling back 4px lands the two lines
+     about 5px apart, so source + wordmark read as one footer block and the
+     space above the block (mt-10 / lg:mt-20) is what separates it from the
+     chart. -->
 <a
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="-mt-2 -ml-2.5 inline-block self-start rounded-full px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px] transition-[background-color,box-shadow] duration-200 hover:bg-base-100 hover:shadow-lg"
+  class="-mt-1 inline-block cursor-pointer self-start font-sans text-[11px] tracking-wide text-base-content/70 underline decoration-accent decoration-2 underline-offset-[3px]"
 >
   sandraviz.com
 </a>

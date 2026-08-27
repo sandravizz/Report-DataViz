@@ -1,12 +1,13 @@
 <script>
   import { BarChart, defaultChartPadding } from "layerchart";
   import { tickLabelProps, yAxisProps, mutedTickLabelProps, desktopTooltips } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
 
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
 
   // Category labels are long, so they get a generous left gutter and wrap to
   // fit it. Wrapping is width-based, so labels reflow per breakpoint.

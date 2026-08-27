@@ -1,7 +1,9 @@
 <script>
-  import { AnnotationLine, AnnotationPoint, AnnotationRange, Area, LineChart, Spline } from "layerchart";
+  import { AnnotationLine, AnnotationPoint, AnnotationRange, Area, LineChart, Spline, Text } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelMobileWrap, endLabelHalo, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, quarterTicks, quarterTickFormat, quarterXAxisProps, quarterAxisTick, yearLineOffset, twoLineXPadding } from "$lib/chart-theme";
+  import { ink } from "$lib/colors";
+  import { formatNumber } from "$lib/format";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -54,7 +56,10 @@
       : {};
 
   // The white casing that separates crossing lines reads too heavy at phone
-  // sizes, so line and halo both thin down below 1024. See
+  // sizes, so line and halo both thin down below 1024. Kept deliberately
+  // narrow — one pixel of white per side is enough to read a crossing as
+  // in-front/behind, and anything wider starts eating the colored lines
+  // themselves wherever they run close together. See
   // docs/line-chart-casing.md.
   const lineStyle = $derived({
     curve: curveMonotoneX,
@@ -65,15 +70,51 @@
   const casingStyle = $derived({
     ...lineStyle,
     stroke: "var(--color-base-100)",
-    strokeWidth: innerWidth < 1024 ? 4.5 : 6.5,
+    strokeWidth: innerWidth < 1024 ? 3.5 : 4.5,
   });
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Paint order for draw-in figures: the figure's own `series` order, which is
+  // the order the steps add them in, so the newest line is drawn last (on
+  // top). Anything LayerChart reports that the figure does not list (indexOf
+  // -1) sorts to the front of the paint order, i.e. behind everything named.
+  const markOrder = (visible) => {
+    const order = pair.series.map((s) => s.key);
+    return [...visible].sort(
+      (a, b) => order.indexOf(a.key) - order.indexOf(b.key)
+    );
+  };
+
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
+  // The tooltip may pin its decimals (pair.tooltipDecimals) where the axis
+  // rounds: an index reads 121,0 next to 93,4 in the readout, but "120,0" on a
+  // gridline is a digit of noise.
+  const formatTooltipValue = (d) =>
+    `${formatNumber(d, pair.tooltipDecimals)}${pair.valueSuffix ?? ""}`;
   // Earliest year in the x domain, so the mobile year abbreviation knows which
   // tick to spell out. Derived, not const: steps swap `pair` under one panel.
   const firstTickYear = $derived(
     (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
   );
+
+  // A quarterly figure (pair.xQuarterly, ticks one per quarter) keeps only its
+  // Q1 ticks and drops each year onto a second line under a hairline connector;
+  // everything else keeps the plain year axis. The tick filter is the same at
+  // every width — it is the DROPPED ROW that mobile has no room for, so below
+  // lg quarterTickFormat writes the year plainly and the second line goes with
+  // it, hence the innerWidth in twoLineXAxis.
+  const quarterly = $derived(pair.xQuarterly === true);
+  const xTicks = $derived(
+    quarterly
+      ? quarterTicks(pair.xTicks)
+      : halfCenturyTicksOnMobile(pair.xTicks, innerWidth)
+  );
+  const xTickFormat = $derived(
+    pair.xTickFormat ??
+      (quarterly
+        ? quarterTickFormat(innerWidth, firstTickYear)
+        : yearTickFormat(innerWidth, firstTickYear))
+  );
+  const twoLineXAxis = $derived(quarterly && innerWidth >= 1024);
 
   // No built-in legend: a series with an explicit `endLabel` is named at the
   // end of its line (and right padding is reserved for it); one without gets
@@ -146,11 +187,41 @@
   );
   const endAnnotations = $derived(resolveAnnotations(endLabelAnnotations, innerWidth));
   const padding = $derived(
-    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, yLabelPadding)
+    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, {
+      ...yLabelPadding,
+      ...(twoLineXAxis ? twoLineXPadding : {}),
+    })
   );
 </script>
 
 <svelte:window bind:innerWidth />
+
+<!-- The dropped-year x axis for quarterly figures. The format writes the year
+     on a second line ("\n2018") and leaves the first line empty, so a tick puts
+     no label at the axis at all — just a hairline connector running down to the
+     year, which sits a row below in the body ink rather than the axis gray.
+     Drawing that line here instead of letting Text render both is what buys the
+     darker fill. props.x/props.y are the tick's foot on the plot, props.dy the
+     axis's label gap; the connector stops quarterAxisTick.yearGap short of the
+     year, which is the whole of how long it is. The lines[0] branch stays
+     because the format is per-figure: one that does label its top line still
+     gets it. -->
+{#snippet quarterTickLabel({ props })}
+  {@const lines = String(props.value ?? "").split("\n")}
+  {#if lines[0]}
+    <Text {...props} value={lines[0]} />
+  {/if}
+  {#if lines[1]}
+    <line
+      x1={props.x}
+      y1={props.y}
+      x2={props.x}
+      y2={props.y + (props.dy ?? 0) + yearLineOffset - quarterAxisTick.yearGap}
+      stroke={quarterAxisTick.stroke}
+    />
+    <Text {...props} value={lines[1]} fill={ink} dy={(props.dy ?? 0) + yearLineOffset} />
+  {/if}
+{/snippet}
 
 {#snippet chart()}
 <LineChart
@@ -163,21 +234,32 @@
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
+    // The quarterly axis brings its own tick marks and lighter labels; every
+    // other axis keeps the report's bare one.
+    xAxis: {
+      ...(twoLineXAxis ? quarterXAxisProps : xAxisProps),
+      ticks: xTicks,
+      format: xTickFormat,
+      tickLabel: twoLineXAxis ? quarterTickLabel : undefined,
+    },
     // A figure can pin exact y ticks (pair.yTicks); otherwise the scale's own
     // candidates minus 0. Either way the same values go to the grid below —
     // LayerChart's Grid defaults to 4 y ticks of its own, which leaves the
     // gridlines landing between the axis labels on most domains.
     yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
-    tooltip:
-      pair.valueSuffix || pair.tooltipHeaderFormat
-        ? {
-            ...(pair.valueSuffix && { item: { format: formatValue } }),
-            ...(pair.tooltipHeaderFormat && {
-              header: { format: pair.tooltipHeaderFormat },
-            }),
-          }
-        : undefined,
+    // Rows carry the figure's own number formatting, not layerchart's default
+    // (which writes 102.4 on a page that writes 102,4). The header takes the
+    // x-axis's words — a figure with a two-line or otherwise abbreviated axis
+    // passes tooltipHeaderFormat to spell them out in one line. The total row
+    // is off wherever summing the series means nothing, which for a line chart
+    // is nearly always: pair.hideTooltipTotal.
+    tooltip: {
+      item: { format: formatTooltipValue },
+      hideTotal: pair.hideTooltipTotal,
+      ...(pair.tooltipHeaderFormat && {
+        header: { format: pair.tooltipHeaderFormat },
+      }),
+    },
     // Explicit color, not LayerChart's default color-mix(currentColor …):
     // that CSS-variable chain is lost when the PNG export re-serializes the
     // SVG outside the page stylesheet, and gridlines rasterize solid black.
@@ -186,10 +268,12 @@
   }}
 >
   {#snippet marks({ context })}
-    <!-- Draw-in figures list series in tooltip order (largest final value
-         first) but introduce them in reverse, so rendering the list reversed
-         paints each step's new line on top of the ones already there. -->
-    {#each hasDrawIn ? [...context.series.visibleSeries].reverse() : context.series.visibleSeries as s (s.key)}
+    <!-- Draw-in figures paint in the figure's own series order, which is also
+         the order the steps introduce them in — so each step's new line lands
+         on top of the ones already drawn, rather than sliding under them.
+         LayerChart's own visibleSeries order follows the tooltip, which is not
+         necessarily that, hence the explicit sort. -->
+    {#each hasDrawIn ? markOrder(context.series.visibleSeries) : context.series.visibleSeries as s (s.key)}
       {@const draw = drawProps(s.key)}
       <Spline seriesKey={s.key} {...casingStyle} {...draw} />
       <Spline seriesKey={s.key} {...lineStyle} {...draw} />

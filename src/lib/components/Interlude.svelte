@@ -28,7 +28,7 @@
 >
   <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
     {#if kicker}
-      <p class="mb-3 text-xs font-medium tracking-wide text-base-content/50 uppercase">
+      <p class="mb-3 text-xs font-medium tracking-wide text-base-content/70 uppercase">
         {kicker}
       </p>
     {/if}
@@ -40,7 +40,7 @@
          for the report's own findings, and this block is the demo talking. -->
     {#each paragraphs as paragraph, i (i)}
       <p
-        class="text-lg leading-relaxed text-base-content/80 lg:text-xl {i === 0
+        class="text-lg leading-relaxed text-base-content lg:text-xl {i === 0
           ? 'mt-8 lg:mt-10'
           : 'mt-4'}"
       >

@@ -30,6 +30,26 @@ which is a good cross-check that neither reading was a fluke.
 (see `src/styles/tailwind.css`) — matching the site's own primary/secondary
 button hierarchy, not an arbitrary pick.
 
+### The chart lines are NOT the PDF's swatches (2026-08-27)
+
+`iw.steel` and `iw.gold` are still recorded above, but no chart uses them any
+more. Sampled off the printed legend they are a lightness ladder rather than
+three colors: navy sits at OKLCH L 0.40 and gold at L 0.84, all three fall
+below the C 0.10 chroma floor — so they read as gray instead of as identity —
+and gold reaches only 1.6:1 against the white chart surface, too little ink
+for a 2.5px line. On screen navy won every crossing and the other two read as
+its shadow.
+
+Figure 2-1's series now wear violet `#8e47cd` (Miete) against a green pair,
+`#027743` / `#3ba654` (ETW / EZFH), defined in `src/lib/colors.js`. The pair
+is one hue at two lightness steps on purpose: it says the two purchase-price
+series are the same kind of thing before the reader reaches a label, while
+Miete — what the chapter is about — gets a hue of its own. Sandra's pick from
+four validated options, 2026-08-27.
+
+`iw.blue` stays out of `src/lib/colors.js` entirely: it is the accent, spent
+only on things that point.
+
 ## Logo
 
 `static/iw-logo.svg` — the icon-only "iW" mark

@@ -1,4 +1,5 @@
-import { iw } from "$lib/colors";
+import { colors } from "$lib/colors";
+import { quarterLabel } from "$lib/chart-theme";
 import { verticalRule } from "../annotation-presets.js";
 
 // IW-Report 34/2026 "IW-Wohnindex Q2 2026", p. 6, Figure 2-1: hedonic price
@@ -39,8 +40,17 @@ const data = quarters.map(([year, q], i) => ({
   ezfh: seriesValues.ezfh[i],
 }));
 
+// The index's base quarter. This carries the index definition now, so the
+// subtitle no longer repeats it.
+const indexBaseRule = verticalRule({
+  x: new Date(2022, 0, 1),
+  label: "Index: 2022 Q1 = 100",
+});
+
 // Shared by the static chart and the animated reveal below: same data, axes
-// and copy — only which lines are visible changes.
+// and copy — only which lines are visible changes. The index rule lives here
+// so it is on screen from the first step, before any line draws: the reader
+// needs to know what the lines are indexed to before they start moving.
 const base = {
   title: "Mieten steigen weiter deutlich, Kaufpreise nur moderat",
   subtitle:
@@ -54,38 +64,43 @@ const base = {
   source: "Quelle: Institut der deutschen Wirtschaft",
   kind: "line",
   xKey: "quarter",
-  xTicks: Array.from({ length: 9 }, (_, i) => new Date(2018 + i, 0, 1)),
+  // One tick per observation, which the axis then thins to the Q1s — it is the
+  // full quarter column because the tooltip reads off the same series, and
+  // because a figure that later wants a quarter marked has the tick to hang it
+  // on. The axis writes no quarter, only the year, dropped a row under a
+  // hairline — see quarterTicks in chart-theme.
+  xQuarterly: true,
+  xTicks: data.map((d) => d.quarter),
   yDomain: [60, 130],
   yTicks: [60, 70, 80, 90, 100, 110, 120, 130],
   data,
+  ruleAnnotations: [indexBaseRule],
+  // The tooltip names the quarter the way the axis does ("Q2 2026"), holds the
+  // index to one decimal so the three series line up as a column, and drops
+  // layerchart's total row: three index levels do not add up to anything.
+  tooltipHeaderFormat: quarterLabel,
+  tooltipDecimals: 1,
+  hideTooltipTotal: true,
 };
 
 const allSeries = [
-  { key: "Miete", endLabel: "Miete", value: "miete", color: iw.steel },
+  { key: "Miete", endLabel: "Miete", value: "miete", color: colors.miete },
   {
     key: "ETW",
     endLabel: "ETW",
     value: "etw",
-    color: iw.navy,
+    color: colors.etw,
     // ETW (93.4) and EZFH (92.6) end within a point of each other, so their
     // end labels would overlap — nudge ETW clear.
     endLabelYOffset: -14,
   },
-  { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: iw.gold },
+  { key: "EZFH", endLabel: "EZFH", value: "ezfh", color: colors.ezfh },
 ];
-
-// The index's base quarter. This carries the index definition now, so the
-// subtitle no longer repeats it.
-const indexBaseRule = verticalRule({
-  x: new Date(2022, 0, 1),
-  label: "Index: 2022 Q1 = 100",
-});
 
 export default {
   ...base,
   number: "Abbildung 2-1",
   series: allSeries,
-  ruleAnnotations: [indexBaseRule],
 };
 
 // Each step shows `values`; `newValue` gets `drawIn`, which LineChartPanel
@@ -99,25 +114,29 @@ const stepSeries = (newValue, values) =>
 
 // The same chart as a 3-step scrolly reveal: rent (the headline) first, then
 // each purchase-price series. Mechanism: docs/scrolly-line-draw-in.md.
+// Each step's title says what its own new line does, in the words of the
+// chapter copy — not the figure's summarizing headline, which only becomes
+// true once all three series are on screen and so belongs to the last step.
 export const nationalIndexAnimatedSteps = [
   {
     ...base,
-    number: "Abbildung 2-1 (animiert)",
+    number: "Abbildung 2-1",
     stepLabel: "Schritt 1 — Angebotsmieten",
+    title: "Die Angebotsmieten steigen kontinuierlich an",
     series: stepSeries("miete", ["miete"]),
   },
   {
     ...base,
-    number: "Abbildung 2-1 (animiert)",
+    number: "Abbildung 2-1",
     stepLabel: "Schritt 2 — Eigentumswohnungen",
+    title: "Eigentumswohnungen: nach der Korrektur nur ein leichtes Plus",
     series: stepSeries("etw", ["miete", "etw"]),
   },
   {
     ...base,
-    number: "Abbildung 2-1 (animiert)",
+    number: "Abbildung 2-1",
     stepLabel: "Schritt 3 — Ein- und Zweifamilienhäuser",
+    title: "Auch Ein- und Zweifamilienhäuser bewegen sich seitwärts",
     series: stepSeries("ezfh", ["miete", "etw", "ezfh"]),
-    // Only the final step carries the index-base rule.
-    ruleAnnotations: [indexBaseRule],
   },
 ];

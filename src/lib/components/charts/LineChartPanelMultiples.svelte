@@ -6,6 +6,7 @@
   import { Area, AnnotationPoint, LineChart, Spline, defaultChartPadding } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import { xAxisProps, yAxisProps, endLabelHalo, desktopTooltips, yearTickFormat } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
 
   // Below 1024 the panels stack full-width, so there is no first/last panel
   // to carry axis numbers — the start/end point labels are the whole readout.
@@ -27,7 +28,7 @@
     strokeWidth: innerWidth < 1024 ? 4.5 : 6.5,
   });
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   const formatPoint = (d) => d.toFixed(1);
   // Earliest year in the x domain, so the mobile year abbreviation knows which
   // tick to spell out.

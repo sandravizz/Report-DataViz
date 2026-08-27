@@ -60,6 +60,27 @@ descendant rule. The `has-dot-cursor` class is put on `<html>` by the component
 in `onMount`, never by a stylesheet — so a page that fails to hydrate keeps its
 arrow instead of having no cursor at all.
 
+## Links keep the hand
+
+Inside the zone, anything pressable — `a, button, summary, [role="button"]` —
+keeps the system pointer, and the dot hides while it is over one. A link has
+one job, to say "this is clickable", and the hand is how it says it; swapping
+that for a decorative dot spends a real affordance and buys nothing. Without
+this the cover's credit link reads as plain text.
+
+It takes two halves that must stay in step: a CSS rule that hands `cursor` back,
+and `showsDotAt()` in the component, which hides the dot so the reader never
+gets a hand and a dot at once. The CSS rule out-specifies the `cursor: none`
+one on the strength of `:is()` — a group's specificity is its heaviest member,
+here `[role="button"]`, which lands these at (0,3,1) against (0,2,1). Adding a
+plain element to that group is free; adding one heavier than `[role="button"]`
+would change the arithmetic.
+
+Note the asymmetry with the header: the header sits OUTSIDE the zone, so its
+logo and social links never lost the hand in the first place. Only things
+inside Landing's root section are affected, which is why the cover's credit
+link was the one place the bug showed.
+
 ## What the reader sees
 
 A 9px solid white dot centred in a 28px halo filled with `accent/35` — the same

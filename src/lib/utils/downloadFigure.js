@@ -5,9 +5,26 @@ import { getChartSvgString } from "layerchart";
 // body/chart-label face; #1b4160 is --color-base-content.
 const FONT_FAMILY = "Source Sans Pro, helvetica, arial, sans-serif";
 const INK = "#1b4160";
-const MUTED = "rgba(27, 65, 96, 0.5)";
+// 0.7, not 0.5: the same floor the page uses for quiet caption text, so the
+// exported source line is as legible as the one under the figure. See
+// docs/type-rendering.md.
+const MUTED = "rgba(27, 65, 96, 0.7)";
 const RAIL_TRACK = "rgba(27, 65, 96, 0.1)";
+// The reserved accent (--color-accent). In the export it is spent on exactly
+// one thing, as on the page: the rule under the sandraviz.com wordmark.
+const ACCENT = "#0069b4";
 const BACKGROUND = "#ffffff";
+// Tailwind's `tracking-wide`, which every caption-sized line on the page
+// carries: the figure eyebrow, the source line, the wordmark. Canvas2D
+// letterSpacing is recent (Chrome 99+, Safari 17.4+), so `withTracking` is a
+// no-op where it is missing and the export is simply what shipped before.
+//
+// It affects MEASUREMENT as well as drawing, so it has to be set before the
+// wrapLines pass too, or a source line wraps at a width it will not occupy.
+const TRACKING_WIDE = "0.025em";
+function withTracking(ctx, on) {
+  if ("letterSpacing" in ctx) ctx.letterSpacing = on ? TRACKING_WIDE : "0px";
+}
 
 // Extra canvas on every side, so labels that spill past the chart box on the
 // page aren't hard-clipped at the viewBox edge when rasterized. Must stay
@@ -111,6 +128,7 @@ export async function downloadFigureImage({
   title,
   subtitle,
   source,
+  legendItems,
   filename,
 }) {
   // Floor of 2, not the device ratio: the file outlives the screen it was made
@@ -144,12 +162,37 @@ export async function downloadFigureImage({
   );
 
   const pad = 28;
-  const numberSize = 11;
+  // 12px, not 11: this is ChartDisplay's eyebrow, which is `text-xs` — the
+  // same size the legend below already matches with `legendSize`. It was the
+  // one metric in the header that had drifted off its page value.
+  const numberSize = 12;
   const railHeight = 1;
   const titleSize = 20;
   const subtitleSize = 14;
-  const footerSize = 12;
-  const wordmarkSize = 12;
+  // 11px, not 12: the source line and the wordmark are `text-[11px]` on the
+  // page (FigureFooter.svelte), the one caption size that is not `text-xs`.
+  const footerSize = 11;
+  const wordmarkSize = 11;
+  // Legend metrics, matching LineChartPanel's `text-xs` row: a 10px dot, a
+  // 6px gap to its label, and 14px between items.
+  const legendSize = 12;
+  const legendDotSize = 10;
+  const legendDotGap = 6;
+  const legendItemGap = 14;
+  // Air around the plot, standing in for the page's mb-20/mt-20 between the
+  // subtitle, the chart and the footer.
+  //
+  // CAPTURE_BLEED is added on top rather than being decoration: the chart is
+  // composited with that much transparent margin on every side, so a bare 24
+  // above and 20 below left about 4px and 0px of real air — which is why the
+  // title and the source both sat right against the image.
+  const chartGap = 56 + CAPTURE_BLEED;
+  // The rule under the wordmark, at the page's own decoration-2. Main's export
+  // goes one thicker because its mint accent is 1.3:1 on white and vanishes
+  // when the PNG is scaled down; IW's #0069b4 is dark enough on white that 2px
+  // survives, so the export matches the page rather than compensating for it.
+  const wordmarkRule = 2;
+  const wordmarkRuleOffset = 3;
   const textWidth = containerRect.width;
 
   // The canvas doubles as the measuring surface, so it stays unsized until the
@@ -163,12 +206,36 @@ export async function downloadFigureImage({
   ctx.font = `400 ${subtitleSize}px ${FONT_FAMILY}`;
   const subtitleLines = subtitle ? wrapLines(ctx, subtitle, textWidth) : [];
   ctx.font = `400 ${footerSize}px ${FONT_FAMILY}`;
+  withTracking(ctx, true);
   const sourceLines = source ? wrapLines(ctx, source, textWidth) : [];
+  withTracking(ctx, false);
+
+  // A figure's legend (LineChartPanel's `pair.legendItems` row) is plain DOM
+  // sitting above `.lc-root-container`, not part of any chart SVG, so
+  // getChartSvgString never sees it — without this it is simply missing from
+  // the export. Redrawn here from the same {label, color} entries the page
+  // renders, wrapped into rows like the on-screen flex row does.
+  ctx.font = `400 ${legendSize}px ${FONT_FAMILY}`;
+  const legendRows = [];
+  for (const item of legendItems ?? []) {
+    if (!item?.label) continue;
+    const width = legendDotSize + legendDotGap + ctx.measureText(item.label).width;
+    const row = legendRows[legendRows.length - 1];
+    const rowWidth = row?.reduce((sum, it) => sum + it.width + legendItemGap, 0) ?? 0;
+    if (row && rowWidth + width <= textWidth) row.push({ ...item, width });
+    else legendRows.push([{ ...item, width }]);
+  }
 
   const numberLineHeight = numberSize * 1.4;
   const titleLineHeight = titleSize * 1.3;
   const subtitleLineHeight = subtitleSize * 1.4;
-  const footerLineHeight = footerSize * 1.5;
+  // `leading-snug` (1.375) — the class on the source <span>, not the 1.5 that
+  // was standing in for it. Only shows on a source long enough to wrap.
+  const footerLineHeight = footerSize * 1.375;
+  const legendLineHeight = legendSize * 1.6;
+  // Sits in the air under the subtitle, the same place the on-page legend is
+  // absolutely positioned into.
+  const legendBlockHeight = legendRows.length ? 14 + legendRows.length * legendLineHeight : 0;
 
   // Mirrors ChartDisplay's reading-progress rail, which sits above the title.
   const numberBlockHeight = number ? numberLineHeight + 12 + railHeight + 16 : 0;
@@ -178,8 +245,16 @@ export async function downloadFigureImage({
     numberBlockHeight +
     titleLines.length * titleLineHeight +
     (subtitleLines.length ? 10 + subtitleLines.length * subtitleLineHeight : 0) +
-    24;
-  const footerHeight = 20 + sourceLines.length * footerLineHeight + 8 + wordmarkSize * 1.4 + pad;
+    legendBlockHeight +
+    chartGap;
+  const footerHeight =
+    chartGap +
+    sourceLines.length * footerLineHeight +
+    8 +
+    wordmarkSize * 1.4 +
+    wordmarkRuleOffset +
+    wordmarkRule +
+    pad;
 
   const cssWidth = pad * 2 + textWidth;
   const cssHeight = headerHeight + unionHeight + footerHeight;
@@ -196,8 +271,14 @@ export async function downloadFigureImage({
 
   if (number) {
     ctx.fillStyle = MUTED;
-    ctx.font = `600 ${numberSize}px ${FONT_FAMILY}`;
+    // Weight 400, matching the page: the eyebrow carries no weight utility in
+    // ChartDisplay. At 600 the strokes of an 11-12px uppercase line close up,
+    // and the same MUTED navy reads bolder and darker in the PNG than the
+    // light grey-blue it is on screen — it looked like a different colour.
+    ctx.font = `400 ${numberSize}px ${FONT_FAMILY}`;
+    withTracking(ctx, true);
     ctx.fillText(number.toUpperCase(), pad, y);
+    withTracking(ctx, false);
     y += numberLineHeight + 12;
 
     ctx.fillStyle = RAIL_TRACK;
@@ -224,6 +305,26 @@ export async function downloadFigureImage({
     }
   }
 
+  if (legendRows.length) {
+    y += 14;
+    ctx.font = `400 ${legendSize}px ${FONT_FAMILY}`;
+    for (const row of legendRows) {
+      let x = pad;
+      for (const item of row) {
+        ctx.fillStyle = item.color ?? INK;
+        ctx.beginPath();
+        // textBaseline is "top", so the dot is centred against the label's
+        // own middle rather than against the line box.
+        ctx.arc(x + legendDotSize / 2, y + legendSize * 0.55, legendDotSize / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = INK;
+        ctx.fillText(item.label, x + legendDotSize + legendDotGap, y);
+        x += item.width + legendItemGap;
+      }
+      y += legendLineHeight;
+    }
+  }
+
   for (let i = 0; i < placements.length; i++) {
     const capture = captures[i];
     if (!capture) continue;
@@ -235,19 +336,37 @@ export async function downloadFigureImage({
     URL.revokeObjectURL(capture.url);
   }
 
-  let fy = headerHeight + unionHeight + 20;
+  let fy = headerHeight + unionHeight + chartGap;
   ctx.fillStyle = MUTED;
   ctx.font = `400 ${footerSize}px ${FONT_FAMILY}`;
+  withTracking(ctx, true);
   for (const line of sourceLines) {
     ctx.fillText(line, pad, fy);
     fy += footerLineHeight;
   }
+  withTracking(ctx, false);
   fy += 8;
   // Same grey as the source line above it, matching the page: all of a
   // figure's furniture sits at one weight.
   ctx.fillStyle = MUTED;
   ctx.font = `400 ${wordmarkSize}px ${FONT_FAMILY}`;
-  ctx.fillText("sandraviz.com", pad, fy);
+  // Left ON through the measureText below: the accent rule has to span the
+  // tracked width, or it stops short of the word it underlines.
+  withTracking(ctx, true);
+  const wordmark = "sandraviz.com";
+  ctx.fillText(wordmark, pad, fy);
+  // Canvas text has no text-decoration, so the accent rule the page draws
+  // under the wordmark has to be a filled rect. Baseline is approximated at
+  // 0.8em below the "top" baseline rather than read off TextMetrics, whose
+  // actualBoundingBox* fields are unreliable for webfonts across browsers.
+  ctx.fillStyle = ACCENT;
+  ctx.fillRect(
+    pad,
+    fy + wordmarkSize * 0.8 + wordmarkRuleOffset,
+    ctx.measureText(wordmark).width,
+    wordmarkRule
+  );
+  withTracking(ctx, false);
 
   // toBlob yields null rather than throwing, which would otherwise surface as
   // a confusing error inside createObjectURL.

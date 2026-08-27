@@ -2,6 +2,7 @@
   import { AnnotationPoint, AnnotationRange, BarChart, Labels, Link, Text } from "layerchart";
   import { xAxisProps, yAxisPropsInline, excludeZeroTick, desktopTooltips, yLabelPaddingInline, formatMillions, resolveAnnotations, endLabelPadding, endLabelMobileWrap, endLabelHalo, responsiveBandPadding, yearTickFormat } from "$lib/chart-theme";
   import { ink, colors } from "$lib/colors";
+  import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -26,7 +27,7 @@
     return vals;
   };
   const formatValue = (d) => {
-    const label = d === maxYTick ? formatMillions(d) : String(Math.round(d * 1e6) / 1e6);
+    const label = d === maxYTick ? formatMillions(d) : formatNumber(Math.round(d * 1e6) / 1e6);
     return `${label}${pair.valueSuffix ?? ""}`;
   };
 
@@ -98,7 +99,7 @@
     return pair.data.map((d, i) => {
       const total = pair.series.reduce((sum, s) => sum + d[s.value], 0);
       const rounded = round1(total);
-      const label = i === lastIndex || Math.abs(total) < 1 ? formatMillions(total) : String(rounded);
+      const label = i === lastIndex || Math.abs(total) < 1 ? formatMillions(total) : formatNumber(rounded);
       return {
         x: d[pair.xKey],
         y: total,
@@ -231,7 +232,7 @@
         x2={targetX}
         y2={targetY}
         type="swoop"
-        stroke={colors.lavender}
+        stroke={colors.muted}
         strokeWidth={1.5}
         fill="none"
         markerEnd={{ type: "triangle", size: 7 }}
@@ -242,7 +243,7 @@
         y={Math.min(sourceY, targetY) + 4}
         textAnchor="middle"
         verticalAnchor="end"
-        fill={colors.lavender}
+        fill={colors.muted}
         class="text-xs font-light"
       />
     {/if}
