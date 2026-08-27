@@ -93,12 +93,50 @@ as hierarchy — it reads as two colours, and the panel loses its single resting
 tone. The figure number is already set apart by position (it comes first) and by
 the accent connector line down the left of the group.
 
-Resting and selected tones, the same in both components:
+**And the rule holds across rows, not just within one.** Chapters and their
+figures share ONE resting alpha. They had drifted apart — chapters at `/55` and
+figures at `/70`, or `/45` on some branches — which put the nested figure rows a
+step *darker* than the chapter headings they sit under: sub-items reading
+stronger than their own parent. One panel, one resting tone.
+
+The shared value is the branch's quiet-text alpha from
+[type-rendering.md](type-rendering.md), taken as the *higher* of that and
+whatever the rows already carried, so no row ever gets lighter than it was:
+
+| branch | resting alpha | on the panel |
+| --- | --- | --- |
+| `iw` | `/70` | 4.49:1 |
+| `main` | `/70` | 5.00:1 |
+| `kiel-institute` | `/70` | 6.14:1 |
+| `template` | `/65` | 5.21:1 |
+| `findevlab` | `/55` | 4.76:1 |
+
+`/55` was 3.04:1 on `iw` and 3.29:1 on `main` — the lightest text left anywhere
+in those reports, and below the floor every other caption now clears. On
+`findevlab`'s pure-black ink the same `/55` already measured 4.76:1, which is
+why it stays: the number was never the rule.
+
+Resting and selected tones:
 
 | Row | Idle | Hover | Current |
 | --- | --- | --- | --- |
-| Chapter title | `text-base-content/55` | `text-base-content` | `font-semibold text-primary` |
-| Figure row | `text-base-content/70` | `text-base-content` | `font-medium text-primary` |
+| Chapter title | branch resting alpha, `text-base` | `text-base-content` | `font-semibold text-primary` |
+| Figure row | branch resting alpha, `text-sm` | `text-base-content` | `font-medium text-primary` |
+
+## Panel width and size
+
+`w-96`, not `w-72`. At `w-72` the title had 224px — about 32 characters at
+`text-sm` — and a German chapter title runs past 55, so nearly every row wrapped
+to two lines and the panel read as a wall of text. `w-96` gives it 320px, and at
+`text-base` that is ~40 characters, so short and mid-length titles sit on one
+line and only the longest still turns.
+
+Sizes come up one step with it: chapter titles `text-sm` → `text-base`, figure
+rows `text-xs` → `text-sm`. A 12px row in a de-emphasized tone was asking a lot
+of a reader scanning a nav.
+
+There is room to go further: the rail starts at `left-9` and the chart at `40%`,
+so at the 1400px breakpoint a `w-96` panel still ends 140px clear of the plot.
 
 ## Applying to a branch
 
