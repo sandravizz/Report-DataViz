@@ -175,14 +175,20 @@
 >
   <div class="pointer-events-none h-32 w-14" aria-hidden="true"></div>
 
-  <!-- w-72 must be a definite width: an absolute box shrink-wraps against its
+  <!-- WIDTH: w-72 gave the title ~32 characters and a chapter title runs
+       well past that, so nearly every row wrapped to two lines and the panel
+       read as a wall. w-96 gives it 320px, ~40 characters at text-base. The
+       rail starts at left-9 and the chart at 40%, so this still ends well
+       clear of the plot. See docs/chapter-nav-states.md.
+
+       w-96 must be a definite width: an absolute box shrink-wraps against its
        containing block — the 56px hover target — which squeezed labels to a
        sliver. Padding stays permanent; toggling it shifted rows 20px right on
        open, the horizontal half of the shiver above. left-9 + px-5 puts the
        dots on the same 56px line as a bare left-14. -->
   <div
     class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
-      ? 'w-72'
+      ? 'w-96'
       : 'w-max'} {expanded ? `shadow-lg ${overChart ? 'bg-white' : 'bg-base-100'}` : ''}"
   >
     {#each sections as section, i (section.id)}
@@ -237,10 +243,10 @@
           {#if expanded}
             <span
               transition:fade={{ duration: FADE_MS }}
-              class="text-sm leading-snug transition-colors duration-200 {activeIndex ===
+              class="text-base leading-snug transition-colors duration-200 {activeIndex ===
               i
                 ? 'font-semibold text-primary'
-                : 'text-base-content/55 group-hover:text-base-content'}"
+                : 'text-base-content/70 group-hover:text-base-content'}"
             >
               {section.title}
             </span>
@@ -260,7 +266,7 @@
                   aria-current={activeChart === `${section.id}:${j}`
                     ? "true"
                     : undefined}
-                  class="cursor-pointer text-left text-xs leading-snug transition-colors duration-200 {activeChart ===
+                  class="cursor-pointer text-left text-sm leading-snug transition-colors duration-200 {activeChart ===
                   `${section.id}:${j}`
                     ? 'font-medium text-primary'
                     : 'text-base-content/70 hover:text-base-content'}"
