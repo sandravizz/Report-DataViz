@@ -64,11 +64,10 @@ const base = {
   source: "Quelle: Institut der deutschen Wirtschaft",
   kind: "line",
   xKey: "quarter",
-  // One tick per observation, which the axis then thins to the Q1s — it is the
-  // full quarter column because the tooltip reads off the same series, and
-  // because a figure that later wants a quarter marked has the tick to hang it
-  // on. The axis writes no quarter, only the year, dropped a row under a
-  // hairline — see quarterTicks in chart-theme.
+  // One tick per observation: the axis labels every quarter and drops the year
+  // onto a second line under each Q1, so the year row still reads as the year
+  // axis this chart had before. Below lg it thins back to those Q1 ticks —
+  // see quarterTicks in chart-theme.
   xQuarterly: true,
   xTicks: data.map((d) => d.quarter),
   yDomain: [60, 130],

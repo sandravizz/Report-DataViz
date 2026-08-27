@@ -78,14 +78,20 @@
       href="https://www.iwkoeln.de"
       target="_blank"
       rel="noopener"
-      class="shrink-0 hover:opacity-70"
+      class="group shrink-0"
       aria-label="Institut der deutschen Wirtschaft — iwkoeln.de"
     >
-      <img
-        src="/iw-logo-white.svg"
-        alt="IW — Institut der deutschen Wirtschaft"
-        class="h-8 w-auto sm:h-9"
-      />
+      <!-- The mark is painted, not placed: the file is a white SVG, so it is
+           used as a MASK and the colour comes from `background-color`. That is
+           what lets one asset resting in the accent turn white on hover — an
+           <img> can only be swapped or filtered. `aspect-[3/2]` is the SVG's
+           own 33×22 viewBox; the mask has to be given a box because a masked
+           span has no intrinsic size the way an image does. -->
+      <span
+        aria-hidden="true"
+        class="block aspect-[3/2] h-8 bg-accent transition-colors duration-200 group-hover:bg-white sm:h-9"
+        style="mask-image:url('/iw-logo-white.svg');mask-size:contain;mask-repeat:no-repeat;mask-position:center;-webkit-mask-image:url('/iw-logo-white.svg');-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center"
+      ></span>
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
@@ -177,16 +183,12 @@
         </ul>
       </details>
 
-      <!-- Full white, not `white/80`: over the cover photo the 80% stop read
-           as a dull grey rather than as a deliberate tone. The accent is NOT
-           spent here — it stays on the rule under the Inhaltsverzeichnis, and
-           filling a glyph with #0069b4 on this dark ground would dim the icons
-           rather than lift them. (The footer's icons DO take the accent: that
-           block is a light ground where the accent is the bright end, and they
-           sit under an accent-underlined link they belong with.)
-
-           Hover is `opacity-70`, the same gesture the IW logo link above uses,
-           so both things in this header press the same way. -->
+      <!-- Accent at rest, white on hover — the same two states as the IW mark
+           to their left, so everything in this header presses the same way.
+           The blue is a dark colour on a dark photo (~3.7:1), so at rest these
+           glyphs sit quieter than the type around them and the hover is what
+           lifts them; that is the intended reading here, with the scrim under
+           the cover already tuned to carry the accent (see Landing.svelte). -->
       <div class="hidden items-center gap-4 md:flex">
         {#each socials as social (social.href)}
           <a
@@ -194,7 +196,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="text-white transition-opacity duration-200 hover:opacity-70"
+            class="text-accent transition-colors duration-200 hover:text-white"
           >
             <svg
               class={social.size}

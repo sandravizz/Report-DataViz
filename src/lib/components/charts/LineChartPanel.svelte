@@ -96,16 +96,15 @@
     (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
   );
 
-  // A quarterly figure (pair.xQuarterly, ticks one per quarter) keeps only its
-  // Q1 ticks and drops each year onto a second line under a hairline connector;
-  // everything else keeps the plain year axis. The tick filter is the same at
-  // every width — it is the DROPPED ROW that mobile has no room for, so below
-  // lg quarterTickFormat writes the year plainly and the second line goes with
-  // it, hence the innerWidth in twoLineXAxis.
+  // A quarterly figure (pair.xQuarterly, ticks one per quarter) labels every
+  // quarter and hangs the year off the Q1 ticks on a second line; everything
+  // else keeps the plain year axis. Mobile has room for neither, so
+  // quarterTicks/quarterTickFormat fall back to the year axis below lg — and
+  // with them the second line, hence the innerWidth in twoLineXAxis.
   const quarterly = $derived(pair.xQuarterly === true);
   const xTicks = $derived(
     quarterly
-      ? quarterTicks(pair.xTicks)
+      ? quarterTicks(pair.xTicks, innerWidth)
       : halfCenturyTicksOnMobile(pair.xTicks, innerWidth)
   );
   const xTickFormat = $derived(
@@ -196,16 +195,18 @@
 
 <svelte:window bind:innerWidth />
 
-<!-- The dropped-year x axis for quarterly figures. The format writes the year
-     on a second line ("\n2018") and leaves the first line empty, so a tick puts
-     no label at the axis at all — just a hairline connector running down to the
-     year, which sits a row below in the body ink rather than the axis gray.
-     Drawing that line here instead of letting Text render both is what buys the
-     darker fill. props.x/props.y are the tick's foot on the plot, props.dy the
-     axis's label gap; the connector stops quarterAxisTick.yearGap short of the
-     year, which is the whole of how long it is. The lines[0] branch stays
-     because the format is per-figure: one that does label its top line still
-     gets it. -->
+<!-- The two-line quarterly x axis. Text would render the format's two lines
+     itself, but then the year would read in the same light gray as the
+     quarters; drawing the second line here puts it in the body ink, so the eye
+     lands on the year and reads the quarters off it. A year tick has no first
+     line to draw (the format leaves Q1 unwritten) and instead runs the Axis's
+     own 4px mark on down to just above the year, so the connector is what says
+     which quarter the year starts on. props.x/props.y are the tick's foot on
+     the plot, props.dy the axis's label gap; the line stops
+     quarterAxisTick.yearGap short of the year, which is also how long it is.
+     Its stroke-width is set here rather than inherited from the axis <g> so the
+     connector stays independent of the pitch marks — same value today, but this
+     one is a line you read and those are texture. -->
 {#snippet quarterTickLabel({ props })}
   {@const lines = String(props.value ?? "").split("\n")}
   {#if lines[0]}
@@ -218,6 +219,7 @@
       x2={props.x}
       y2={props.y + (props.dy ?? 0) + yearLineOffset - quarterAxisTick.yearGap}
       stroke={quarterAxisTick.stroke}
+      stroke-width={quarterAxisTick.width}
     />
     <Text {...props} value={lines[1]} fill={ink} dy={(props.dy ?? 0) + yearLineOffset} />
   {/if}

@@ -31,39 +31,36 @@ export function yearTickFormat(innerWidth, firstYear) {
   };
 }
 
-// Quarterly series get a two-line x axis: a pitch mark under every quarter and
-// the year on a second line under the mark that opens it — so the year row
+// Quarterly series get a two-line x axis: Q2, Q3, Q4 along the top and the
+// year on a second line under the quarter that opens it — so the year row
 // lands exactly where a plain year axis would have put it, and the quarters
-// read as a finer comb hung off it.
+// read as a finer grid hung off it. Q1 itself is never written: its slot is
+// left empty and a hairline runs down through it to the year, which says "the
+// year starts here" more directly than the word would, and saves a label at the
+// tightest point on the axis.
 //
-// The quarters are MARKS ONLY, never words. Q2/Q3/Q4 were written under their
-// marks once, and 25 labels under a line whose subject is a trend read as a row
-// of noise — the reader was being asked to spell out a texture. The marks alone
-// still say the series is quarterly and still show where each year starts, and
-// the tooltip names the exact quarter (quarterLabel) for anyone who wants one.
-// So the format returns an EMPTY STRING off Q1: the Axis still places the tick,
-// and the label snippet is handed nothing to draw.
+// Every quarter keeps a pitch mark under its label — a reader needs to see
+// which point each Q belongs to — but the marks are drawn as faintly as an SVG
+// line goes: gridline gray at a sub-pixel stroke. At the axis gray and a full
+// pixel they read as a picket fence across the foot of the plot, competing
+// with the labels they exist to serve. See quarterAxisTick below.
 //
-// Q1 writes no top line either, and instead runs a connector down to its year.
-// Both lines travel as one string ("\n2018"): Text splits on the newline, and
-// LineChartPanel's tickLabel snippet draws the connector and puts the year in
-// the darker ink so the year leads.
+// Both lines travel as one string ("\n2018", "Q3"): Text splits on the newline,
+// and LineChartPanel's tickLabel snippet draws the connector and puts the
+// second line in the darker ink so the year still leads.
 const quarterOf = (d) => Math.floor(d.getMonth() / 3) + 1;
 
-// Desktop keeps a mark per quarter. Below lg the comb closes up — 34 marks on
-// a phone's plot is ~7px each — so mobile thins to the Q1 ticks only and takes
-// the plain year axis with them.
+// Below lg there is no room for a label per quarter — 34 of them on a phone's
+// plot is ~7px each — so mobile keeps the year axis it has today: the Q1 ticks
+// only, formatted by yearTickFormat.
 export function quarterTicks(ticks, innerWidth) {
   if (!ticks || innerWidth >= 1024) return ticks;
   return ticks.filter((d) => d.getMonth() === 0);
 }
 
-// Marks under every quarter, words under none: off Q1 this returns an empty
-// string, which draws no label but leaves the tick. Q1 carries the year on its
-// second line. Below lg there is no second row, so the year is written plainly.
 export function quarterTickFormat(innerWidth, firstYear) {
   if (innerWidth < 1024) return yearTickFormat(innerWidth, firstYear);
-  return (d) => (d.getMonth() === 0 ? `\n${d.getFullYear()}` : "");
+  return (d) => (d.getMonth() === 0 ? `\n${d.getFullYear()}` : `Q${quarterOf(d)}`);
 }
 
 // The tooltip runs the axis's two lines back together — "Q2 2026" — rather
@@ -73,32 +70,52 @@ export function quarterLabel(d) {
   return `Q${quarterOf(d)} ${d.getFullYear()}`;
 }
 
-// Axis geometry, and the one place the no-tick-marks rule bends: with no word
-// under any quarter, the marks are the only thing left saying the axis is
-// quarterly at all, so they stay. 4px pitch marks in the GRIDLINE gray rather
-// than the axis gray — at #b1b1b1 the comb read as a picket fence under the
-// plot, and #e6e6e6 lets it settle back into texture, which is all it is.
+// Tick geometry for that axis, and the one place the no-tick-marks rule bends:
+// with a label under every quarter, a reader needs to see which point each Q
+// belongs to. They stay pitch marks rather than an axis — 4px, and drawn as
+// faintly as SVG allows.
 //
-// The Q1 mark is the exception: it runs on down through the quarter row to stop
-// `yearGap` short of its year, so the connector is what ties the year to its
-// place on the axis. yearGap is also the knob for that line's LENGTH — raise it
-// to shorten the connector without moving the year row, which stays pinned to
-// yearLineOffset below.
-export const quarterAxisTick = { length: 4, yearGap: 10, stroke: iw.grayLight };
+// `stroke` is grayLight, the GRIDLINE value rather than the axis gray: these
+// are the ground the labels sit on, not a thing to be read. `width` is 0.75,
+// under a full pixel, so the renderer antialiases each mark to a fraction of
+// its ink — the marks register as texture at the foot of the plot and stop
+// there. Both are dialled all the way down deliberately; if the row turns out
+// to be TOO faint on screen, raise `stroke` toward iw.gray before touching
+// `width`. Color is the safer knob — a sub-pixel stroke is the one that
+// renders unevenly between a retina display and a 1x one.
+//
+// The Q1 tick is the exception: it runs down through the quarter line to stop
+// just above its year (`yearGap`), so the connector is what names the quarter.
+// yearGap is also the knob for that line's LENGTH — raise it to shorten the
+// connector without moving the year row, which stays pinned to yearLineOffset.
+export const quarterAxisTick = { length: 4, yearGap: 10, stroke: iw.grayLight, width: 0.75 };
 
-// tickLength drives the label gap as well as the tick line, so with a 4px tick
-// the year keeps its old 12px offset through an explicit dy. No fill override
-// on the labels any more: the only label this axis renders is the year, and the
-// snippet paints that in the body ink itself.
+// The quarters are a repeating texture, not something read one at a time, so
+// they go lighter than a normal axis label and leave the year in the body ink.
+// tickLength drives the label gap as well as the tick line, so with a short
+// tick the labels keep their old 12px offset through an explicit dy.
+//
+// `stroke-width` is an ATTRIBUTE, not a class, and that is load-bearing rather
+// than a style choice. Axis has no per-tick props hook — its tick <Line> takes
+// only x/y, `stroke` and a class — so the width has to arrive by SVG
+// INHERITANCE: unrecognised props land in Axis's restProps, which spread onto
+// the axis <g>, and stroke-width inherits from there down to every mark. A
+// Tailwind class on `classes.tick` would reach the same elements on screen and
+// then vanish from the PNG, which serializes the SVG on its own and rasterizes
+// it without the page stylesheet (the same reason the grid carries a literal
+// rgba stroke in LineChartPanel). Nothing else under this <g> strokes anything
+// — the rule is off, the grid is a separate component, and the labels are
+// fill-only — so the inherited width reaches the marks and no one else.
 export const quarterXAxisProps = {
   tickLength: quarterAxisTick.length,
   tickMarks: true,
   rule: false,
   stroke: quarterAxisTick.stroke,
-  tickLabelProps: { ...mutedTickLabelProps, dy: 12 },
+  "stroke-width": quarterAxisTick.width,
+  tickLabelProps: { ...mutedTickLabelProps, fill: iw.gray, dy: 12 },
 };
 
-// Distance from the quarter row down to the year row, and the bottom padding
+// Distance from the quarter line down to the year line, and the bottom padding
 // that has to clear both: defaultChartPadding reserves 20px, which fits one
 // 12px line under a 10px tick gap and no more. The connector's length falls out
 // of this minus quarterAxisTick.yearGap, so shortening the line is done there —
