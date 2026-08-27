@@ -2,9 +2,13 @@ import { ink, brand } from "$lib/colors.js";
 
 const annotationLabel = { fill: ink, class: "text-xs font-light" };
 const mutedLabel = { fill: brand.grayText, class: "text-xs font-light" };
+// The hatch has to say "not observed" and then get out of the way. At 0.5 it
+// was reading as a filled panel — the diagonals and the gridlines crossing
+// them added up to more texture than the bars themselves. 0.3 lands the lines
+// a step above the gridlines: still legibly a band, no longer a surface.
 const projectionPattern = {
   size: 8,
-  lines: { rotate: -45, color: brand.gray, opacity: 0.5 },
+  lines: { rotate: -45, color: brand.gray, opacity: 0.3 },
 };
 
 // Circled point callout. `filled` tints the ring with the series color for

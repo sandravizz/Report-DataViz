@@ -98,18 +98,26 @@
      full width. -ml-2.5 cancels px-2.5 so the wordmark sits flush with the
      source line above it.
 
-     -mt-2 closes the gap to the source line above. The row above is 24px tall
-     because the PNG button sets its height, while the source text beside it is
-     only ~15px, so there is dead space under the source that has nothing to do
-     with the spacing anyone intended. Pulling back 8px against this element's
-     own py-1 lands the two lines about 5px apart, so source + wordmark read as
-     one footer block and the space above the block (mt-10 / lg:mt-20) is what
-     separates it from the chart. -->
+     md:-mt-2 closes the gap to the source line above. The row above is 24px
+     tall because the PNG button sets its height, while the source text beside
+     it is only ~15px, so there is dead space under the source that has nothing
+     to do with the spacing anyone intended. Pulling back 8px against this
+     element's own py-1 lands the two lines about 5px apart, so source +
+     wordmark read as one footer block and the space above the block
+     (mt-10 / lg:mt-20) is what separates it from the chart.
+
+     THE PULL IS md: AND UP ONLY. Below 768px the source no longer fits beside
+     the button on one line, so it wraps to two, the row grows past the
+     button's 24px and the dead space it was cancelling is gone — the -8px
+     then ate into the real gap and the wordmark sat almost on the source's
+     second line. With no pull at phone widths the two lines land ~6px apart,
+     the same as everywhere else. md rather than lg because the wrap is what
+     drives this, and the source is back on one line well before 1024. -->
 <a
   href="https://sandraviz.com"
   target="_blank"
   rel="noopener"
-  class="-mt-2 -ml-2.5 inline-block self-start px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px]"
+  class="-ml-2.5 inline-block md:-mt-2 self-start px-2.5 py-1 font-sans text-[11px] tracking-wide text-base-content/50 underline decoration-accent decoration-1 underline-offset-[3px]"
 >
   sandraviz.com
 </a>
