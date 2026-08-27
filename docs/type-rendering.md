@@ -101,6 +101,42 @@ rather than flattened to a single value.
 
 ---
 
+## Rule 3 — The PNG exporter copies the page's type metrics, it does not approximate them
+
+`downloadFigure.js` redraws the figure header onto a canvas, so every type
+value there is a hand-written copy of a Tailwind class — and copies drift. The
+figure eyebrow had drifted on every branch at once: **500 weight** (600 on
+`iw`) against the page's 400, **11px** against `text-xs`'s 12, and **no
+letter-spacing** against `tracking-wide`.
+
+None of that changes the ink, but all three make the strokes of an uppercase
+line at caption size close up, and closed-up strokes in a muted colour read as
+*darker and more saturated* rather than merely heavier. Reported, correctly, as
+"not such a nice colour, and not crisp" — the colour was identical; the
+weight, size and tracking were not.
+
+The tell was one line away: `legendSize = 12` right underneath, already
+matching `text-xs` because someone had checked it once. The eyebrow was the
+metric nobody brought back.
+
+**When touching either side, check the pair.** The page value wins.
+
+| element | page | canvas |
+|---|---|---|
+| eyebrow | `text-xs tracking-wide` uppercase, weight 400 | `numberSize` 12, `numberTracking`, weight 400 |
+| legend | `text-xs` | `legendSize` 12 |
+| source line | `text-[11px] tracking-wide` | `footerSize` |
+
+Canvas2D `letterSpacing` is recent (Chrome 99+, Safari 17.4+), so it is set
+behind an `"letterSpacing" in ctx` guard and reset to `0px` straight after —
+where it is missing the export is simply what shipped before, never broken.
+
+`iea`'s exporter draws no eyebrow at all, so it has nothing to bring back.
+
+Still not matched, deliberately, because it has not been reported as wrong:
+the exported source line is 12px where the page's is 11px, and carries no
+tracking. Left alone rather than changed unasked.
+
 ## Adding a new branch
 
 1. Paste the Rule 1 block into `src/styles/tailwind.css`. It is identical

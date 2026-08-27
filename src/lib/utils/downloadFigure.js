@@ -156,7 +156,16 @@ export async function downloadFigureImage({
   );
 
   const pad = 28;
-  const numberSize = 11;
+  // 12px, not 11: this is ChartDisplay's eyebrow, which is `text-xs` — the
+  // same size the legend below already matches with `legendSize`. It was the
+  // one metric in the header that had drifted off its page value.
+  const numberSize = 12;
+  // `tracking-wide`, the eyebrow's letter-spacing on the page. Canvas2D
+  // letterSpacing is recent (Chrome 99+, Safari 17.4+), so it is applied only
+  // where supported and reset straight after — without it the glyphs sit
+  // tighter than on the page, which is part of why the exported eyebrow read
+  // as a denser, more saturated tone than the one on screen.
+  const numberTracking = "0.025em";
   const railHeight = 1;
   const titleSize = 20;
   const subtitleSize = 14;
@@ -257,8 +266,15 @@ export async function downloadFigureImage({
 
   if (number) {
     ctx.fillStyle = MUTED;
-    ctx.font = `500 ${numberSize}px ${FONT_FAMILY}`;
+    // Weight 400, matching the page: the eyebrow carries no weight utility in
+    // ChartDisplay. At 500 the strokes of a 12px uppercase line close up, and
+    // the same MUTED ink reads bolder and darker in the PNG than the light
+    // tone it is on screen — it looked like a different colour.
+    ctx.font = `400 ${numberSize}px ${FONT_FAMILY}`;
+    const canTrack = "letterSpacing" in ctx;
+    if (canTrack) ctx.letterSpacing = numberTracking;
     ctx.fillText(number.toUpperCase(), pad, y);
+    if (canTrack) ctx.letterSpacing = "0px";
     y += numberLineHeight + 12;
 
     ctx.fillStyle = RAIL_TRACK;
