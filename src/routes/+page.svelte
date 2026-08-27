@@ -87,8 +87,14 @@
     <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
       <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
         <div class="lg:flex lg:min-h-full">
+          <!-- max-w-200 caps the reading column at the same 800px the desktop
+               layout uses. Without it the column is 88vw the whole way up to
+               the 1400px breakpoint, so a 1399px window sets 18px type across
+               1231px — about 130 characters a line, against the 55–75 that is
+               comfortable to read. The cap bites from ~909px upward; below
+               that 88vw still governs, so the phone column is unchanged. -->
           <div
-            class="mx-auto w-[88vw] py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
+            class="mx-auto w-[88vw] max-w-200 py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
           >
             <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
             {#if section.intro}
