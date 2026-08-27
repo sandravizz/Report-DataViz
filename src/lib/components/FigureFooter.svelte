@@ -38,7 +38,7 @@
 </script>
 
 <div
-  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/50 lg:mt-20"
+  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/55 lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
   <!-- The one filled control in the report: a faint accent wash at rest that

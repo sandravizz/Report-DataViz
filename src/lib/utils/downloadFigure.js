@@ -7,7 +7,10 @@ import { getChartSvgString } from "layerchart";
 // base-content is pure black on this theme (see tailwind.css).
 const FONT_FAMILY = "Barlow, sans-serif";
 const INK = "#000000";
-const MUTED = "rgba(0, 0, 0, 0.5)";
+// Alpha matches the page's quiet-text value for this branch's ink, so the
+// exported source line is as legible as the one under the figure.
+// Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
+const MUTED = "rgba(0, 0, 0, 0.55)";
 const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
 const BACKGROUND = "#ffffff";
 

@@ -52,7 +52,7 @@
   </div>
 
   {#if disclosure}
-    <div class="mt-12 max-w-2xl text-left text-[10px] leading-relaxed text-base-content/40">
+    <div class="mt-12 max-w-2xl text-left text-[10px] leading-relaxed text-base-content/55">
       {@render disclosure()}
     </div>
   {/if}
