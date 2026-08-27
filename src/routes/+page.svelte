@@ -181,7 +181,13 @@
              from 28/40: at the old values a short chapter was mostly padding,
              and on a phone — where the column is 88vw and the type is smaller
              — it pushed the text down past the fold before it started. -->
-        <div class="mx-auto w-[88vw] py-16 lg:w-200 lg:py-28">
+        <!-- max-w-200 caps the reading column at the same 800px the desktop
+             layout uses. Without it the column is 88vw the whole way up to the
+             1400px breakpoint, so a 1399px window sets 18px type across 1231px
+             — about 130 characters a line, against the 55–75 that is comfortable
+             to read. The cap bites from ~909px upward; below that 88vw still
+             governs, so the phone column is exactly as it was. -->
+        <div class="mx-auto w-[88vw] max-w-200 py-16 lg:w-200 lg:py-28">
           {#if section.kicker}
             <p class="mb-3 text-xs font-medium tracking-wide text-primary uppercase">
               {section.kicker}
