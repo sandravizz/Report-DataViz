@@ -125,7 +125,8 @@ metric nobody brought back.
 |---|---|---|
 | eyebrow | `text-xs tracking-wide` uppercase, weight 400 | `numberSize` 12, `numberTracking`, weight 400 |
 | legend | `text-xs` | `legendSize` 12 |
-| source line | `text-[11px] tracking-wide` | `footerSize` |
+| source line | `text-[11px] tracking-wide`, `leading-snug` | `footerSize` 11, tracked, line-height 1.375 |
+| wordmark | `text-[11px] tracking-wide` | `wordmarkSize` 11, tracked |
 
 Canvas2D `letterSpacing` is recent (Chrome 99+, Safari 17.4+), so it is set
 behind an `"letterSpacing" in ctx` guard and reset to `0px` straight after —
@@ -133,9 +134,17 @@ where it is missing the export is simply what shipped before, never broken.
 
 `iea`'s exporter draws no eyebrow at all, so it has nothing to bring back.
 
-Still not matched, deliberately, because it has not been reported as wrong:
-the exported source line is 12px where the page's is 11px, and carries no
-tracking. Left alone rather than changed unasked.
+Tracking is set through `withTracking(ctx, on)`, which is a no-op where the
+browser lacks it. It has to be on for the **measuring** pass as well as the
+drawing one — `wrapLines` calls `measureText`, so a source line left untracked
+while measuring wraps at a width it will not occupy — and it stays on through
+the `measureText` that sizes the wordmark's accent rule, or the rule stops
+short of the word it underlines.
+
+The eyebrow was the reported one; the source line and wordmark were the same
+drift found by comparing the two columns rather than by eye, and were brought
+across in the same pass. A visual check finds the worst offender, not all of
+them. When one of these is wrong, read the whole table.
 
 ## Adding a new branch
 
