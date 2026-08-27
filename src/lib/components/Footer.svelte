@@ -33,12 +33,12 @@
       <!-- The one marked phrase in the footer. On this light ground the accent
            is ~1.2:1, so it works as a rule under text and nowhere else — which
            is exactly why the logos and social icons here stay dark. -->
-      <p class="text-base leading-relaxed text-base-content/80 sm:text-xl">
+      <p class="text-base leading-relaxed text-base-content sm:text-xl">
         I'm Sandra, a data visualization designer and developer. I build interactive,
         <mark class="accent-mark">visualization-first reports for the web, mobile</mark>, and
         static downloads too.
       </p>
-      <p class="mt-4 text-base leading-relaxed text-base-content/80 sm:mt-6 sm:text-xl">
+      <p class="mt-4 text-base leading-relaxed text-base-content sm:mt-6 sm:text-xl">
         This is one example of what that looks like in practice, built on real content and data
         from the Global Justice Project (World Inequality Lab), the interactive design and
         development are mine. If you've got a report that deserves to be more than a PDF, let's

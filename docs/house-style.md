@@ -142,6 +142,15 @@ black to 8.5:1, turning a quiet caption into near-body-weight grey. Compute the
 smallest alpha clearing 4.5:1 against the surface the text sits on, round up to
 the nearest 5. Controls stay one step above the captions beside them.
 
+**Running text is the strongest ink on the page.** The chapter paragraphs, the
+Interlude and the Footer pitch carry no alpha where the alpha was costing them:
+`/80` beside a full-strength `DescriptionColumn` had the short annotation
+reading stronger than the passage. The tell is selection — if a passage reads
+better highlighted, it is under-inked. Measured per branch, not copied: below
+~8:1 the alpha comes off, above it `/80` already reads, and on a pure-black
+branch removing it would put `#000000` under long-form reading, which the
+Colour rule above forbids.
+
 Locked spec, the per-branch table, and the list of files it touches
 (`downloadFigure.js`'s `MUTED` is the easy one to miss):
 [type-rendering.md](type-rendering.md).

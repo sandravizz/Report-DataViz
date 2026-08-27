@@ -156,7 +156,7 @@
              user-supplied. -->
         {#each section.intro as paragraph, pIndex (pIndex)}
           <p
-            class="text-lg leading-relaxed text-base-content/80 lg:text-xl {pIndex === 0
+            class="text-lg leading-relaxed text-base-content lg:text-xl {pIndex === 0
               ? 'mt-8 lg:mt-10'
               : 'mt-4'}"
           >

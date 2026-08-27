@@ -146,6 +146,47 @@ drift found by comparing the two columns rather than by eye, and were brought
 across in the same pass. A visual check finds the worst offender, not all of
 them. When one of these is wrong, read the whole table.
 
+---
+
+## Rule 4 — Running text is the strongest ink on the page
+
+The chapter paragraphs were `text-base-content/80` while `DescriptionColumn`
+beside the chart was plain `text-base-content`. That is backwards: the short
+annotation read at full strength and the passage the reader actually spends
+time in was knocked back.
+
+It is also why grayscale antialiasing was *felt* here rather than welcomed.
+Rule 1 thins every glyph slightly, and it costs most in 400-weight body copy at
+18–20px — the one place a reader is exposed to it for minutes at a time.
+
+**The tell is selection.** If a passage reads noticeably better while
+highlighted, it is under-inked: selection paints text at full opacity, so
+selecting it is a preview of removing the alpha.
+
+Same discipline as Rule 2 — measure, do not copy. `/80` is a different colour
+on every branch:
+
+| branch | ink | `/80` | full | decision |
+|---|---|---|---|---|
+| `iw` | `#1b4160` | 5.57:1 | 9.65:1 | **full ink** |
+| `main` | `#103900` | 6.53:1 | 11.51:1 | **full ink** |
+| `kiel-institute` | `#1d1815` | 8.09:1 | 14.17:1 | left at `/80` |
+| `template` | `#221d18` | 8.14:1 | 14.91:1 | left at `/80` |
+| `findevlab` | `#000000` | 11.05:1 | 17.20:1 | left at `/80` |
+| `iea` | `#000000` | 11.79:1 | 18.93:1 | left at `/80` |
+
+Below ~8:1 the passage is under-inked and the alpha comes off. Above it, `/80`
+already reads — and on the two pure-black branches removing it would put
+**`#000000` under long-form reading**, which the house style rules out (see
+"Colour" in `house-style.md`). There `/80` is not a compromise, it is the warm
+near-black doing its job.
+
+Where it applies: the chapter paragraphs in `+page.svelte`, the `Interlude`
+paragraphs, and the `Footer` pitch — everything carrying `leading-relaxed`.
+Deliberately **not** the `/80` in `SideNote`'s active/inactive pair or on
+`template`'s cover subtitle over the photo: those are a state contrast and a
+scrim contrast, not reading ink.
+
 ## Adding a new branch
 
 1. Paste the Rule 1 block into `src/styles/tailwind.css`. It is identical
