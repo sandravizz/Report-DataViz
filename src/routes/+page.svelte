@@ -54,6 +54,42 @@
     href: `#${section.id}`,
     label: section.title,
   }));
+
+  // The fade between the chapter ground and the white figure surface is
+  // painted ON THE CHAPTER BLOCK's own background, not as a spacer div
+  // between the two. Ported from main.
+  //
+  // That is the whole point. A dedicated band element can only make the fade
+  // longer by making the GAP longer, which buys a screen of empty page. As a
+  // background on the block itself the ramp costs no height whatsoever: it
+  // runs up behind the copy, which is dark enough that a light-to-light wash
+  // underneath changes nothing about reading it. So the fade can be as slow
+  // as it likes and the text still sits directly above its figure.
+  //
+  // The stops are PERCENTAGES, so the ramp scales with the chapter: a long
+  // chapter gets a long fade, a short one a proportionally shorter one, and
+  // neither ever shows a seam. This only works because the block is now
+  // natural height — see the layout note in the markup below.
+  //
+  // This branch's tokens, not main's: base-100 is #ffffff (the figure
+  // surface) and base-200 is #e2eaeb (the chapter ground). NOT lg:-scoped —
+  // the ground has to match Footer's tint on phone and tablet too.
+  const FIGURE_SURFACE = "var(--color-base-100)";
+  const TEXT_SURFACE = "var(--color-base-200)";
+
+  // `rampTop` is false for chapter 1 — it follows the cover, where the cut is
+  // meant to be hard. `rampBottom` is false when no figure follows.
+  function textSurface(rampTop, rampBottom) {
+    const stops = rampTop
+      ? [`${FIGURE_SURFACE} 0%`, `${TEXT_SURFACE} 35%`]
+      : [`${TEXT_SURFACE} 0%`];
+    stops.push(
+      ...(rampBottom
+        ? [`${TEXT_SURFACE} 65%`, `${FIGURE_SURFACE} 100%`]
+        : [`${TEXT_SURFACE} 100%`])
+    );
+    return `background-image:linear-gradient(to bottom,${stops.join(",")})`;
+  }
 </script>
 
 <svelte:head>
@@ -100,41 +136,58 @@
   <Landing />
 
   <div id="charts"></div>
-  {#each sections as section (section.id)}
-    <section id={section.id} class="font-sans text-base-content lg:h-[140vh]">
-      <div class="bg-base-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-        <div class="lg:flex lg:min-h-full">
-          <!-- max-w-200 caps the reading column at the same 800px the desktop
-               layout uses. Without it the column is 88vw the whole way up to
-               the 1400px breakpoint, so a 1399px window sets 18px type across
-               1231px — about 130 characters a line, against the 55–75 that is
-               comfortable to read. The cap bites from ~909px upward; below
-               that 88vw still governs, so the phone column is unchanged. -->
-          <div
-            class="mx-auto w-[88vw] max-w-200 py-24 lg:my-auto lg:ml-[calc(43%-400px)] lg:w-200"
-          >
-            <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
-            {#if section.intro}
-              <!-- The intro is stepped in from the heading (desktop only), so
-                   the chapter title reads as the block's left edge and the
-                   body text as a subordinate column under it. -->
-              <!-- md:text-xl is a TYPE tier only — the scrolly mechanism stays
-                   keyed to lg: (see the breakpoint note in tailwind.css). At
-                   text-lg the chapter copy was 18px in an 800px column on every
-                   screen from 640px up, which is where the "text is small on
-                   tablet" report comes from: there was no step between the
-                   phone size and the desktop one, so a 1024px iPad read the
-                   phone size across a desktop-width column. -->
-              <p class="mt-8 text-lg leading-relaxed text-base-content/80 md:text-xl lg:pl-16">
-                <!-- Rendered as HTML so the intro can carry a
-                     `mark.accent-mark` — the accent underline defined in
-                     tailwind.css. The strings come from the chapter list in
-                     this file, editorial copy authored in this repo; nothing
-                     fetched, routed or user-supplied. -->
-                {@html section.intro}
-              </p>
-            {/if}
-          </div>
+  {#each sections as section, i (section.id)}
+    <!-- Chapter text is NOT pinned and NOT sized to the viewport: only the
+         figure surface in ScrollySection sticks. This is long-form copy, so
+         the block is exactly as tall as its own paragraph — you scroll until
+         the text ends and the next section begins, and nothing is padded out
+         to fill a screen it does not need.
+         It used to be `lg:h-[140vh]` on the section with a
+         `lg:sticky lg:h-screen lg:overflow-y-auto` box inside, which pinned a
+         short chapter in the middle of an otherwise empty screen and gave
+         every chapter the same height regardless of how much it said. Ported
+         from main; see docs/house-style.md. -->
+    <section id={section.id} class="font-sans text-base-content">
+      <!-- The ground and its fade into the white figure surface live in this
+           block's own background — see textSurface() above. -->
+      <div
+        class="bg-base-200"
+        style={textSurface(i > 0 && sections[i - 1].charts.length > 0, section.charts.length > 0)}
+      >
+        <!-- max-w-200 caps the reading column at the same 800px the desktop
+             layout uses. Without it the column is 88vw the whole way up to
+             the 1400px breakpoint, so a 1399px window sets 18px type across
+             1231px — about 130 characters a line, against the 55–75 that is
+             comfortable to read. The cap bites from ~909px upward; below
+             that 88vw still governs, so the phone column is unchanged. -->
+        <!-- py-16/lg:py-28 replaces py-24 + `lg:my-auto`: the vertical
+             centring only had meaning inside the flex box that filled a
+             screen, and with the block at natural height the air above and
+             below the copy is now set directly. -->
+        <div
+          class="mx-auto w-[88vw] max-w-200 py-16 lg:ml-[calc(43%-400px)] lg:w-200 lg:py-28"
+        >
+          <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+          {#if section.intro}
+            <!-- The intro is stepped in from the heading (desktop only), so
+                 the chapter title reads as the block's left edge and the
+                 body text as a subordinate column under it. -->
+            <!-- md:text-xl is a TYPE tier only — the scrolly mechanism stays
+                 keyed to lg: (see the breakpoint note in tailwind.css). At
+                 text-lg the chapter copy was 18px in an 800px column on every
+                 screen from 640px up, which is where the "text is small on
+                 tablet" report comes from: there was no step between the
+                 phone size and the desktop one, so a 1024px iPad read the
+                 phone size across a desktop-width column. -->
+            <p class="mt-8 text-lg leading-relaxed text-base-content/80 md:text-xl lg:pl-16">
+              <!-- Rendered as HTML so the intro can carry a
+                   `mark.accent-mark` — the accent underline defined in
+                   tailwind.css. The strings come from the chapter list in
+                   this file, editorial copy authored in this repo; nothing
+                   fetched, routed or user-supplied. -->
+              {@html section.intro}
+            </p>
+          {/if}
         </div>
       </div>
     </section>
