@@ -2,6 +2,21 @@ import { defaultChartPadding } from "layerchart";
 import { scaleBand } from "d3-scale";
 import { ink, fdl } from "./colors.js";
 
+// The one width that separates the tablet layout from the desktop one, and the
+// single knob for every viewport-conditional value in this file.
+//
+// It MUST track `--breakpoint-lg` in src/styles/tailwind.css. These were both
+// 1024 when this file was written (2026-07-21); the layout moved to 1400 on
+// 2026-08-04 and the numbers here did not follow, so the whole 1024-1400 band
+// was getting the tablet LAYOUT with desktop TOOLTIPS, desktop annotation
+// placements, desktop label halos and "million" spelled out — the opposite of
+// what moving the breakpoint was for. Changing the two together is the fix; if
+// you retune `--breakpoint-lg`, retune this with it.
+//
+// Every panel feeds this the WINDOW width (`<svelte:window bind:innerWidth />`),
+// not the plot width, so it compares like with like against the CSS breakpoint.
+export const DESKTOP_MIN = 1400;
+
 export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // Muted variant for axes/annotations that are a reference rather than the
@@ -35,10 +50,10 @@ export function quarterCenturyTicks(startYear, endYear) {
 // On mobile the quarter-century ticks crowd the narrow x axis, so keep only
 // the half-century years (1800, 1850, … 2100). Short-range charts would be
 // left with fewer than three ticks that way, so they keep the full
-// quarter-century set instead. Same <1024 mobile threshold as the layout's
-// lg: breakpoint.
+// quarter-century set instead. Below DESKTOP_MIN, i.e. the same threshold as
+// the layout's lg: breakpoint.
 export function halfCenturyTicksOnMobile(ticks, innerWidth) {
-  if (!ticks || innerWidth >= 1024) return ticks;
+  if (!ticks || innerWidth >= DESKTOP_MIN) return ticks;
   const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
   return halved.length >= 3 ? halved : ticks;
 }
@@ -52,7 +67,7 @@ export function halfCenturyTicksOnMobile(ticks, innerWidth) {
 export function yearTickFormat(innerWidth, firstYear) {
   return (d) => {
     const year = d.getFullYear();
-    if (innerWidth >= 1024 || year === firstYear) return String(year);
+    if (innerWidth >= DESKTOP_MIN || year === firstYear) return String(year);
     return String(year % 100).padStart(2, "0");
   };
 }
@@ -79,12 +94,24 @@ export function excludeZeroTick(scale, count) {
   return candidates.filter((tick) => tick !== 0);
 }
 
-// Tooltips are desktop-only: on mobile viewports the tooltip interaction is
-// buggy (tap-triggered tooltips misbehave on touch), so every chart passes
-// this as its `tooltipContext` instead of a hardcoded boolean. Same <1024
-// mobile threshold as the layout's lg: breakpoint and the helpers below.
+// Tooltips are desktop-only: on touch the tooltip interaction is buggy
+// (tap-triggered tooltips misbehave — see docs/tooltip-mobile-freeze-bug.md),
+// so every chart passes this as its `tooltipContext` instead of a hardcoded
+// boolean. Gated on DESKTOP_MIN so it tracks the layout's lg: breakpoint, like
+// the helpers below.
+//
+// CAVEAT, and the reason this is worth revisiting: the stated reason is TOUCH,
+// but the test is WIDTH. Those used to agree closely enough at 1024; at 1400
+// they don't. A 1280px-wide desktop window with a real mouse now gets no
+// tooltips, and an iPad in landscape at 1366 correctly gets none but only by
+// luck. The precise test is the pointer itself —
+// `matchMedia("(any-hover: hover) and (pointer: fine)")`, the same gate
+// CursorDot.svelte already uses — which would restore tooltips to narrow
+// desktop windows and keep them off every touch device regardless of width.
+// Not changed here because it alters behaviour on real desktops and wants an
+// eye-check first.
 export function desktopTooltips(innerWidth) {
-  return innerWidth >= 1024;
+  return innerWidth >= DESKTOP_MIN;
 }
 
 // Numeric y tick labels are wider than the default 20px left gutter; give
@@ -97,7 +124,7 @@ export const yLabelPadding = { left: 36 };
 // plot edge; SVG text does not clip-or-wrap on its own, so reposition instead.
 export function resolveAnnotations(annotations, innerWidth) {
   return annotations.map(({ mobile, ...annotation }) =>
-    innerWidth < 1024 && mobile
+    innerWidth < DESKTOP_MIN && mobile
       ? {
           ...annotation,
           ...mobile,
@@ -116,7 +143,7 @@ export function resolveAnnotations(annotations, innerWidth) {
 // screen width is already scarce there, and the labels wrap instead of
 // running wide.
 export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const labelSpace = innerWidth < 1024 ? 52 : 80;
+  const labelSpace = innerWidth < DESKTOP_MIN ? 52 : 80;
   return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
 }
 
@@ -137,7 +164,7 @@ export const endLabelMobileWrap = {
 // Mobile's smaller text and tighter layouts read the desktop width as a
 // bloated blob rather than a halo, so it's scaled down there.
 export function endLabelHalo(innerWidth) {
-  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < 1024 ? 3 : 8 };
+  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < DESKTOP_MIN ? 3 : 8 };
 }
 
 // The end-of-line label annotation itself, shared by every panel that names
@@ -177,7 +204,7 @@ export function formatMillions(d, innerWidth = Infinity) {
   if (Math.abs(d) >= 1) {
     const millions = Math.round(d * 10) / 10;
     const value = Number.isInteger(millions) ? millions : millions.toFixed(1);
-    return `${value} ${innerWidth < 1024 ? "mil." : "million"}`;
+    return `${value} ${innerWidth < DESKTOP_MIN ? "mil." : "million"}`;
   }
   const thousands = Math.round(d * 1000);
   return `${thousands.toLocaleString()}K`;
@@ -211,7 +238,7 @@ export const yLabelPaddingInline = { left: 8 };
 // figure's own base padding so many-bar figures aren't compressed as
 // aggressively as two-bar ones.
 export function responsiveBandPadding(innerWidth, base) {
-  return innerWidth < 1024 ? Math.min(base * 1.6, 0.68) : base;
+  return innerWidth < DESKTOP_MIN ? Math.min(base * 1.6, 0.68) : base;
 }
 
 // scaleBand's `.padding()` setter applies one fraction to both the inner gap

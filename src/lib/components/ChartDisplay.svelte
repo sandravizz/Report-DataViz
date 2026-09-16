@@ -50,7 +50,14 @@
            Only the mobile value moves — lg:mb-3 already had the room, and the
            button is hidden at that breakpoint anyway. -->
       <div class="mb-2 flex items-center justify-between gap-1 lg:mb-3">
-        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase">
+        <!-- TABLET TYPE TIER. Everything in this figure stack jumped straight
+             from the phone size to `lg:` — which is 1400px, not Tailwind's
+             1024 — so the whole 768-1400 band rendered phone-sized type beside
+             a tablet-sized chart: an 11px source line and a 12px subtitle under
+             a 1000px-wide plot on an iPad. The md: steps below are TYPE ONLY;
+             the scrolly mechanism (chart position, description column, the
+             Interpretation button's lg:hidden) is untouched and stays on lg. -->
+        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
           {headerLabel}
         </span>
         <!-- Same device as FigureFooter's PNG button — accent wash at rest,
@@ -104,7 +111,7 @@
         ></div>
       </div>
 
-      <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content lg:mb-2 lg:text-xl lg:leading-normal">
+      <div class="mb-1 font-sans text-base leading-snug font-medium text-base-content md:text-lg lg:mb-2 lg:text-xl lg:leading-normal">
         {pair.title}
       </div>
       <!-- The double figure pulls its half-height plots closer to the
@@ -114,7 +121,7 @@
       <div
         class="{pair.kind === 'double'
           ? 'mb-7 lg:mb-8'
-          : 'mb-10 lg:mb-12'} font-sans text-xs text-base-content lg:text-sm"
+          : 'mb-10 lg:mb-12'} font-sans text-xs text-base-content md:text-sm lg:text-sm"
       >
         {pair.subtitle}
       </div>
@@ -139,13 +146,13 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">✕</button>
       </form>
-      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/55 uppercase">
+      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
         {pairs[activeIndex].number}
       </div>
-      <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium text-base-content">
+      <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium text-base-content md:text-lg">
         {pairs[activeIndex].title}
       </div>
-      <p class="font-sans text-sm leading-relaxed text-base-content">
+      <p class="font-sans text-sm leading-relaxed text-base-content md:text-base">
         <!-- HTML for the same reason as DescriptionColumn: the description may
              carry a `mark.accent-mark`. Authored copy from $lib/data/figures. -->
         {@html pairs[activeIndex].description}

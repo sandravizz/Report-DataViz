@@ -45,6 +45,33 @@
     closeTimer = setTimeout(() => (boxOpen = false), WIDTH_HOLD_MS);
   }
 
+  // KEYBOARD PARITY. The panel used to open on mouseenter and nothing else, so
+  // the chapter titles — and the whole figure list, which only exists while
+  // expanded — were unreachable without a mouse. focusin/focusout mirror
+  // enter/leave exactly, and go through the same two functions so the
+  // width-hold timing above is shared rather than reimplemented.
+  //
+  // focusout fires BEFORE the new element takes focus, so `relatedTarget` is
+  // where focus is heading; `contains` keeps the panel open while Tab walks
+  // from one row to the next inside it. A null relatedTarget (focus leaving
+  // the document entirely) closes, which matches mouseleave.
+  function onFocusIn() {
+    openPanel();
+  }
+
+  function onFocusOut(event) {
+    if (!event.currentTarget.contains(event.relatedTarget)) closePanel();
+  }
+
+  // Escape closes without moving focus out of the rail, the usual disclosure
+  // behaviour — the reader stays where they are and can Tab onward.
+  function onKeyDown(event) {
+    if (event.key === "Escape" && expanded) {
+      event.stopPropagation();
+      closePanel();
+    }
+  }
+
   // Everything the rail shows is derived from one scroll tick of live
   // getBoundingClientRect() reads — nothing is cached up front, so no position
   // can go stale. Visibility: the rail shows once chapter 1 reaches the top and
@@ -160,14 +187,26 @@
      Since mouseenter/mouseleave count overflowing descendants as "inside", the
      hover region is (block ∪ panel): it only ever grows on open, making the
      cycle geometrically impossible whatever the panel later contains. -->
+<!-- `inert` is what actually takes the rail out of play while it is hidden.
+     `pointer-events-none opacity-0` hides it from the mouse and the eye but
+     does NOTHING to the tab order: before this, tabbing off the header walked
+     the reader through a set of invisible chapter buttons, and they were
+     focusable inside an `aria-hidden` subtree, which is an ARIA violation on
+     top of being confusing. `inert` removes focusability and AT exposure in
+     one attribute, and it is kept alongside aria-hidden rather than replacing
+     it so nothing regresses on an engine that ignores inert. -->
 <nav
   class="fixed top-1/2 left-9 z-40 hidden -translate-y-1/2 transition-opacity duration-200 lg:block {showRail
     ? 'opacity-100'
     : 'pointer-events-none opacity-0'}"
   onmouseenter={openPanel}
   onmouseleave={closePanel}
+  onfocusin={onFocusIn}
+  onfocusout={onFocusOut}
+  onkeydown={onKeyDown}
   aria-label="Chapter navigation"
   aria-hidden={!showRail}
+  inert={!showRail}
 >
   <div class="pointer-events-none h-32 w-14" aria-hidden="true"></div>
 
@@ -196,6 +235,7 @@
           type="button"
           onclick={() => jumpTo(i)}
           aria-current={activeIndex === i ? "true" : undefined}
+          aria-label={section.title}
           class="group flex cursor-pointer items-start gap-3 p-1.5 -m-1.5 text-left"
         >
           <!-- Hovering a non-current chapter marks it without imitating the
@@ -224,7 +264,13 @@
               : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:scale-[0.6] group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-[9px] group-hover/chapter:ring-primary/15'}"
           ></span>
           {#if expanded}
+            <!-- aria-hidden because the button now carries the title as its
+                 aria-label: without this the title is announced twice while
+                 the panel is open. The visual span keeps its fade untouched —
+                 the accessible name no longer depends on `expanded`, which is
+                 what made a collapsed rail a row of nameless buttons. -->
             <span
+              aria-hidden="true"
               transition:fade={{ duration: FADE_MS }}
               class="text-base leading-snug transition-colors duration-200 {activeIndex ===
               i

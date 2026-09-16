@@ -111,3 +111,59 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Keyboard focus, report-wide. There was no `:focus-visible` rule anywhere in
+   the project, so every control fell back to the UA outline — which on the
+   cover photo is effectively invisible, and which daisyUI only styles for
+   `.btn` (the PNG and Interpretation buttons). The bare controls — the chapter
+   rail's dots, the header's dropdown triggers, the TOC links, the cover's
+   credit links, the footer links — had nothing.
+
+   The accent is the right ink for it: it is already the report's "this points
+   at something" colour, and CursorDot.svelte's note records it clearing 4.8:1
+   against the cover's bright sky and 4.4:1 against the bottom scrim, which is
+   the hardest ground on the page. On base-100 it sits at ~4.8:1.
+
+   `:focus-visible`, never `:focus` — a plain `:focus` rule would ring the
+   buttons on every mouse click too. The outline is drawn OUTSIDE the box with
+   an offset so it never reflows a row; the chapter rail in particular is a
+   geometry the hover behaviour depends on (see ChapterRail.svelte's note on
+   the shiver loop), and an outline cannot shift it the way a border would. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Reduced motion. The report is built out of movement — 500ms figure
+   crossfades, the clip-path wipe and draw-in on the area panels, the rail's
+   fades, and `scroll-smooth` on <html> — and none of it was gated.
+
+   The chart draw-ins are CSS `transition`s on clip-path/opacity (see
+   AreaChartPanelOverlap.svelte), so collapsing transition-duration lands them
+   on their FINISHED state instantly rather than freezing them mid-wipe: the
+   reader gets the completed figure, just without the animation. That is the
+   whole reason this can be done in CSS rather than threading a flag through
+   every panel.
+
+   Scroll-driven PINNING is deliberately untouched. It is layout, not
+   animation — the figure is sticky and the reader's own scroll moves it, so
+   there is nothing here that moves on its own. Reduced motion means "don't
+   animate at me", not "take the report apart". */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

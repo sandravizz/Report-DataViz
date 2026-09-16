@@ -38,7 +38,7 @@
 </script>
 
 <div
-  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/55 lg:mt-20"
+  class="mt-10 flex flex-nowrap items-start justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/55 md:text-xs lg:mt-20"
 >
   <span class="leading-snug">{pair.source}</span>
   <!-- The one filled control in the report: a faint accent wash at rest that
@@ -67,7 +67,7 @@
        report's two controls drift apart. -->
   <button
     type="button"
-    class="group btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full bg-accent/25! px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/75 normal-case hover:border-transparent! hover:bg-accent! hover:text-accent-content! hover:shadow-lg!"
+    class="group btn btn-ghost btn-xs shrink-0 self-start gap-1 rounded-full bg-accent/25! px-2.5 font-sans text-[11px] font-normal tracking-wide text-base-content/75 normal-case md:text-xs hover:border-transparent! hover:bg-accent! hover:text-accent-content! hover:shadow-lg!"
     disabled={downloading}
     onclick={handleDownload}
   >

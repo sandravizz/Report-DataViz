@@ -76,10 +76,27 @@
      mouse — see CursorDot.svelte. Nothing else on the page depends on it. -->
 <CursorDot />
 
+<!-- Skip link: the first thing in the tab order, visually hidden until it is
+     focused. Without it a keyboard or screen-reader user had to tab the whole
+     header — two dropdown triggers, four social links — on the way into the
+     report, on every visit. `sr-only focus:not-sr-only` is the standard
+     pattern: it takes no space until it is the focused element. -->
+<a
+  href="#top"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-box focus:bg-base-100 focus:px-4 focus:py-2 focus:font-sans focus:text-sm focus:text-base-content focus:shadow-lg"
+>
+  Skip to the report
+</a>
+
 <Header links={tocLinks} />
 <ChapterRail {sections} />
 
-<div id="top">
+<!-- `main` rather than a bare div: the page had no landmark at all, so
+     "jump to main content" had nothing to jump to. tabindex="-1" is what lets
+     the skip link above actually move focus here (a container is not focusable
+     on its own); it does NOT put the element in the tab order. The id stays
+     `top` because Header's logo links to it. -->
+<main id="top" tabindex="-1">
   <Landing />
 
   <div id="charts"></div>
@@ -101,7 +118,14 @@
               <!-- The intro is stepped in from the heading (desktop only), so
                    the chapter title reads as the block's left edge and the
                    body text as a subordinate column under it. -->
-              <p class="mt-8 text-lg leading-relaxed text-base-content/80 lg:pl-16">
+              <!-- md:text-xl is a TYPE tier only — the scrolly mechanism stays
+                   keyed to lg: (see the breakpoint note in tailwind.css). At
+                   text-lg the chapter copy was 18px in an 800px column on every
+                   screen from 640px up, which is where the "text is small on
+                   tablet" report comes from: there was no step between the
+                   phone size and the desktop one, so a 1024px iPad read the
+                   phone size across a desktop-width column. -->
+              <p class="mt-8 text-lg leading-relaxed text-base-content/80 md:text-xl lg:pl-16">
                 <!-- Rendered as HTML so the intro can carry a
                      `mark.accent-mark` — the accent underline defined in
                      tailwind.css. The strings come from the chapter list in
@@ -118,6 +142,6 @@
       <ScrollySection pairs={section.charts} sectionId={section.id} />
     {/if}
   {/each}
-</div>
+</main>
 
 <Footer />
