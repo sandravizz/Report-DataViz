@@ -1,4 +1,4 @@
-import { colors, fdl } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { circleCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // From the IDA_GIZ_KAdequacyModel presentation (slide 15), exact series from
@@ -54,7 +54,7 @@ export default {
     circleCallout({
       x: new Date(2026, 0, 1),
       y: 15.15,
-      color: fdl.slate,
+      color: colors.accent,
       label: "The ambition: sustain the pace of the past decade",
       labelPlacement: "top-left",
       labelXOffset: 24,
@@ -71,20 +71,27 @@ export default {
       key: "Concessional loans",
       endLabel: "Concessional",
       value: "concessional",
-      color: fdl.slate,
+      // The accent, and the only one: concessional lending is what the
+      // chapter's "disbursement pace" is largely made of, and the callout
+      // above rings this line. The other three windows are context and walk
+      // down the neutral ramp IN THIS ARRAY'S ORDER — not by size, so a CSV
+      // update cannot swap two series' colors. Every one of them carries an
+      // end label, which is what makes four lightness steps legible where
+      // four hues used to be.
+      color: colors.accent,
     },
     {
       key: "Blended loans",
       endLabel: "Blended",
       value: "blended",
-      color: colors.sage,
+      color: colors.strong,
     },
-    { key: "Grants", endLabel: "Grants", value: "grants", color: colors.sky },
+    { key: "Grants", endLabel: "Grants", value: "grants", color: colors.mid },
     {
       key: "Non-concessional loans",
       endLabel: "Non-concessional",
       value: "nonconcessional",
-      color: colors.coral,
+      color: colors.soft,
     },
   ],
   data,

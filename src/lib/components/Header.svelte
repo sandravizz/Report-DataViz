@@ -1,17 +1,53 @@
 <script>
+  import { onMount } from "svelte";
+
   // Header overlays the landing hero photo (absolutely positioned over
   // Landing's image, transparent background) rather than sitting in normal
   // flow with its own bar — see Landing.svelte's scrim. So logo/nav/icons use
   // white instead of FDL's slate/neutral brand colors, which would vanish
   // against the photo.
-  // `abstract` is an optional snippet; when given, an "Abstract" dropdown
-  // appears next to the TOC with the snippet as its panel content.
-  let { links = [], abstract } = $props();
+  //
+  // `sections` is the chapter list from +page.svelte, the same array the
+  // chapter rail gets: `{ id, title, charts }`. The Table of Contents lists
+  // the chapters and nests each chapter's figures under it, so the two
+  // navigations show the report at the same depth.
+  let { sections = [] } = $props();
 
-  function closeDropdown(event) {
-    event.currentTarget.closest(".dropdown")?.querySelector("[role='button']")?.blur();
-    event.currentTarget.blur();
+  // The Table of Contents is a real <details>, not daisyUI's focus-driven
+  // dropdown. The focus version is what made the cover's credit links
+  // untappable on a phone: the panel is held open by `:focus-within`, so the
+  // first tap anywhere else is spent blurring the trigger and never reaches
+  // the link under it — you have to tap an author name twice, which reads as
+  // the menu blocking the link. <details> has no focus to spend, and daisyUI
+  // excludes `details` from its closed-state rule precisely because the
+  // element already hides its own content, so a shut menu is not in the
+  // document's way at all. Ported from main.
+  let toc = $state(null);
+
+  function closeToc() {
+    if (toc) toc.open = false;
   }
+
+  onMount(() => {
+    // Native <details> does not close when you tap elsewhere, so restore that.
+    // `pointerdown` in the CAPTURE phase is the whole trick: it closes the
+    // panel before the tap resolves but never consumes it, so the same tap
+    // still activates whatever it landed on.
+    function onPointerDown(event) {
+      if (toc?.open && event.target instanceof Node && !toc.contains(event.target)) {
+        toc.open = false;
+      }
+    }
+    function onKeydown(event) {
+      if (event.key === "Escape") closeToc();
+    }
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("keydown", onKeydown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("keydown", onKeydown);
+    };
+  });
 
   // FDL's real profiles, from findevlab.org's page footer.
   const socials = [
@@ -57,33 +93,16 @@
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
-      {#if abstract}
-        <div class="dropdown dropdown-end">
-          <div
-            tabindex="0"
-            role="button"
-            aria-label="Abstract"
-            class="cursor-pointer font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
-          >
-            Abstract
-          </div>
-          <div
-            tabindex="-1"
-            class="dropdown-content z-50 mt-2 w-[min(calc(100vw-2rem),34rem)] rounded-box bg-base-200 p-6 font-sans shadow-lg"
-          >
-            <div class="max-h-[70vh] space-y-3 overflow-y-auto text-sm leading-relaxed text-base-content/80">
-              {@render abstract()}
-            </div>
-          </div>
-        </div>
-      {/if}
-
-      <div class="dropdown dropdown-end">
-        <div
-          tabindex="0"
-          role="button"
+      <details class="dropdown dropdown-end" bind:this={toc}>
+        <!-- `list-none` plus the webkit marker rule strip the disclosure
+             triangle a <summary> paints by default; without both, Safari keeps
+             showing one. `cursor-pointer` is explicit because a summary does
+             not get the hand on its own the way a link does. The type is FDL's
+             own — display caps with the gold underline, not main's accent
+             rule. -->
+        <summary
           aria-label="Table of Contents"
-          class="cursor-pointer font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 hover:underline"
+          class="[&::-webkit-details-marker]:hidden cursor-pointer list-none px-2 py-2 font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 outline-none hover:underline"
         >
           <svg
             class="h-5 w-5 sm:hidden"
@@ -106,24 +125,59 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
             </svg>
           </span>
-        </div>
+        </summary>
+        <!-- Same panel as ChapterRail's hover flyout, deliberately: rounded-2xl
+             on px-5 py-4, a hollow dot per chapter, and the figures nested
+             under a connector. daisyUI's `menu` class is dropped rather than
+             restyled — its own padding and hover rules would fight every one
+             of those. The dots are all idle here; unlike the rail this panel
+             is a destination list, not a position indicator — but hover
+             matches the rail exactly (the primary core shrinks by a scale
+             transform while a wide translucent halo opens around it), and a
+             figure row is one uniform tone, number included.
+             The tokens are this branch's rail, not main's: primary teal-slate
+             for the dots and a base-content hairline for the connector, so the
+             accent rust stays reserved for the marks that point. -->
         <ul
-          tabindex="-1"
-          class="dropdown-content menu z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box bg-base-200 p-2 font-sans shadow-lg"
+          class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-100 px-5 py-4 font-sans text-base-content shadow-lg"
         >
-          {#each links as link (link.href)}
-            <li>
-              <a href={link.href} onclick={closeDropdown}>{link.label}</a>
+          {#each sections as section (section.id)}
+            <li class="group/chapter flex flex-col">
+              <a
+                href="#{section.id}"
+                onclick={closeToc}
+                class="group flex items-start gap-3 -m-1.5 p-1.5 text-left"
+              >
+                <span
+                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover/chapter:scale-[0.6] group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-[9px] group-hover/chapter:ring-primary/15"
+                ></span>
+                <span
+                  class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
+                >
+                  {section.title}
+                </span>
+              </a>
+
+              {#if section.charts?.length}
+                <ul class="mt-2 ml-1.5 flex list-none flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4">
+                  {#each section.charts as chart, i (chart.number ?? i)}
+                    <li>
+                      <a
+                        href="#{section.id}-chart-{i}"
+                        onclick={closeToc}
+                        class="block text-xs leading-snug text-base-content/70 transition-colors duration-200 hover:text-base-content"
+                      >
+                        {chart.number}
+                        {chart.title}
+                      </a>
+                    </li>
+                  {/each}
+                </ul>
+              {/if}
             </li>
           {/each}
         </ul>
-      </div>
-
-      <div class="hidden items-center gap-1.5 font-sans text-sm text-white md:flex">
-        <span class="opacity-60">FR</span>
-        <span class="font-light text-warning">|</span>
-        <span class="font-semibold">EN</span>
-      </div>
+      </details>
 
       <div class="hidden items-center gap-4 md:flex">
         {#each socials as social (social.href)}

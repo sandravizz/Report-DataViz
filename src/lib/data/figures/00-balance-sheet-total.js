@@ -15,7 +15,7 @@ export default {
   // A single series through the stacked renderer draws plain bars.
   kind: "bar-stacked",
   xKey: "year",
-  series: [{ key: "Total assets", value: "total", color: colors.sky }],
+  series: [{ key: "Total assets", value: "total", color: colors.accent }],
   data: parseFigureCsv(csv).map((d) => ({
     ...d,
     total: Math.round((d.liabilities + d.equity) * 10) / 10,

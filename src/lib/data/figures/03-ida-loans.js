@@ -24,7 +24,7 @@ export default {
     circleCallout({
       x: new Date(2024, 0, 1),
       y: 40.35,
-      color: colors.sky,
+      color: colors.accent,
       label: "Back above 40% of disbursements in 2024",
       labelPlacement: "top-left",
       labelXOffset: 20,
@@ -38,7 +38,7 @@ export default {
     circleCallout({
       x: new Date(2022, 0, 1),
       y: 21.62,
-      color: colors.sage,
+      color: colors.strong,
       label: "Grants reach ~20% of all grants received",
       labelPlacement: "bottom-left",
       labelXOffset: 24,
@@ -55,13 +55,13 @@ export default {
       key: "Share of disbursements",
       endLabel: "Share of disbursements",
       value: "disbursements",
-      color: colors.sky,
+      color: colors.accent,
     },
     {
       key: "Grants / IDA",
       endLabel: "Grants / IDA",
       value: "grants",
-      color: colors.sage,
+      color: colors.strong,
     },
   ],
   data: parseFigureCsv(csv),

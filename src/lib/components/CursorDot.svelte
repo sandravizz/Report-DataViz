@@ -1,23 +1,23 @@
 <script>
   import { onMount } from "svelte";
 
-  // Custom pointer for the COVER ONLY: a solid accent dot inside a bigger
-  // translucent accent halo, both locked to the same point. No lag, no trail,
+  // Custom pointer for the COVER ONLY: a solid white dot inside a bigger
+  // translucent white halo, both locked to the same point. No lag, no trail,
   // no easing — the two circles sit exactly under the pointer and go where it
   // goes.
   //
   // The scoping is the design. Two things that are true everywhere else on the
   // report stop being true on the cover:
   //
-  //   1. Contrast. The accent rust is the one saturated hue on this cover —
-  //      the photo is a blue-grey sky and fjord — and it sits mid-dark, which
-  //      is the luminance that survives a photograph: it reads against the
-  //      bright sky at the top (4.8:1) and against the black/65 scrim at the
-  //      bottom (4.4:1). Over a chapter's ground or a figure's white surface
-  //      it would need a dark hairline instead, and a hairline is what makes a
-  //      dot read as a bordered bead rather than a mark.
+  //   1. Contrast. White is the cover's own ink: the title, the author line,
+  //      the credit links and the scroll arrow are all white over a scrim that
+  //      darkens toward the bottom, so a white pointer belongs to that block
+  //      rather than introducing a second colour to it. The photo is a
+  //      blue-grey sky and fjord, and its bright top is the one place white
+  //      has little to push against — so the dot carries a soft dark shadow,
+  //      which keeps its edge without putting a hairline around it.
   //      NOTE the eye-check: this cover has a wide luminance range, so the
-  //      mid-tones of the photo are where to look at the dot first.
+  //      bright sky is where to look at the dot first.
   //   2. The report is made of charts and long-form copy, where a cursor costs
   //      real things: a filled disc travels over the data, and hiding the
   //      system cursor takes away the I-beam over running text. The cover has
@@ -25,13 +25,10 @@
   //      arrow.
   //
   // So the dot is a flourish on the title page and the report proper keeps the
-  // pointer the reader came with. Accent on a cursor is the palette rule kept,
-  // not bent: `--color-accent` is reserved for things that POINT, and this is
-  // the only place it is spent on the cover.
-  //
-  // The halo is `accent/35`, the same fill as the PNG button in
-  // FigureFooter.svelte and the Interpretation button in ChartDisplay.svelte —
-  // the report's translucent-accent value, now in three places.
+  // pointer the reader came with. It is deliberately NOT the accent rust:
+  // `--color-accent` is reserved for things that POINT — underlines, pointers,
+  // the connector rules on the figures — and a cursor is the one mark on the
+  // page the reader is already looking at, so it needs no colour to be found.
 
   // The zone. Landing.svelte's root section carries this attribute and nothing
   // else does; an attribute rather than a hard-coded id so a branch can move
@@ -188,15 +185,21 @@
   .cursor-dot {
     width: 9px;
     height: 9px;
-    background: var(--color-accent);
+    background: #ffffff;
+    /* The one concession to the photo's bright sky, where white alone would
+       dissolve. A shadow rather than a hairline: a stroke around a 9px disc
+       reads as a bordered bead, a shadow just separates it from what is
+       behind it. */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
   }
 
   .cursor-halo {
     width: 28px;
     height: 28px;
-    /* accent/35 — see the note in the script block before changing it. No ink
-       hairline on the halo: the dot inside it already carries the edge, and a
-       stroke around a 28px translucent ring reads as a bordered bead. */
-    background: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    /* white/35 — the same translucent value the accent halo used, now in the
+       cover's own ink. No shadow and no hairline out here: the dot inside it
+       already carries the edge, and an outline around a 28px translucent ring
+       reads as a bordered bead. */
+    background: rgba(255, 255, 255, 0.35);
   }
 </style>

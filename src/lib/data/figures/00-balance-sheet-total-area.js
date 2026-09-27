@@ -26,7 +26,7 @@ export default {
   number: "Figure 1",
   kind: "area",
   xKey: "year",
-  series: [{ key: "Total assets", value: "total", color: colors.sky }],
+  series: [{ key: "Total assets", value: "total", color: colors.accent }],
   // Circled point on the last observation (same emphasis mark as figures 3
   // and 4): the curve peaks at the top-right corner, so the label floats left
   // into the empty space above the area.
@@ -34,7 +34,7 @@ export default {
     circleCallout({
       x: last.year,
       y: last.total,
-      color: colors.sky,
+      color: colors.accent,
       link: { type: "swoop" },
       label: `Biggest yearly growth: +USD ${growth} billion`,
       labelPlacement: "left",

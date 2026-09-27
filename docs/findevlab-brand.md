@@ -29,10 +29,29 @@ Secondary palette (guidelines p. 9):
 `tint(hex, pct)` in `src/lib/colors.js`. Note the guidelines' dark slate is
 `#395966`; the website CSS uses `#385866` — the guidelines value wins here.
 
-**Chart rule:** the palette is muted by design and fails the usual chroma/contrast
-floors for chart marks. Validated mitigation: every series carries a direct label
-(house style already), sand/pale sage never used for thin lines, teal and green
-never adjacent in the same chart. Best-separated line trio: teal / camel / rust.
+**Chart rule (revised 2026-09-23 — the table above is the brand record, not the
+chart palette).** The figures no longer draw series colours from these nine hues.
+
+The palette is muted by design and fails the usual chroma/contrast floors for
+chart marks: six of the nine sit below the C 0.10 chroma floor, and four of
+those also fall under 3:1 on the chapter ground. The old mitigation — direct
+labels on every series, sand/pale sage never on thin lines, teal and green
+never adjacent — kept each figure *legible*, but it could not fix how the
+report read as a whole: several marks in several almost-identical non-colours,
+none of which looks chosen.
+
+The current rule is that **hue does not carry identity**. One saturated ink —
+FDL's own rust `#c24c2c`, the brand's designated "strongest accent", and at
+C 0.159 the most saturated thing in the palette — marks the series its figure
+is about. Everything else sits on a neutral ramp separated by lightness, and
+the direct labels that were already house style carry identity on their own.
+
+Turning the brand hues up was tested and rejected: at teal's hue (H 198) sRGB
+runs out of gamut before C 0.10 unless the colour also lightens, at which point
+it is a bright cyan `#009296` and no longer FDL teal. The only hues in this
+palette that *can* be clear are the warm ones that already are.
+
+See the header of `src/lib/colors.js` for the measurements and the ramp.
 
 ## Fonts
 
@@ -55,4 +74,5 @@ never adjacent in the same chart. Best-separated line trio: teal / camel / rust.
 
 - `src/styles/tailwind.css` — daisyUI theme `findevlab` (semantic UI tokens)
 - `src/styles/fonts.css` — font-face declarations + Barlow import
-- `src/lib/colors.js` — chart palette (`fdl.*`) + legacy role keys for v1 figures
+- `src/lib/colors.js` — the brand record (`fdl.*`), the neutral ramp (`neutral.*`)
+  and the job-keyed series roles the figures actually use (`colors.*`)

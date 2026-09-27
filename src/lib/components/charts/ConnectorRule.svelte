@@ -8,9 +8,9 @@
   // same width, padding, and x domain, so the rule lands on the same pixel
   // column in each.
   import { getChartContext } from "layerchart";
-  import { colors } from "$lib/colors";
+  import { neutral } from "$lib/colors";
 
-  let { x, extendTop = 0, extendBottom = 0, stroke = colors.lavender, strokeWidth = 0.5 } = $props();
+  let { x, extendTop = 0, extendBottom = 0, stroke = neutral.label, strokeWidth = 0.5 } = $props();
 
   const ctx = getChartContext();
 </script>

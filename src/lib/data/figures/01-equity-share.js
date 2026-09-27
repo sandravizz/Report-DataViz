@@ -1,4 +1,4 @@
-import { fdl } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { lineCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // From the IDA_GIZ_KAdequacyModel presentation (slide 10): IDA balance sheet
@@ -36,12 +36,14 @@ export default {
   percent: true,
   xKey: "year",
   // Stack order: first series sits at the bottom. Equity carries the story,
-  // so it sits at the bottom in the dark slate; liabilities de-emphasized
-  // in gray on top. Series point at the share fields so the tooltip reports
-  // percentages (the 100% layout renders the same either way).
+  // so it sits at the bottom in the accent; liabilities recede to the palest
+  // step of the neutral ramp on top — a fill, which is the only job `faint`
+  // is allowed to do. (The comment here used to say "dark slate" and the code
+  // said camel; both are gone.) Series point at the share fields so the
+  // tooltip reports percentages.
   series: [
-    { key: "Equity", value: "equityShare", color: fdl.camel },
-    { key: "Liabilities", value: "liabilitiesShare", color: "#e2e7d4" },
+    { key: "Equity", value: "equityShare", color: colors.accent },
+    { key: "Liabilities", value: "liabilitiesShare", color: colors.faint },
   ],
   data: rows,
 };

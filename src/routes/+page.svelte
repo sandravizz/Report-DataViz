@@ -50,11 +50,6 @@
     },
   ].map((section, i) => ({ ...section, id: `chapter-${i + 1}` }));
 
-  const tocLinks = sections.map((section) => ({
-    href: `#${section.id}`,
-    label: section.title,
-  }));
-
   // The fade between the chapter ground and the white figure surface is
   // painted ON THE CHAPTER BLOCK's own background, not as a spacer div
   // between the two. Ported from main.
@@ -72,8 +67,13 @@
   // natural height — see the layout note in the markup below.
   //
   // This branch's tokens, not main's: base-100 is #ffffff (the figure
-  // surface) and base-200 is #e2eaeb (the chapter ground). NOT lg:-scoped —
-  // the ground has to match Footer's tint on phone and tablet too.
+  // surface) and base-200 is #edf1f1 (the chapter ground — a near-white teal,
+  // see the note on the token in tailwind.css). NOT lg:-scoped — the ground
+  // has to match Footer's tint on phone and tablet too.
+  //
+  // The ramp is unchanged by that lighter ground, and deliberately so: the
+  // stops describe WHERE the handoff happens, not how strong it is, so a
+  // quieter ground simply shortens the part of the fade the eye can see.
   const FIGURE_SURFACE = "var(--color-base-100)";
   const TEXT_SURFACE = "var(--color-base-200)";
 
@@ -124,7 +124,10 @@
   Skip to the report
 </a>
 
-<Header links={tocLinks} />
+<!-- Header and rail take the SAME chapter list: the Table of Contents nests
+     each chapter's figures under it exactly as the rail's hover panel does,
+     so the two navigations describe the report at the same depth. -->
+<Header {sections} />
 <ChapterRail {sections} />
 
 <!-- `main` rather than a bare div: the page had no landmark at all, so
@@ -167,19 +170,48 @@
         <div
           class="mx-auto w-[88vw] max-w-200 py-16 lg:ml-[calc(43%-400px)] lg:w-200 lg:py-28"
         >
-          <h2 class="text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+          <!-- The chapter title is the one piece of display type in the
+               report body, so it is sized like one: 32px climbing to 52px,
+               with the leading pulled to 1.06 and a hair of negative tracking
+               to keep a two-line title reading as a single object. At the old
+               24/30px it was the same tier as the figure titles beside it,
+               which is what made the chapters read as web sections rather
+               than as chapters. `text-balance` keeps the second line from
+               orphaning a word at the 800px column width. -->
+          <h2
+            class="text-[2rem] leading-[1.06] font-semibold tracking-[-0.012em] text-balance sm:text-[2.5rem] lg:text-[3.25rem]"
+          >
+            {section.title}
+          </h2>
           {#if section.intro}
             <!-- The intro is stepped in from the heading (desktop only), so
                  the chapter title reads as the block's left edge and the
                  body text as a subordinate column under it. -->
-            <!-- md:text-xl is a TYPE tier only — the scrolly mechanism stays
-                 keyed to lg: (see the breakpoint note in tailwind.css). At
-                 text-lg the chapter copy was 18px in an 800px column on every
-                 screen from 640px up, which is where the "text is small on
-                 tablet" report comes from: there was no step between the
+            <!-- The md: step is a TYPE tier only — the scrolly mechanism
+                 stays keyed to lg: (see the breakpoint note in tailwind.css).
+                 At text-lg the chapter copy was 18px in an 800px column on
+                 every screen from 640px up, which is where the "text is small
+                 on tablet" report comes from: there was no step between the
                  phone size and the desktop one, so a 1024px iPad read the
-                 phone size across a desktop-width column. -->
-            <p class="mt-8 text-lg leading-relaxed text-base-content/80 md:text-xl lg:pl-16">
+                 phone size across a desktop-width column.
+
+                 `max-w-[34em]` is the other half of that fix, and the more
+                 important half. Size alone was never the problem: 20px across
+                 the full 800px column is ~95 characters a line, well past the
+                 55-75 that is comfortable to read, and a wide measure makes
+                 type feel SMALL however many pixels it has. 34em resolves
+                 against this element's own 21px, so the measure holds at ~62
+                 characters after the lg: step-in — and it scales with the
+                 type instead of having to be retuned beside it.
+
+                 The `/80` STAYS. See docs/type-rendering.md rule 4: on this
+                 branch base-content is #000000, /80 measures 11.6:1 on the
+                 chapter ground, and removing the alpha would put pure black
+                 under long-form reading, which house style rules out. Here
+                 the alpha is not a compromise, it is the near-black. -->
+            <p
+              class="mt-8 max-w-[34em] text-xl leading-relaxed text-base-content/80 md:text-[1.3125rem] lg:pl-16"
+            >
               <!-- Rendered as HTML so the intro can carry a
                    `mark.accent-mark` — the accent underline defined in
                    tailwind.css. The strings come from the chapter list in

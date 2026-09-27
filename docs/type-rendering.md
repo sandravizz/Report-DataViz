@@ -172,8 +172,15 @@ on every branch:
 | `main` | `#103900` | 6.53:1 | 11.51:1 | **full ink** |
 | `kiel-institute` | `#1d1815` | 8.09:1 | 14.17:1 | left at `/80` |
 | `template` | `#221d18` | 8.14:1 | 14.91:1 | left at `/80` |
-| `findevlab` | `#000000` | 11.05:1 | 17.20:1 | left at `/80` |
+| `findevlab` | `#000000` | 11.63:1 | 18.45:1 | left at `/80` |
 | `iea` | `#000000` | 11.79:1 | 18.93:1 | left at `/80` |
+
+The `findevlab` row was remeasured on 2026-09-23: this rule's numbers are
+against the CHAPTER GROUND (rule 2's table above is against the white figure
+surface, which is why the two disagree), and that ground moved from `#e2eaeb`
+to the quieter `#edf1f1`. A lighter ground raises the contrast of everything
+on it, so the row moved further above the line rather than toward it, and the
+decision is unchanged.
 
 Below ~8:1 the passage is under-inked and the alpha comes off. Above it, `/80`
 already reads — and on the two pure-black branches removing it would put

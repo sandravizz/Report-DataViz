@@ -1,6 +1,6 @@
 import { defaultChartPadding } from "layerchart";
 import { scaleBand } from "d3-scale";
-import { ink, fdl } from "./colors.js";
+import { ink, neutral } from "./colors.js";
 
 // The one width that separates the tablet layout from the desktop one, and the
 // single knob for every viewport-conditional value in this file.
@@ -21,10 +21,11 @@ export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // Muted variant for axes/annotations that are a reference rather than the
 // primary readout (e.g. a chart whose series are direct-labeled already).
-// greyGreen is FDL's own "muted secondary, muted label text" palette entry
-// (colors.js) — not currently the default for xAxisProps/yAxisProps below,
-// available for panels that want it explicitly.
-export const mutedTickLabelProps = { fill: fdl.greyGreen, class: "text-xs font-light" };
+// Draws from the neutral ramp's `label` step, the same ink the annotation
+// labels and connector rules use, so everything that is chrome rather than
+// data reads at one weight. Not currently the default for xAxisProps/
+// yAxisProps below; available for panels that want it explicitly.
+export const mutedTickLabelProps = { fill: neutral.label, class: "text-xs font-light" };
 
 // Every line-over-area chart draws its wash at the same strength: the line
 // does the reading, the fill only signals amount. All area components read

@@ -8,8 +8,23 @@
 }
 
 /* FDL corporate colors (brand guidelines pp. 8-9). Base surfaces are white plus
-   tints of the primary teal #709899 (the guidelines sanction 75%/50% tints);
-   #e2eaeb is the section background FDL's own website uses. */
+   tints of the primary teal #709899 (the guidelines sanction 75%/50% tints).
+
+   base-200 is NOT FDL's own #e2eaeb. That value is the section background
+   findevlab.org uses behind short blocks, and at OKLCH L 0.931 / C 0.0087 it
+   is light but not light ENOUGH: against the white figure surface it reads as
+   a panel laid on the page rather than as the page's own ground, and a panel
+   is exactly what makes a reader notice its hue. On a scrolling report, where
+   the ground runs for screens at a time and hands off to white at every
+   figure, that registers as "the text part is blue".
+
+   The fix is lightness first, chroma second. #edf1f1 is the same teal hue
+   (H 206) lifted to L 0.955 and dropped to C 0.004 — still FDL teal rather
+   than a neutral grey, so the footer and the header dropdowns stay in the
+   brand, but quiet enough that the ramp into a figure reads as a lift rather
+   than a change of colour. Picked against the real composition; the ladder it
+   came from was L .931/.945/.955/.967 crossed with C .0087/.006/.004/.0025,
+   plus a slate (H 248) and a chroma-zero grey as controls. */
 @plugin "daisyui/theme" {
   name: 'findevlab';
   default: true;
@@ -17,7 +32,7 @@
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #e2eaeb;
+  --color-base-200: #edf1f1;
   --color-base-300: #b7cbcc;
   /* Black text, matching findevlab.org's article pages (.style_page p is #000). */
   --color-base-content: #000000;
@@ -27,7 +42,19 @@
   --color-secondary-content: #ffffff;
   --color-accent: #c24c2c;
   --color-accent-content: #ffffff;
-  --color-neutral: #5e6d68;
+  /* The ink the report's two filled controls wear — the PNG button and the
+     mobile Interpretation button. Was FDL's grey-green #5e6d68; now the
+     `strong` step of the neutral ramp in src/lib/colors.js, so the controls
+     sit on the same greys the figures do.
+
+     They used to be filled in `accent`. That worked while the accent was the
+     only saturated thing on the page, but the figures now draw their story
+     series in that same rust, so an accent-filled button put a third red
+     object on every figure and competed with the one mark that is supposed
+     to mean "look here". A control is chrome; it gets a neutral.
+
+     White on this step is 7.4:1, so `neutral-content` stays white. */
+  --color-neutral: #505757;
   --color-neutral-content: #ffffff;
   --color-info: #709899;
   --color-info-content: #ffffff;

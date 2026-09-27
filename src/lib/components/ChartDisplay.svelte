@@ -60,8 +60,8 @@
         <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
           {headerLabel}
         </span>
-        <!-- Same device as FigureFooter's PNG button — accent wash at rest,
-             full accent on hover, glyph one step stronger than the label — so
+        <!-- Same device as FigureFooter's PNG button — neutral wash at rest,
+             full neutral on hover, glyph one step stronger than the label — so
              the report has exactly one way of saying "this is a control". It
              matters more here than on PNG: this is the only route to the
              interpretation text below lg, and as flat grey caption text it did
@@ -74,7 +74,7 @@
              so do not shrink it further. aria-label carries the name for
              screen readers. See docs/figure-footer-controls.md. -->
         <button
-          class="group btn btn-circle btn-ghost btn-xs shrink-0 bg-accent/25! text-base-content/75 hover:border-transparent! hover:bg-accent! hover:text-accent-content! hover:shadow-lg! lg:hidden"
+          class="group btn btn-circle btn-ghost btn-xs shrink-0 bg-neutral/25! text-base-content/75 hover:border-transparent! hover:bg-neutral! hover:text-neutral-content! hover:shadow-lg! lg:hidden"
           aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
@@ -93,7 +93,7 @@
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="size-3.5 text-base-content group-hover:text-accent-content"
+            class="size-3.5 text-base-content group-hover:text-neutral-content"
           >
             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>

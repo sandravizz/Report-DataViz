@@ -4,16 +4,17 @@
 // disbursements recede to a light teal context band (the same strong/pale
 // pairing as the equity/liabilities figure), so the grants catch-up since
 // 2018 is the story the eye lands on. The line version stays untouched.
-import { fdl, tint } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 import csv from "./csv/03-ida-loans.csv?raw";
 
 const rows = parseFigureCsv(csv);
 
-// Disbursements keep their teal identity from the line figure, dimmed to the
-// brand-sanctioned 75% white tint; grants keep their camel at full strength.
-const tealMuted = tint(fdl.teal, 0.75);
+// Disbursements are the context band and grants are the story, so the two
+// sit at opposite ends of the report's ink range rather than on two hues:
+// grants in the accent, disbursements on the palest step that is still legal
+// for a labeled line.
 
 // Annotation facts computed from the data: grants' share at its peak vs the
 // 2018 low point ("more than doubled"), disbursements' latest value.
@@ -30,7 +31,7 @@ const lastDisb = rows.findLast((d) => d.disbursements != null);
 export const grantsCallout = circleCallout({
   x: grantsPeak.year,
   y: grantsPeak.grants,
-  color: fdl.camel,
+  color: colors.accent,
   label: `Doubled since ${grantsBase.year.getFullYear()}`,
   labelPlacement: "top-left",
   labelXOffset: 16,
@@ -46,8 +47,8 @@ export const grantsCallout = circleCallout({
 export const disbursementsCallout = circleCallout({
   x: lastDisb.year,
   y: lastDisb.disbursements,
-  // Full-strength teal, not the muted area tint — the ring needs to read.
-  color: fdl.teal,
+  // The strong step, not the band's own `soft` — a 2.5:1 ring does not read.
+  color: colors.strong,
   label: "Back above 40%",
   labelPlacement: "top-left",
   labelXOffset: 12,
@@ -87,17 +88,17 @@ export default {
       key: "Share of disbursements",
       endLabel: "Share of disbursements",
       value: "disbursements",
-      color: tealMuted,
-      // The muted tint is too light to read as type; the label keeps the
-      // teal identity at full strength.
-      endLabelColor: fdl.teal,
+      color: colors.soft,
+      // `soft` is too light to read as type; the end label steps down the
+      // ramp to `strong` so the name of the series is always legible.
+      endLabelColor: colors.strong,
       lineWidth: 2,
     },
     {
       key: "Grants / IDA",
       endLabel: "Grants / IDA",
       value: "grants",
-      color: fdl.camel,
+      color: colors.accent,
       lineWidth: 2.5,
     },
   ],
