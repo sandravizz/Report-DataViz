@@ -2,9 +2,12 @@
   import DescriptionColumn from "./DescriptionColumn.svelte";
   import ChartDisplay from "./ChartDisplay.svelte";
 
-  // sectionId is the owning chapter's id: it namespaces the per-chart scroll
-  // anchors below so ChapterRail can link to an individual figure.
-  let { pairs, sectionId = "" } = $props();
+  // sectionId is the owning sub-chapter's id: it namespaces the per-chart
+  // scroll anchors below so ChapterRail can link to an individual figure.
+  // chapterId is the chapter above it, which the rail reads to tell which
+  // chapter a pinned figure belongs to. Without sub-chapters the two are the
+  // same, hence the fallback.
+  let { pairs, sectionId = "", chapterId = sectionId } = $props();
 
   // Pinned-scroll budget, in vh. The figure sticks for (height - 100vh), and
   // one step goes active every STEP_VH of that.
@@ -97,7 +100,7 @@
     <div
       id="{sectionId}-chart-{i}"
       data-chart-anchor
-      data-chapter={sectionId}
+      data-chapter={chapterId}
       data-step={i}
       class="pointer-events-none absolute left-0 h-px w-px"
       style:top={pairs.length > 1

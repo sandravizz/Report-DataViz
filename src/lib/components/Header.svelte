@@ -1,53 +1,113 @@
 <script>
   import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
+  import { cubicIn, quintOut } from "svelte/easing";
 
-  // Header overlays the landing hero photo (absolutely positioned over
-  // Landing's image, transparent background) rather than sitting in normal
-  // flow with its own bar — see Landing.svelte's scrim. So logo/nav/icons use
-  // white instead of FDL's slate/neutral brand colors, which would vanish
-  // against the photo.
+  // Header overlays the landing cover (absolutely positioned, transparent
+  // background) rather than sitting in normal flow with its own bar. The
+  // cover is the engraving on the chapter ground, so logo/nav/icons are in
+  // the report's ink: the FDL logo recoloured all-black (fdl-logo-black.svg)
+  // and base-content. Hover underlines are the accent red.
   //
   // `sections` is the chapter list from +page.svelte, the same array the
-  // chapter rail gets: `{ id, title, charts }`. The Table of Contents lists
-  // the chapters and nests each chapter's figures under it, so the two
-  // navigations show the report at the same depth.
+  // chapter rail gets: `{ id, title, subchapters: [{ id, title, charts }] }`.
+  // The Table of Contents lists the chapters and nests each one's
+  // sub-chapters and figures under it, so the two navigations show the report
+  // at the same depth.
   let { sections = [] } = $props();
 
-  // The Table of Contents is a real <details>, not daisyUI's focus-driven
-  // dropdown. The focus version is what made the cover's credit links
-  // untappable on a phone: the panel is held open by `:focus-within`, so the
-  // first tap anywhere else is spent blurring the trigger and never reaches
-  // the link under it — you have to tap an author name twice, which reads as
-  // the menu blocking the link. <details> has no focus to spend, and daisyUI
-  // excludes `details` from its closed-state rule precisely because the
-  // element already hides its own content, so a shut menu is not in the
-  // document's way at all. Ported from main.
-  let toc = $state(null);
+  // The Table of Contents is a FULL-PAGE SHEET, not a dropdown (after
+  // silverlinings.bio's Index): clicking the trigger lays the contents over
+  // the whole page as one large, numbered list — the report's structure read
+  // at a glance, rather than a small menu pinned to a corner.
+  //
+  // It is a native <dialog> opened with showModal(), which is what makes it
+  // cheap to get right: the top layer puts it above everything (rail, cursor
+  // dot, pinned figures) with no z-index fight, focus is trapped inside it
+  // while open, and the page behind is inert to taps and screen readers.
+  // A modal dialog does not stop the page scrolling underneath, so that is
+  // done by hand.
+  //
+  // MOTION. The dialog itself is a transparent full-screen frame; what you
+  // see is the panel inside it, rendered under `{#if open}` so Svelte's
+  // transitions can run on it. Opening, the panel drops down from above the
+  // viewport like a blind being pulled, fast out and soft landing (quintOut),
+  // with its whole content already on it — nothing inside animates on its
+  // own, so the text never appears after the sheet. Closing, it
+  // is pulled back up, quicker and accelerating away (cubicIn). The native
+  // dialog is only closed once that outro has finished (onoutroend), so the
+  // panel never vanishes mid-slide.
+  let sheet = $state(null);
+  let open = $state(false);
+  let reduceMotion = $state(false);
+  // The link a reader picked, jumped to again once the dialog is really
+  // closed: closing a modal dialog hands focus back to the trigger, which sits
+  // on the cover, and the browser may scroll to it.
+  let pendingTarget = null;
 
-  function closeToc() {
-    if (toc) toc.open = false;
+  const ms = (duration) => (reduceMotion ? 0 : duration);
+
+  function openToc() {
+    reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    sheet?.showModal();
+    open = true;
+    document.documentElement.style.overflow = "hidden";
   }
 
-  onMount(() => {
-    // Native <details> does not close when you tap elsewhere, so restore that.
-    // `pointerdown` in the CAPTURE phase is the whole trick: it closes the
-    // panel before the tap resolves but never consumes it, so the same tap
-    // still activates whatever it landed on.
-    function onPointerDown(event) {
-      if (toc?.open && event.target instanceof Node && !toc.contains(event.target)) {
-        toc.open = false;
-      }
-    }
-    function onKeydown(event) {
-      if (event.key === "Escape") closeToc();
-    }
-    document.addEventListener("pointerdown", onPointerDown, true);
-    document.addEventListener("keydown", onKeydown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown, true);
-      document.removeEventListener("keydown", onKeydown);
-    };
-  });
+  // Starts the slide up. The scroll lock goes at once, so the page behind is
+  // already free (and already at the chosen chapter) while the sheet leaves.
+  function closeToc() {
+    open = false;
+    unlock();
+  }
+
+  function finishClose() {
+    sheet?.close();
+    if (pendingTarget) jump(pendingTarget);
+    pendingTarget = null;
+  }
+
+  // A link jumps the page INSTANTLY behind the sheet, then the sheet slides
+  // away to reveal the chapter already in place — rather than the sheet
+  // leaving first and the page then scrolling all the way down from the
+  // cover. Default navigation is prevented so the jump can be instant even
+  // though the page otherwise scrolls smoothly.
+  function goTo(event, id) {
+    event.preventDefault();
+    pendingTarget = id;
+    closeToc();
+    jump(id);
+  }
+
+  function jump(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: "instant", block: "start" });
+  }
+
+  // No close button: a click anywhere on the sheet closes it, except on a
+  // chapter, sub-chapter or figure link — those run goTo() instead.
+  function onSheetClick(event) {
+    if (event.target.closest("a")) return;
+    closeToc();
+  }
+
+  // Escape: the dialog would close itself instantly, so take over and play
+  // the same slide as a click.
+  function onCancel(event) {
+    event.preventDefault();
+    closeToc();
+  }
+
+  // Safety net for any close that did not go through closeToc().
+  function onSheetClose() {
+    open = false;
+    unlock();
+  }
+
+  function unlock() {
+    document.documentElement.style.overflow = "";
+  }
+
+  onMount(() => unlock);
 
   // FDL's real profiles, from findevlab.org's page footer.
   const socials = [
@@ -86,98 +146,34 @@
   <div class="flex items-center justify-between gap-4 px-6 py-3">
     <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to top">
       <img
-        src="/fdl-logo-white.svg"
+        src="/fdl-logo-black.svg"
         alt="FDL — Finance for Development Lab"
         class="h-9 w-auto sm:h-11"
       />
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
-      <details class="dropdown dropdown-end" bind:this={toc}>
-        <!-- `list-none` plus the webkit marker rule strip the disclosure
-             triangle a <summary> paints by default; without both, Safari keeps
-             showing one. `cursor-pointer` is explicit because a summary does
-             not get the hand on its own the way a link does. The type is FDL's
-             own — display caps with the gold underline, not main's accent
-             rule. -->
-        <summary
-          aria-label="Table of Contents"
-          class="[&::-webkit-details-marker]:hidden cursor-pointer list-none px-2 py-2 font-display text-sm tracking-wide text-white uppercase decoration-warning decoration-2 underline-offset-8 outline-none hover:underline"
+      <!-- Same trigger type as before — FDL's display caps, gold underline on
+           hover — but it is now a button that opens the sheet below. The
+           chevron went with the dropdown: nothing drops down any more. -->
+      <button
+        type="button"
+        onclick={openToc}
+        aria-haspopup="dialog"
+        aria-label="Index"
+        class="cursor-pointer px-2 py-2 font-display text-sm tracking-wide text-base-content uppercase decoration-accent decoration-2 underline-offset-8 hover:underline"
+      >
+        <svg
+          class="h-5 w-5 sm:hidden"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <svg
-            class="h-5 w-5 sm:hidden"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <span class="hidden items-center gap-2 sm:flex">
-            Table of Contents
-            <svg
-              class="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-            </svg>
-          </span>
-        </summary>
-        <!-- Same panel as ChapterRail's hover flyout, deliberately: rounded-2xl
-             on px-5 py-4, a hollow dot per chapter, and the figures nested
-             under a connector. daisyUI's `menu` class is dropped rather than
-             restyled — its own padding and hover rules would fight every one
-             of those. The dots are all idle here; unlike the rail this panel
-             is a destination list, not a position indicator — but hover
-             matches the rail exactly (the primary core shrinks by a scale
-             transform while a wide translucent halo opens around it), and a
-             figure row is one uniform tone, number included.
-             The tokens are this branch's rail, not main's: primary teal-slate
-             for the dots and a base-content hairline for the connector, so the
-             accent rust stays reserved for the marks that point. -->
-        <ul
-          class="dropdown-content z-50 mt-2 flex w-80 max-w-[calc(100vw-2rem)] list-none flex-col gap-4 rounded-2xl bg-base-100 px-5 py-4 font-sans text-base-content shadow-lg"
-        >
-          {#each sections as section (section.id)}
-            <li class="group/chapter flex flex-col">
-              <a
-                href="#{section.id}"
-                onclick={closeToc}
-                class="group flex items-start gap-3 -m-1.5 p-1.5 text-left"
-              >
-                <span
-                  class="mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-base-content/35 bg-transparent transition-all duration-200 group-hover/chapter:scale-[0.6] group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-[9px] group-hover/chapter:ring-primary/15"
-                ></span>
-                <span
-                  class="text-sm leading-snug text-base-content/55 transition-colors duration-200 group-hover:text-base-content"
-                >
-                  {section.title}
-                </span>
-              </a>
-
-              {#if section.charts?.length}
-                <ul class="mt-2 ml-1.5 flex list-none flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4">
-                  {#each section.charts as chart, i (chart.number ?? i)}
-                    <li>
-                      <a
-                        href="#{section.id}-chart-{i}"
-                        onclick={closeToc}
-                        class="block text-xs leading-snug text-base-content/70 transition-colors duration-200 hover:text-base-content"
-                      >
-                        {chart.number}
-                        {chart.title}
-                      </a>
-                    </li>
-                  {/each}
-                </ul>
-              {/if}
-            </li>
-          {/each}
-        </ul>
-      </details>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <span class="hidden sm:inline">Index</span>
+      </button>
 
       <div class="hidden items-center gap-4 md:flex">
         {#each socials as social (social.href)}
@@ -186,7 +182,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            class="text-white/80 hover:text-white"
+            class="text-base-content/70 hover:text-base-content"
           >
             <svg class={social.size} viewBox={social.viewBox} fill="currentColor">
               <path d={social.path} />
@@ -197,3 +193,120 @@
     </nav>
   </div>
 </header>
+
+<!-- THE CONTENTS SHEET. Covers the whole viewport on the chapter ground and
+     scrolls on its own if the list is longer than the screen. -->
+<dialog
+  bind:this={sheet}
+  onclose={onSheetClose}
+  oncancel={onCancel}
+  aria-label="Index"
+  class="m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 backdrop:bg-transparent"
+>
+  {#if open}
+  <!-- The panel that drops. `opacity: 1` keeps fly from fading it: it should
+       read as a solid sheet sliding, not a ghost. The shadow is what you see
+       of it while it moves — its lower edge passing over the cover. -->
+  <!-- Click-to-close has no keyboard twin on this element because Escape
+       already closes the dialog (onCancel). -->
+  <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+  <div
+    onclick={onSheetClick}
+    in:fly={{ y: "-100%", opacity: 1, duration: ms(560), easing: quintOut }}
+    out:fly={{ y: "-100%", opacity: 1, duration: ms(380), easing: cubicIn }}
+    onoutroend={finishClose}
+    class="h-full overflow-y-auto bg-base-200 font-sans text-base-content shadow-[0_12px_40px_rgb(0_0_0/0.18)]"
+  >
+  <!-- Top bar, now empty: it only keeps the Index heading at the same
+       height below the top edge that it had when the close button lived
+       here. The sheet closes on any click that is not a link (see
+       onSheetClick) or on Escape. -->
+  <div class="min-h-[3.75rem] sm:min-h-[4.25rem]" aria-hidden="true"></div>
+
+  <!-- One centred reading column, like the chapter text. Three tiers:
+         1.0  CHAPTER       semibold, full ink, hairline rule beneath
+         1.1  Sub-chapter   regular, /80 ink, number in a quiet column
+              Figure n …    /80 title right after a quiet inline label,
+                            hung under the sub-chapter's title
+       The number column is a fixed w-10 so every title starts on one line
+       down the page; figures hang from that same line (ml-15 = w-10 + gap-5).
+       PHONES (below md) get a compact tier: smaller type and gaps and a w-8
+       number column (ml-12 = w-8 + gap-4). Every tier is still shown —
+       content is never dropped on a phone. Some scroll is fine.
+       Hover takes a row to full ink and draws the gold underline under its
+       title only — the same mark as the trigger, so the accent keeps
+       meaning "this is a link". That is also why the "Index" heading has
+       no underline: it is not a link. It sits pulled up close to the top
+       bar (negative top margin from md up) rather than a gap below it. -->
+  <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4">
+    <h2
+      class="text-center text-[1.75rem] leading-none font-semibold tracking-[-0.012em] md:text-[2rem] lg:text-[2.5rem]">
+      Index
+    </h2>
+
+    <ol class="mt-8 flex list-none flex-col gap-6 md:mt-12 md:gap-10 lg:mt-16">
+      {#each sections as section, i (section.id)}
+        <!-- No transition of its own: the rows are printed on the sheet and
+             ride down with it, already there as it drops. (They used to
+             settle in one by one behind it, which read as the text arriving
+             late.) -->
+        <li>
+          <a
+            href="#{section.id}"
+            onclick={(e) => goTo(e, section.id)}
+            class="group flex items-baseline gap-4 border-b border-base-content pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:text-xl"
+          >
+            <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
+            <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{section.title}</span>
+          </a>
+
+          {#if section.subchapters?.length}
+            <ol class="mt-2 flex list-none flex-col md:mt-3">
+              {#each section.subchapters as sub, k (sub.id)}
+                <li>
+                  <a
+                    href="#{sub.id}"
+                    onclick={(e) => goTo(e, sub.id)}
+                    class="group flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg transition-colors duration-150 hover:text-base-content"
+                  >
+                    <span class="w-8 shrink-0 text-base-content/55 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
+                    <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{sub.title}</span>
+                  </a>
+
+                  {#if sub.charts.length}
+                    <!-- Figure rows are read as TITLES with a label, not the
+                         other way round: the title carries the ink, the
+                         label is quiet and regular weight (a bold label made
+                         the title beside it look faint by contrast), and the
+                         label runs INLINE ahead of the title. A fixed label
+                         column aligned the titles but left a wide gap after
+                         the short labels, and on a phone squeezed each title
+                         into three lines.
+                         text-base, not text-sm: Barlow is narrow, and at
+                         14px under an alpha tint its strokes thin out. -->
+                    <ul class="mb-2 ml-12 flex list-none flex-col gap-1.5 md:ml-15">
+                      {#each sub.charts as chart, j (chart.number ?? j)}
+                        <li>
+                          <a
+                            href="#{sub.id}-chart-{j}"
+                            onclick={(e) => goTo(e, `${sub.id}-chart-${j}`)}
+                            class="group block text-[0.9375rem] leading-snug text-base-content/80 transition-colors duration-150 hover:text-base-content md:text-base"
+                          >
+                            <span class="mr-2 text-base-content/60">{chart.number}</span>
+                            <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{chart.title}</span>
+                          </a>
+                        </li>
+                      {/each}
+                    </ul>
+                  {/if}
+                </li>
+              {/each}
+            </ol>
+          {/if}
+        </li>
+      {/each}
+    </ol>
+  </div>
+  </div>
+  {/if}
+</dialog>

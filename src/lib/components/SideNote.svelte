@@ -18,7 +18,7 @@
       <p
         class="text-xs font-medium tracking-wide uppercase {glass
           ? 'text-white/70'
-          : 'text-primary'}"
+          : 'text-accent'}"
       >
         {kicker}
       </p>

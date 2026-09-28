@@ -6,14 +6,28 @@ the same behaviour in its own colours — see [Porting to another
 branch](#porting-to-another-branch) for the one contrast check that is not
 automatic.
 
-**This branch's accent is the FDL rust `#c24c2c`** — mid-dark and saturated,
-which changes two things against the reference version on `main`: the hover
-text flips to `accent-content` (white clears 4.8:1 on the rust, the black ink
-only 4.4:1), and the glyph has to follow it with `group-hover:text-accent-content`
-or it stays black under the fill. **There is also no per-figure
-`sandraviz.com` wordmark on this branch** — FDL is a client report and the
-credit lives once in the page footer — so the link half of this document is
-background rather than instructions.
+**On this branch the buttons are filled in `neutral`, not `accent`** (changed
+2026-09-27). Everything below about the *mechanism* — wash at rest, full fill
+on hover, no border, glyph one step stronger than the label — still holds
+exactly; only which token supplies the fill has changed, and the classes are
+`bg-neutral/25!` → `hover:bg-neutral!` with `hover:text-neutral-content!`.
+
+The reason is a palette change, not a change of heart about controls. The rule
+below assumes the accent is otherwise unspent on the page, so that the things
+wearing it are the things you can press. That stopped being true when the
+figures were re-skinned to draw their story series in that same rust (see the
+header of `src/lib/colors.js`): a rust button then sat on every figure
+competing with the one rust mark that means "look here". Where the accent is
+still unspent — `main`, and any future branch — the accent fill below remains
+the default, and this branch is the documented exception.
+
+`--color-neutral` here is `#505757`, the `strong` step of that file's neutral
+ramp. White on it is 7.4:1, so `neutral-content` stays white and the hover
+contrast check below is satisfied with room to spare.
+
+**There is also no per-figure `sandraviz.com` wordmark on this branch** — FDL
+is a client report and the credit lives once in the page footer — so the link
+half of this document is background rather than instructions.
 
 ## The problem
 
@@ -45,9 +59,10 @@ chart, so nothing in it gets a weight of its own. The wordmark used to be
 kinds of thing:**
 
 - The **buttons** — PNG and Interpretation — are *controls*; they perform an
-  action, so they take the accent as a **fill**. At rest, `bg-accent/25`: a
-  wash strong enough to read as green, faint enough that it does not pull the
-  eye off the chart. On hover it goes to the full accent plus the shadow lift.
+  action, so they take a **fill** (the accent by default; `neutral` on this
+  branch — see the note at the top). At rest, `/25`: a wash strong enough to
+  read as a filled shape, faint enough that it does not pull the eye off the
+  chart. On hover it goes to the full-strength fill plus the shadow lift.
   No border — the fill alone carries the shape, and the download
   glyph at full ink supplies the focal point.
 - The **wordmark** is a *link* — it navigates — so it takes the accent as a
@@ -55,8 +70,12 @@ kinds of thing:**
   `mark.accent-mark` in the running text. Hover is the lift alone.
 
 The source line beside them gets neither, which is what makes the distinction
-legible: in a row of identical grey, the two things wearing accent are the two
-things you can press.
+legible: in a row of identical grey, the things wearing a fill or a rule are
+the things you can press. Note what this branch gives up by moving the buttons
+to neutral — the fill no longer separates them from the surrounding grey by
+*hue*, only by being a filled shape at all. That is enough at the size these
+sit, and it is the right trade when the accent has data to mark; it is the
+thing to re-examine first if the controls ever stop reading as pressable.
 
 ## Why the glyph is full ink, and why it cannot be the accent
 

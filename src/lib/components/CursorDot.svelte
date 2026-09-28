@@ -1,23 +1,20 @@
 <script>
   import { onMount } from "svelte";
 
-  // Custom pointer for the COVER ONLY: a solid white dot inside a bigger
-  // translucent white halo, both locked to the same point. No lag, no trail,
+  // Custom pointer for the COVER ONLY: a solid ink dot inside a bigger
+  // translucent ink halo, both locked to the same point. No lag, no trail,
   // no easing — the two circles sit exactly under the pointer and go where it
   // goes.
   //
   // The scoping is the design. Two things that are true everywhere else on the
   // report stop being true on the cover:
   //
-  //   1. Contrast. White is the cover's own ink: the title, the author line,
-  //      the credit links and the scroll arrow are all white over a scrim that
-  //      darkens toward the bottom, so a white pointer belongs to that block
-  //      rather than introducing a second colour to it. The photo is a
-  //      blue-grey sky and fjord, and its bright top is the one place white
-  //      has little to push against — so the dot carries a soft dark shadow,
-  //      which keeps its edge without putting a hairline around it.
-  //      NOTE the eye-check: this cover has a wide luminance range, so the
-  //      bright sky is where to look at the dot first.
+  //   1. Contrast. Ink is the cover's own colour: the title, the author line,
+  //      the credit links, the scroll arrow and the engraving are all
+  //      base-content on the chapter ground, so an ink pointer belongs to that
+  //      block rather than introducing a second colour to it. Over the densest
+  //      engraved shadow (the fjord) the dot sinks into the lines; the halo is
+  //      what still shows it there.
   //   2. The report is made of charts and long-form copy, where a cursor costs
   //      real things: a filled disc travels over the data, and hiding the
   //      system cursor takes away the I-beam over running text. The cover has
@@ -185,21 +182,14 @@
   .cursor-dot {
     width: 9px;
     height: 9px;
-    background: #ffffff;
-    /* The one concession to the photo's bright sky, where white alone would
-       dissolve. A shadow rather than a hairline: a stroke around a 9px disc
-       reads as a bordered bead, a shadow just separates it from what is
-       behind it. */
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+    background: var(--color-base-content);
   }
 
   .cursor-halo {
     width: 28px;
     height: 28px;
-    /* white/35 — the same translucent value the accent halo used, now in the
-       cover's own ink. No shadow and no hairline out here: the dot inside it
-       already carries the edge, and an outline around a 28px translucent ring
-       reads as a bordered bead. */
-    background: rgba(255, 255, 255, 0.35);
+    /* The cover's ink at 18%. No hairline: an outline around a 28px
+       translucent ring reads as a bordered bead. */
+    background: color-mix(in oklab, var(--color-base-content) 18%, transparent);
   }
 </style>

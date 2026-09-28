@@ -6,7 +6,8 @@
   // belongs to the description column, where the dots overlapped its text.
   // Charts get NO dot of their own; a dot per figure would read as a chapter
   // and flatten the hierarchy. They appear only inside the hover panel, one
-  // indent under their chapter (as +page.svelte nests them in `section.charts`).
+  // indent under their sub-chapter (as +page.svelte nests them in
+  // `section.subchapters[].charts`).
   let { sections = [] } = $props();
 
   const FADE_MS = 120;
@@ -89,7 +90,10 @@
       // bottom: the last figure is pinned right up against the footer, so
       // "footer not on screen at all" blanked the rail — including the dots —
       // for the whole of that figure. It hides once the footer reaches it.
-      const pastLanding = firstEl.getBoundingClientRect().top <= 0;
+      // Same line at the top end: the rail comes in as soon as chapter 1
+      // reaches the rail's own height (mid-screen), not only once the cover
+      // has scrolled fully away — that read as the rail arriving late.
+      const pastLanding = firstEl.getBoundingClientRect().top <= mid;
       const beforeFooter = footerEl.getBoundingClientRect().top > mid;
       showRail = pastLanding && beforeFooter;
       if (!showRail && expanded) closePanel();
@@ -119,9 +123,9 @@
           }
         }
       }
-      activeChart = anchor
-        ? `${anchor.dataset.chapter}:${anchor.dataset.step}`
-        : null;
+      // The anchor's own id (`<sub-chapter id>-chart-<step>`) is the figure's
+      // identity now that step numbers restart in every sub-chapter.
+      activeChart = anchor ? anchor.id : null;
 
       // Active chapter. A figure ALWAYS belongs to the chapter that owns it,
       // whichever direction the reader arrived from, so while a figure is
@@ -170,10 +174,9 @@
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function jumpToChart(sectionId, step) {
-    document
-      .getElementById(`${sectionId}-chart-${step}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Sub-chapter headings and figure anchors alike.
+  function jumpToId(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 </script>
 
@@ -210,7 +213,14 @@
 >
   <div class="pointer-events-none h-32 w-14" aria-hidden="true"></div>
 
-  <!-- WIDTH: w-72 gave the title ~32 characters and a chapter title runs
+  <!-- WIDTH (2026-09-28): now w-[28rem] with type one step up throughout
+       (chapter and sub-chapter text-base — one size, weight tells them apart —
+       figure text-sm) — at the old
+       sizes the panel was hard to read. 36rem kept every row on one line but
+       was too wide; at 28rem longer titles wrap to two lines, which is fine.
+       It overlays the chart while open, on its own surface.
+
+       Earlier: w-72 gave the title ~32 characters and a chapter title runs
        well past that, so nearly every row wrapped to two lines and the panel
        read as a wall. w-96 gives it 320px, ~40 characters at text-base. The
        rail starts at left-9 and the chart at 40%, so this still ends well
@@ -223,8 +233,8 @@
        20px right on open, the horizontal half of the shiver above. left-9 +
        px-5 puts the dots on the same 56px line as a bare left-14. -->
   <div
-    class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-4 rounded-2xl px-5 py-4 transition-[background-color,box-shadow] duration-200 {boxOpen
-      ? 'w-96'
+    class="absolute top-1/2 left-0 flex -translate-y-1/2 flex-col gap-5 rounded-2xl px-5 py-5 transition-[background-color,box-shadow] duration-200 {boxOpen
+      ? 'w-[28rem]'
       : 'w-max'} {expanded ? `shadow-lg ${overChart ? 'bg-base-100' : 'bg-base-200'}` : ''}"
   >
     {#each sections as section, i (section.id)}
@@ -241,7 +251,7 @@
           <!-- Hovering a non-current chapter marks it without imitating the
                selected state (the dot shrinks into a halo, the label goes to
                full contrast), so the row reads as clickable without a link
-               underline. mt-0.5 optically centres the dot on the label's first
+               underline. mt-1 optically centres the dot on the label's first
                line, since titles can wrap.
 
                Hover no longer approaches that state, it inverts it: the core
@@ -259,9 +269,9 @@
                chapter's dot. The title keeps the button's own `group`, so a
                figure hover does not darken the heading. -->
           <span
-            class="mt-0.5 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
-              ? 'h-3 w-3 bg-primary'
-              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:scale-[0.6] group-hover/chapter:border-primary group-hover/chapter:bg-primary group-hover/chapter:ring-[9px] group-hover/chapter:ring-primary/15'}"
+            class="mt-1 block shrink-0 rounded-full transition-all duration-200 {activeIndex === i
+              ? 'h-3 w-3 bg-accent'
+              : 'h-2.5 w-2.5 border-[1.5px] border-base-content/35 bg-transparent group-hover/chapter:scale-[0.6] group-hover/chapter:border-accent group-hover/chapter:bg-accent group-hover/chapter:ring-[9px] group-hover/chapter:ring-accent/15'}"
           ></span>
           {#if expanded}
             <!-- aria-hidden because the button now carries the title as its
@@ -274,7 +284,7 @@
               transition:fade={{ duration: FADE_MS }}
               class="text-base leading-snug transition-colors duration-200 {activeIndex ===
               i
-                ? 'font-semibold text-primary'
+                ? 'font-semibold text-accent'
                 : 'text-base-content/55 group-hover:text-base-content'}"
             >
               {section.title}
@@ -282,27 +292,49 @@
           {/if}
         </button>
 
-        {#if expanded && section.charts?.length}
+        <!-- Sub-chapters under the connector, each with its figures one more
+             step in. Plain first pass at the three layers — the TOC design
+             itself is still to be reworked. A sub-chapter reads as current
+             while one of its figures is pinned. -->
+        {#if expanded && section.subchapters?.length}
           <ul
             transition:fade={{ duration: FADE_MS }}
-            class="mt-2 ml-1.5 flex flex-col gap-1.5 border-l border-base-content/15 py-0.5 pl-4"
+            class="mt-2.5 ml-1.5 flex flex-col gap-3 border-l border-base-content/15 py-0.5 pl-4"
           >
-            {#each section.charts as chart, j (chart.number ?? j)}
-              <li>
+            {#each section.subchapters as sub (sub.id)}
+              <li class="flex flex-col">
                 <button
                   type="button"
-                  onclick={() => jumpToChart(section.id, j)}
-                  aria-current={activeChart === `${section.id}:${j}`
-                    ? "true"
-                    : undefined}
-                  class="cursor-pointer text-left text-sm leading-snug transition-colors duration-200 {activeChart ===
-                  `${section.id}:${j}`
-                    ? 'font-medium text-primary'
-                    : 'text-base-content/55 hover:text-base-content'}"
+                  onclick={() => jumpToId(sub.id)}
+                  class="cursor-pointer text-left text-base leading-snug transition-colors duration-200 {activeChart?.startsWith(
+                    `${sub.id}-chart-`
+                  )
+                    ? 'font-medium text-accent'
+                    : 'text-base-content/70 hover:text-base-content'}"
                 >
-                  {chart.number}
-                  {chart.title}
+                  {sub.title}
                 </button>
+                {#if sub.charts.length}
+                  <ul class="mt-1.5 flex flex-col gap-1.5 pl-3">
+                    {#each sub.charts as chart, j (chart.number ?? j)}
+                      {@const chartId = `${sub.id}-chart-${j}`}
+                      <li>
+                        <button
+                          type="button"
+                          onclick={() => jumpToId(chartId)}
+                          aria-current={activeChart === chartId ? "true" : undefined}
+                          class="cursor-pointer text-left text-sm leading-snug transition-colors duration-200 {activeChart ===
+                          chartId
+                            ? 'font-medium text-accent'
+                            : 'text-base-content/55 hover:text-base-content'}"
+                        >
+                          {chart.number}
+                          {chart.title}
+                        </button>
+                      </li>
+                    {/each}
+                  </ul>
+                {/if}
               </li>
             {/each}
           </ul>

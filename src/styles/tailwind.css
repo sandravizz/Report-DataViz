@@ -24,7 +24,11 @@
    brand, but quiet enough that the ramp into a figure reads as a lift rather
    than a change of colour. Picked against the real composition; the ladder it
    came from was L .931/.945/.955/.967 crossed with C .0087/.006/.004/.0025,
-   plus a slate (H 248) and a chroma-zero grey as controls. */
+   plus a slate (H 248) and a chroma-zero grey as controls.
+
+   Lifted once more (2026-09-28) to #f5f7f7 — L 0.975 / C 0.002, same H 206:
+   at #edf1f1 the step from text ground to white figure still read as a
+   colour change. Now it is barely a change at all, only a hint of teal. */
 @plugin "daisyui/theme" {
   name: 'findevlab';
   default: true;
@@ -32,7 +36,7 @@
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #edf1f1;
+  --color-base-200: #f5f7f7;
   --color-base-300: #b7cbcc;
   /* Black text, matching findevlab.org's article pages (.style_page p is #000). */
   --color-base-content: #000000;
