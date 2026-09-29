@@ -46,8 +46,11 @@
   --color-secondary-content: #ffffff;
   --color-accent: #c24c2c;
   --color-accent-content: #ffffff;
-  /* The ink the report's two filled controls wear — the PNG button and the
-     mobile Interpretation button. Was FDL's grey-green #5e6d68; now the
+  /* NOT WORN BY ANY CONTROL since 2026-09-29: the PNG and Interpretation
+     buttons became hairline outlines in base-content (see FigureFooter.svelte)
+     and no longer fill in this. Kept as the theme's neutral step. History:
+     this was the ink the report's two filled controls wore — the PNG button
+     and the mobile Interpretation button. Was FDL's grey-green #5e6d68; now the
      `strong` step of the neutral ramp in src/lib/colors.js, so the controls
      sit on the same greys the figures do.
 

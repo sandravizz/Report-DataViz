@@ -21,25 +21,25 @@
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<!-- lg: the header is FIXED there as a 56px bar (Header.svelte), so the
-     figure starts below it: 3.5rem bar + 1.5rem air = top-20. The height
-     gives up the same 2rem (6rem → 8rem) so the margin under the figure is
+<!-- lg: the header is FIXED there as a 72px bar (Header.svelte), so the
+     figure starts below it: 4.5rem bar + 1.5rem air = top-24. The height
+     gives up the same (6rem → 9rem) so the 3rem margin under the figure is
      unchanged.
      lg: CENTRED at --fig-w, with the chapter rail and the description column
      as equal side columns — see the symmetric layout variables in
      styles/tailwind.css. (Was left-[43%] w-200, off-centre.) -->
-<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-20 lg:w-(--fig-w)">
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
       <!-- mb-2 rather than mb-1 below lg: the Interpretation button is a 24px
-           circle, taller than the eyebrow text it shares the row with, so at
+           square, taller than the eyebrow text it shares the row with, so at
            4px its bottom edge nearly touched the progress rail underneath.
            Only the mobile value moves — lg:mb-3 already had the room, and the
            button is hidden at that breakpoint anyway. -->
@@ -54,21 +54,22 @@
         <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
           {pair.number}
         </span>
-        <!-- Same device as FigureFooter's PNG button — neutral wash at rest,
-             full neutral on hover, glyph one step stronger than the label — so
-             the report has exactly one way of saying "this is a control". It
+        <!-- Same device as FigureFooter's PNG button — a hairline outline,
+             1px ink at 28%, 6px corners, glyph one step stronger than the
+             label — so the report has exactly one way of saying "this is a
+             control". (No letter roll: it is a glyph, and phone-only.) It
              matters more here than on PNG: this is the only route to the
              interpretation text below lg, and as flat grey caption text it did
-             not read as pressable at all. Glyph only, in a 24px circle: any
+             not read as pressable at all. Glyph only, in a 24px square: any
              label at all — "Interpretation", "The read" — crowded the FIGURE
-             eyebrow it shares the line with on a 330px phone, and the accent
-             pill now carries the "this is pressable" signal on its own, so the
+             eyebrow it shares the line with on a 330px phone, and the outline
+             carries the "this is pressable" signal on its own, so the
              words were doing less work than the room they took. 24px is the
              floor, not a target: it is already under the 44px touch guidance,
              so do not shrink it further. aria-label carries the name for
              screen readers. See docs/figure-footer-controls.md. -->
         <button
-          class="group btn btn-circle btn-ghost btn-xs shrink-0 bg-neutral/25! text-base-content/75 hover:border-transparent! hover:bg-neutral! hover:text-neutral-content! hover:shadow-lg! lg:hidden"
+          class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md border border-base-content/28 text-base-content/75 transition-colors duration-200 hover:border-base-content/70 lg:hidden"
           aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
@@ -87,7 +88,7 @@
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="size-3.5 text-base-content group-hover:text-neutral-content"
+            class="size-3.5 text-base-content"
           >
             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>

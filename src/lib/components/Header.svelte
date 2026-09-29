@@ -2,12 +2,14 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { cubicIn, quintOut } from "svelte/easing";
+  import { HoverGlide } from "$lib/hoverGlide.svelte.js";
+  import RollText from "./RollText.svelte";
 
   // Header overlays the landing cover (absolutely positioned, transparent
   // background) rather than sitting in normal flow with its own bar. The
   // cover is the engraving on the chapter ground, so logo/nav/icons are in
   // the report's ink: the FDL logo recoloured all-black (fdl-logo-black.svg)
-  // and base-content. Hover underlines are ink, not the accent red (as in
+  // and base-content. Hover marks are ink, never the accent red (as in
   // ChapterRail — no red in either navigation).
   //
   // `sections` is the chapter list from +page.svelte, the same array the
@@ -47,7 +49,11 @@
 
   const ms = (duration) => (reduceMotion ? 0 : duration);
 
+  // Rows hover with the shared gliding block (lib/hoverGlide.svelte.js).
+  const glide = new HoverGlide();
+
   function openToc() {
+    glide.hide();
     reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     sheet?.showModal();
     open = true;
@@ -112,10 +118,14 @@
   // report. Below lg it is still absolute over the cover and scrolls away.
   // It keeps ONE size throughout — no compacting on scroll (Sandra: the
   // logo changing size after the cover read as a change of header). At lg
-  // the logo is the SMALL size everywhere, cover included: a 56px bar
-  // (logo h-8 + py-3) on a solid ground so copy never runs through it. A
-  // pinned figure starts below the bar (ChartDisplay's lg:top-20 = this
-  // 56px + 24px air); if the bar's height changes, change that offset.
+  // the logo is the SMALL size everywhere, cover included: a 72px bar
+  // (logo h-8 + lg:py-5) on a solid ground so copy never runs through it.
+  // (Was py-3, a 56px bar: the logo and Index sat too close to the top edge
+  // of the screen, 2026-09-29.) Two things are set from this height — if it
+  // changes, change them too: a pinned figure starts below the bar
+  // (ChartDisplay's lg:top-24 = 72px + 24px air, and its lg:h- calc), and an
+  // Index jump lands a sub-chapter title below it (+page.svelte's
+  // lg:scroll-mt-24).
   //
   // The bar is plain base-200: the whole report (text AND pinned figures)
   // sits on that one ground, so the bar is the page's own colour everywhere
@@ -159,7 +169,7 @@
      transparent over the cover. -->
 <header class="absolute inset-x-0 top-0 z-20 lg:fixed lg:bg-base-200">
   <div
-    class="flex items-center justify-between gap-4 px-6 py-3"
+    class="flex items-center justify-between gap-4 px-6 py-3 lg:py-5"
   >
     <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to the cover">
       <img
@@ -170,15 +180,21 @@
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
-      <!-- Same trigger type as before — FDL's display caps, ink underline on
-           hover — but it is now a button that opens the sheet below. The
-           chevron went with the dropdown: nothing drops down any more. -->
+      <!-- FDL's display caps on a SOFT FILL ("option C", 2026-09-29, after
+           bleibtgleich.dev's Menu button): ink at 6%, 6px corners, going to
+           10% on hover while the word rolls (RollText). The same tint as the
+           gliding hover block inside the Index, so trigger and sheet read as
+           one family. Opens the sheet below.
+           Not the hairline outline the figures' PNG button wears: at header
+           size a tall outlined box around full-ink caps read as an empty
+           input field, the frame weaker than its contents. py-1.5 keeps it a
+           low tab rather than a box. -->
       <button
         type="button"
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="cursor-pointer px-2 py-2 font-display text-sm tracking-wide text-base-content uppercase decoration-base-content decoration-2 underline-offset-8 hover:underline"
+        class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10"
       >
         <svg
           class="h-5 w-5 sm:hidden"
@@ -189,7 +205,7 @@
         >
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
-        <span class="hidden sm:inline">Index</span>
+        <span class="hidden sm:inline"><RollText text="Index" /></span>
       </button>
 
       <div class="hidden items-center gap-4 md:flex">
@@ -249,18 +265,31 @@
        down the page. PHONES (below md) get a compact tier: smaller type and
        gaps and a w-8 number column. Both tiers are still shown — content is
        never dropped on a phone. Some scroll is fine.
-       Hover takes a row to full ink and draws an ink underline under its
-       title only — the same mark as the trigger and the chapter rail, so the
-       underline means "this is a link". That is also why the "Index" heading has
-       no underline: it is not a link. It sits pulled up close to the top
-       bar (negative top margin from md up) rather than a gap below it. -->
+       Hover is the gliding highlight block (see `glide` above), not an
+       underline: chapter rows already carry a rule beneath, so an underline
+       read as a second line. A sub-chapter row also goes to full ink.
+       The "Index" heading sits pulled up close to the top bar (negative top
+       margin from md up) rather than a gap below it. -->
   <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4">
     <h2
       class="text-center text-[1.75rem] leading-none font-semibold tracking-[-0.012em] md:text-[2rem] lg:text-[2.5rem]">
       Index
     </h2>
 
-    <ol class="mt-8 flex list-none flex-col gap-6 md:mt-12 md:gap-10 lg:mt-16">
+    <!-- `isolate` keeps the block's -z-10 inside this list: behind the rows,
+         above the sheet's ground. It reaches a little past the column on both
+         sides so titles and numbers keep some air inside it. -->
+    <div
+      {@attach glide.attach}
+      class="relative isolate mt-8 md:mt-12 lg:mt-16"
+    >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute -inset-x-3 top-0 -z-10 bg-base-content/6"
+      style={glide.style}
+    ></div>
+
+    <ol class="flex list-none flex-col gap-6 md:gap-10">
       {#each sections as section, i (section.id)}
         <!-- No transition of its own: the rows are printed on the sheet and
              ride down with it, already there as it drops. (They used to
@@ -270,10 +299,11 @@
           <a
             href="#{section.id}"
             onclick={(e) => goTo(e, section.id)}
-            class="group flex items-baseline gap-4 border-b border-base-content pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:text-xl"
+            data-row
+            class="flex items-baseline gap-4 border-b border-base-content pt-2 pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:text-xl"
           >
             <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
-            <span class="decoration-base-content decoration-2 underline-offset-4 group-hover:underline">{section.title}</span>
+            <span>{section.title}</span>
           </a>
 
           {#if section.subchapters?.length}
@@ -283,10 +313,11 @@
                   <a
                     href="#{sub.id}"
                     onclick={(e) => goTo(e, sub.id)}
-                    class="group flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg transition-colors duration-150 hover:text-base-content"
+                    data-row
+                    class="flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg transition-colors duration-150 hover:text-base-content"
                   >
                     <span class="w-8 shrink-0 text-base-content/55 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
-                    <span class="decoration-base-content decoration-2 underline-offset-4 group-hover:underline">{sub.title}</span>
+                    <span>{sub.title}</span>
                   </a>
                 </li>
               {/each}
@@ -295,6 +326,7 @@
         </li>
       {/each}
     </ol>
+    </div>
   </div>
   </div>
   {/if}

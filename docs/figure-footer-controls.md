@@ -6,7 +6,17 @@ the same behaviour in its own colours — see [Porting to another
 branch](#porting-to-another-branch) for the one contrast check that is not
 automatic.
 
-**On this branch the buttons are filled in `neutral`, not `accent`** (changed
+**Superseded on this branch (2026-09-29): the buttons are now HAIRLINE
+OUTLINES, not fills.** The PNG and Interpretation buttons wear
+`border border-base-content/28 rounded-md`, darkening to
+`hover:border-base-content/70`. (The header's Index trigger tried the outline
+and moved to a soft `bg-base-content/6` fill — at header size the outlined box
+read as an input field.) Text labels roll letter by letter on hover
+(`RollText.svelte`, after bleibtgleich.dev). Plain Tailwind, no daisyUI `.btn`.
+The wash-to-fill mechanism below is kept as the record and as the default for
+branches that have not taken the outline.
+
+**Before that, the buttons on this branch were filled in `neutral`, not `accent`** (changed
 2026-09-27). Everything below about the *mechanism* — wash at rest, full fill
 on hover, no border, glyph one step stronger than the label — still holds
 exactly; only which token supplies the fill has changed, and the classes are

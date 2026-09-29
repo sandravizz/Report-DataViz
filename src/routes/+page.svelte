@@ -224,7 +224,7 @@
                jump lands on the sub-chapter title; scroll-mt keeps air above. -->
           <div
             id={sub.id}
-            class="scroll-mt-12 lg:scroll-mt-20 {k === 0 ? 'mt-12 lg:mt-20' : ''}"
+            class="scroll-mt-12 lg:scroll-mt-24 {k === 0 ? 'mt-12 lg:mt-20' : ''}"
           >
             <h3
               class="text-center text-2xl leading-tight font-medium text-balance underline decoration-1 underline-offset-[0.2em] lg:text-[2rem]"
