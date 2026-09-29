@@ -10,23 +10,10 @@
   // this element's LayerChart chart(s) to build the exported PNG.
   let figureRefs = $state([]);
 
-  // Multi-step figures (e.g. "Figure 13a/13b/13c") show the shared prefix
-  // only — "Figure 13" — instead of cycling the per-step letter; the
-  // progress rail above the title carries the "how far along" signal instead.
-  // A one-pair group has nothing to strip, so it falls back to the full number.
-  function commonPrefixLength(strings) {
-    if (strings.length < 2) return 0;
-    let len = strings[0].length;
-    for (const s of strings.slice(1)) {
-      let i = 0;
-      while (i < len && i < s.length && s[i] === strings[0][i]) i++;
-      len = i;
-    }
-    return len;
-  }
-  let tabPrefixLength = $derived(commonPrefixLength(pairs.map((p) => p.number)));
-  let tabPrefix = $derived(pairs[0]?.number.slice(0, tabPrefixLength).trim() ?? "");
-  let headerLabel = $derived(pairs.length > 1 ? tabPrefix : (pairs[0]?.number ?? ""));
+  // Each figure shows its OWN number. Figures are numbered 1, 2, 3… in
+  // reading order by +page.svelte. (This used to show only the prefix the
+  // group's numbers shared — meant for "Figure 13a/13b" → "Figure 13" — which
+  // for "Figure 1" + "Figure 2" left a bare "Figure" with no number.)
   // One step's worth of fill per chart, not raw scroll fraction: chart 1 of 3
   // lands the rail at 33%, chart 2 at 66%, the last chart always at a flat
   // 100% (rather than only reaching 100% at the very last pixel of the
@@ -34,12 +21,19 @@
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-12 lg:left-[43%] lg:w-200">
+<!-- lg: the header is FIXED there as a 56px bar (Header.svelte), so the
+     figure starts below it: 3.5rem bar + 1.5rem air = top-20. The height
+     gives up the same 2rem (6rem → 8rem) so the margin under the figure is
+     unchanged.
+     lg: CENTRED at --fig-w, with the chapter rail and the description column
+     as equal side columns — see the symmetric layout variables in
+     styles/tailwind.css. (Was left-[43%] w-200, off-centre.) -->
+<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-20 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-6rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-8rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
@@ -58,7 +52,7 @@
              the scrolly mechanism (chart position, description column, the
              Interpretation button's lg:hidden) is untouched and stays on lg. -->
         <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
-          {headerLabel}
+          {pair.number}
         </span>
         <!-- Same device as FigureFooter's PNG button — neutral wash at rest,
              full neutral on hover, glyph one step stronger than the label — so
@@ -137,7 +131,7 @@
         {/if}
       </div>
 
-      <FigureFooter {pair} figureEl={figureRefs[i]} number={headerLabel} progress={stepProgress} />
+      <FigureFooter {pair} figureEl={figureRefs[i]} number={pair.number} progress={stepProgress} />
     </div>
   {/each}
 

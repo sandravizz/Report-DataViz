@@ -78,18 +78,52 @@
      column, chapter rail, the mobile "Interpretation" modal button — so this
      one number decides where the side-by-side desktop layout takes over from
      the stacked tablet one. It is deliberately NOT Tailwind's stock 1024px.
-     The desktop layout is built from two fixed offsets (ChartDisplay's
-     `left-[43%] w-200`, DescriptionColumn's `left-[calc(43%+464px)] right-8`),
-     which means the description column is whatever is left over:
-     0.57 × viewport − 544px. Below ~1400px that leftover collapses — 185px of
-     text at 1280, 83px at 1100 — while the 800px chart, which never shrinks,
-     slides left until it sits under the chapter rail at 56px. Rather than make
-     the chart elastic (tried; it spoils the wide-desktop composition), the
-     tablet layout simply stays in charge until there is genuinely room:
-     1400px leaves the description ~254px and the chart's left edge at 202px.
+     The desktop layout itself is the symmetric set of variables in :root
+     below; 1400px is where both side columns first get a readable width.
      Nothing else in the project uses lg except Header's nav gap; layerchart
-     ships no responsive classes, so it is unaffected. */
-  --breakpoint-lg: 1400px;
+     ships no responsive classes, so it is unaffected.
+     IN REM, NOT PX: Tailwind v4 orders the breakpoint variants by value and
+     cannot compare px against the stock rem breakpoints (sm 40rem, md
+     48rem), so `1400px` put lg: rules BEFORE sm:/md: in the CSS and every
+     `md:x lg:y` pair resolved to the md value on desktop (the compact
+     header logo stayed at sm:h-11, figure titles at md:text-lg). 87.5rem is
+     the same 1400px at the default 16px root. */
+  --breakpoint-lg: 87.5rem;
+}
+
+/* THE DESKTOP (lg+) SCROLLY LAYOUT, SYMMETRIC (2026-09-29). Three columns
+   around the viewport's centre line:
+
+     [ chapter rail ] ←gap→ [    pinned figure    ] ←gap→ [ description ]
+        --rail-w                  --fig-w                    --side-w
+
+   The figure is CENTRED and capped at 760px (640px at 1400). Both gaps are
+   the same --side-gap (88px), so the white space either side of the figure
+   is equal. The description column (DescriptionColumn) is --side-w: what the
+   viewport leaves (less a 24px edge margin) up to 20rem. The chapter rail
+   (ChapterRail) is 2.5rem narrower than that (--rail-w) — it is quieter
+   and needs less measure. The description hugs the figure; the rail is
+   pinned to the window edge under the header logo, so on wide screens the
+   left gap grows beyond --side-gap.
+
+   At 1400: figure 640, description 268, rail 228.
+   At 1920: figure 760, description 320, rail 280.
+
+   (2026-09-29: the gaps were 48px, with the rail's extra 40px giving the
+   left side 88px and the right only 48. Sandra liked the left and wanted the
+   right to match, taking the width from the figure.)
+
+   Used only by lg: classes, so the values below lg are never read. vw rather
+   than %: the rail is position:fixed and the others live in full-width
+   sticky boxes, and vw gives all three the same centre line. */
+:root {
+  --fig-w: min(760px, 100vw - 760px);
+  --side-gap: 88px;
+  --side-w: min(20rem, (100vw - var(--fig-w)) / 2 - var(--side-gap) - 24px);
+  --rail-w: calc(var(--side-w) - 2.5rem);
+  /* No --rail-left: the rail is pinned to the window edge under the logo
+     (left-6 in ChapterRail), not to the figure. */
+  --desc-left: calc(50vw + var(--fig-w) / 2 + var(--side-gap));
 }
 
 /* Accent underline for a marked phrase in running text. A real underline, not
@@ -165,6 +199,17 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+
+  /* Jump TARGETS, not controls: `<main id="top" tabindex="-1">` takes focus
+     when the skip link or the header logo (#top) sends the reader there, and
+     browsers treat that programmatic focus as focus-visible — so the whole
+     report got a red outline whose bottom edge showed as a red rule above
+     the footer. Nothing with tabindex="-1" is in the tab order, so it never
+     needs the ring. */
+  [tabindex="-1"]:focus,
+  [tabindex="-1"]:focus-visible {
+    outline: none;
   }
 }
 

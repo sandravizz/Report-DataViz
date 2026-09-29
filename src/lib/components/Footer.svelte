@@ -1,7 +1,13 @@
-<!-- Colophon only (2026-09-28): a fine ink rule, FDL's logo and imprint,
-     then a small production credit, on the chapter ground — the report simply
-     ends. The "Read the full paper" close and its links were removed at
-     Sandra's request.
+<!-- Colophon only: FDL's imprint and a small production credit, on the
+     chapter ground — the report simply ends.
+
+     LAYOUT "D, bottom bar" (picked 2026-09-29 from five endings): one slim
+     row across the full width on the HEADER's 24px margins (px-6), so the
+     page closes on the same frame it opens on — imprint left, credit right,
+     under a faint full-width hairline. NO LOGO: the fixed header already
+     shows it right above, and a second one read as the logo twice. The
+     space above is the last text block's own bottom padding (py-28 at lg).
+     Below md the two lines stack, left-aligned.
 
      `disclosure` is an optional snippet for report-specific licensing text,
      kept out of the credit line so it stays visually secondary. -->
@@ -9,27 +15,20 @@
   let { disclosure } = $props();
 </script>
 
-<footer class="bg-base-200 font-sans text-base-content">
-  <div class="mx-auto max-w-300 px-6 pt-16 pb-8 sm:px-10 md:pt-24">
-    <div
-      class="flex flex-col gap-4 border-t border-base-content pt-5 md:flex-row md:items-center md:justify-between md:gap-10"
-    >
-      <img
-        src="/fdl-logo-black.svg"
-        alt="FDL — Finance for Development Lab"
-        class="h-7 w-auto shrink-0 self-start md:self-auto"
-      />
-      <!-- FDL's own imprint, as findevlab.org's footer gives it. -->
-      <p class="text-sm leading-relaxed text-base-content/70 md:text-right">
-        © 2026 Finance for Development Lab<br />
-        48 boulevard Jourdan, 75014 Paris
-      </p>
-    </div>
+<footer class="border-t border-base-content/12 bg-base-200 font-sans text-base-content">
+  <div
+    class="flex flex-col gap-1.5 px-6 pt-4.5 pb-5.5 md:flex-row md:items-baseline md:justify-between md:gap-6"
+  >
+    <!-- FDL's own imprint, as findevlab.org's footer gives it. -->
+    <p class="text-[0.8125rem] leading-relaxed text-base-content/70">
+      © 2026 Finance for Development Lab<span class="mx-1.5 text-base-content/55">·</span>48
+      boulevard Jourdan, 75014 Paris
+    </p>
 
     <!-- Production credit, deliberately the quietest line on the page: small,
          /55 (the lowest step that clears 4.5:1), a hairline underline that
          only turns accent on hover. -->
-    <p class="mt-6 text-xs text-base-content/55 md:text-right">
+    <p class="text-xs text-base-content/55">
       Web development and data visualization by
       <a
         href="https://sandraviz.com"
@@ -39,11 +38,11 @@
         >Sandra Becker</a
       >
     </p>
-
-    {#if disclosure}
-      <div class="mt-6 max-w-2xl text-[10px] leading-relaxed text-base-content/55 md:text-[11px]">
-        {@render disclosure()}
-      </div>
-    {/if}
   </div>
+
+  {#if disclosure}
+    <div class="px-6 pb-6 text-[10px] leading-relaxed text-base-content/55 md:text-[11px]">
+      {@render disclosure()}
+    </div>
+  {/if}
 </footer>

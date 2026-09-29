@@ -17,7 +17,7 @@
   });
   const casingStyle = $derived({
     ...lineStyle,
-    stroke: "var(--color-base-100)",
+    stroke: "var(--color-base-200)",
     strokeWidth: innerWidth < 1024 ? 4.5 : 6.5,
   });
 

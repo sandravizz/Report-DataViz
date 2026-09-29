@@ -2,13 +2,20 @@
   let { items, activeIndex } = $props();
 </script>
 
+<!-- Right-hand side column of the symmetric desktop layout: same width and
+     same gap from the figure as the chapter rail on the left (variables in
+     styles/tailwind.css). No padding of its own — --side-gap is the gap. -->
 <div
-  class="absolute top-10 left-[calc(43%+464px)] right-8 hidden flex-col px-6 lg:top-36 lg:flex"
+  class="absolute top-10 left-(--desc-left) hidden w-(--side-w) flex-col lg:top-44 lg:flex"
 >
-  <div class="relative h-56">
+  <!-- Set EXACTLY as the chapter body copy in +page.svelte (text-lg,
+       leading-[1.85], /80 ink): the description is reading the figure asks
+       for, so it must out-rank the chapter rail opposite (text-sm, quiet
+       greys). At equal size the two side columns had the same pull. -->
+  <div class="relative h-80">
     {#each items as item, i (i)}
       <p
-        class="absolute inset-0 font-sans text-base leading-relaxed text-base-content transition-opacity duration-500 ease-[ease]"
+        class="absolute inset-0 font-sans text-lg leading-[1.85] text-base-content/80 transition-opacity duration-500 ease-[ease]"
         style:opacity={i === activeIndex ? 1 : 0}
         style:pointer-events={i === activeIndex ? "auto" : "none"}
       >

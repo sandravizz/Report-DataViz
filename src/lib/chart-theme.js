@@ -144,7 +144,7 @@ const endLabelMobileWrap = {
 // Mobile's smaller text and tighter layouts read the desktop width as a
 // bloated blob rather than a halo, so it's scaled down there.
 function endLabelHalo(innerWidth) {
-  return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < DESKTOP_MIN ? 3 : 8 };
+  return { stroke: "var(--color-base-200)", strokeWidth: innerWidth < DESKTOP_MIN ? 3 : 8 };
 }
 
 // The end-of-line label annotation itself, shared by every panel that names

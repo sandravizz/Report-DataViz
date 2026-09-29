@@ -7,13 +7,13 @@
   // background) rather than sitting in normal flow with its own bar. The
   // cover is the engraving on the chapter ground, so logo/nav/icons are in
   // the report's ink: the FDL logo recoloured all-black (fdl-logo-black.svg)
-  // and base-content. Hover underlines are the accent red.
+  // and base-content. Hover underlines are ink, not the accent red (as in
+  // ChapterRail — no red in either navigation).
   //
   // `sections` is the chapter list from +page.svelte, the same array the
   // chapter rail gets: `{ id, title, subchapters: [{ id, title, charts }] }`.
   // The Table of Contents lists the chapters and nests each one's
-  // sub-chapters and figures under it, so the two navigations show the report
-  // at the same depth.
+  // sub-chapters under it — two layers only; figures are not listed.
   let { sections = [] } = $props();
 
   // The Table of Contents is a FULL-PAGE SHEET, not a dropdown (after
@@ -107,6 +107,19 @@
     document.documentElement.style.overflow = "";
   }
 
+  // DESKTOP ONLY (lg+), a trial on this branch: the header is FIXED, so the
+  // logo (back to the cover) and the Index stay reachable anywhere in the
+  // report. Below lg it is still absolute over the cover and scrolls away.
+  // It keeps ONE size throughout — no compacting on scroll (Sandra: the
+  // logo changing size after the cover read as a change of header). At lg
+  // the logo is the SMALL size everywhere, cover included: a 56px bar
+  // (logo h-8 + py-3) on a solid ground so copy never runs through it. A
+  // pinned figure starts below the bar (ChartDisplay's lg:top-20 = this
+  // 56px + 24px air); if the bar's height changes, change that offset.
+  //
+  // The bar is plain base-200: the whole report (text AND pinned figures)
+  // sits on that one ground, so the bar is the page's own colour everywhere
+  // and never reads as a strip.
   onMount(() => unlock);
 
   // FDL's real profiles, from findevlab.org's page footer.
@@ -142,18 +155,22 @@
   ];
 </script>
 
-<header class="absolute inset-x-0 top-0 z-20">
-  <div class="flex items-center justify-between gap-4 px-6 py-3">
-    <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to top">
+<!-- The ground is only painted from lg up; below lg the header stays
+     transparent over the cover. -->
+<header class="absolute inset-x-0 top-0 z-20 lg:fixed lg:bg-base-200">
+  <div
+    class="flex items-center justify-between gap-4 px-6 py-3"
+  >
+    <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to the cover">
       <img
         src="/fdl-logo-black.svg"
         alt="FDL — Finance for Development Lab"
-        class="h-9 w-auto sm:h-11"
+        class="h-9 w-auto sm:h-11 lg:h-8"
       />
     </a>
 
     <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
-      <!-- Same trigger type as before — FDL's display caps, gold underline on
+      <!-- Same trigger type as before — FDL's display caps, ink underline on
            hover — but it is now a button that opens the sheet below. The
            chevron went with the dropdown: nothing drops down any more. -->
       <button
@@ -161,7 +178,7 @@
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="cursor-pointer px-2 py-2 font-display text-sm tracking-wide text-base-content uppercase decoration-accent decoration-2 underline-offset-8 hover:underline"
+        class="cursor-pointer px-2 py-2 font-display text-sm tracking-wide text-base-content uppercase decoration-base-content decoration-2 underline-offset-8 hover:underline"
       >
         <svg
           class="h-5 w-5 sm:hidden"
@@ -223,19 +240,18 @@
        onSheetClick) or on Escape. -->
   <div class="min-h-[3.75rem] sm:min-h-[4.25rem]" aria-hidden="true"></div>
 
-  <!-- One centred reading column, like the chapter text. Three tiers:
+  <!-- One centred reading column, like the chapter text. Two tiers:
          1.0  CHAPTER       semibold, full ink, hairline rule beneath
          1.1  Sub-chapter   regular, /80 ink, number in a quiet column
-              Figure n …    /80 title right after a quiet inline label,
-                            hung under the sub-chapter's title
+       Figures are deliberately NOT listed here any more: the Index is the
+       report's outline, chapter and sub-chapter only.
        The number column is a fixed w-10 so every title starts on one line
-       down the page; figures hang from that same line (ml-15 = w-10 + gap-5).
-       PHONES (below md) get a compact tier: smaller type and gaps and a w-8
-       number column (ml-12 = w-8 + gap-4). Every tier is still shown —
-       content is never dropped on a phone. Some scroll is fine.
-       Hover takes a row to full ink and draws the gold underline under its
-       title only — the same mark as the trigger, so the accent keeps
-       meaning "this is a link". That is also why the "Index" heading has
+       down the page. PHONES (below md) get a compact tier: smaller type and
+       gaps and a w-8 number column. Both tiers are still shown — content is
+       never dropped on a phone. Some scroll is fine.
+       Hover takes a row to full ink and draws an ink underline under its
+       title only — the same mark as the trigger and the chapter rail, so the
+       underline means "this is a link". That is also why the "Index" heading has
        no underline: it is not a link. It sits pulled up close to the top
        bar (negative top margin from md up) rather than a gap below it. -->
   <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4">
@@ -257,7 +273,7 @@
             class="group flex items-baseline gap-4 border-b border-base-content pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:text-xl"
           >
             <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
-            <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{section.title}</span>
+            <span class="decoration-base-content decoration-2 underline-offset-4 group-hover:underline">{section.title}</span>
           </a>
 
           {#if section.subchapters?.length}
@@ -270,35 +286,8 @@
                     class="group flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg transition-colors duration-150 hover:text-base-content"
                   >
                     <span class="w-8 shrink-0 text-base-content/55 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
-                    <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{sub.title}</span>
+                    <span class="decoration-base-content decoration-2 underline-offset-4 group-hover:underline">{sub.title}</span>
                   </a>
-
-                  {#if sub.charts.length}
-                    <!-- Figure rows are read as TITLES with a label, not the
-                         other way round: the title carries the ink, the
-                         label is quiet and regular weight (a bold label made
-                         the title beside it look faint by contrast), and the
-                         label runs INLINE ahead of the title. A fixed label
-                         column aligned the titles but left a wide gap after
-                         the short labels, and on a phone squeezed each title
-                         into three lines.
-                         text-base, not text-sm: Barlow is narrow, and at
-                         14px under an alpha tint its strokes thin out. -->
-                    <ul class="mb-2 ml-12 flex list-none flex-col gap-1.5 md:ml-15">
-                      {#each sub.charts as chart, j (chart.number ?? j)}
-                        <li>
-                          <a
-                            href="#{sub.id}-chart-{j}"
-                            onclick={(e) => goTo(e, `${sub.id}-chart-${j}`)}
-                            class="group block text-[0.9375rem] leading-snug text-base-content/80 transition-colors duration-150 hover:text-base-content md:text-base"
-                          >
-                            <span class="mr-2 text-base-content/60">{chart.number}</span>
-                            <span class="decoration-accent decoration-2 underline-offset-4 group-hover:underline">{chart.title}</span>
-                          </a>
-                        </li>
-                      {/each}
-                    </ul>
-                  {/if}
                 </li>
               {/each}
             </ol>

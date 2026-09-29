@@ -87,6 +87,7 @@
 
 <div
   bind:this={containerEl}
+  data-surface="figure"
   class="relative"
   style:height="{heightVh}vh"
 >
@@ -110,7 +111,7 @@
   {/each}
   <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
        hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
-  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-100">
+  <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-200">
     <ChartDisplay {pairs} {activeIndex} {inView} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>

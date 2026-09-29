@@ -93,66 +93,41 @@
           intro: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
           charts: [figures.idaLoansAreaSteps[1]],
         },
+        {
+          // Text-only on purpose: the report must END ON TEXT, never on a
+          // figure — a pinned figure running straight into the footer read
+          // as the page stopping mid-thought. Placeholder closing copy until
+          // FDL's conclusion is in.
+          title: "Looking Ahead",
+          intro: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+          charts: [],
+        },
       ],
     },
   ]);
 
-  // Also records on each sub-chapter whether a figure run ends right above
-  // its text block (`rampTop`), which is what textSurface() needs — across
-  // chapter boundaries too, since chapters are no longer one block each.
+  // NUMBERS THE FIGURES: one plain series in reading order — Figure 1, 2,
+  // 3… — overriding whatever `number` the figure file carries (the source
+  // paper's "Figures 1 & 2", "Figure 4a"…). Every place a number is shown
+  // (figure eyebrow, chapter rail, PNG export) reads this one. Figures are
+  // copied, not mutated: the data objects are shared module exports.
   function assignIds(chapters) {
-    let figureAbove = false;
+    let figureCount = 0;
     return chapters.map((chapter, i) => {
       const id = `chapter-${i + 1}`;
       const subchapters = chapter.subchapters.map((sub, k) => {
-        const withId = { body: LOREM, ...sub, id: `${id}-${k + 1}`, rampTop: figureAbove };
-        figureAbove = sub.charts.length > 0;
-        return withId;
+        const charts = sub.charts.map((c) => ({ ...c, number: `Figure ${++figureCount}` }));
+        return { body: LOREM, ...sub, charts, id: `${id}-${k + 1}` };
       });
       return { ...chapter, id, subchapters };
     });
   }
 
-  // The fade between the chapter ground and the white figure surface is
-  // painted ON THE CHAPTER BLOCK's own background, not as a spacer div
-  // between the two. Ported from main.
-  //
-  // That is the whole point. A dedicated band element can only make the fade
-  // longer by making the GAP longer, which buys a screen of empty page. As a
-  // background on the block itself the ramp costs no height whatsoever: it
-  // runs up behind the copy, which is dark enough that a light-to-light wash
-  // underneath changes nothing about reading it. So the fade can be as slow
-  // as it likes and the text still sits directly above its figure.
-  //
-  // The stops are PERCENTAGES, so the ramp scales with the chapter: a long
-  // chapter gets a long fade, a short one a proportionally shorter one, and
-  // neither ever shows a seam. This only works because the block is now
-  // natural height — see the layout note in the markup below.
-  //
-  // This branch's tokens, not main's: base-100 is #ffffff (the figure
-  // surface) and base-200 is #edf1f1 (the chapter ground — a near-white teal,
-  // see the note on the token in tailwind.css). NOT lg:-scoped — the ground
-  // has to match Footer's tint on phone and tablet too.
-  //
-  // The ramp is unchanged by that lighter ground, and deliberately so: the
-  // stops describe WHERE the handoff happens, not how strong it is, so a
-  // quieter ground simply shortens the part of the fade the eye can see.
-  const FIGURE_SURFACE = "var(--color-base-100)";
-  const TEXT_SURFACE = "var(--color-base-200)";
-
-  // `rampTop` is false for chapter 1 — it follows the cover, where the cut is
-  // meant to be hard. `rampBottom` is false when no figure follows.
-  function textSurface(rampTop, rampBottom) {
-    const stops = rampTop
-      ? [`${FIGURE_SURFACE} 0%`, `${TEXT_SURFACE} 35%`]
-      : [`${TEXT_SURFACE} 0%`];
-    stops.push(
-      ...(rampBottom
-        ? [`${TEXT_SURFACE} 65%`, `${FIGURE_SURFACE} 100%`]
-        : [`${TEXT_SURFACE} 100%`])
-    );
-    return `background-image:linear-gradient(to bottom,${stops.join(",")})`;
-  }
+  // ONE GROUND EVERYWHERE (2026-09-29). Text and pinned figures both sit on
+  // base-200, the near-white teal (#f5f7f7). There used to be a white figure
+  // surface with a fade painted into each text block's background on the way
+  // in and out; together with the rail's highlight changing, the background
+  // switching read as noise, so it went. No ramps, no second surface.
 </script>
 
 <svelte:head>
@@ -187,10 +162,9 @@
   Skip to the report
 </a>
 
-<!-- Header and rail take the SAME chapter list: the Table of Contents nests
-     sub-chapters and their figures under each chapter exactly as the rail's
-     hover panel does, so the two navigations describe the report at the same
-     depth. -->
+<!-- Header and rail take the SAME chapter list and split the job: the Index
+     sheet is the outline (chapters and sub-chapters), the left rail (lg+)
+     always shows the CURRENT sub-chapter and its figures. -->
 <Header {sections} />
 <ChapterRail {sections} />
 
@@ -221,12 +195,9 @@
          with a seam between them. -->
     <section id={section.id} class="font-sans text-base-content">
       {#each section.subchapters as sub, k (sub.id)}
-      <!-- The ground and its fade into the white figure surface live in this
-           block's own background — see textSurface() above. -->
-      <div
-        class="bg-base-200"
-        style={textSurface(sub.rampTop, sub.charts.length > 0)}
-      >
+      <!-- data-surface marks the sub-chapter's text block; ChapterRail reads
+           it to tell which sub-chapter the reader is in. -->
+      <div class="bg-base-200" data-surface="text">
         <!-- Report-style text block, after the Silver Linings reference:
              a centred display title per chapter, a centred underlined
              sub-chapter title under it, then a lede one tier bigger than the
