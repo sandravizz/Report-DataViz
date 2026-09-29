@@ -68,14 +68,13 @@
 
       // Shown only while the reader is IN the report, and both edges are
       // live, so scrolling back brings it back.
-      // In: once chapter 1's top has climbed to a quarter of the screen —
-      // most of the cover gone. (Mid-screen brought it in while the cover
-      // still filled half the window, which read as too soon.)
+      // In: once chapter 1's top has climbed to 40% of the screen height.
+      // (Mid-screen read as too soon, a quarter as a little too late.)
       // Out: as soon as the footer's top edge enters the window, which is
       // the moment the last figure unpins and starts scrolling away. (It used
       // to wait for the footer to reach mid-screen, so the rail hung on over
       // the footer's white space.)
-      const pastLanding = firstEl.getBoundingClientRect().top <= window.innerHeight * 0.25;
+      const pastLanding = firstEl.getBoundingClientRect().top <= window.innerHeight * 0.4;
       const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
       showRail = pastLanding && beforeFooter;
 

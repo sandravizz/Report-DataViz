@@ -1,6 +1,17 @@
 <script>
   import CoverEngraving from "$lib/components/CoverEngraving.svelte";
 
+  // The scroll-down arrow is only an invitation: it fades out the moment the
+  // reader starts scrolling (and back in if they return to the very top),
+  // rather than riding up the screen with the cover.
+  let scrolled = $state(false);
+  $effect(() => {
+    const onScroll = () => (scrolled = window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  });
+
   // LinkedIn URLs still to come from the client — href="#" until then.
   const authors = [
     { name: "Mathilde Barras", href: "#" },
@@ -77,7 +88,9 @@
     <a
       href="#charts"
       aria-label="Scroll to content"
-      class="mt-6 self-center text-base-content/60 hover:text-base-content md:mt-8 md:self-start"
+      class="mt-6 self-center text-base-content/60 transition-opacity duration-300 hover:text-base-content md:mt-8 md:self-start {scrolled
+        ? 'pointer-events-none opacity-0'
+        : 'opacity-100'}"
     >
       <svg
         class="h-7 w-7 md:h-8 md:w-8"
