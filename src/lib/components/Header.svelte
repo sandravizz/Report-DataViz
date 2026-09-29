@@ -113,9 +113,9 @@
     document.documentElement.style.overflow = "";
   }
 
-  // DESKTOP ONLY (lg+), a trial on this branch: the header is FIXED, so the
-  // logo (back to the cover) and the Index stay reachable anywhere in the
-  // report. Below lg it is still absolute over the cover and scrolls away.
+  // A trial on this branch: the header is FIXED, so the logo (back to the
+  // cover) and the Index stay reachable anywhere in the report. Desktop
+  // first; phones and tablets followed on 2026-09-29 (see the markup).
   // It keeps ONE size throughout — no compacting on scroll (Sandra: the
   // logo changing size after the cover read as a change of header). At lg
   // the logo is the SMALL size everywhere, cover included: a 72px bar
@@ -165,9 +165,12 @@
   ];
 </script>
 
-<!-- The ground is only painted from lg up; below lg the header stays
-     transparent over the cover. -->
-<header class="absolute inset-x-0 top-0 z-20 lg:fixed lg:bg-base-200">
+<!-- FIXED AT EVERY SIZE (phones joined the desktop trial, 2026-09-29): a
+     solid base-200 bar, so copy never runs through it. Below lg it is a
+     56px bar (logo h-8 + py-3) holding only the logo and the Index button —
+     the social icons wait for md. Things set from that height: ChartDisplay's
+     top-[4.5rem] and h- calc, +page.svelte's scroll-mt-20. -->
+<header class="fixed inset-x-0 top-0 z-20 bg-base-200">
   <div
     class="flex items-center justify-between gap-4 px-6 py-3 lg:py-5"
   >
@@ -175,7 +178,7 @@
       <img
         src="/fdl-logo-black.svg"
         alt="FDL — Finance for Development Lab"
-        class="h-9 w-auto sm:h-11 lg:h-8"
+        class="h-8 w-auto"
       />
     </a>
 
@@ -194,18 +197,12 @@
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10"
+        class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
       >
-        <svg
-          class="h-5 w-5 sm:hidden"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <span class="hidden sm:inline"><RollText text="Index" /></span>
+        <!-- The word at every size — no hamburger on phones (Sandra,
+             2026-09-29). active: darkens the fill on a tap, where there is
+             no hover. -->
+        <RollText text="Index" />
       </button>
 
       <div class="hidden items-center gap-4 md:flex">

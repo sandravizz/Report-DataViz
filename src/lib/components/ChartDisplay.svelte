@@ -21,19 +21,22 @@
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<!-- lg: the header is FIXED there as a 72px bar (Header.svelte), so the
+<!-- Below lg the header is a fixed 56px bar: 3.5rem + 1rem air =
+     top-[4.5rem] (was top-10 with no bar), height 100dvh-6rem so the 1.5rem
+     under the figure is unchanged.
+     lg: the header is FIXED there as a 72px bar (Header.svelte), so the
      figure starts below it: 4.5rem bar + 1.5rem air = top-24. The height
      gives up the same (6rem → 9rem) so the 3rem margin under the figure is
      unchanged.
      lg: CENTRED at --fig-w, with the chapter rail and the description column
      as equal side columns — see the symmetric layout variables in
      styles/tailwind.css. (Was left-[43%] w-200, off-centre.) -->
-<div class="absolute top-10 left-1/2 w-[88vw] -translate-x-1/2 lg:top-24 lg:w-(--fig-w)">
+<div class="absolute top-[4.5rem] left-1/2 w-[88vw] -translate-x-1/2 lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-4rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
@@ -67,9 +70,12 @@
              words were doing less work than the room they took. 24px is the
              floor, not a target: it is already under the 44px touch guidance,
              so do not shrink it further. aria-label carries the name for
-             screen readers. See docs/figure-footer-controls.md. -->
+             screen readers. See docs/figure-footer-controls.md.
+             Now a SOFT FILL (2026-09-29), like PNG below lg and the header's
+             Index button: it is phone-only, where the outline's hover
+             never showed. -->
         <button
-          class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md border border-base-content/28 text-base-content/75 transition-colors duration-200 hover:border-base-content/70 lg:hidden"
+          class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-base-content/6 text-base-content/75 transition-colors duration-200 hover:bg-base-content/12 active:bg-base-content/16 lg:hidden"
           aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
