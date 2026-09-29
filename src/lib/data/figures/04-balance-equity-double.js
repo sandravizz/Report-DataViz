@@ -23,14 +23,11 @@ const highlightLabel = {
 };
 
 // Both band labels are short forms computed from the data (the standalones'
-// full sentences are too long for a band label). The top one is compact —
-// "bn" not "billion", since the subtitle right below already spells out the
-// unit — adds the relative growth, and wraps to two lines: `width` forces
-// the break after "growth", so the amount gets its own line.
+// full sentences are too long for a band label). The top one states the
+// relative growth and wraps to two lines: `width` forces the break.
 const balanceRows = balanceSheetTotalArea.data;
 const balancePrev = balanceRows[balanceRows.length - 2];
 const balanceLast = balanceRows[balanceRows.length - 1];
-const growthBn = Math.round(balanceLast.total - balancePrev.total);
 const growthPct = Math.round(
   ((balanceLast.total - balancePrev.total) / balancePrev.total) * 100
 );

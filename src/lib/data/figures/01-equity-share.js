@@ -1,5 +1,4 @@
 import { colors } from "$lib/colors";
-import { lineCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
 // From the IDA_GIZ_KAdequacyModel presentation (slide 10): IDA balance sheet
 // in USD billion, read off the slide's bar labels (values there in USD
@@ -7,8 +6,7 @@ import { parseFigureCsv } from "./parse-csv.js";
 // traces the balance sheet total.
 import csv from "./csv/01-equity-share.csv?raw";
 
-// Shares computed up front so the callout below can state the peak→last
-// decline straight from the data instead of hardcoding it.
+// Shares computed up front: the series below plot them directly.
 const rows = parseFigureCsv(csv).map((d) => {
   const total = d.liabilities + d.equity;
   return {
@@ -17,10 +15,6 @@ const rows = parseFigureCsv(csv).map((d) => {
     liabilitiesShare: d.liabilities / total,
   };
 });
-
-const peak = rows.reduce((a, b) => (b.equityShare > a.equityShare ? b : a));
-const last = rows[rows.length - 1];
-const declinePp = Math.round((peak.equityShare - last.equityShare) * 100);
 
 export default {
   title: "Equity's Share Is Large… but Declining",

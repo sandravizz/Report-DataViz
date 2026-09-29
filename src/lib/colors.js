@@ -96,13 +96,6 @@ export const neutral = {
 // weight it had and only changes hue family. Anything quieter would drop
 // 12px annotation text under the 4.5:1 line.
 
-// The guidelines also sanction 75% / 50% white tints of any palette color.
-export function tint(hex, pct) {
-  const mix = (c) => Math.round(c * pct + 255 * (1 - pct));
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  return `#${[r, g, b].map((c) => mix(c).toString(16).padStart(2, "0")).join("")}`;
-}
-
 // Axis ticks and annotation labels. Black, not brand slate: FDL's own site
 // (findevlab.org article pages) sets running text in #000, so all general
 // text — in and around the charts — follows it.

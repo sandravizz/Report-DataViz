@@ -1,9 +1,10 @@
-// Overlapping-area variant of 03-ida-loans.js (Datawrapper-style): the same
-// two IDA shares drawn as areas from the baseline — NOT stacked — with the
+// Overlapping-area figure (Datawrapper-style): two IDA shares drawn as areas
+// from the baseline — NOT stacked — with the
 // emphasis flipped to the lower share. Grants carry the strong camel wash,
 // disbursements recede to a light teal context band (the same strong/pale
 // pairing as the equity/liabilities figure), so the grants catch-up since
-// 2018 is the story the eye lands on. The line version stays untouched.
+// 2018 is the story the eye lands on. Not rendered on its own: 07 builds
+// the scrolly steps from it.
 import { colors } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";

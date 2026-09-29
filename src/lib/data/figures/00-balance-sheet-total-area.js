@@ -1,9 +1,8 @@
 import { colors } from "$lib/colors";
 import { circleCallout } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-// Identical to 00-balance-sheet-total.js in every way except the mark:
-// the same balance-sheet total rendered as an area instead of bars, so the
-// two figures can be compared back to back.
+// IDA's balance-sheet total (liabilities + equity) drawn as an area, from the
+// same CSV as the equity-share figure.
 import csv from "./csv/01-equity-share.csv?raw";
 
 const rows = parseFigureCsv(csv).map((d) => ({

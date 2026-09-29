@@ -48,12 +48,7 @@
           title: "A Growing Balance Sheet",
           intro:
             "First the size of the balance sheet, then how much of it equity still finances.",
-          charts: [
-            // figures.balanceSheetTotal,
-            figures.balanceSheetTotalArea,
-            figures.equityShare,
-            // figures.equityShareArea,
-          ],
+          charts: [figures.balanceSheetTotalArea, figures.equityShare],
         },
         {
           title: "Growth and Equity Side by Side",
@@ -86,9 +81,6 @@
       intro:
         "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
       subchapters: [
-        //figures.idaLoans,
-        //figures.idaLoansArea,
-        //figures.idaLoansAreaLegend,
         // The two reveal steps of Figure 4, one per sub-chapter for the test.
         // Each step is a complete figure, so each still draws on its own.
         {

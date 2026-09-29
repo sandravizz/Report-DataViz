@@ -4,15 +4,15 @@
 // ScrollySection crossfades between them like any other chart sequence, and
 // the `drawIn` flag makes AreaChartPanelOverlap wipe the new line and its
 // area wash in left-to-right when the step becomes active. No difference
-// band — the reveal itself is the emphasis. Derived from 05/06 so data,
+// band — the reveal itself is the emphasis. Derived from 05 so data,
 // callouts and styling stay in sync.
 import idaLoansArea, {
   disbursementsCallout,
   grantsCallout,
 } from "./05-ida-loans-area.js";
 
-// Same series specs as the legend variant: end labels stripped in favor of
-// the swatch legend below the plot, which grows with the steps.
+// End labels stripped in favor of the swatch legend below the plot, which
+// grows with the steps.
 const allSeries = idaLoansArea.series.map(({ endLabel, endLabelColor, ...s }) => s);
 const legendItem = (s) => ({ label: s.key, color: s.color });
 
@@ -53,5 +53,3 @@ export const idaLoansAreaSteps = [
     legendItems: allSeries.map(legendItem),
   },
 ];
-
-export default idaLoansAreaSteps[idaLoansAreaSteps.length - 1];

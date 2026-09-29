@@ -25,8 +25,8 @@ Secondary palette (guidelines p. 9):
 | Pale sage | `#abc6b1` | de-emphasized background series |
 | Grey-green | `#5e6d68` | muted labels, `neutral` |
 
-75% and 50% white tints of any color are sanctioned (guidelines pp. 8–9) —
-`tint(hex, pct)` in `src/lib/colors.js`. Note the guidelines' dark slate is
+75% and 50% white tints of any color are sanctioned (guidelines pp. 8–9).
+Note the guidelines' dark slate is
 `#395966`; the website CSS uses `#385866` — the guidelines value wins here.
 
 **Chart rule (revised 2026-09-23 — the table above is the brand record, not the
@@ -64,8 +64,9 @@ See the header of `src/lib/colors.js` for the measurements and the ramp.
 
 ## Logo
 
-- `static/fdl-logo.svg` (color, for white/light backgrounds) and
-  `static/fdl-logo-white.svg` (for dark/colored backgrounds), from findevlab.org.
+- `static/fdl-logo-black.svg`: the FDL logo recoloured all-black, used in the
+  Header and Footer. The color and white originals from findevlab.org were
+  removed as unused; retrieve them from git history if a design needs them.
 - Rules (guidelines pp. 5–7): min width 10 mm with the "Finance for Development
   Lab" wordmark, 6 mm without; generous exclusion zone; never distort, rotate, or
   crop a white box around it on colored backgrounds — use the white version instead.

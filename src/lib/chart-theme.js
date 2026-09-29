@@ -1,6 +1,5 @@
 import { defaultChartPadding } from "layerchart";
-import { scaleBand } from "d3-scale";
-import { ink, neutral } from "./colors.js";
+import { ink } from "./colors.js";
 
 // The one width that separates the tablet layout from the desktop one, and the
 // single knob for every viewport-conditional value in this file.
@@ -15,17 +14,9 @@ import { ink, neutral } from "./colors.js";
 //
 // Every panel feeds this the WINDOW width (`<svelte:window bind:innerWidth />`),
 // not the plot width, so it compares like with like against the CSS breakpoint.
-export const DESKTOP_MIN = 1400;
+const DESKTOP_MIN = 1400;
 
-export const tickLabelProps = { fill: ink, class: "text-xs font-light" };
-
-// Muted variant for axes/annotations that are a reference rather than the
-// primary readout (e.g. a chart whose series are direct-labeled already).
-// Draws from the neutral ramp's `label` step, the same ink the annotation
-// labels and connector rules use, so everything that is chrome rather than
-// data reads at one weight. Not currently the default for xAxisProps/
-// yAxisProps below; available for panels that want it explicitly.
-export const mutedTickLabelProps = { fill: neutral.label, class: "text-xs font-light" };
+const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 
 // Every line-over-area chart draws its wash at the same strength: the line
 // does the reading, the fill only signals amount. All area components read
@@ -35,18 +26,6 @@ export const areaFillOpacity = 0.5;
 // No tick marks and no axis rule line, on any axis of any chart.
 export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
 export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
-
-// X ticks for year axes: every 25 years on the quarter-century grid
-// (1800, 1825, … 2100), so a tick and its gridline always land on 2025,
-// where the projection bands start. Start years off the grid (e.g. 1980)
-// snap up to the next grid year.
-export function quarterCenturyTicks(startYear, endYear) {
-  const ticks = [];
-  for (let y = Math.ceil(startYear / 25) * 25; y <= endYear; y += 25) {
-    ticks.push(new Date(y, 0, 1));
-  }
-  return ticks;
-}
 
 // On mobile the quarter-century ticks crowd the narrow x axis, so keep only
 // the half-century years (1800, 1850, … 2100). Short-range charts would be
@@ -153,7 +132,7 @@ export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
 // pins lineHeight — Text's default line height is a flat 16px (1em resolved
 // against an assumed 16px base font, not our actual text-xs/12px), which
 // reads as oversized gaps between wrapped lines.
-export const endLabelMobileWrap = {
+const endLabelMobileWrap = {
   props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
 };
 
@@ -164,7 +143,7 @@ export const endLabelMobileWrap = {
 // globally on .lc-text-svg), so this reads as a tight halo, not an outline.
 // Mobile's smaller text and tighter layouts read the desktop width as a
 // bloated blob rather than a halo, so it's scaled down there.
-export function endLabelHalo(innerWidth) {
+function endLabelHalo(innerWidth) {
   return { stroke: "var(--color-base-100)", strokeWidth: innerWidth < DESKTOP_MIN ? 3 : 8 };
 }
 
@@ -193,63 +172,4 @@ export function endLabelAnnotation(s, pair, innerWidth) {
     },
     mobile: endLabelMobileWrap,
   };
-}
-
-// Formats a value already scaled to millions (1.5 = 1.5 million) with the
-// magnitude spelled out on the tick label itself. Only shortens to "mil."
-// once a caller passes an actual mobile innerWidth — otherwise spells out
-// "million" in full. Ported from the shared chart-theme helpers; not wired
-// into any findevlab figure yet, available for a future one that needs it.
-export function formatMillions(d, innerWidth = Infinity) {
-  if (d === 0) return "0";
-  if (Math.abs(d) >= 1) {
-    const millions = Math.round(d * 10) / 10;
-    const value = Number.isInteger(millions) ? millions : millions.toFixed(1);
-    return `${value} ${innerWidth < DESKTOP_MIN ? "mil." : "million"}`;
-  }
-  const thousands = Math.round(d * 1000);
-  return `${thousands.toLocaleString()}K`;
-}
-
-// Stacked-bar y tick labels that sit inside the plot rather than in a left
-// gutter, for a mobile layout with nowhere else to put them. textAnchor
-// flips to "start" with a small dx so the label reads into the chart
-// instead of hanging left of the axis line; the halo keeps it legible over
-// gridlines. Not wired into BarChartPanelStacked yet — available for it.
-export function yAxisPropsInline(innerWidth) {
-  return {
-    ...yAxisProps,
-    tickLabelProps: {
-      ...mutedTickLabelProps,
-      textAnchor: "start",
-      verticalAnchor: "end",
-      dx: 8,
-      dy: -3,
-      ...endLabelHalo(innerWidth),
-    },
-  };
-}
-
-// Left padding just needs to clear the SVG edge, since labels above live
-// inside the plot rather than needing gutter width for the longest tick.
-export const yLabelPaddingInline = { left: 8 };
-
-// Extra gap between bars on mobile so two adjacent bars' totals (and, e.g.,
-// a growth arrow between them) fit without crowding; scaled relative to the
-// figure's own base padding so many-bar figures aren't compressed as
-// aggressively as two-bar ones.
-export function responsiveBandPadding(innerWidth, base) {
-  return innerWidth < DESKTOP_MIN ? Math.min(base * 1.6, 0.68) : base;
-}
-
-// scaleBand's `.padding()` setter applies one fraction to both the inner gap
-// (between bars) and outer margin (before/after the first/last bar). A
-// two-bar panel needs a big inner gap (see responsiveBandPadding) but
-// nothing useful fills the outer margin, so passing BarChart this prebuilt
-// scale (via its `xScale` prop) decouples the two: outer stays a small
-// constant and bars get thicker.
-const bandOuterPadding = 0.1;
-
-export function bandXScale(paddingInner) {
-  return scaleBand().paddingInner(paddingInner).paddingOuter(bandOuterPadding);
 }
