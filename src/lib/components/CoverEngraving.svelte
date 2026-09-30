@@ -227,20 +227,35 @@
     ctx.fillRect(fx - fw / 2, hy + fw * 1.1, fw, fh - fw * 1.1);
 
     // Leader and "2030" tag.
+    // KEPT INSIDE THE CANVAS (2026-09-30): on a real phone the ending band is
+    // short, the figure sits near its top, and the tag was drawn above the
+    // canvas's edge — clipped to two red slivers. So the rise is capped to
+    // leave the whole tag in view, and if the tag would run off the right
+    // edge the leader turns left instead. On the cover, where there is room,
+    // nothing changes.
     const size = Math.max(10, Math.min(13, W / 48));
-    const up = Math.max(28, H * 0.07);
+    const tagH = size * 2.1;
+    ctx.save();
+    ctx.font = `500 ${size}px 'IBM Plex Mono', ui-monospace, monospace`;
+    if ("letterSpacing" in ctx) ctx.letterSpacing = `${(size * 0.12).toFixed(1)}px`;
+    const tagW = size * 0.8 * 2 + size * 0.62 + size * 0.6 + ctx.measureText("2030").width;
+    ctx.restore();
+    const up = Math.min(Math.max(28, H * 0.07), hy - tagH / 2 - 2);
     const run = Math.max(40, W * 0.12);
+    const dir = fx + run + tagW <= W - 2 ? 1 : -1;
+    const ly = hy - up;
+    const lx = fx + run * dir;
     ctx.strokeStyle = accent;
     ctx.lineWidth = 1.25;
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.moveTo(fx, hy - 6);
-    ctx.lineTo(fx, hy - up);
-    ctx.lineTo(fx + run, hy - up);
+    ctx.lineTo(fx, ly);
+    ctx.lineTo(lx, ly);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillRect(fx - 3.5, hy - up - 3.5, 7, 7);
-    tag(ctx, fx + run, hy - up, "2030", accent, size);
+    ctx.fillRect(fx - 3.5, ly - 3.5, 7, 7);
+    tag(ctx, dir > 0 ? lx : lx - tagW, ly, "2030", accent, size);
   }
 
   onMount(() => {

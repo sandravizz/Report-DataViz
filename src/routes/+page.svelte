@@ -54,11 +54,22 @@
       intro:
         "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figures 1 and 2).",
       subchapters: [
+        // Split in two (2026-09-30): Figures 1 and 2 used to run back to
+        // back in one sub-chapter, and with no text between them the reader
+        // had no cue that a second, different figure had started. Each now
+        // gets its own heading and lede. The ledes are the chapter intro's
+        // own sentences (FDL copy), divided between the two figures.
         {
           title: "A Growing Balance Sheet",
           intro:
-            "First the size of the balance sheet, then how much of it equity still finances.",
-          charts: [figures.balanceSheetTotalArea, figures.equityShare],
+            "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025.",
+          charts: [figures.balanceSheetTotalArea],
+        },
+        {
+          title: "Equity's Declining Share",
+          intro:
+            "Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth.",
+          charts: [figures.equityShare],
         },
         {
           title: "Growth and Equity Side by Side",
@@ -359,16 +370,18 @@
     </div>
 
     <!-- THE BAND. The crop is the photo's full width over the horizon, ridge,
-         fjord and cliff (y 200–840); it fades out strongly at the top so it
-         rises out of the ground under the colophon, and softly on the other
-         three edges. min-h keeps it a real band on a short or crowded
+         fjord and cliff (y 110–840). The top starts in the empty sky, so
+         there is always room above the figure for its 2030 tag (it was
+         clipped on real phones when the crop started at y 200); the fade
+         at the top dissolves only that sky and the far horizon, and the
+         other three edges fade softly. min-h keeps it a real band on a short or crowded
          screen. Decorative: the colophon above says what the page is, so
          the canvas's label stays short. -->
     <div class="relative min-h-[30svh] flex-1 md:min-h-[34svh]">
       <CoverEngraving
-        crop={{ x: 0, y: 200, w: 2000, h: 640 }}
+        crop={{ x: 0, y: 110, w: 2000, h: 730 }}
         focusU={0.5}
-        fade={{ top: 0.3, bottom: 0.12, left: 0.05, right: 0.05 }}
+        fade={{ top: 0.2, bottom: 0.12, left: 0.05, right: 0.05 }}
         label="Line engraving of the fjord panorama, the lone figure small on the cliff at the far right"
       />
     </div>

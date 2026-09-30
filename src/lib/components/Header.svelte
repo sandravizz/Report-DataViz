@@ -187,8 +187,14 @@
      the social icons wait for md. Things set from that height: ChartDisplay's
      top-[4.5rem] and h- calc, +page.svelte's scroll-mt-20. -->
 <header class="fixed inset-x-0 top-0 z-20 bg-base-200">
+  <!-- Side margins: px-[6vw] below lg, so the logo starts and the Index
+       button ends exactly where the figures and text do — those are
+       w-[88vw] centred, i.e. 6vw each side (2026-09-30: with a fixed px-6
+       the Index button ended short of the figure's Interpretation button
+       on a real phone, visible because the header sits right above it).
+       At lg the figure layout changes, and the header keeps its 24px. -->
   <div
-    class="flex items-center justify-between gap-4 px-6 py-3 lg:py-5"
+    class="flex items-center justify-between gap-4 px-[6vw] py-3 lg:px-6 lg:py-5"
   >
     <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to the cover">
       <img

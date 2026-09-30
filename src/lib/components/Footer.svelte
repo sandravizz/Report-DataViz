@@ -3,7 +3,8 @@
 
      LAYOUT "D, bottom bar" (picked 2026-09-29 from five endings): one slim
      row across the full width on the HEADER's 24px margins (px-6), so the
-     page closes on the same frame it opens on — imprint left, credit right,
+     page closes on the same frame it opens on (and, like the header, on
+     6vw below lg, the figures' and text's own margin) — imprint left, credit right,
      under a faint full-width hairline. NO LOGO: the fixed header already
      shows it right above, and a second one read as the logo twice. The
      space above is the last text block's own bottom padding (py-28 at lg).
@@ -20,19 +21,23 @@
      it off. -->
 <footer class="bg-base-200 font-sans text-base-content">
   <div
-    class="flex flex-col gap-1.5 px-6 pt-4.5 pb-5.5 md:flex-row md:items-baseline md:justify-between md:gap-6"
+    class="flex flex-col gap-1.5 px-[6vw] pt-4.5 pb-5.5 lg:px-6 md:flex-row md:items-baseline md:justify-between md:gap-6"
   >
     <!-- FDL's own imprint, as findevlab.org's footer gives it. -->
     <p class="text-[0.8125rem] leading-relaxed text-base-content/70">
-      © 2026 Finance for Development Lab<span class="mx-1.5 text-base-content/55">·</span>48
-      boulevard Jourdan, 75014 Paris
+      <!-- Below md: name on one line, address on the next (the dot only
+           separates them where they share a line). -->
+      © 2026 Finance for Development Lab<span class="mx-1.5 hidden text-base-content/55 md:inline"
+        >·</span
+      ><br class="md:hidden" />48 boulevard Jourdan, 75014 Paris
     </p>
 
     <!-- Production credit, deliberately the quietest line on the page: small,
          /55 (the lowest step that clears 4.5:1), a hairline underline that
          only turns accent on hover. -->
     <p class="text-xs text-base-content/55">
-      Web development and data visualization by
+      Web development and data visualization<br class="md:hidden" />
+      by
       <a
         href="https://sandraviz.com"
         target="_blank"
@@ -44,7 +49,7 @@
   </div>
 
   {#if disclosure}
-    <div class="px-6 pb-6 text-[10px] leading-relaxed text-base-content/55 md:text-[11px]">
+    <div class="px-[6vw] pb-6 lg:px-6 text-[10px] leading-relaxed text-base-content/55 md:text-[11px]">
       {@render disclosure()}
     </div>
   {/if}
