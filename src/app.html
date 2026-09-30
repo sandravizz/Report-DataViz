@@ -9,6 +9,21 @@
 			content="An interactive report by the Finance for Development Lab on IDA's growth, its financing, and whether disbursements face a cliff by 2030. Web development and data visualization by SandraViz."
 		/>
 		<meta name="robots" content="noindex, nofollow" />
+		<!-- FONTS LOAD HERE, not via @import in fonts.css. An @import is only
+		     found after the bundled CSS has downloaded and parsed, and the woff2
+		     only after THAT stylesheet — three round trips, during which the
+		     text painted in the fallback face and then visibly swapped.
+		     Preconnect + a plain <link> start them with the HTML; the two Kapra
+		     files are preloaded; `display=block` hides text for the few ms the
+		     fonts take instead of flashing a different face. -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@500&display=block"
+		/>
+		<link rel="preload" href="/fonts/KapraNeue-RegularExpanded.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/KapraNeue-SemiBoldExpanded.woff2" as="font" type="font/woff2" crossorigin />
 		<style>
 			/* Pin Tailwind's cascade layer order before any bundled CSS loads.
 			   Vite 8 (Rolldown) hoists the empty `@layer components;` statement above

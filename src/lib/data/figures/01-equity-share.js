@@ -22,7 +22,7 @@ export default {
     "IDA Balance Sheet: Equity and Liabilities as Share of Total Assets, 2017–2025",
   description:
     "IDA's assets are financed mostly by equity, but equity's share is declining: from 80% of the balance sheet in 2017 (89% in 2018) to 73% in 2025, as liabilities grew from USD 39 billion to USD 77 billion.",
-  source: "Sources & series: to be confirmed",
+  source: "Source: Finance for Development Lab (2026)",
   number: "Figure 2",
   kind: "bar-stacked",
   // 100% stacked: bars normalized per year, y axis in percent; the tooltip

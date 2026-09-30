@@ -13,6 +13,11 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import CursorDot from "$lib/components/CursorDot.svelte";
+  import RollText from "$lib/components/RollText.svelte";
+
+  // The PDF the closing call to action downloads. Drop FDL's file in
+  // static/ under this name (or change the path).
+  const pdfHref = "/report.pdf";
 
   // Sections follow the IDA_GIZ_KAdequacyModel presentation's narrative:
   // IDA's growth, financing that growth, and IDA's future.
@@ -259,6 +264,22 @@
                   {@html paragraph}
                 </p>
               {/each}
+
+              <!-- THE CLOSING CALL TO ACTION, under the report's last text
+                   block only. Deliberately the Index button's twin — same
+                   soft fill, display caps and letter roll (Header.svelte) —
+                   so the page opens and closes on one kind of control. -->
+              {#if i === sections.length - 1 && k === section.subchapters.length - 1}
+                <div class="mt-12 flex justify-center lg:mt-16">
+                  <a
+                    href={pdfHref}
+                    download
+                    class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+                  >
+                    <RollText text="Download PDF" />
+                  </a>
+                </div>
+              {/if}
             </div>
           </div>
         </div>

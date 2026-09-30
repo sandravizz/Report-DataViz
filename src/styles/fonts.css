@@ -4,17 +4,18 @@
      the two weights the page sets are declared: 400 (Header) and 600 (cover).
    - Barlow — print & web text face, loaded from Google Fonts like FDL's own site.
    - IBM Plex Mono 500 — NOT an FDL face: only the "2030" tag on the cover
-     engraving (CoverEngraving.svelte), a technical-label nod. */
-
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap');
+     engraving (CoverEngraving.svelte), a technical-label nod.
+   Both Google faces are linked in src/app.html, not @imported here (the
+   @import chain made the fallback face flash on load — see app.html).
+   font-display: block for the same reason: a brief invisible moment instead
+   of a visible swap. The files are preloaded, so it stays brief. */
 
 @font-face {
 	font-family: 'Kapra Neue Expanded';
 	src: url('/fonts/KapraNeue-RegularExpanded.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 @font-face {
@@ -22,5 +23,5 @@
 	src: url('/fonts/KapraNeue-SemiBoldExpanded.woff2') format('woff2');
 	font-weight: 600;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }

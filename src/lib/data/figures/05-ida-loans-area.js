@@ -72,7 +72,7 @@ export default {
     "IDA Share of All Disbursements and Grants Received by Eligible Countries, 2008–2024",
   description:
     "IDA grants more than doubled their share of all grants received by eligible countries — from ~10% in 2018 to ~22% in 2022 — while IDA loans returned to 40% of all disbursements in 2024.",
-  source: "Sources & series: to be confirmed",
+  source: "Source: Finance for Development Lab (2026)",
   number: "Figure 4",
   kind: "area-overlap",
   xKey: "year",

@@ -46,13 +46,21 @@
   // closed: closing a modal dialog hands focus back to the trigger, which sits
   // on the cover, and the browser may scroll to it.
   let pendingTarget = null;
+  // Whether the sheet was opened with a mouse or tap (click `detail` > 0;
+  // Enter/Space give 0). Closing a modal dialog hands focus back to the
+  // trigger, and after an Escape the browser counts that as KEYBOARD focus
+  // and draws the red :focus-visible ring round the Index button. A pointer
+  // user never asked for that ring, so their returned focus is dropped;
+  // keyboard users keep it — it is how they know where they are.
+  let openedByPointer = false;
 
   const ms = (duration) => (reduceMotion ? 0 : duration);
 
   // Rows hover with the shared gliding block (lib/hoverGlide.svelte.js).
   const glide = new HoverGlide();
 
-  function openToc() {
+  function openToc(event) {
+    openedByPointer = (event?.detail ?? 0) > 0;
     glide.hide();
     reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     sheet?.showModal();
@@ -69,6 +77,7 @@
 
   function finishClose() {
     sheet?.close();
+    dropPointerFocus();
     if (pendingTarget) jump(pendingTarget);
     pendingTarget = null;
   }
@@ -107,6 +116,13 @@
   function onSheetClose() {
     open = false;
     unlock();
+    dropPointerFocus();
+  }
+
+  function dropPointerFocus() {
+    if (openedByPointer && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   }
 
   function unlock() {

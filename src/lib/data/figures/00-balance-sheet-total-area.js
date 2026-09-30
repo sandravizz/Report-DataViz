@@ -21,7 +21,7 @@ export default {
   subtitle: "IDA Total Assets, USD Billion, 2017–2025",
   description:
     "IDA's balance sheet grew from about USD 197 billion in 2017 to USD 281 billion in 2025 — an increase of more than 40% in eight years.",
-  source: "Sources & series: to be confirmed",
+  source: "Source: Finance for Development Lab (2026)",
   number: "Figure 1",
   kind: "area",
   xKey: "year",

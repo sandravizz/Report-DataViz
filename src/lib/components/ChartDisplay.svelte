@@ -30,8 +30,13 @@
      unchanged.
      lg: CENTRED at --fig-w, with the chapter rail and the description column
      as equal side columns — see the symmetric layout variables in
-     styles/tailwind.css. (Was left-[43%] w-200, off-centre.) -->
-<div class="absolute top-[4.5rem] left-1/2 w-[88vw] -translate-x-1/2 lg:top-24 lg:w-(--fig-w)">
+     styles/tailwind.css. (Was left-[43%] w-200, off-centre.)
+     Centred with inset-x-0 + mx-auto, NOT left-1/2 -translate-x-1/2: the
+     translate moved the box by half its width, which at an odd pixel width
+     is a half pixel — every label, title and source line in the figure then
+     rendered between pixels and looked soft. Auto margins stay on whole
+     pixels. -->
+<div class="absolute inset-x-0 top-[4.5rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}

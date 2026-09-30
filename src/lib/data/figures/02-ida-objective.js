@@ -34,7 +34,7 @@ export default {
   subtitle: "IDA Disbursements by Financing Window, USD Billion, IDA17–IDA22",
   description:
     "The IDA ambition is maintaining an overall disbursement pace similar to the past 10 years. The IDA cliff is flat or declining disbursements.",
-  source: "Sources & series: to be confirmed",
+  source: "Source: Finance for Development Lab (2026)",
   number: "Figure 3",
   kind: "line",
   xKey: "year",
