@@ -57,10 +57,13 @@
        change both together. See docs/figure-footer-controls.md.
        BELOW lg it wears the header's SOFT FILL instead (ink at 6%, darker on
        hover/tap), 2026-09-29: on a phone the outline's hover change never
-       shows, and the fill matches the Index button in the fixed bar. -->
+       shows, and the fill matches the Index button in the fixed bar.
+       SIZE h-8 px-4 gap-1.5 (was h-6 px-2.5 gap-1, 2026-09-30: the label ran
+       too close to the stroke). The closing "Full report" button in
+       +page.svelte is an exact copy — change both together. -->
   <button
     type="button"
-    class="group inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 self-start rounded-md border border-transparent bg-base-content/6 px-2.5 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:bg-base-content/12 hover:text-base-content active:bg-base-content/16 active:text-base-content disabled:cursor-wait disabled:opacity-60 md:text-xs lg:border-base-content/28 lg:bg-transparent lg:hover:border-base-content/70 lg:hover:bg-transparent"
+    class="group inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-md border border-transparent bg-base-content/6 px-4 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:bg-base-content/12 hover:text-base-content active:bg-base-content/16 active:text-base-content disabled:cursor-wait disabled:opacity-60 md:text-xs lg:border-base-content/28 lg:bg-transparent lg:hover:border-base-content/70 lg:hover:bg-transparent"
     disabled={downloading}
     onclick={handleDownload}
   >
