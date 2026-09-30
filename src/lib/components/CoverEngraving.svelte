@@ -18,15 +18,36 @@
   // Colours come from the theme tokens at draw time, so the ink is the same
   // base-content as the title beside it.
 
+  // PROPS (2026-09-30), so the ending screen can reuse the engraving with a
+  // different crop — the defaults are the cover's, unchanged.
+  //   crop    the part of the 2000×1329 photo to engrave, in photo px.
+  //   focusU  horizontal centre (0..1 of the crop) of what stays in view when
+  //           the box is narrower than the crop.
+  //   fade    { left, right, top, bottom }: how far in (0..1 of the box) the
+  //           engraving dissolves into the ground on each side. Omitted = the
+  //           cover's own vignette (see draw()).
+  //   label   the canvas's accessible description.
+  let {
+    crop = { x: 780, y: 120, w: 1220, h: 1209 },
+    focusU = 0.46,
+    fade = null,
+    label = "Line engraving of a lone figure standing at the edge of a sheer cliff above a fjord",
+  } = $props();
+
   let canvas = $state(null);
 
-  // The photo is 2000×1329. This crop holds the cliff tip, the figure and the
-  // fjord; everything below is in 0..1 of the crop.
-  const CROP = { x: 780, y: 120, w: 1220, h: 1209 };
-  const FIG = { u: (1182 - 780) / 1220, feet: (347 - 120) / 1209, head: (284 - 120) / 1209 };
-  // Horizontal centre of what stays in view when the box is narrower than the
-  // crop — slightly left of middle, so the figure is never cut.
-  const FOCUS_U = 0.46;
+  // The cover crop holds the cliff tip, the figure and the fjord; everything
+  // below is in 0..1 of the crop. The figure is fixed in PHOTO px and mapped
+  // into whichever crop is set.
+  const CROP = crop;
+  const FIG_PX = { x: 1182, feet: 347, head: 284 };
+  const FIG = {
+    u: (FIG_PX.x - CROP.x) / CROP.w,
+    feet: (FIG_PX.feet - CROP.y) / CROP.h,
+    head: (FIG_PX.head - CROP.y) / CROP.h,
+  };
+  // Cover default: slightly left of middle, so the figure is never cut.
+  const FOCUS_U = focusU;
 
   const smooth = (a, b, x) => {
     const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
@@ -165,9 +186,16 @@
 
     // Soft vignette so the engraving dissolves into the ground at the foot
     // and, when it sits beside the title (md and up), on the text side.
+    // A `fade` prop replaces this with its own edges.
     const beside = window.matchMedia("(min-width: 768px)").matches;
-    const vignette = (x, y) =>
-      (beside ? smooth(0, 0.14, x / W) : 1) * smooth(1, 0.86, y / H) * smooth(0, 0.03, y / H);
+    const vignette = fade
+      ? (x, y) =>
+          (fade.left ? smooth(0, fade.left, x / W) : 1) *
+          (fade.right ? smooth(1, 1 - fade.right, x / W) : 1) *
+          (fade.top ? smooth(0, fade.top, y / H) : 1) *
+          (fade.bottom ? smooth(1, 1 - fade.bottom, y / H) : 1)
+      : (x, y) =>
+          (beside ? smooth(0, 0.14, x / W) : 1) * smooth(1, 0.86, y / H) * smooth(0, 0.03, y / H);
 
     const map = photoMap(W, H);
     const s = Math.max(3.4, Math.min(6, W / 118));
@@ -245,6 +273,6 @@
 <canvas
   bind:this={canvas}
   role="img"
-  aria-label="Line engraving of a lone figure standing at the edge of a sheer cliff above a fjord"
+  aria-label={label}
   class="absolute inset-0 block h-full w-full"
 ></canvas>

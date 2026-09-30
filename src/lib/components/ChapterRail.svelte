@@ -56,7 +56,9 @@
   // getBoundingClientRect() reads — nothing cached, so nothing goes stale.
   $effect(() => {
     const firstEl = document.getElementById(sections[0]?.id);
-    const footerEl = document.querySelector("footer");
+    // The rail leaves where the report's content ends: the closing screen
+    // ([data-report-end], +page.svelte) when there is one, else the footer.
+    const footerEl = document.querySelector("[data-report-end]") ?? document.querySelector("footer");
     // Each sub-chapter's whole text block (the heading's data-surface
     // ancestor), not the heading: the block's top is where the reader
     // leaves the previous figure run and enters this sub-chapter.
@@ -73,12 +75,15 @@
       // live, so scrolling back brings it back.
       // In: once chapter 1's top has climbed to 40% of the screen height.
       // (Mid-screen read as too soon, a quarter as a little too late.)
-      // Out: as soon as the footer's top edge enters the window, which is
-      // the moment the last figure unpins and starts scrolling away. (It used
-      // to wait for the footer to reach mid-screen, so the rail hung on over
-      // the footer's white space.)
+      // Out: the MIRROR of in (2026-09-30) — once the ending screen's top
+      // has climbed to 60% of the screen height, i.e. the ending fills the
+      // bottom 40%, just as the report fills the bottom 60% when the rail
+      // arrives. Scrolling back up past that line brings it back, the way
+      // scrolling up to the cover takes it away. (It used to leave the
+      // moment the ending's top edge entered the window, earlier than the
+      // cover's rule, so the two ends did not match.)
       const pastLanding = firstEl.getBoundingClientRect().top <= window.innerHeight * 0.4;
-      const beforeFooter = footerEl.getBoundingClientRect().top >= window.innerHeight;
+      const beforeFooter = footerEl.getBoundingClientRect().top > window.innerHeight * 0.6;
       showRail = pastLanding && beforeFooter;
 
       const overChart = Array.from(document.querySelectorAll("[data-scrolly]")).some((el) => {

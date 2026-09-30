@@ -13,11 +13,14 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import CursorDot from "$lib/components/CursorDot.svelte";
+  import CoverEngraving from "$lib/components/CoverEngraving.svelte";
   import RollText from "$lib/components/RollText.svelte";
 
   // The PDF the closing call to action downloads. Drop FDL's file in
   // static/ under this name (or change the path).
   const pdfHref = "/report.pdf";
+  // The report's name as the closing colophon prints it.
+  const reportTitle = "IDA 2030: Cliff or no cliff?";
   // Where the closing "More from FDL" button sends the reader.
   const fdlHref = "https://findevlab.org";
 
@@ -252,12 +255,16 @@
                   {@html sub.intro}
                 </p>
               {/if}
-              <!-- Body copy. The /80 stays: base-content is #000000 on this
+              <!-- Body copy. Leading 1.6 on phones, 1.85 from md (2026-09-30):
+                   1.85 suits the full ~65-character desktop measure, but on a
+                   phone's ~35-character lines it read as loose, the lines
+                   drifting apart (compare Reuters' mobile stories, ~1.6).
+                   The /80 stays: base-content is #000000 on this
                    branch and house style rules out pure black under
                    long-form reading (docs/type-rendering.md rule 4). -->
               {#each sub.body ?? [] as paragraph, j (j)}
                 <p
-                  class="text-lg leading-[1.85] text-base-content/80 {j === 0 && sub.intro
+                  class="text-lg leading-[1.6] text-base-content/80 md:leading-[1.85] {j === 0 && sub.intro
                     ? 'mt-8'
                     : j > 0
                       ? 'mt-6'
@@ -266,41 +273,6 @@
                   {@html paragraph}
                 </p>
               {/each}
-
-              <!-- THE CLOSING CALL TO ACTION, under the report's last text
-                   block only: the PDF of the full report. Deliberately a copy
-                   of the figures' PNG button (FigureFooter.svelte) — same
-                   hairline outline at lg, soft fill below, download glyph and
-                   letter roll — so it reads as "download this", the same
-                   control the reader met under every figure. Change both
-                   together, size included.
-                   Beside it, the ONWARD step for a reader who finished online:
-                   a link to FDL's own site in the Index button's style (soft
-                   fill, display caps — Header.svelte), opening in a new tab so
-                   the report stays open. Both are 32px tall, so they sit on
-                   one line; flex-wrap stacks them on a narrow phone. -->
-              {#if i === sections.length - 1 && k === section.subchapters.length - 1}
-                <div class="mt-12 flex flex-wrap items-center justify-center gap-3 lg:mt-16">
-                  <a
-                    href={pdfHref}
-                    download
-                    class="group inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-transparent bg-base-content/6 px-4 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:bg-base-content/12 hover:text-base-content active:bg-base-content/16 active:text-base-content md:text-xs lg:border-base-content/28 lg:bg-transparent lg:hover:border-base-content/70 lg:hover:bg-transparent"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-3.5 text-base-content">
-                      <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                    </svg>
-                    <RollText text="Full report" />
-                  </a>
-                  <a
-                    href={fdlHref}
-                    target="_blank"
-                    rel="noopener"
-                    class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
-                  >
-                    <RollText text="More from FDL" />
-                  </a>
-                </div>
-              {/if}
             </div>
           </div>
         </div>
@@ -313,4 +285,94 @@
   {/each}
 </main>
 
-<Footer />
+<!-- THE ENDING SCREEN (2026-09-30), at every size. The last sub-chapter's
+     text ends on its own natural height; the next scroll brings a screen of
+     its own, a bookend to the cover: the same ground, nothing above but
+     empty space, then the colophon the report closes on — title, publisher
+     and year, and the two actions ("option C", picked 2026-09-30 from six
+     endings). Ending screen + footer together fill exactly one small
+     viewport (min-h-svh, like the cover), so the footer sits on the bottom
+     edge and the colophon is centred in the room above it.
+     STACKED AT EVERY SIZE — title, publisher · year, then the buttons —
+     on the left edge of the chapter text's column (88vw, max 40rem). The
+     type scales up from md so the block holds a desktop screen: the title
+     goes 20 → 32 → 44px, near the chapter titles (52px at lg). (It was a
+     row from md, title left and buttons right, at phone type size: on a
+     desktop screen it read as too small, 2026-09-30.) The buttons keep
+     their size.
+     data-report-end tells ChapterRail to leave here rather than at the
+     footer. -->
+<div class="flex min-h-svh flex-col bg-base-200">
+  <!-- The screen splits at every size: the colophon in the upper part, then
+       the cover engraving's whole panorama as a low band filling the rest
+       down to the footer ("option E", picked 2026-09-30 from six ending
+       images) — fjord to cliff, the figure small and far right with its 2030
+       tag. On a phone the band's crop shows the middle of the panorama; the
+       figure and tag stay in view. -->
+  <section
+    data-report-end
+    aria-label="End of report"
+    class="flex flex-1 flex-col font-sans text-base-content"
+  >
+    <div class="pt-[16svh] pb-10 md:pt-[22svh] md:pb-12">
+    <div
+      class="mx-auto flex w-[88vw] max-w-[40rem] flex-col gap-6 md:gap-8 lg:gap-10"
+    >
+      <div>
+        <p
+          class="text-xl leading-snug font-medium text-balance md:text-[2rem] md:leading-[1.15] lg:text-[2.75rem] lg:leading-[1.1] lg:tracking-[-0.012em]"
+        >
+          {reportTitle}
+        </p>
+        <p class="mt-1.5 text-sm text-base-content/55 md:mt-3 md:text-base lg:text-lg">
+          Finance for Development Lab · 2026
+        </p>
+      </div>
+      <!-- "Full report" is an exact copy of the figures' PNG button
+           (FigureFooter.svelte) — outline = download. "More from FDL" is the
+           Index button's twin (Header.svelte) — soft fill = opens something;
+           new tab, so the report stays open. EQUAL WIDTH: the stack is w-max
+           and stretches both to the wider one, labels centred; both 32px
+           tall at every size (Full report does not shrink on phones like the
+           PNG button, so the pair stays matched). -->
+      <div class="flex w-max shrink-0 flex-col items-stretch gap-2.5">
+        <a
+          href={pdfHref}
+          download
+          class="group inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-base-content/28 px-4 font-sans text-xs tracking-wide text-base-content/75 transition-colors duration-200 hover:border-base-content/70 hover:text-base-content active:border-base-content/70 active:text-base-content"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-3.5 text-base-content">
+            <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+          </svg>
+          <RollText text="Full report" />
+        </a>
+        <a
+          href={fdlHref}
+          target="_blank"
+          rel="noopener"
+          class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+        >
+          <RollText text="More from FDL" />
+        </a>
+      </div>
+    </div>
+    </div>
+
+    <!-- THE BAND. The crop is the photo's full width over the horizon, ridge,
+         fjord and cliff (y 200–840); it fades out strongly at the top so it
+         rises out of the ground under the colophon, and softly on the other
+         three edges. min-h keeps it a real band on a short or crowded
+         screen. Decorative: the colophon above says what the page is, so
+         the canvas's label stays short. -->
+    <div class="relative min-h-[30svh] flex-1 md:min-h-[34svh]">
+      <CoverEngraving
+        crop={{ x: 0, y: 200, w: 2000, h: 640 }}
+        focusU={0.5}
+        fade={{ top: 0.3, bottom: 0.12, left: 0.05, right: 0.05 }}
+        label="Line engraving of the fjord panorama, the lone figure small on the cliff at the far right"
+      />
+    </div>
+  </section>
+
+  <Footer />
+</div>

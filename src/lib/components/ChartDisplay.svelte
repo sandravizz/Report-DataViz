@@ -46,9 +46,10 @@
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}
     >
-      <!-- mb-2 rather than mb-1 below lg: the Interpretation button is a 24px
-           square, taller than the eyebrow text it shares the row with, so at
-           4px its bottom edge nearly touched the progress rail underneath.
+      <!-- mb-2 rather than mb-1 below lg: the Interpretation button (24px)
+           is taller than the eyebrow text it shares
+           the row with, so at 4px its bottom edge nearly touched the progress
+           rail underneath.
            Only the mobile value moves — lg:mb-3 already had the room, and the
            button is hidden at that breakpoint anyway. -->
       <div class="mb-2 flex items-center justify-between gap-1 lg:mb-3">
@@ -62,35 +63,25 @@
         <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
           {pair.number}
         </span>
-        <!-- Same device as FigureFooter's PNG button — a hairline outline,
-             1px ink at 28%, 6px corners, glyph one step stronger than the
-             label — so the report has exactly one way of saying "this is a
-             control". (No letter roll: it is a glyph, and phone-only.) It
-             matters more here than on PNG: this is the only route to the
-             interpretation text below lg, and as flat grey caption text it did
-             not read as pressable at all. Glyph only, in a 24px square: any
-             label at all — "Interpretation", "The read" — crowded the FIGURE
-             eyebrow it shares the line with on a 330px phone, and the outline
-             carries the "this is pressable" signal on its own, so the
-             words were doing less work than the room they took. 24px is the
-             floor, not a target: it is already under the 44px touch guidance,
-             so do not shrink it further. aria-label carries the name for
-             screen readers. See docs/figure-footer-controls.md.
-             Now a SOFT FILL (2026-09-29), like PNG below lg and the header's
-             Index button: it is phone-only, where the outline's hover
-             never showed. -->
+        <!-- THE INDEX BUTTON'S FILL (2026-09-30): same ink-6% soft fill,
+             6px corners and hover/tap steps as Header.svelte's Index
+             trigger, at 24px — the phone-size PNG button's height, so the
+             figure's two controls match and neither shouts — holding the three-lines glyph (no word — keep the
+             glyph). The report's buttons speak two words only:
+             OUTLINE = download (PNG, Full report), SOFT FILL = opens
+             something (Index, this).
+             Phone/tablet only (lg:hidden): at lg the interpretation is the
+             description column beside the figure. aria-label keeps the full
+             name for screen readers. -->
         <button
-          class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-base-content/6 text-base-content/75 transition-colors duration-200 hover:bg-base-content/12 active:bg-base-content/16 lg:hidden"
+          type="button"
+          class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-base-content/6 text-base-content transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16 lg:hidden"
           aria-label="Interpretation"
           onclick={() => interpretationModal.showModal()}
         >
-          <!-- Heroicons bars-3-bottom-left, the 24px STROKE set — not the 20px
-               solid set the rest of the report's glyphs come from. A filled
-               disc reads as a stamp from an older generation of UI; at 1.5px
-               the glyph sits at caption weight rather than shouting over the
-               eyebrow. Three stacked rules are also the only glyph that says
-               "there is writing behind this", which is what the button opens —
-               an info circle would say "meta-information about the page". -->
+          <!-- Heroicons bars-3-bottom-left (24px stroke set): three stacked
+               rules say "there is writing behind this", which is what the
+               button opens. -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -99,7 +90,7 @@
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="size-3.5 text-base-content"
+            class="size-3.5"
           >
             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>

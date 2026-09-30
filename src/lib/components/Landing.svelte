@@ -14,7 +14,6 @@
 
   // LinkedIn URLs still to come from the client — href="#" until then.
   const authors = [
-    { name: "Mathilde Barras", href: "#" },
     { name: "Martin Kessler", href: "#" },
     { name: "Stephen Paduano", href: "#" },
   ];
@@ -79,9 +78,9 @@
           class="link-hover underline-offset-4">Finance for Development Lab</a
         >
       </p>
-      <!-- Placeholder publication date until the client confirms the real one. -->
+      <!-- Publication date, confirmed 2026-09-30. -->
       <p class="mt-1 text-sm text-base-content/70 sm:text-base md:mt-2">
-        September 1, 2026 | Report
+        October 16, 2026 | Report
       </p>
     </div>
 

@@ -15,7 +15,10 @@
   let { disclosure } = $props();
 </script>
 
-<footer class="border-t border-base-content/12 bg-base-200 font-sans text-base-content">
+<!-- No hairline (2026-09-30): the ending screen's engraved band runs right
+     down to the footer, and a rule under the image read as a line cutting
+     it off. -->
+<footer class="bg-base-200 font-sans text-base-content">
   <div
     class="flex flex-col gap-1.5 px-6 pt-4.5 pb-5.5 md:flex-row md:items-baseline md:justify-between md:gap-6"
   >
