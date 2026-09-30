@@ -64,6 +64,12 @@ const balancePanel = {
   ...balanceSheetTotalArea,
   // Half-height plots want a sparser axis; no point callouts here.
   yTicks: [100, 200, 300],
+  // Figure 1's right-hand y axis and opaque wash stay out of the double
+  // figure: the right axis changes the plot's xPadding, which would break the
+  // x alignment with the equity panel under it, and an opaque wash would hide
+  // the highlight band drawn beneath the area.
+  yAxisRight: false,
+  solidWash: false,
   annotations: [],
   rangeAnnotations: [balanceBand],
   lineAnnotations: [connectorRule],

@@ -23,9 +23,70 @@ const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 // this — never hardcode a fill opacity in a component or figure.
 export const areaFillOpacity = 0.5;
 
-// No tick marks and no axis rule line, on any axis of any chart.
-export const xAxisProps = {  tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
+// The x axis follows Bloomberg's sediment chart (Sandra, 2026-09-30): an ink
+// axis line with a short tick under every label. `stroke` colours the rule
+// and the tick marks; the labels keep their own fill and halo (the halo is a
+// CSS rule in LayerChart, which beats the stroke attribute). The label's dy
+// overrides LayerChart's default of `tickLength`, which would sit the text
+// flush against the tick's end. The y axis stays bare: gridlines only.
+const X_TICK_LENGTH = 5;
+export const xAxisProps = {
+  rule: true,
+  stroke: ink,
+  tickMarks: true,
+  tickLength: X_TICK_LENGTH,
+  tickLabelProps: { ...tickLabelProps, dy: X_TICK_LENGTH + 3 },
+};
 export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
+
+// How far the x axis line runs past the first and last tick, in px [left,
+// right]. Every time-axis chart passes this as its chart-level `xPadding`:
+// LayerChart pads the scale's DOMAIN by these pixels while the range — and so
+// the axis rule, which spans the range — stays full width. The data and the
+// ticks move in; the line does not. Band (bar) scales ignore xPadding, and
+// don't need it: the band padding already leaves the rule overhanging the
+// outer bars.
+export const xAxisOverhang = [6, 12];
+
+// Y labels at the RIGHT END of their gridlines, sitting on top of the line —
+// Bloomberg's sediment chart again (Sandra, 2026-09-30, figure 1 first). A
+// figure opts in with `yAxisRight: true`. The labels are right-aligned to the
+// end of the range, so they need the data to stop short of it: those charts
+// pass yAxisRightOverhang as xPadding instead of xAxisOverhang, and the
+// right value is the room for a three-digit label ("300" at text-xs ≈ 20px)
+// plus a gap. The gridlines and the x axis line run on under the labels.
+export const yAxisRightProps = {
+  placement: "right",
+  tickLabelProps: { ...tickLabelProps, textAnchor: "end", verticalAnchor: "end", dx: 0, dy: -3 },
+};
+export const yAxisRightOverhang = [6, 32];
+
+// The area wash as an OPAQUE colour: the series colour laid over the white
+// figure surface at areaFillOpacity, pre-mixed. It looks the same as the
+// translucent wash, but the gridlines no longer show through the area — the
+// area paints over them, as in the Bloomberg reference. A single-series
+// figure opts in with `solidWash: true`; AreaChartPanel then passes the fill
+// through `props.area`. NOT through the series' own `props`: LayerChart's
+// Spline spreads those onto the top line too, and a filled open line closes
+// with a straight chord from the last point back to the first. Not for
+// overlapping series: an opaque later area would hide the earlier one.
+export function solidWash(color, opacity = areaFillOpacity) {
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const [r, g, b] = rgb(color).map((c) => Math.round(255 + (c - 255) * opacity));
+  return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+}
+
+// Default ticks for a year axis whose figure doesn't list its own `xTicks`:
+// every year on desktop, every other year on mobile — counted back from the
+// last year so the axis always ends on a labelled tick (same rule as
+// BarChartPanelStacked's mobile bands). Explicit ticks are what let
+// yearTickFormat know which labels are the ends; LayerChart's automatic ticks
+// could start or stop on any year.
+export function defaultYearTicks(data, xKey, innerWidth) {
+  const years = data.map((d) => d[xKey]);
+  if (innerWidth >= DESKTOP_MIN) return years;
+  return years.filter((_, i) => (years.length - 1 - i) % 2 === 0);
+}
 
 // On mobile the quarter-century ticks crowd the narrow x axis, so keep only
 // the half-century years (1800, 1850, … 2100). Short-range charts would be
@@ -38,17 +99,21 @@ export function halfCenturyTicksOnMobile(ticks, innerWidth) {
   return halved.length >= 3 ? halved : ticks;
 }
 
-// On mobile the x axis is too narrow to spell out every year in full — the
-// first tick keeps its 4-digit year for orientation, later ticks abbreviate
-// to the last two digits ("20", "21"…) since the century never changes
-// within one chart's range. Desktop always shows full years. Figures with
-// their own custom xTickFormat (e.g. scenario labels) pass that prop
-// directly instead, so this only ever applies to plain year axes.
-export function yearTickFormat(innerWidth, firstYear) {
+// Year labels, at every width: the first and last tick spell the year in
+// full, the ones between abbreviate to ’yy (2008 ’12 ’16 ’20 2024), as in
+// Bloomberg's sediment chart. The apostrophe is a real ’ (U+2019): a bare
+// "12" reads as a number, not a year. Pass the ticks the axis actually draws
+// — the ends are found from them, so a mobile tick set that stops early still
+// ends on a full year. Figures with their own xTickFormat (e.g. figure 3's
+// IDA periods) pass that instead, so this only applies to plain year axes.
+export function yearTickFormat(ticks) {
+  const years = ticks.map((d) => d.getFullYear());
+  const first = Math.min(...years);
+  const last = Math.max(...years);
   return (d) => {
     const year = d.getFullYear();
-    if (innerWidth >= DESKTOP_MIN || year === firstYear) return String(year);
-    return String(year % 100).padStart(2, "0");
+    if (year === first || year === last) return String(year);
+    return `’${String(year % 100).padStart(2, "0")}`;
   };
 }
 

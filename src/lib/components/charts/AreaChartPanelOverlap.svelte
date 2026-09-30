@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, Area, AreaChart } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, xAxisOverhang, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -41,11 +41,6 @@
   );
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = $derived(
-    (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
-  );
 
   // Figures whose desktop ticks sit too close for a phone axis (e.g. an
   // extra end-of-series year beside a regular tick) pass a sparser
@@ -53,7 +48,8 @@
   const xTicks = $derived(
     innerWidth < 1024 && pair.xTicksMobile
       ? pair.xTicksMobile
-      : halfCenturyTicksOnMobile(pair.xTicks, innerWidth)
+      : (halfCenturyTicksOnMobile(pair.xTicks, innerWidth) ??
+        defaultYearTicks(pair.data, pair.xKey, innerWidth))
   );
 
   // Datawrapper-style overlapping areas (layerchart's default series layout —
@@ -92,10 +88,11 @@
   series={pair.series}
   legend={false}
   rule={false}
+  xPadding={xAxisOverhang}
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
+    xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
     yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
     // Header is the year alone — the data is annual, so LayerChart's default
     // "1 January 2035" is precision the figures never had. A figure can still

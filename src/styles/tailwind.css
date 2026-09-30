@@ -44,7 +44,7 @@
   --color-primary-content: #ffffff;
   --color-secondary: #709899;
   --color-secondary-content: #ffffff;
-  --color-accent: #c24c2c;
+  --color-accent: #ae7709; /* deepened FDL gold — see `accent` in src/lib/colors.js */
   --color-accent-content: #ffffff;
   /* NOT WORN BY ANY CONTROL since 2026-09-29: the PNG and Interpretation
      buttons became hairline outlines in base-content (see FigureFooter.svelte)
@@ -131,7 +131,7 @@
 
 /* Accent underline for a marked phrase in running text. A real underline, not
    a highlighter band: the text keeps its own ink and only the RULE is painted
-   in the accent rust, which is how the accent stays reserved for things that
+   in the accent gold, which is how the accent stays reserved for things that
    point. It stays a `mark` for semantics, with the browser's default yellow
    ground stripped — without this rule a `<mark>` would render as a highlighter
    band, so the rule has to exist before any copy uses one.
@@ -188,9 +188,9 @@
    credit links, the footer links — had nothing.
 
    The accent is the right ink for it: it is already the report's "this points
-   at something" colour, and CursorDot.svelte's note records it clearing 4.8:1
-   against the cover's bright sky and 4.4:1 against the bottom scrim, which is
-   the hardest ground on the page. On base-100 it sits at ~4.8:1.
+   at something" colour. Since the switch from rust to deepened gold
+   (2026-09-30) it sits at 3.9:1 on base-100 — above the 3:1 a focus
+   indicator needs.
 
    `:focus-visible`, never `:focus` — a plain `:focus` rule would ring the
    buttons on every mouse click too. The outline is drawn OUTSIDE the box with

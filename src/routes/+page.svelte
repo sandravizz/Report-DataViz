@@ -40,6 +40,13 @@
   // FDL's structure: titles and intros are placeholders drawn from the
   // chapter copy, with no numbers of their own.
   //
+  // PASSAGES: a sub-chapter may continue after its figure run with
+  // `passages: [{ intro, body, charts }]` — a text block with NO heading,
+  // then its own figure run. Use it for text between two figures that
+  // belong to the same sub-chapter; the Index and rail list the passage's
+  // figures under that sub-chapter. `body` defaults to LOREM like a
+  // sub-chapter's.
+  //
   // Ids are assigned automatically below: chapter-1, its sub-chapters
   // chapter-1-1, chapter-1-2, and their figure anchors chapter-1-1-chart-0...
   // Placeholder body copy for every sub-chapter until FDL's text is in.
@@ -54,22 +61,23 @@
       intro:
         "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figures 1 and 2).",
       subchapters: [
-        // Split in two (2026-09-30): Figures 1 and 2 used to run back to
-        // back in one sub-chapter, and with no text between them the reader
-        // had no cue that a second, different figure had started. Each now
-        // gets its own heading and lede. The ledes are the chapter intro's
-        // own sentences (FDL copy), divided between the two figures.
+        // Figures 1 and 2 share ONE sub-chapter (2026-09-30), with a plain
+        // text passage between them and no heading: the reader still gets a
+        // cue that a second figure is starting, without a new sub-chapter
+        // in the outline. The ledes are the chapter intro's own sentences
+        // (FDL copy), divided between the two figures.
         {
           title: "A Growing Balance Sheet",
           intro:
             "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025.",
           charts: [figures.balanceSheetTotalArea],
-        },
-        {
-          title: "Equity's Declining Share",
-          intro:
-            "Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth.",
-          charts: [figures.equityShare],
+          passages: [
+            {
+              intro:
+                "Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth.",
+              charts: [figures.equityShare],
+            },
+          ],
         },
         {
           title: "Growth and Equity Side by Side",
@@ -137,8 +145,18 @@
     return chapters.map((chapter, i) => {
       const id = `chapter-${i + 1}`;
       const subchapters = chapter.subchapters.map((sub, k) => {
-        const charts = sub.charts.map((c) => ({ ...c, number: `Figure ${++figureCount}` }));
-        return { body: LOREM, ...sub, charts, id: `${id}-${k + 1}` };
+        const number = (c) => ({ ...c, number: `Figure ${++figureCount}` });
+        const charts = sub.charts.map(number);
+        // Each passage's figure run numbers its anchors on from the runs
+        // before it (anchorOffset), so the rail's `-chart-<j>` ids hold.
+        let offset = charts.length;
+        const passages = (sub.passages ?? []).map((p) => {
+          const run = { body: LOREM, ...p, charts: p.charts.map(number), anchorOffset: offset };
+          offset += run.charts.length;
+          return run;
+        });
+        const allCharts = [...charts, ...passages.flatMap((p) => p.charts)];
+        return { body: LOREM, ...sub, charts, passages, allCharts, id: `${id}-${k + 1}` };
       });
       return { ...chapter, id, subchapters };
     });
@@ -150,6 +168,41 @@
   // in and out; together with the rail's highlight changing, the background
   // switching read as noise, so it went. No ramps, no second surface.
 </script>
+
+<!-- A text block's lede and body, shared by a sub-chapter and its
+     heading-less passages. -->
+{#snippet copy(text)}
+              {#if text.intro}
+                <!-- The lede: one tier above the body, full ink, tight
+                     leading — the line that says what the sub-chapter is
+                     about. Rendered as HTML so it can carry a
+                     `mark.accent-mark`; the strings are editorial copy from
+                     this file, nothing fetched or user-supplied. -->
+                <p
+                  class="text-[1.375rem] leading-snug text-base-content/90 lg:text-[1.625rem]"
+                >
+                  {@html text.intro}
+                </p>
+              {/if}
+              <!-- Body copy. Leading 1.6 on phones, 1.85 from md (2026-09-30):
+                   1.85 suits the full ~65-character desktop measure, but on a
+                   phone's ~35-character lines it read as loose, the lines
+                   drifting apart (compare Reuters' mobile stories, ~1.6).
+                   The /80 stays: base-content is #000000 on this
+                   branch and house style rules out pure black under
+                   long-form reading (docs/type-rendering.md rule 4). -->
+              {#each text.body ?? [] as paragraph, j (j)}
+                <p
+                  class="text-lg leading-[1.6] text-base-content/80 md:leading-[1.85] {j === 0 && text.intro
+                    ? 'mt-8'
+                    : j > 0
+                      ? 'mt-6'
+                      : ''}"
+                >
+                  {@html paragraph}
+                </p>
+              {/each}
+{/snippet}
 
 <svelte:head>
   <meta property="og:type" content="website" />
@@ -254,36 +307,7 @@
             </h3>
 
             <div class="mx-auto mt-10 max-w-[40rem] lg:mt-14">
-              {#if sub.intro}
-                <!-- The lede: one tier above the body, full ink, tight
-                     leading — the line that says what the sub-chapter is
-                     about. Rendered as HTML so it can carry a
-                     `mark.accent-mark`; the strings are editorial copy from
-                     this file, nothing fetched or user-supplied. -->
-                <p
-                  class="text-[1.375rem] leading-snug text-base-content/90 lg:text-[1.625rem]"
-                >
-                  {@html sub.intro}
-                </p>
-              {/if}
-              <!-- Body copy. Leading 1.6 on phones, 1.85 from md (2026-09-30):
-                   1.85 suits the full ~65-character desktop measure, but on a
-                   phone's ~35-character lines it read as loose, the lines
-                   drifting apart (compare Reuters' mobile stories, ~1.6).
-                   The /80 stays: base-content is #000000 on this
-                   branch and house style rules out pure black under
-                   long-form reading (docs/type-rendering.md rule 4). -->
-              {#each sub.body ?? [] as paragraph, j (j)}
-                <p
-                  class="text-lg leading-[1.6] text-base-content/80 md:leading-[1.85] {j === 0 && sub.intro
-                    ? 'mt-8'
-                    : j > 0
-                      ? 'mt-6'
-                      : ''}"
-                >
-                  {@html paragraph}
-                </p>
-              {/each}
+              {@render copy(sub)}
             </div>
           </div>
         </div>
@@ -291,6 +315,23 @@
       {#if sub.charts.length > 0}
         <ScrollySection pairs={sub.charts} sectionId={sub.id} chapterId={section.id} />
       {/if}
+      {#each sub.passages as passage, p (p)}
+        <!-- A passage: the sub-chapter's copy continuing between two figures,
+             same column and air as the block above, no heading. -->
+        <div class="bg-base-200" data-surface="text">
+          <div class="mx-auto w-[88vw] max-w-[40rem] py-16 lg:py-28">
+            {@render copy(passage)}
+          </div>
+        </div>
+        {#if passage.charts.length > 0}
+          <ScrollySection
+            pairs={passage.charts}
+            sectionId={sub.id}
+            chapterId={section.id}
+            anchorOffset={passage.anchorOffset}
+          />
+        {/if}
+      {/each}
       {/each}
     </section>
   {/each}
@@ -361,7 +402,7 @@
           href={fdlHref}
           target="_blank"
           rel="noopener"
-          class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+          class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
         >
           <RollText text="More from FDL" />
         </a>

@@ -114,8 +114,19 @@ export const ink = "#000000";
 // an end label or a legend swatch carries the identity — which is the house
 // rule on every figure in this report anyway. `faint` is for fills, never a
 // line.
+// The accent is FDL's header gold, deepened. Rust was the brand's own "calls
+// to attention" hue, but red reads as alarm — loss, danger, error — and a
+// report on development finance should not make its story series look like a
+// warning. Gold is the one colour findevlab.org itself lets stand out (the
+// home-page header band, #ffd68e / #e9be72), so the accent comes from there:
+// same hue (OKLCH H 76), lowered to L 0.61 and pushed to C 0.126 so it keeps
+// the rust's pull. 3.9:1 on the white figure, 3.6:1 on the chapter ground —
+// clears 3:1 for marks, rules and focus rings. Not a text ink below 18px bold.
+// (2026-09-30)
+export const accent = "#ae7709";
+
 export const colors = {
-  accent: fdl.rust, //     the series the chapter is about
+  accent, //               the series the chapter is about
   strong: neutral.strong,
   mid: neutral.mid,
   soft: neutral.soft,

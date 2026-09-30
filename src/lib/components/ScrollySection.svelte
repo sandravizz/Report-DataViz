@@ -7,7 +7,11 @@
   // chapterId is the chapter above it, which the rail reads to tell which
   // chapter a pinned figure belongs to. Without sub-chapters the two are the
   // same, hence the fallback.
-  let { pairs, sectionId = "", chapterId = sectionId } = $props();
+  // anchorOffset shifts the anchor numbering for a figure run that continues
+  // a sub-chapter after a heading-less passage (see `passages` in
+  // +page.svelte), so the sub-chapter's anchors stay -chart-0, -1, -2… in
+  // reading order across all its runs.
+  let { pairs, sectionId = "", chapterId = sectionId, anchorOffset = 0 } = $props();
 
   // Pinned-scroll budget, in vh. The figure sticks for (height - 100vh), and
   // one step goes active every STEP_VH of that.
@@ -99,7 +103,7 @@
        reads their positions to tell which figure is showing. -->
   {#each pairs as pair, i (pair.number ?? i)}
     <div
-      id="{sectionId}-chart-{i}"
+      id="{sectionId}-chart-{i + anchorOffset}"
       data-chart-anchor
       data-chapter={chapterId}
       data-step={i}

@@ -34,7 +34,9 @@
   // a figure's dot shrinks to a /55 point.
   //
   // `sections` is the chapter list from +page.svelte:
-  // `{ id, title, subchapters: [{ id, title, charts }] }`.
+  // `{ id, title, subchapters: [{ id, title, charts, allCharts }] }` —
+  // allCharts is every figure in the sub-chapter, including those after a
+  // heading-less passage, so the rail lists them under the one sub-chapter.
   let { sections = [] } = $props();
 
   // Every sub-chapter, flattened, with the index of its chapter.
@@ -214,14 +216,14 @@
                 <span>{sub.title}</span>
               </button>
 
-              {#if sub.charts.length}
+              {#if sub.allCharts.length}
                 <!-- One dot per figure. Hovering a non-current figure marks
                      it without imitating the current state: the dot shrinks
                      to a pinpoint (the old halo went — the glide block does
                      that job now). The shrink is a scale transform, never
                      smaller h/w, so the text beside it does not slide. -->
                 <ul class="mt-2.5 flex list-none flex-col gap-2.5">
-                  {#each sub.charts as chart, j (chart.number ?? j)}
+                  {#each sub.allCharts as chart, j (chart.number ?? j)}
                     {@const chartId = `${sub.id}-chart-${j}`}
                     {@const on = activeChart === chartId}
                     <li>

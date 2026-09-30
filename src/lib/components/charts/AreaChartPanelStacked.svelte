@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, AreaChart, Labels } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity, defaultYearTicks, xAxisOverhang, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
@@ -9,9 +9,9 @@
   let innerWidth = $state(1024);
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = $derived(pair.data[0][pair.xKey].getFullYear());
+  // One tick per year (every other on mobile); yearTickFormat reads the
+  // ends off this list.
+  const xTicks = $derived(defaultYearTicks(pair.data, pair.xKey, innerWidth));
 
   // Same direct-label convention as BarChartPanelStacked: on desktop each
   // series is named beside its band at the last observation instead of a
@@ -85,6 +85,7 @@
       seriesLayout={pair.percent ? "stackExpand" : "stack"}
       legend={false}
       rule={false}
+      xPadding={xAxisOverhang}
       tooltipContext={desktopTooltips(innerWidth)}
       {padding}
       props={{
@@ -92,7 +93,7 @@
           fillOpacity: areaFillOpacity,
           line: { strokeWidth: 2.5 },
         },
-        xAxis: { ...xAxisProps, format: yearTickFormat(innerWidth, firstTickYear) },
+        xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(xTicks) },
         yAxis: {
           ...yAxisProps,
           ticks: pair.yTicks ?? excludeZeroTick,

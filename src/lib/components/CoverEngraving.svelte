@@ -182,7 +182,7 @@
 
     const css = getComputedStyle(document.documentElement);
     const ink = css.getPropertyValue("--color-base-content").trim() || "#000";
-    const accent = css.getPropertyValue("--color-accent").trim() || "#c24c2c";
+    const accent = css.getPropertyValue("--color-accent").trim() || "#ae7709";
 
     // Soft vignette so the engraving dissolves into the ground at the foot
     // and, when it sits beside the title (md and up), on the text side.

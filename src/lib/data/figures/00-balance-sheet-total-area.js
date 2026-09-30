@@ -25,6 +25,13 @@ export default {
   number: "Figure 1",
   kind: "area",
   xKey: "year",
+  // Bloomberg-style y axis: labels at the right end of the gridlines, every
+  // USD 50 billion.
+  yAxisRight: true,
+  yTicks: [50, 100, 150, 200, 250, 300],
+  // Opaque wash so the gridlines stop at the area instead of showing through
+  // (see solidWash in chart-theme.js).
+  solidWash: true,
   series: [{ key: "Total assets", value: "total", color: colors.accent }],
   // Circled point on the last observation (same emphasis mark as figures 3
   // and 4): the curve peaks at the top-right corner, so the label floats left

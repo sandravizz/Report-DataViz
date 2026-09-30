@@ -8,9 +8,6 @@
   let innerWidth = $state(1024);
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = $derived(pair.data[0][pair.xKey].getFullYear());
 
   // Direct labels instead of a legend on desktop (Datawrapper stacked-column
   // guidance, mirrored in the dataviz skill's stacked-bars reference): each
@@ -101,7 +98,7 @@
       {padding}
       props={{
         bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(innerWidth, firstTickYear) },
+        xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(pair.data.map((d) => d[pair.xKey])) },
         yAxis: {
           ...yAxisProps,
           ticks: excludeZeroTick,

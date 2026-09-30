@@ -212,14 +212,17 @@
            one family. Opens the sheet below.
            Not the hairline outline the figures' PNG button wears: at header
            size a tall outlined box around full-ink caps read as an empty
-           input field, the frame weaker than its contents. py-1.5 keeps it a
-           low tab rather than a box. -->
+           input field, the frame weaker than its contents.
+           SAME BOX AS THE PNG BUTTON (2026-09-30): h-8 px-4. py-1.5 stays
+           and the button stays NOT flex: the word sits on its baseline in
+           the 20px line, which puts Kapra's caps low in the box. Centring it
+           (inline-flex items-center) lifted them visibly. -->
       <button
         type="button"
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="group cursor-pointer rounded-md bg-base-content/6 px-3.5 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+        class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
       >
         <!-- The word at every size — no hamburger on phones (Sandra,
              2026-09-29). active: darkens the fill on a tap, where there is

@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, LineChart, Spline } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, xAxisOverhang, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -22,10 +22,11 @@
   });
 
   const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
-  // Earliest year in the chart's own x domain, so the mobile year
-  // abbreviation below knows which tick to keep spelled out in full.
-  const firstTickYear = $derived(
-    (pair.xTicks?.[0] ?? pair.data[0][pair.xKey]).getFullYear()
+  // The ticks the x axis draws: the figure's own list, or one per year
+  // (every other on mobile). yearTickFormat reads the ends off this list.
+  const xTicks = $derived(
+    halfCenturyTicksOnMobile(pair.xTicks, innerWidth) ??
+      defaultYearTicks(pair.data, pair.xKey, innerWidth)
   );
 
   // There is no built-in legend; series that opt in via an explicit
@@ -53,10 +54,11 @@
   series={pair.series}
   legend={false}
   rule={false}
+  xPadding={xAxisOverhang}
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
-    xAxis: { ...xAxisProps, ticks: halfCenturyTicksOnMobile(pair.xTicks, innerWidth), format: pair.xTickFormat ?? yearTickFormat(innerWidth, firstTickYear) },
+    xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
     yAxis: { ...yAxisProps, ticks: excludeZeroTick, format: formatValue },
     // Tooltip rows show the same unit suffix as the y-axis (e.g. "28%");
     // figures whose x values aren't plain years (e.g. figure 2's IDA period
