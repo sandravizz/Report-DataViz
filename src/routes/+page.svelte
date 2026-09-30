@@ -209,13 +209,13 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/og-image-fdl.jpg" />
+  <meta property="og:image" content="{page.url.origin}/og-image-fdl-engraving.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/og-image-fdl.jpg" />
+  <meta name="twitter:image" content="{page.url.origin}/og-image-fdl-engraving.jpg" />
 </svelte:head>
 
 <!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
