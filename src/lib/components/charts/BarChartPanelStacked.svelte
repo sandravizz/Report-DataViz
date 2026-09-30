@@ -1,13 +1,15 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, barYAxisProps, barChartPadding, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Thousands grouping and at most two decimals — $lib/format.js.
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
 
   // Direct labels instead of a legend on desktop (Datawrapper stacked-column
   // guidance, mirrored in the dataviz skill's stacked-bars reference): each
@@ -64,7 +66,12 @@
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...directLabelAnnotations], innerWidth)
   );
-  const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPadding));
+  // A figure whose series are named at the right edge keeps its y axis on
+  // the left — decided per figure, not per width, so the axis doesn't jump
+  // sides when the direct labels give way to the mobile legend. Bars keep
+  // the label strips as chart padding (band scales ignore xPadding).
+  const namesOnRight = $derived(pair.series.length > 1 && pair.directLabels !== false);
+  const padding = $derived(barChartPadding(innerWidth, namesOnRight, directLabelsActive));
 
   // The narrow mobile axis has no room for a year under every bar: label
   // every other band, counting back from the last bar so the latest year
@@ -80,7 +87,7 @@
 
 <!-- The built-in legend overlays the plot area (and the x axis), so render
      the same manual bottom legend as LineChartPanel's legendItems block:
-     below the plot, pl-9 matching yLabelPadding's axis gutter. -->
+     below the plot, pl-3 matching chartPadding's 12px left edge. -->
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
     <!-- pair.percent switches to a 100% stacked layout: bars are normalized
@@ -100,10 +107,13 @@
         bars: { strokeWidth: 0 },
         xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(pair.data.map((d) => d[pair.xKey])) },
         yAxis: {
-          ...yAxisProps,
-          ticks: excludeZeroTick,
+          ...barYAxisProps(namesOnRight, padding),
+          ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
           format: pair.percent ? "percentRound" : formatValue,
         },
+        // Gridlines on exactly the y-axis ticks: LayerChart's chart-level Grid
+        // otherwise picks its own (fewer) ticks and skips some labelled values.
+        grid: { yTicks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks) },
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
@@ -111,9 +121,7 @@
           ...(pair.percent
             ? // Series carry share values; a total row (always 100%) is noise.
               { item: { format: "percentRound" }, hideTotal: true }
-            : pair.valueSuffix
-              ? { item: { format: formatValue } }
-              : {}),
+            : { item: { format: formatValue } }),
         },
       }}
     >
@@ -141,7 +149,7 @@
        desktop the direct labels above replace the legend entirely; the legend
        only renders as the mobile fallback. -->
   {#if pair.series.length > 1 && !directLabelsActive}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>

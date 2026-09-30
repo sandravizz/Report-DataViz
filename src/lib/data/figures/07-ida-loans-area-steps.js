@@ -20,10 +20,6 @@ const legendItem = (s) => ({ label: s.key, color: s.color });
 // title/description change while scrolling.
 const base = {
   ...idaLoansArea,
-  // Without end labels no right margin is reserved; keep enough room that the
-  // disbursements callout ring (r=12, anchored on the last observation at the
-  // plot's right edge) doesn't clip.
-  padding: { right: 16 },
 };
 
 // Each step keeps every series introduced so far and flags only the newest

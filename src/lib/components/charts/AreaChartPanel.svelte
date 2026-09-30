@@ -1,12 +1,14 @@
 <script>
   import { AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, xAxisOverhang, yAxisRightProps, yAxisRightOverhang, solidWash, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Thousands grouping and at most two decimals — $lib/format.js.
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   // The ticks the x axis draws: the figure's own list, or one per year
   // (every other on mobile). yearTickFormat reads the ends off this list.
   const xTicks = $derived(
@@ -22,13 +24,11 @@
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
   );
-  // pair.yAxisRight moves the y labels to the right end of the gridlines
-  // (see yAxisRightProps). The left label gutter is then not needed, and the
-  // right-hand room for the labels comes from xPadding instead of padding,
-  // so the gridlines and the x axis line run on underneath them.
-  const padding = $derived(
-    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, pair.yAxisRight ? {} : yLabelPadding)
-  );
+  // Series named at the right edge (end labels) own that edge, so the y
+  // axis moves to the left; otherwise it sits at the right (plotXPadding).
+  const namesOnRight = $derived(endLabelAnnotations.length > 0);
+  const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
+  const padding = chartPadding();
 </script>
 
 <svelte:window bind:innerWidth />
@@ -39,7 +39,7 @@
   series={pair.series}
   legend={false}
   rule={false}
-  xPadding={pair.yAxisRight ? yAxisRightOverhang : xAxisOverhang}
+  {xPadding}
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
@@ -52,13 +52,16 @@
       : { fillOpacity: areaFillOpacity },
     line: { strokeWidth: 2.5, "stroke-linecap": "round", "stroke-linejoin": "round" },
     xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
-    yAxis: { ...yAxisProps, ...(pair.yAxisRight && yAxisRightProps), ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
+    yAxis: { ...yAxisFor(namesOnRight), ticks: pair.yTicks ?? yTicks, format: formatValue },
+    // Gridlines on exactly the y-axis ticks: LayerChart's chart-level Grid
+    // otherwise picks its own (fewer) ticks and skips some labelled values.
+    grid: { yTicks: pair.yTicks ?? yTicks },
     // Header is the year alone — the data is annual, so LayerChart's default
     // "1 January 2035" is precision the figures never had. A figure can still
     // override it with pair.tooltipHeaderFormat.
     tooltip: {
       header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
-      ...(pair.valueSuffix && { item: { format: formatValue } }),
+      item: { format: formatValue },
     },
   }}
 >

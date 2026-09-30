@@ -1,2 +1,18 @@
 @import './fonts.css';
 @import './tailwind.css';
+
+/* Tooltip card rules ported from main. LayerChart's daisyUI bridge paints the
+   tooltip panel with `--color-surface-100` (wired to base-100). That is
+   already white on this theme, but pin it anyway so a theme change can't tint
+   the card. Deliberately unlayered so it outranks the bridge's own rule. */
+.lc-tooltip-root {
+  --color-surface-100: #ffffff;
+  --color-surface-200: #ffffff;
+}
+
+/* The panel itself is mixed 90% into transparent (plus a backdrop blur), so
+   it would still let a tenth of the chart and gridlines through. Paint it
+   fully opaque so the card reads as plain white over any background. */
+.lc-tooltip-container[data-variant='default'] {
+  background-color: #ffffff;
+}

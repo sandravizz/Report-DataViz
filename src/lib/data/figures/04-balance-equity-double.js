@@ -3,12 +3,14 @@ import { ink } from "$lib/colors.js";
 import balanceSheetTotalArea from "./00-balance-sheet-total-area.js";
 import equityShareArea from "./01-equity-share-area.js";
 
-// Shared 2024→2025 highlight across both plots: the same hatched band as the
-// projection ranges, but instead of the muted "Projection →" tag each band
-// carries the finding itself as its top label (dark ink, right-aligned at the
-// band's right edge so it grows into the plot). The point callouts of the
-// standalone figures are dropped — the band label does the explaining. Each
-// chart also draws its own vertical rule at 2024, confined to its own plot.
+// Shared 2024→2025 highlight across both plots: the vertical rule each chart
+// draws at 2024 marks the step, and the band carries the finding as its top
+// label. No hatch and no fill (Sandra, 2026-09-30: the diagonal lines didn't
+// work) — the band is only the label's anchor. The label hangs off the
+// band's LEFT edge and reads leftwards from the rule (right-aligned, dx -6),
+// so it stays clear of the y labels at the right end of the gridlines, and
+// dy -6 lifts it off the plot's top line. The point callouts of the
+// standalone figures are dropped — the band label does the explaining.
 const highlightX = [new Date(2024, 0, 1), new Date(2025, 0, 1)];
 const connectorRule = { x: highlightX[0] };
 
@@ -18,13 +20,18 @@ const highlightLabel = {
     class: "text-xs font-light",
     textAnchor: "end",
     verticalAnchor: "end",
-    dx: 0,
+    dx: -6,
+    dy: -6,
   },
 };
 
+// projectionRange's hatch off. With no pattern and no fill, AnnotationRange
+// draws no rect at all — only its label.
+const noHatch = { pattern: undefined };
+
 // Both band labels are short forms computed from the data (the standalones'
-// full sentences are too long for a band label). The top one states the
-// relative growth and wraps to two lines: `width` forces the break.
+// full sentences are too long for a band label). Both fit on one line now
+// that they run leftwards into the plot.
 const balanceRows = balanceSheetTotalArea.data;
 const balancePrev = balanceRows[balanceRows.length - 2];
 const balanceLast = balanceRows[balanceRows.length - 1];
@@ -41,22 +48,17 @@ const lastYearDeclinePp = Math.round(
 
 const balanceBand = projectionRange({
   x: highlightX,
+  ...noHatch,
   label: `Biggest yearly growth by ${growthPct}pp`,
-  labelPlacement: "top-right",
-  props: {
-    label: {
-      ...highlightLabel.label,
-      width: 140,
-      truncate: false,
-      lineHeight: "13px",
-    },
-  },
+  labelPlacement: "top-left",
+  props: highlightLabel,
 });
 
 const equityBand = projectionRange({
   x: highlightX,
+  ...noHatch,
   label: `Declined by ${lastYearDeclinePp}pp`,
-  labelPlacement: "top-right",
+  labelPlacement: "top-left",
   props: highlightLabel,
 });
 
@@ -64,11 +66,8 @@ const balancePanel = {
   ...balanceSheetTotalArea,
   // Half-height plots want a sparser axis; no point callouts here.
   yTicks: [100, 200, 300],
-  // Figure 1's right-hand y axis and opaque wash stay out of the double
-  // figure: the right axis changes the plot's xPadding, which would break the
-  // x alignment with the equity panel under it, and an opaque wash would hide
-  // the highlight band drawn beneath the area.
-  yAxisRight: false,
+  // Figure 1's opaque wash stays out of the double figure: it would hide the
+  // highlight band drawn beneath the area.
   solidWash: false,
   annotations: [],
   rangeAnnotations: [balanceBand],

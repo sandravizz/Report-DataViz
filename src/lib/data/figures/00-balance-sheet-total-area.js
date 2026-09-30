@@ -25,9 +25,8 @@ export default {
   number: "Figure 1",
   kind: "area",
   xKey: "year",
-  // Bloomberg-style y axis: labels at the right end of the gridlines, every
-  // USD 50 billion.
-  yAxisRight: true,
+  // Every USD 50 billion (the default step would be the same; kept explicit
+  // so a CSV update can't change it).
   yTicks: [50, 100, 150, 200, 250, 300],
   // Opaque wash so the gridlines stop at the area instead of showing through
   // (see solidWash in chart-theme.js).

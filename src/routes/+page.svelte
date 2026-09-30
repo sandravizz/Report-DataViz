@@ -420,6 +420,7 @@
          the canvas's label stays short. -->
     <div class="relative min-h-[30svh] flex-1 md:min-h-[34svh]">
       <CoverEngraving
+        lens
         crop={{ x: 0, y: 110, w: 2000, h: 730 }}
         focusU={0.5}
         fade={{ top: 0.2, bottom: 0.12, left: 0.05, right: 0.05 }}

@@ -2,7 +2,8 @@
   import { AnnotationPoint, AnnotationRange, Area, AreaChart } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, yLabelPadding, resolveAnnotations, excludeZeroTick, endLabelPadding, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, xAxisOverhang, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -40,7 +41,8 @@
         : "ac-draw-reveal"
   );
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Thousands grouping and at most two decimals — $lib/format.js.
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
 
   // Figures whose desktop ticks sit too close for a phone axis (e.g. an
   // extra end-of-series year beside a regular tick) pass a sparser
@@ -72,11 +74,12 @@
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...endLabelAnnotations], innerWidth)
   );
-  // Figures without end labels can still reserve extra padding via
-  // pair.padding (e.g. room for a callout ring anchored on the plot's edge).
-  const padding = $derived(
-    endLabelPadding(innerWidth, endLabelAnnotations.length > 0, { ...yLabelPadding, ...pair.padding })
-  );
+  // Series named at the right edge (end labels) own that edge, so the y
+  // axis moves to the left; otherwise it sits at the right (plotXPadding).
+  // Figures can still add chart padding via pair.padding.
+  const namesOnRight = $derived(endLabelAnnotations.length > 0);
+  const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
+  const padding = $derived(chartPadding(pair.padding));
 </script>
 
 <svelte:window bind:innerWidth />
@@ -88,18 +91,21 @@
   series={pair.series}
   legend={false}
   rule={false}
-  xPadding={xAxisOverhang}
+  {xPadding}
   tooltipContext={desktopTooltips(innerWidth)}
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
-    yAxis: { ...yAxisProps, ticks: pair.yTicks ?? excludeZeroTick, format: formatValue },
+    yAxis: { ...yAxisFor(namesOnRight), ticks: pair.yTicks ?? yTicks, format: formatValue },
+    // Gridlines on exactly the y-axis ticks: LayerChart's chart-level Grid
+    // otherwise picks its own (fewer) ticks and skips some labelled values.
+    grid: { yTicks: pair.yTicks ?? yTicks },
     // Header is the year alone — the data is annual, so LayerChart's default
     // "1 January 2035" is precision the figures never had. A figure can still
     // override it with pair.tooltipHeaderFormat.
     tooltip: {
       header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
-      ...(pair.valueSuffix && { item: { format: formatValue } }),
+      item: { format: formatValue },
     },
   }}
 >
@@ -136,13 +142,13 @@
 {#if pair.legendItems}
   <!-- Manual legend below the plot, same markup as LineChartPanel's: figures
        that name their series here instead of via endLabel supply {label,
-       color} entries. pl-9 matches yLabelPadding's 36px axis gutter so the
+       color} entries. pl-3 matches chartPadding's 12px left edge so the
        swatches align with the plot's left edge. -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}
     </div>
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
       {#each pair.legendItems as item (item.label)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>

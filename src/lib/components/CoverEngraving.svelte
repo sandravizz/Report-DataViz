@@ -27,11 +27,16 @@
   //           engraving dissolves into the ground on each side. Omitted = the
   //           cover's own vignette (see draw()).
   //   label   the canvas's accessible description.
+  //   lens    the ENGRAVER'S LENS (2026-09-30, option C of the cover cursor
+  //           studies): a loupe follows the mouse, magnifying the picture
+  //           under it while the lines there swell. Off by default; the
+  //           Landing and the ending screen both turn it on.
   let {
     crop = { x: 780, y: 120, w: 1220, h: 1209 },
     focusU = 0.46,
     fade = null,
     label = "Line engraving of a lone figure standing at the edge of a sheer cliff above a fjord",
+    lens = false,
   } = $props();
 
   let canvas = $state(null);
@@ -67,12 +72,18 @@
     x.drawImage(img, CROP.x * k, CROP.y * k, CROP.w * k, CROP.h * k, 0, 0, SW, SH);
     const d = x.getImageData(0, 0, SW, SH).data;
     const dark = new Float32Array(SW * SH);
+    // The LOUPE's reading (2026-09-30): the print's curve clips every deep
+    // shadow to full ink, so under the lens the fjord was solid black and
+    // there was nothing to magnify. This softer curve keeps the shadows
+    // apart, so the water opens into ripples when the lens passes over it.
+    const fine = new Float32Array(SW * SH);
     for (let i = 0; i < SW * SH; i++) {
       const L = (0.2126 * d[i * 4] + 0.7152 * d[i * 4 + 1] + 0.0722 * d[i * 4 + 2]) / 255;
       // The bright sky drops out entirely; the fjord water is full ink.
       dark[i] = Math.pow(Math.min(1, Math.max(0, (1 - L - 0.26) / 0.64)), 0.9);
+      fine[i] = Math.pow(Math.min(1, Math.max(0, (1 - L - 0.12) / 0.88)), 1.6);
     }
-    return (u, v) => {
+    const lookup = (arr) => (u, v) => {
       if (u < 0 || v < 0 || u >= 1 || v >= 1) return 0;
       const fx = u * (SW - 1);
       const fy = v * (SH - 1);
@@ -82,10 +93,11 @@
       const y1 = Math.min(SH - 1, y0 + 1);
       const tx = fx - x0;
       const ty = fy - y0;
-      const top = dark[y0 * SW + x0] * (1 - tx) + dark[y0 * SW + x1] * tx;
-      const bot = dark[y1 * SW + x0] * (1 - tx) + dark[y1 * SW + x1] * tx;
+      const top = arr[y0 * SW + x0] * (1 - tx) + arr[y0 * SW + x1] * tx;
+      const bot = arr[y1 * SW + x0] * (1 - tx) + arr[y1 * SW + x1] * tx;
       return top * (1 - ty) + bot * ty;
     };
+    return Object.assign(lookup(dark), { fine: lookup(fine) });
   }
 
   // Cover-fit the crop into the W×H box.
@@ -101,8 +113,10 @@
   }
 
   // Parallel strokes at `angle`; each stroke is a filled ribbon whose width
-  // is thickFn(x, y), broken wherever it gets too thin to see.
-  function hatch(ctx, W, H, angle, spacing, thickFn, bendFn) {
+  // is thickFn(x, y), broken wherever it gets too thin to see. `box`
+  // ([x0, y0, x1, y1], optional) walks only the part of each stroke inside
+  // that rectangle, so the lens can redraw its own patch every frame.
+  function hatch(ctx, W, H, angle, spacing, thickFn, bendFn, box) {
     const dx = Math.cos(angle);
     const dy = Math.sin(angle);
     const nx = -dy;
@@ -112,7 +126,26 @@
     const R = Math.hypot(W, H) / 2 + spacing;
     const step = 1.4;
     const minT = 0.14;
+    const [bx0, by0, bx1, by1] = box ?? [0, 0, W, H];
     for (let o = -R; o <= R; o += spacing) {
+      const ox = cx + nx * o;
+      const oy = cy + ny * o;
+      // The stretch of t where this stroke crosses the box.
+      let t0 = -R;
+      let t1 = R;
+      if (Math.abs(dx) > 1e-6) {
+        const a = (bx0 - ox) / dx;
+        const b = (bx1 - ox) / dx;
+        t0 = Math.max(t0, Math.min(a, b));
+        t1 = Math.min(t1, Math.max(a, b));
+      }
+      if (Math.abs(dy) > 1e-6) {
+        const a = (by0 - oy) / dy;
+        const b = (by1 - oy) / dy;
+        t0 = Math.max(t0, Math.min(a, b));
+        t1 = Math.min(t1, Math.max(a, b));
+      }
+      if (t0 > t1) continue;
       let top = [];
       let bot = [];
       const flush = () => {
@@ -127,9 +160,9 @@
         top = [];
         bot = [];
       };
-      for (let t = -R; t <= R; t += step) {
-        const x = cx + nx * o + dx * t;
-        const y = cy + ny * o + dy * t;
+      for (let t = t0 - step; t <= t1 + step; t += step) {
+        const x = ox + dx * t;
+        const y = oy + dy * t;
         if (x < 0 || y < 0 || x > W || y > H) {
           flush();
           continue;
@@ -168,6 +201,13 @@
     ctx.restore();
   }
 
+  // The last layout: everything compose() and the lens need between draws.
+  let view = null;
+
+  // The engraving itself is heavy (every stroke across the whole box), so it
+  // is drawn ONCE per size into an offscreen `base` canvas; compose() then
+  // copies it to the screen and adds the lens and the figure on top, which is
+  // cheap enough to do every frame while the lens moves.
   function draw(sample) {
     if (!canvas) return;
     const box = canvas.getBoundingClientRect();
@@ -176,13 +216,11 @@
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     canvas.width = W * dpr;
     canvas.height = H * dpr;
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
 
     const css = getComputedStyle(document.documentElement);
     const ink = css.getPropertyValue("--color-base-content").trim() || "#000";
     const accent = css.getPropertyValue("--color-accent").trim() || "#ae7709";
+    const ground = css.getPropertyValue("--color-base-200").trim() || "#f5f7f7";
 
     // Soft vignette so the engraving dissolves into the ground at the foot
     // and, when it sits beside the title (md and up), on the text side.
@@ -203,19 +241,110 @@
       const [u, v] = map.toUV(x, y);
       return sample(u, v) * vignette(x, y);
     };
+    const fineTone = (x, y) => {
+      const [u, v] = map.toUV(x, y);
+      return sample.fine(u, v) * vignette(x, y);
+    };
 
-    ctx.fillStyle = ink;
+    const base = document.createElement("canvas");
+    base.width = W * dpr;
+    base.height = H * dpr;
+    const bctx = base.getContext("2d");
+    bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bctx.fillStyle = ink;
     hatch(
-      ctx, W, H, -0.06, s,
+      bctx, W, H, -0.06, s,
       (x, y) => Math.pow(tone(x, y), 1.1) * s * 0.92,
       (x, y) => (tone(x, y) - 0.4) * s * 0.55,
     );
-    hatch(ctx, W, H, 0.95, s * 1.15, (x, y) => {
+    hatch(bctx, W, H, 0.95, s * 1.15, (x, y) => {
       const t = tone(x, y);
       return t > 0.66 ? ((t - 0.66) / 0.34) * s * 0.6 : 0;
     });
 
-    // The figure, crisp, in the accent.
+    view = { W, H, dpr, map, s, tone, fineTone, base, ink, accent, ground };
+    compose();
+  }
+
+  // Where the lens is and how strongly it is showing (0 = gone, 1 = full).
+  // It trails the pointer slightly and fades in and out rather than popping.
+  const loupe = { x: 0, y: 0, str: 0, inside: false, px: 0, py: 0 };
+
+  function compose() {
+    if (!canvas || !view) return;
+    const { W, H, dpr, map, s, tone, fineTone, base, ink, accent, ground } = view;
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(base, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // The lens: inside a circle the engraving is redrawn from a tone sampled
+    // closer to the centre (so the picture magnifies) and read with more
+    // shadow detail, the light strokes swelling and the lines spreading
+    // apart, with less cross-hatch so dark areas open up. Everything
+    // is weighted by a gaussian that is ~0 at the rim, so the redrawn patch
+    // meets the base engraving without a seam.
+    if (loupe.str > 0.01) {
+      const R = Math.max(70, Math.min(150, W * 0.19));
+      const sig = R / 2.3;
+      const st = loupe.str;
+      const lx = loupe.x;
+      const ly = loupe.y;
+      const g = (x, y) => Math.exp(-((x - lx) ** 2 + (y - ly) ** 2) / (sig * sig));
+      // Magnified, and read through the loupe's finer curve (see
+      // buildSampler), blending back to the print's own tone at the rim.
+      const lensTone = (x, y) => {
+        const w = st * g(x, y);
+        const k = 1 - 0.5 * w;
+        const mx = lx + (x - lx) * k;
+        const my = ly + (y - ly) * k;
+        return tone(mx, my) * (1 - w) + fineTone(mx, my) * w;
+      };
+      const box = [lx - R - 4, ly - R - 4, lx + R + 4, ly + R + 4];
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(lx, ly, R, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.fillStyle = ground;
+      ctx.fillRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+      ctx.fillStyle = ink;
+      hatch(
+        ctx, W, H, -0.06, s,
+        // Only the light strokes swell: swelling the dark ones just filled
+        // the shadows back in to solid black.
+        (x, y) => {
+          const t = lensTone(x, y);
+          return Math.min(s * 0.97, Math.pow(t, 1.1) * s * 0.92 * (1 + 0.8 * st * g(x, y) * (1 - t)));
+        },
+        (x, y) => (lensTone(x, y) - 0.4) * s * 0.55 + st * g(x, y) * (y - ly) * 0.3,
+        box,
+      );
+      hatch(
+        ctx, W, H, 0.95, s * 1.15,
+        (x, y) => {
+          const t = lensTone(x, y);
+          // Less cross-hatch under the glass, so the shadows stay open.
+          const xh = 0.66 + 0.2 * st * g(x, y);
+          return t > xh ? ((t - xh) / (1 - xh)) * s * 0.6 : 0;
+        },
+        null,
+        box,
+      );
+      ctx.restore();
+      // A faint ink rim: the loupe's glass edge, not a pointer, so no accent.
+      ctx.save();
+      ctx.globalAlpha = 0.28 * st;
+      ctx.strokeStyle = ink;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(lx, ly, R - 0.5, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // The figure, crisp, in the accent — drawn last so the lens never
+    // covers it.
     const [fx, fy] = map.toXY(FIG.u, FIG.feet);
     const [, hy] = map.toXY(FIG.u, FIG.head);
     const fh = fy - hy;
@@ -278,9 +407,64 @@
 
     const ro = new ResizeObserver(redraw);
     ro.observe(canvas);
+
+    // The lens is for a real mouse only — the same gate as CursorDot, since
+    // on touch there is no hover and it would strand wherever a tap landed.
+    // The pointer is read on window, so the header and the title block
+    // floating over the canvas never swallow it.
+    let lensFrame = 0;
+    let offLens = () => {};
+    if (lens && window.matchMedia("(any-hover: hover) and (pointer: fine)").matches) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const tick = () => {
+        lensFrame = 0;
+        const target = loupe.inside ? 1 : 0;
+        loupe.str += (target - loupe.str) * (reduce ? 1 : 0.12);
+        if (loupe.inside) {
+          const f = reduce ? 1 : 0.22;
+          loupe.x += (loupe.px - loupe.x) * f;
+          loupe.y += (loupe.py - loupe.y) * f;
+        }
+        if (!loupe.inside && loupe.str < 0.01) loupe.str = 0;
+        compose();
+        const settled = Math.abs(loupe.px - loupe.x) < 0.3 && Math.abs(loupe.py - loupe.y) < 0.3;
+        if (loupe.str > 0 && !(loupe.inside && loupe.str > 0.99 && settled)) {
+          lensFrame = requestAnimationFrame(tick);
+        }
+      };
+      const onMove = (e) => {
+        if (!view) return;
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        const inside = x >= 0 && y >= 0 && x <= r.width && y <= r.height;
+        // Enter where the pointer is, rather than sliding in from the last exit.
+        if (inside && loupe.str < 0.02) {
+          loupe.x = x;
+          loupe.y = y;
+        }
+        loupe.inside = inside;
+        loupe.px = x;
+        loupe.py = y;
+        if (!lensFrame) lensFrame = requestAnimationFrame(tick);
+      };
+      const onOut = () => {
+        loupe.inside = false;
+        if (!lensFrame) lensFrame = requestAnimationFrame(tick);
+      };
+      window.addEventListener("pointermove", onMove, { passive: true });
+      document.documentElement.addEventListener("pointerleave", onOut);
+      offLens = () => {
+        window.removeEventListener("pointermove", onMove);
+        document.documentElement.removeEventListener("pointerleave", onOut);
+        cancelAnimationFrame(lensFrame);
+      };
+    }
+
     return () => {
       ro.disconnect();
       cancelAnimationFrame(frame);
+      offLens();
     };
   });
 </script>

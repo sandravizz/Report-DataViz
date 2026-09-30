@@ -23,43 +23,102 @@ const tickLabelProps = { fill: ink, class: "text-xs font-light" };
 // this — never hardcode a fill opacity in a component or figure.
 export const areaFillOpacity = 0.5;
 
-// The x axis follows Bloomberg's sediment chart (Sandra, 2026-09-30): an ink
-// axis line with a short tick under every label. `stroke` colours the rule
-// and the tick marks; the labels keep their own fill and halo (the halo is a
-// CSS rule in LayerChart, which beats the stroke attribute). The label's dy
-// overrides LayerChart's default of `tickLength`, which would sit the text
-// flush against the tick's end. The y axis stays bare: gridlines only.
+// Both axes follow Bloomberg's sediment chart (Sandra, 2026-09-30).
+//
+// X: an ink axis line with a short tick under every label. `stroke` colours
+// the rule and the tick marks; the labels keep their own fill and halo (the
+// halo is a CSS rule in LayerChart, which beats the stroke attribute). The
+// label's dy overrides LayerChart's default of `tickLength`, which would sit
+// the text flush against the tick's end.
+//
+// Y: labels at the RIGHT END of their gridlines, right-aligned and sitting on
+// top of the line; no tick marks, no rule. `dx: 0` cancels LayerChart's
+// default right-axis offset so the label ends exactly where the gridline does.
 const X_TICK_LENGTH = 5;
+// Air between a tick's end and its label (was 3px; Sandra asked for more).
+const X_LABEL_GAP = 6;
 export const xAxisProps = {
   rule: true,
   stroke: ink,
   tickMarks: true,
   tickLength: X_TICK_LENGTH,
-  tickLabelProps: { ...tickLabelProps, dy: X_TICK_LENGTH + 3 },
+  tickLabelProps: { ...tickLabelProps, dy: X_TICK_LENGTH + X_LABEL_GAP },
 };
-export const yAxisProps = { tickLength: 4, tickMarks: false, rule: false, tickLabelProps };
-
-// How far the x axis line runs past the first and last tick, in px [left,
-// right]. Every time-axis chart passes this as its chart-level `xPadding`:
-// LayerChart pads the scale's DOMAIN by these pixels while the range — and so
-// the axis rule, which spans the range — stays full width. The data and the
-// ticks move in; the line does not. Band (bar) scales ignore xPadding, and
-// don't need it: the band padding already leaves the rule overhanging the
-// outer bars.
-export const xAxisOverhang = [6, 12];
-
-// Y labels at the RIGHT END of their gridlines, sitting on top of the line —
-// Bloomberg's sediment chart again (Sandra, 2026-09-30, figure 1 first). A
-// figure opts in with `yAxisRight: true`. The labels are right-aligned to the
-// end of the range, so they need the data to stop short of it: those charts
-// pass yAxisRightOverhang as xPadding instead of xAxisOverhang, and the
-// right value is the room for a three-digit label ("300" at text-xs ≈ 20px)
-// plus a gap. The gridlines and the x axis line run on under the labels.
-export const yAxisRightProps = {
+export const yAxisProps = {
   placement: "right",
+  tickMarks: false,
+  rule: false,
   tickLabelProps: { ...tickLabelProps, textAnchor: "end", verticalAnchor: "end", dx: 0, dy: -3 },
 };
-export const yAxisRightOverhang = [6, 32];
+
+// Charts that name their series at the right edge (end labels on lines,
+// direct labels on bars) keep the y axis on the LEFT instead (Sandra,
+// 2026-09-30): the names own the right edge. Same treatment mirrored —
+// left-aligned at the START of each gridline, sitting on top of it.
+export const yAxisLeftProps = {
+  placement: "left",
+  tickMarks: false,
+  rule: false,
+  tickLabelProps: { ...tickLabelProps, textAnchor: "start", verticalAnchor: "end", dx: 0, dy: -3 },
+};
+export function yAxisFor(namesOnRight) {
+  return namesOnRight ? yAxisLeftProps : yAxisProps;
+}
+
+// Room at the end of the range for the y labels: "100%" at text-xs (~27px)
+// plus a gap before the data.
+const Y_LABEL_ROOM = 36;
+// Space end labels / direct labels need to the right of the last data
+// point. Mobile gets less — width is scarce there, and the labels wrap
+// (endLabelMobileWrap) instead of running wide.
+export function endLabelSpace(innerWidth) {
+  return innerWidth < DESKTOP_MIN ? 52 : 80;
+}
+
+// The plot's label strips, as the chart-level `xPadding` [left, right] of
+// every time-axis chart. LayerChart pads the scale's DOMAIN by these pixels
+// while the range stays full width, so the data and the x ticks move in and
+// the x axis line and the gridlines run on to the edges — under the y labels
+// and past the first and last tick. Right-hand y axis: 6px overhang on the
+// left, the y labels' room on the right. Left-hand y axis (names on the
+// right): the y labels' room on the left, the names' space on the right.
+export function plotXPadding(innerWidth, namesOnRight = false) {
+  return namesOnRight ? [Y_LABEL_ROOM, endLabelSpace(innerWidth)] : [6, Y_LABEL_ROOM];
+}
+
+// Chart padding once the y labels live inside the range: no gutter, just
+// enough on the left for the first x label to hang off the axis line's
+// start, and nothing on the right, so the labels end flush with the figure
+// column (title, subtitle, source) above and below.
+export function chartPadding(extra = {}) {
+  return defaultChartPadding({ left: 12, right: 0, ...extra });
+}
+
+// Bars can't use plotXPadding: band scales ignore xPadding (LayerChart's
+// padScale returns an ordinal domain untouched). A bar chart instead keeps
+// its label strips as chart padding and pushes the y labels across the strip
+// with dx, so they still sit at the figure's edge. The gridlines stop at the
+// outer bands there — LayerChart has no prop to run a grid past its range.
+export function barChartPadding(innerWidth, namesOnRight, directLabelsActive) {
+  return chartPadding(
+    namesOnRight
+      ? { left: Y_LABEL_ROOM, right: directLabelsActive ? endLabelSpace(innerWidth) : 0 }
+      : { right: Y_LABEL_ROOM }
+  );
+}
+export function barYAxisProps(namesOnRight, padding) {
+  const base = yAxisFor(namesOnRight);
+  const dx = namesOnRight ? -padding.left : padding.right;
+  return { ...base, tickLabelProps: { ...base.tickLabelProps, dx } };
+}
+
+// Default y ticks: about five round steps (50 / 100 / 150… on a 0–300
+// scale, 10 / 20 / 30 on 0–45), zero dropped — the x axis line is the zero.
+export function yTicks(scale) {
+  return excludeZeroTick(scale, 5);
+}
+// Percent (0–1) charts: quarters read better than d3's fifths.
+export const percentTicks = [0.25, 0.5, 0.75, 1];
 
 // The area wash as an OPAQUE colour: the series colour laid over the white
 // figure surface at areaFillOpacity, pre-mixed. It looks the same as the
@@ -159,11 +218,6 @@ export function desktopTooltips(innerWidth) {
   return innerWidth >= DESKTOP_MIN;
 }
 
-// Numeric y tick labels are wider than the default 20px left gutter; give
-// those charts enough room that the labels stay inside the chart container,
-// so the legend and plot stay flush with the title/subtitle/source.
-export const yLabelPadding = { left: 36 };
-
 // Point annotations may carry a `mobile` override (placement, offsets, label
 // props) for narrow viewports where the desktop placement would run past the
 // plot edge; SVG text does not clip-or-wrap on its own, so reposition instead.
@@ -181,15 +235,6 @@ export function resolveAnnotations(annotations, innerWidth) {
         }
       : annotation
   );
-}
-
-// End-of-line labels (LineChartPanel's series end labels) reserve padding on
-// the right. Mobile gets a tighter margin than desktop —
-// screen width is already scarce there, and the labels wrap instead of
-// running wide.
-export function endLabelPadding(innerWidth, hasLabels, extra = {}) {
-  const labelSpace = innerWidth < DESKTOP_MIN ? 52 : 80;
-  return defaultChartPadding(hasLabels ? { ...extra, right: labelSpace } : extra);
 }
 
 // Mobile override for end-of-line label annotations: the reserved

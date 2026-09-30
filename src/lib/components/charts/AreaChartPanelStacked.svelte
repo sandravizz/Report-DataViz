@@ -1,14 +1,16 @@
 <script>
   import { AnnotationPoint, AnnotationRange, AreaChart, Labels } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisProps, excludeZeroTick, desktopTooltips, yLabelPadding, resolveAnnotations, endLabelPadding, areaFillOpacity, defaultYearTicks, xAxisOverhang, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, yTicks, percentTicks, desktopTooltips, chartPadding, plotXPadding, resolveAnnotations, areaFillOpacity, defaultYearTicks, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
 
-  const formatValue = (d) => `${d}${pair.valueSuffix ?? ""}`;
+  // Thousands grouping and at most two decimals — $lib/format.js.
+  const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   // One tick per year (every other on mobile); yearTickFormat reads the
   // ends off this list.
   const xTicks = $derived(defaultYearTicks(pair.data, pair.xKey, innerWidth));
@@ -66,7 +68,10 @@
   const annotations = $derived(
     resolveAnnotations([...(pair.annotations ?? []), ...directLabelAnnotations], innerWidth)
   );
-  const padding = $derived(endLabelPadding(innerWidth, directLabelsActive, yLabelPadding));
+  // Direct labels own the right edge, so the y axis moves to the left
+  // while they show; otherwise it sits at the right (plotXPadding).
+  const xPadding = $derived(plotXPadding(innerWidth, directLabelsActive));
+  const padding = chartPadding();
 </script>
 
 <svelte:window bind:innerWidth />
@@ -85,7 +90,7 @@
       seriesLayout={pair.percent ? "stackExpand" : "stack"}
       legend={false}
       rule={false}
-      xPadding={xAxisOverhang}
+      {xPadding}
       tooltipContext={desktopTooltips(innerWidth)}
       {padding}
       props={{
@@ -95,19 +100,20 @@
         },
         xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(xTicks) },
         yAxis: {
-          ...yAxisProps,
-          ticks: pair.yTicks ?? excludeZeroTick,
+          ...yAxisFor(directLabelsActive),
+          ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
           format: pair.percent ? "percentRound" : formatValue,
         },
+        // Gridlines on exactly the y-axis ticks: LayerChart's chart-level Grid
+        // otherwise picks its own (fewer) ticks and skips some labelled values.
+        grid: { yTicks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks) },
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
           header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
           ...(pair.percent
             ? { item: { format: "percentRound" }, hideTotal: true }
-            : pair.valueSuffix
-              ? { item: { format: formatValue } }
-              : {}),
+            : { item: { format: formatValue } }),
         },
       }}
     >
@@ -140,7 +146,7 @@
   </div>
   <!-- Mobile legend fallback, identical to the stacked bar panel's. -->
   {#if pair.series.length > 1 && !directLabelsActive}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-9 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>
