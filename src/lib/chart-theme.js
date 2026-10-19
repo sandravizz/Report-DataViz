@@ -283,3 +283,32 @@ export function endLabelAnnotation(s, pair, innerWidth) {
     mobile: endLabelMobileWrap,
   };
 }
+
+// QUARTERLY X AXES (carta-demo, 2026-10-15). Carta reports by quarter, so
+// x values are Dates on each quarter's first month (Q3 2021 = 1 July 2021,
+// see quarterDate). The axis keeps the year treatment above: one tick per
+// year, under that year's Q1, labelled by yearTickFormat (2018 ’19 ’20 …
+// 2026) — the quarters between are bars or line points without a label.
+// The tooltip header names the quarter instead ("Q3 2021").
+export function quarterDate(year, quarter) {
+  return new Date(year, (quarter - 1) * 3, 1);
+}
+
+// "2021-Q3" (the CSV spelling) → Date.
+export function parseQuarter(period) {
+  const [year, q] = period.split("-Q");
+  return quarterDate(+year, +q);
+}
+
+// The Q1 of every year in the series; below DESKTOP_MIN every other year,
+// counted back from the last so the axis always ends on a labelled year
+// (same rule as defaultYearTicks).
+export function quarterTicks(dates, innerWidth) {
+  const q1 = dates.filter((d) => d.getMonth() === 0);
+  if (innerWidth >= DESKTOP_MIN) return q1;
+  return q1.filter((_, i) => (q1.length - 1 - i) % 2 === 0);
+}
+
+export function tooltipHeaderQuarter(d) {
+  return d instanceof Date ? `Q${Math.floor(d.getMonth() / 3) + 1} ${d.getFullYear()}` : d;
+}

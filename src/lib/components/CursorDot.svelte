@@ -179,10 +179,13 @@
     will-change: transform;
   }
 
+  /* carta-demo: the cover is Carta's near-black, so the dot is WHITE — the
+     cover's own ink there. (Base-content, the ink on every other branch's
+     light cover, would vanish into it.) */
   .cursor-dot {
     width: 9px;
     height: 9px;
-    background: var(--color-base-content);
+    background: #ffffff;
   }
 
   .cursor-halo {
@@ -190,6 +193,6 @@
     height: 28px;
     /* The cover's ink at 18%. No hairline: an outline around a 28px
        translucent ring reads as a bordered bead. */
-    background: color-mix(in oklab, var(--color-base-content) 18%, transparent);
+    background: color-mix(in oklab, #ffffff 18%, transparent);
   }
 </style>

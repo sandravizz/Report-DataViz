@@ -1,4 +1,4 @@
-<!-- Colophon only: FDL's imprint and a small production credit, on the
+<!-- Colophon only: Carta's imprint and a small production credit, on the
      chapter ground — the report simply ends.
 
      LAYOUT "D, bottom bar" (picked 2026-09-29 from five endings): one slim
@@ -23,19 +23,19 @@
   <div
     class="flex flex-col gap-1.5 px-[6vw] pt-4.5 pb-5.5 lg:px-6 md:flex-row md:items-baseline md:justify-between md:gap-6"
   >
-    <!-- FDL's own imprint, as findevlab.org's footer gives it. -->
+    <!-- Carta's own imprint, as every slide of the deck prints it. -->
     <p class="text-[0.8125rem] leading-relaxed text-base-content/70">
-      <!-- Below md: name on one line, address on the next (the dot only
-           separates them where they share a line). -->
-      © 2026 Finance for Development Lab<span class="mx-1.5 hidden text-base-content/55 md:inline"
+      <!-- Below md: the company on one line, the rights on the next (the
+           dot only separates them where they share a line). -->
+      © 2026 eShares, Inc. dba Carta, Inc.<span class="mx-1.5 hidden text-base-content/65 md:inline"
         >·</span
-      ><br class="md:hidden" />48 boulevard Jourdan, 75014 Paris
+      ><br class="md:hidden" />All rights reserved.
     </p>
 
     <!-- Production credit, deliberately the quietest line on the page: small,
          /55 (the lowest step that clears 4.5:1), a hairline underline that
          only turns accent on hover. -->
-    <p class="text-xs text-base-content/55">
+    <p class="text-xs text-base-content/65">
       Web development and data visualization<br class="md:hidden" />
       by
       <a
@@ -49,7 +49,7 @@
   </div>
 
   {#if disclosure}
-    <div class="px-[6vw] pb-6 lg:px-6 text-[10px] leading-relaxed text-base-content/55 md:text-[11px]">
+    <div class="px-[6vw] pb-6 lg:px-6 text-[10px] leading-relaxed text-base-content/65 md:text-[11px]">
       {@render disclosure()}
     </div>
   {/if}

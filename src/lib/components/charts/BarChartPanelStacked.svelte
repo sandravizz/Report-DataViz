@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { xAxisProps, barYAxisProps, barChartPadding, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, barYAxisProps, barChartPadding, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
@@ -35,7 +35,9 @@
         y: pair.percent ? mid / total : mid,
         // Half a band (~30px at the desktop column's fixed 800px) plus a
         // 2px gap starts the line just off the last bar's right edge.
-        r: 32,
+        // Figures with fewer, wider bands pass their own half-band
+        // (`directLabelOffset`) so the line still starts off the bar's edge.
+        r: pair.directLabelOffset ?? 32,
         label: s.key,
         labelPlacement: "right",
         labelXOffset: 22,
@@ -76,10 +78,27 @@
   // The narrow mobile axis has no room for a year under every bar: label
   // every other band, counting back from the last bar so the latest year
   // always keeps its label. Desktop labels every band as before.
+  // QUARTERLY figures (`pair.quarterly`, carta-demo) tick only each year's
+  // Q1 band — see quarterTicks in chart-theme.js. CATEGORICAL figures (x is
+  // a name, not a Date) label every band at every width: dropping every
+  // other metro name on a phone would hide content, not thin an axis.
+  const isTimeAxis = $derived(pair.data[0]?.[pair.xKey] instanceof Date);
   const xTicks = $derived(
-    innerWidth < 1024
-      ? (scale) => scale.domain().filter((_, i, all) => (all.length - 1 - i) % 2 === 0)
-      : undefined
+    pair.quarterly
+      ? (scale) => quarterTicks(scale.domain(), innerWidth)
+      : innerWidth < 1024 && isTimeAxis
+        ? (scale) => scale.domain().filter((_, i, all) => (all.length - 1 - i) % 2 === 0)
+        : undefined
+  );
+  // The labels: a figure's own xTickFormat (categorical axes pass one),
+  // else the shared year treatment, read off the ticks the axis draws.
+  const xTickFormat = $derived(
+    pair.xTickFormat ??
+      yearTickFormat(
+        pair.quarterly
+          ? quarterTicks(pair.data.map((d) => d[pair.xKey]), innerWidth)
+          : pair.data.map((d) => d[pair.xKey])
+      )
   );
 </script>
 
@@ -105,7 +124,7 @@
       {padding}
       props={{
         bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, ticks: xTicks, format: yearTickFormat(pair.data.map((d) => d[pair.xKey])) },
+        xAxis: { ...xAxisProps, ticks: xTicks, format: xTickFormat },
         yAxis: {
           ...barYAxisProps(namesOnRight, padding),
           ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
@@ -117,7 +136,7 @@
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
-          header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+          header: { format: pair.tooltipHeaderFormat ?? (pair.quarterly ? tooltipHeaderQuarter : tooltipHeaderYear) },
           ...(pair.percent
             ? // Series carry share values; a total row (always 100%) is noise.
               { item: { format: "percentRound" }, hideTotal: true }

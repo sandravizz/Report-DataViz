@@ -3,9 +3,9 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "IDA 2030: Cliff or no cliff? — An Interactive Report",
+    title: "State of Private Markets: Q1 2026 — An Interactive Report",
     description:
-      "An interactive report by the Finance for Development Lab on IDA's growth, its financing, and whether disbursements face a cliff by 2030. Web development and data visualization by SandraViz.",
+      "An interactive edition of Carta's State of Private Markets, Q1 2026: fundraising volume, down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -13,122 +13,169 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import CursorDot from "$lib/components/CursorDot.svelte";
-  import CoverEngraving from "$lib/components/CoverEngraving.svelte";
+  import DotGrid from "$lib/components/DotGrid.svelte";
   import RollText from "$lib/components/RollText.svelte";
 
-  // The PDF the closing call to action downloads. Drop FDL's file in
+  // The PDF the closing call to action downloads. Drop Carta's file in
   // static/ under this name (or change the path).
   const pdfHref = "/report.pdf";
   // The report's name as the closing colophon prints it.
-  const reportTitle = "IDA 2030: Cliff or no cliff?";
-  // Where the closing "More from FDL" button sends the reader.
-  const fdlHref = "https://findevlab.org";
+  const reportTitle = "State of Private Markets: Q1 2026";
+  // Where the closing "More from Carta" button sends the reader.
+  const moreHref = "https://carta.com/data/";
 
-  // Sections follow the IDA_GIZ_KAdequacyModel presentation's narrative:
-  // IDA's growth, financing that growth, and IDA's future.
+  // Chapters follow the deck's own sections (contents slide): Fundraising
+  // Volume, Key Trends, Valuations, AI & Foundational Models, Geography &
+  // Industry, Methodology — one figure per chapter, two where the deck's
+  // slide drew two measures on two axes and the report splits them.
   //
-  // THREE LAYERS: chapter → sub-chapter → figure. A chapter carries the
-  // display title (its `intro` is kept as source copy but no longer rendered —
-  // the text block leads with each sub-chapter's lede instead); the figures
-  // live in its sub-chapters, each with its own heading, optional intro
-  // (the lede), body paragraphs (LOREM by default) and its own pinned figure
-  // run. A
-  // sub-chapter may have no figures (text only). A report that wants no
-  // sub-chapters uses a single untitled one per chapter.
+  // THREE LAYERS: chapter → sub-chapter → figure, as on the other branches.
+  // A sub-chapter may have no figures (text only); `passages` continue a
+  // sub-chapter after its figure run with a heading-less text block and
+  // their own figures. Ids are assigned automatically below.
   //
-  // The sub-chapter split below is a DESIGN TEST for the three-layer TOC, not
-  // FDL's structure: titles and intros are placeholders drawn from the
-  // chapter copy, with no numbers of their own.
-  //
-  // PASSAGES: a sub-chapter may continue after its figure run with
-  // `passages: [{ intro, body, charts }]` — a text block with NO heading,
-  // then its own figure run. Use it for text between two figures that
-  // belong to the same sub-chapter; the Index and rail list the passage's
-  // figures under that sub-chapter. `body` defaults to LOREM like a
-  // sub-chapter's.
-  //
-  // Ids are assigned automatically below: chapter-1, its sub-chapters
-  // chapter-1-1, chapter-1-2, and their figure anchors chapter-1-1-chart-0...
-  // Placeholder body copy for every sub-chapter until FDL's text is in.
-  const LOREM = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-  ];
-
+  // COPY: every sentence and number is Carta's own — the Highlights slide,
+  // the slide headlines and the values printed on the slides. Nothing is
+  // read off a chart into the copy (see docs/carta-brand.md). Body copy
+  // defaults to nothing: no placeholder text on this branch.
   const sections = assignIds([
     {
-      title: "Financing IDA's Growth",
-      intro:
-        "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025. Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth (Figures 1 and 2).",
+      title: "Fundraising Volume",
       subchapters: [
-        // Figures 1 and 2 share ONE sub-chapter (2026-09-30), with a plain
-        // text passage between them and no heading: the reader still gets a
-        // cue that a second figure is starting, without a new sub-chapter
-        // in the outline. The ledes are the chapter intro's own sentences
-        // (FDL copy), divided between the two figures.
         {
-          title: "A Growing Balance Sheet",
+          title: "Capital Invested",
           intro:
-            "IDA's balance sheet has grown from about USD 197 billion in 2017 to USD 281 billion in 2025.",
-          charts: [figures.balanceSheetTotalArea],
+            "2025 deals continue to roll in: an additional $20B was recorded in the last 12 weeks, bringing 2025 to <mark class=\"accent-mark\">$137.8B of capital invested</mark>, the most since 2021.",
+          body: [
+            "Carta's data has an administrative lag: a round is recorded some time after it closes, so the latest periods keep growing for months after they end. The 2026 bar is the first quarter alone, $30.4B so far.",
+          ],
+          charts: [figures.capitalByYear],
           passages: [
             {
               intro:
-                "Most of it is financed by equity, but equity's share of assets is declining — from over 80% in 2017 to 73% in 2025 — as IDA increasingly borrows to fund its growth.",
-              charts: [figures.equityShare],
+                "Counted in rounds rather than dollars, the market peaked in the fourth quarter of 2021, at 2,291 rounds.",
+              body: [
+                "With Q1 deals still coming in, 2026 is already $2B ahead of 2025 year to date.",
+              ],
+              charts: [figures.roundsByQuarter],
             },
           ],
-        },
-        {
-          title: "Growth and Equity Side by Side",
-          intro: "Both trends on one figure: the balance sheet grows while equity's share declines.",
-          charts: [figures.balanceEquityDouble],
         },
       ],
     },
     {
-      title: "IDA's Future: Cliff or No Cliff?",
-      intro:
-        "The ambition for IDA is to maintain an overall disbursement pace similar to the past 10 years. The alternative — the IDA cliff — is flat or declining disbursements (Figure 3).",
+      title: "Key Trends",
       subchapters: [
         {
-          title: "The Objective",
-          intro: "Maintaining an overall disbursement pace similar to the past decade.",
-          charts: [figures.idaObjective],
+          title: "Down Rounds Are Low",
+          intro:
+            "The down-round rate fell to <mark class=\"accent-mark\">11.4% in Q1 2026</mark>. This is back in line with 2019 and 2020 levels.",
+          body: [
+            "Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
+          ],
+          charts: [figures.downRounds],
         },
         {
-          // Text-only on purpose: the layout and the TOC have to handle a
-          // sub-chapter without figures.
-          title: "The Alternative: The IDA Cliff",
-          intro: "The alternative is flat or declining disbursements — the IDA cliff.",
+          // Text only: the rest of the deck's Key Trends, in its own numbers.
+          title: "Terms Shift Toward Founders",
+          intro: "Dilution has fallen 3–5 points across all stages in the last three years.",
+          body: [
+            "Median dilution in Q1 2026 stood at 19.0% at seed, 18.0% at Series A, 13.0% at Series B, 9.5% at Series C and 4.9% at Series D.",
+            "Primary terms continue to shift toward founder friendly: the share of primary rounds carrying a liquidation preference fell from 6.0% in Q1 2023 to 2.7% in Q1 2026.",
+          ],
           charts: [],
         },
       ],
     },
     {
-      title: "The Largest Fund for Poor Countries",
-      intro:
-        "IDA is the largest source of concessional finance for the world's poorest countries: its loans represent 40% of all disbursements to eligible countries, and its grants around 20% of all grants they receive (Figure 4).",
+      title: "Valuations",
       subchapters: [
-        // The two reveal steps of Figure 4, one per sub-chapter for the test.
-        // Each step is a complete figure, so each still draws on its own.
         {
-          title: "Loans: 40% of Disbursements",
-          intro: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — sed do eiusmod tempor incididunt ut labore.",
-          charts: [figures.idaLoansAreaSteps[0]],
+          title: "Valuations by Stage",
+          intro:
+            "Over the last 12 months, the median seed round was priced at <mark class=\"accent-mark\">$21M post-money</mark>, the median Series D at $540M.",
+          body: [
+            "In Q1 2026 alone, the median post-money valuation stood at $62.8M for Series A, $177.0M for Series B and $385M for Series C. At the 90th percentile, Series B reached $1B and Series D $9.1B.",
+          ],
+          charts: [figures.postMoneyByStage],
         },
         {
-          title: "Grants: A Fifth of All Grants",
-          intro: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
-          charts: [figures.idaLoansAreaSteps[1]],
+          title: "Series B and C Rising",
+          intro:
+            "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025.",
+          body: [
+            "This may be because AI companies are maturing and moving toward later stages after promising early wins. Over the same 15 months, primary pre-money valuations fell 6.6% at seed and 7.1% at Series A.",
+          ],
+          charts: [],
+        },
+      ],
+    },
+    {
+      title: "AI & Foundational Models",
+      subchapters: [
+        {
+          title: "AI Crosses 60% of Capital",
+          intro:
+            "Over 60 cents of each dollar of venture capital invested on Carta in Q1 2026 went to AI companies, <mark class=\"accent-mark\">the highest share recorded to date</mark>.",
+          body: [
+            "Foundational model companies drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
+          ],
+          charts: [figures.aiShareOfCapital],
         },
         {
-          // Text-only on purpose: the report must END ON TEXT, never on a
-          // figure — a pinned figure running straight into the footer read
-          // as the page stopping mid-thought. Placeholder closing copy until
-          // FDL's conclusion is in.
-          title: "Looking Ahead",
-          intro: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+          title: "Priced in Three Tiers",
+          intro:
+            "New this quarter, Carta breaks out non-AI, applied-AI and foundational-model companies at every stage from seed to Series E+.",
+          body: [
+            "The gap opens at the very first round. The median seed pre-money valuation in Q1 2026 was $18.4M for non-AI companies and $18.6M for applied AI — and $200.0M for foundational model companies, up from $42.5M a year earlier.",
+          ],
+          charts: [],
+        },
+      ],
+    },
+    {
+      title: "Geography & Industry",
+      subchapters: [
+        {
+          title: "Where AI Capital Goes",
+          intro:
+            "The Bay Area ranks first for investment in AI: <mark class=\"accent-mark\">70.9% of its capital</mark> went to AI companies, ahead of Austin and Washington, DC.",
+          body: [
+            "California took 48.0% of all capital invested from Q2 2025 to Q1 2026, and the West region as a whole 55.4%. Behind California, New York (10.3%), Massachusetts (7.9%) and Texas (6.6%) receive the largest shares.",
+          ],
+          charts: [figures.aiShareByMetro],
+        },
+        {
+          title: "Each Metro, Its Own Mix",
+          intro: "Each of the big metros leans on a different industry.",
+          body: [
+            "SaaS makes up 46.5% of capital raised in the Bay Area. Austin sees 64.8% of its capital go into hardware; Boston 49.4% into biopharma, healthtech and medical devices. In New York, fintech and health together take a third.",
+          ],
+          charts: [],
+        },
+      ],
+    },
+    {
+      // The deck's own methodology, verbatim — and the text the report
+      // ends on (a report never ends on a pinned figure).
+      title: "Methodology",
+      subchapters: [
+        {
+          title: "Overview",
+          intro:
+            "Carta helps more than 50,000 primarily venture-backed companies who have combined to raise more than $1.2 trillion in equity.",
+          body: [
+            "This study uses an aggregated and anonymized sample of Carta customer data. Companies that have contractually requested that we not use their data in anonymized and aggregated studies are not included in this analysis.",
+            "The data presented in this private markets report represents a snapshot as of May 22, 2026. Historical data may change in future studies because there is typically an administrative lag between the time a transaction took place and when it is recorded in Carta. In addition, new companies signing up for Carta's services will increase historical data available for the report.",
+          ],
+          charts: [],
+        },
+        {
+          title: "Financings",
+          body: [
+            "Financings include equity deals raised in USD by U.S.-based corporations. The financing \u201cseries\u201d (e.g. Series A) is taken from the share class name in their applicable certificate or articles of incorporation. Financing rounds that don't follow this standard are not included in any data shown by series but are included in data not shown by series. Primary rounds are defined as the first equity round within a series. Bridge rounds are defined as any round raised after the first round in a given series.",
+            "In some cases, convertible notes are raised and converted at various discounted prices within a series (e.g. Series A-1, Series A-2, Series A-3). In these cases, converted securities are not included in cash raised, and only the post-money valuation of the new money is included.",
+          ],
           charts: [],
         },
       ],
@@ -136,10 +183,9 @@
   ]);
 
   // NUMBERS THE FIGURES: one plain series in reading order — Figure 1, 2,
-  // 3… — overriding whatever `number` the figure file carries (the source
-  // paper's "Figures 1 & 2", "Figure 4a"…). Every place a number is shown
-  // (figure eyebrow, chapter rail, PNG export) reads this one. Figures are
-  // copied, not mutated: the data objects are shared module exports.
+  // 3… — which every place a number is shown (figure eyebrow, chapter rail,
+  // PNG export) reads. Figures are copied, not mutated: the data objects are
+  // shared module exports.
   function assignIds(chapters) {
     let figureCount = 0;
     return chapters.map((chapter, i) => {
@@ -151,22 +197,19 @@
         // before it (anchorOffset), so the rail's `-chart-<j>` ids hold.
         let offset = charts.length;
         const passages = (sub.passages ?? []).map((p) => {
-          const run = { body: LOREM, ...p, charts: p.charts.map(number), anchorOffset: offset };
+          const run = { body: [], ...p, charts: p.charts.map(number), anchorOffset: offset };
           offset += run.charts.length;
           return run;
         });
         const allCharts = [...charts, ...passages.flatMap((p) => p.charts)];
-        return { body: LOREM, ...sub, charts, passages, allCharts, id: `${id}-${k + 1}` };
+        return { body: [], ...sub, charts, passages, allCharts, id: `${id}-${k + 1}` };
       });
       return { ...chapter, id, subchapters };
     });
   }
 
-  // ONE GROUND EVERYWHERE (2026-09-29). Text and pinned figures both sit on
-  // base-200, the near-white teal (#f5f7f7). There used to be a white figure
-  // surface with a fade painted into each text block's background on the way
-  // in and out; together with the rail's highlight changing, the background
-  // switching read as noise, so it went. No ramps, no second surface.
+  // ONE GROUND EVERYWHERE: text and pinned figures both sit on base-200,
+  // Carta's cream #fcf8f3 — the paper their chart slides are printed on.
 </script>
 
 <!-- A text block's lede and body, shared by a sub-chapter and its
@@ -188,9 +231,8 @@
                    1.85 suits the full ~65-character desktop measure, but on a
                    phone's ~35-character lines it read as loose, the lines
                    drifting apart (compare Reuters' mobile stories, ~1.6).
-                   The /80 stays: base-content is #000000 on this
-                   branch and house style rules out pure black under
-                   long-form reading (docs/type-rendering.md rule 4). -->
+                   The /80 stays: Carta's #1a1a1a at /80 is ~10:1 on the
+                   cream, well clear of 4.5 (docs/type-rendering.md rule 4). -->
               {#each text.body ?? [] as paragraph, j (j)}
                 <p
                   class="text-lg leading-[1.6] text-base-content/80 md:leading-[1.85] {j === 0 && text.intro
@@ -209,13 +251,11 @@
   <meta property="og:title" content={meta.title} />
   <meta property="og:description" content={meta.description} />
   <meta property="og:url" content={page.url.origin + page.url.pathname} />
-  <meta property="og:image" content="{page.url.origin}/og-image-fdl-engraving.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <!-- No og:image yet: the share image for this report is still to come.
+       "summary" until then — "summary_large_image" wants an image. -->
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={meta.title} />
   <meta name="twitter:description" content={meta.description} />
-  <meta name="twitter:image" content="{page.url.origin}/og-image-fdl-engraving.jpg" />
 </svelte:head>
 
 <!-- The accent dot cursor, which applies to the COVER ONLY: it follows the
@@ -281,11 +321,14 @@
              the block is natural height (see docs/house-style.md). -->
         <div class="mx-auto w-[88vw] max-w-200 py-16 lg:py-28">
           <!-- The chapter title is the one piece of display type in the
-               report body: 32px climbing to 52px, leading 1.06 and a hair of
+               report body: 36px climbing to 60px, leading 1.06 and a hair of
                negative tracking so a two-line title reads as one object. -->
           {#if k === 0}
+          <!-- SangBleu Versailles at 400 (the only weight Carta ships), as
+               on the deck's section-divider slides; a step bigger than the
+               sans it replaced, since a 400 serif reads lighter. -->
           <h2
-            class="text-center text-[2rem] leading-[1.06] font-semibold tracking-[-0.012em] text-balance sm:text-[2.5rem] lg:text-[3.25rem]"
+            class="text-center font-serif text-[2.25rem] leading-[1.06] font-normal tracking-[-0.01em] text-balance sm:text-[2.75rem] lg:text-[3.75rem]"
           >
             {section.title}
           </h2>
@@ -337,7 +380,7 @@
   {/each}
 </main>
 
-<!-- THE ENDING SCREEN (2026-09-30), at every size. The last sub-chapter's
+<!-- THE ENDING SCREEN (2026-09-30; band redrawn for Carta 2026-10-15), at every size. The last sub-chapter's
      text ends on its own natural height; the next scroll brings a screen of
      its own, a bookend to the cover: the same ground, nothing above but
      empty space, then the colophon the report closes on — title, publisher
@@ -356,11 +399,8 @@
      footer. -->
 <div class="flex min-h-svh flex-col bg-base-200">
   <!-- The screen splits at every size: the colophon in the upper part, then
-       the cover engraving's whole panorama as a low band filling the rest
-       down to the footer ("option E", picked 2026-09-30 from six ending
-       images) — fjord to cliff, the figure small and far right with its 2030
-       tag. On a phone the band's crop shows the middle of the panorama; the
-       figure and tag stay in view. -->
+       a low decorative band filling the rest down to the footer (the
+       "option E" layout, picked 2026-09-30) — here the cover's dot grid. -->
   <section
     data-report-end
     aria-label="End of report"
@@ -371,17 +411,18 @@
       class="mx-auto flex w-[88vw] max-w-[40rem] flex-col gap-6 md:gap-8 lg:gap-10"
     >
       <div>
+        <!-- SangBleu, like the cover title it bookends. -->
         <p
-          class="text-xl leading-snug font-medium text-balance md:text-[2rem] md:leading-[1.15] lg:text-[2.75rem] lg:leading-[1.1] lg:tracking-[-0.012em]"
+          class="font-serif text-2xl leading-snug font-normal text-balance md:text-[2.25rem] md:leading-[1.12] lg:text-[3rem] lg:leading-[1.08] lg:tracking-[-0.01em]"
         >
           {reportTitle}
         </p>
-        <p class="mt-1.5 text-sm text-base-content/55 md:mt-3 md:text-base lg:text-lg">
-          Finance for Development Lab · 2026
+        <p class="mt-1.5 text-sm text-base-content/65 md:mt-3 md:text-base lg:text-lg">
+          Carta · June 2026
         </p>
       </div>
       <!-- "Full report" is an exact copy of the figures' PNG button
-           (FigureFooter.svelte) — outline = download. "More from FDL" is the
+           (FigureFooter.svelte) — outline = download. "More from Carta" is the
            Index button's twin (Header.svelte) — soft fill = opens something;
            new tab, so the report stays open. EQUAL WIDTH: the stack is w-max
            and stretches both to the wider one, labels centred; both 32px
@@ -399,33 +440,28 @@
           <RollText text="Full report" />
         </a>
         <a
-          href={fdlHref}
+          href={moreHref}
           target="_blank"
           rel="noopener"
           class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
         >
-          <RollText text="More from FDL" />
+          <RollText text="More from Carta" />
         </a>
       </div>
     </div>
     </div>
 
-    <!-- THE BAND. The crop is the photo's full width over the horizon, ridge,
-         fjord and cliff (y 110–840). The top starts in the empty sky, so
-         there is always room above the figure for its 2030 tag (it was
-         clipped on real phones when the crop started at y 200); the fade
-         at the top dissolves only that sky and the far horizon, and the
-         other three edges fade softly. min-h keeps it a real band on a short or crowded
-         screen. Decorative: the colophon above says what the page is, so
-         the canvas's label stays short. -->
-    <div class="relative min-h-[30svh] flex-1 md:min-h-[34svh]">
-      <CoverEngraving
-        lens
-        crop={{ x: 0, y: 110, w: 2000, h: 730 }}
-        focusU={0.5}
-        fade={{ top: 0.2, bottom: 0.12, left: 0.05, right: 0.05 }}
-        label="Line engraving of the fjord panorama, the lone figure small on the cliff at the far right"
-      />
+    <!-- THE BAND: Carta's coral square-dot grid, the cover's pattern
+         returning on the cream to close the report — the bookend the
+         engraving panorama was on the findevlab branch. It fades in from
+         the top (a CSS mask, the grid itself stays one flat colour) so it
+         rises out of the colophon's space rather than starting on a hard
+         edge. min-h keeps it a real band on a short or crowded screen.
+         Decorative: the colophon above says what the page is. -->
+    <div
+      class="relative min-h-[30svh] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_60%)] md:min-h-[34svh]"
+    >
+      <DotGrid color="#ff7d55" animate={false} />
     </div>
   </section>
 

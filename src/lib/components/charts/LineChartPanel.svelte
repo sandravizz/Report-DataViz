@@ -81,7 +81,7 @@
     // black un-themed default instead of a faint 10%-opacity line.
     // Gridlines on exactly the y-axis ticks (the chart-level Grid otherwise
     // picks its own, fewer ticks and skips some labelled values).
-    grid: { stroke: "rgba(0, 0, 0, 0.1)", yTicks: pair.yTicks ?? yTicks },
+    grid: { stroke: "rgba(26, 26, 26, 0.1)", yTicks: pair.yTicks ?? yTicks },
   }}
 >
   {#snippet marks({ context })}

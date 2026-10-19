@@ -60,7 +60,7 @@
              a 1000px-wide plot on an iPad. The md: steps below are TYPE ONLY;
              the scrolly mechanism (chart position, description column, the
              Interpretation button's lg:hidden) is untouched and stays on lg. -->
-        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
+        <span class="min-w-0 flex-1 truncate font-sans text-xs tracking-wide text-base-content/65 uppercase md:text-sm">
           {pair.number}
         </span>
         <!-- THE INDEX BUTTON'S FILL (2026-09-30): same ink-6% soft fill,
@@ -143,7 +143,7 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">✕</button>
       </form>
-      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/55 uppercase md:text-sm">
+      <div class="mb-1 font-sans text-xs tracking-wide text-base-content/65 uppercase md:text-sm">
         {pairs[activeIndex].number}
       </div>
       <div class="mb-3 pr-6 font-sans text-base leading-snug font-medium text-base-content md:text-lg">

@@ -4,78 +4,68 @@
 @import 'layerchart/daisyui-5.css';
 
 @plugin "daisyui" {
-  themes: findevlab --default;
+  themes: carta --default;
 }
 
-/* FDL corporate colors (brand guidelines pp. 8-9). Base surfaces are white plus
-   tints of the primary teal #709899 (the guidelines sanction 75%/50% tints).
+/* CARTA (carta.com), read off their production CSS on 2026-10-15 — see
+   docs/carta-brand.md for every value's source. The report sits on Carta's
+   own cream, `--clr-light-cream` #fcf8f3, the same warm off-white their
+   chart slides are printed on; the cover and the ending band use their
+   near-black `--color-black` #1a1a1a, the ground of every title and
+   section-divider slide in the State of Private Markets deck.
 
-   base-200 is NOT FDL's own #e2eaeb. That value is the section background
-   findevlab.org uses behind short blocks, and at OKLCH L 0.931 / C 0.0087 it
-   is light but not light ENOUGH: against the white figure surface it reads as
-   a panel laid on the page rather than as the page's own ground, and a panel
-   is exactly what makes a reader notice its hue. On a scrolling report, where
-   the ground runs for screens at a time and hands off to white at every
-   figure, that registers as "the text part is blue".
-
-   The fix is lightness first, chroma second. #edf1f1 is the same teal hue
-   (H 206) lifted to L 0.955 and dropped to C 0.004 — still FDL teal rather
-   than a neutral grey, so the footer and the header dropdowns stay in the
-   brand, but quiet enough that the ramp into a figure reads as a lift rather
-   than a change of colour. Picked against the real composition; the ladder it
-   came from was L .931/.945/.955/.967 crossed with C .0087/.006/.004/.0025,
-   plus a slate (H 248) and a chroma-zero grey as controls.
-
-   Lifted once more (2026-09-28) to #f5f7f7 — L 0.975 / C 0.002, same H 206:
-   at #edf1f1 the step from text ground to white figure still read as a
-   colour change. Now it is barely a change at all, only a hint of teal. */
+   Ink is that same #1a1a1a, not #000: Carta never sets pure black, and the
+   house rule rules it out under long-form reading anyway. 16.5:1 on the
+   cream. Quiet text is /65 on this pair (computed: /60 is 4.48:1, just under
+   4.5 — see docs/type-rendering.md rule 2). */
 @plugin "daisyui/theme" {
-  name: 'findevlab';
+  name: 'carta';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f5f7f7;
-  --color-base-300: #b7cbcc;
-  /* Black text, matching findevlab.org's article pages (.style_page p is #000). */
-  --color-base-content: #000000;
-  --color-primary: #395966;
-  --color-primary-content: #ffffff;
-  --color-secondary: #709899;
+  --color-base-200: #fcf8f3;
+  --color-base-300: #dedfdf;
+  --color-base-content: #1a1a1a;
+  /* Carta's coral, orange-60 #ff7d55 — the brand colour itself. On the cream
+     it is only 2.4:1, so on light grounds it is a FILL (the date tag, the
+     accent underline's rule is the deeper step below); on the near-black
+     cover it is 6.9:1 and carries everything. */
+  --color-primary: #ff7d55;
+  --color-primary-content: #1a1a1a;
+  --color-secondary: #394040;
   --color-secondary-content: #ffffff;
-  --color-accent: #ae7709; /* deepened FDL gold — see `accent` in src/lib/colors.js */
+  /* The accent is Carta's orange-80 #d26442, one step deeper than the
+     coral: 3.5:1 on the cream, so it clears 3:1 for focus rings, rules and
+     chart marks where the brand coral would not. Same as `accent` in
+     src/lib/colors.js. */
+  --color-accent: #d26442;
   --color-accent-content: #ffffff;
-  /* NOT WORN BY ANY CONTROL since 2026-09-29: the PNG and Interpretation
-     buttons became hairline outlines in base-content (see FigureFooter.svelte)
-     and no longer fill in this. Kept as the theme's neutral step. History:
-     this was the ink the report's two filled controls wore — the PNG button
-     and the mobile Interpretation button. Was FDL's grey-green #5e6d68; now the
-     `strong` step of the neutral ramp in src/lib/colors.js, so the controls
-     sit on the same greys the figures do.
-
-     They used to be filled in `accent`. That worked while the accent was the
-     only saturated thing on the page, but the figures now draw their story
-     series in that same rust, so an accent-filled button put a third red
-     object on every figure and competed with the one mark that is supposed
-     to mean "look here". A control is chrome; it gets a neutral.
-
-     White on this step is 7.4:1, so `neutral-content` stays white. */
-  --color-neutral: #505757;
+  /* Carta's gray-90, the dark slate of their "total rounds" bars. */
+  --color-neutral: #394040;
   --color-neutral-content: #ffffff;
-  --color-info: #709899;
+  --color-info: #2c67b5;
   --color-info-content: #ffffff;
-  --color-success: #618e78;
+  --color-success: #2d9e90;
   --color-success-content: #ffffff;
-  --color-warning: #e9be72;
-  --color-warning-content: #000000;
-  --color-error: #c24c2c;
+  --color-warning: #f8d648;
+  --color-warning-content: #1a1a1a;
+  --color-error: #c62128;
   --color-error-content: #ffffff;
 }
 
 @theme {
-  --font-sans: 'Barlow', sans-serif;
-  --font-display: 'Kapra Neue Expanded', 'Barlow', sans-serif;
+  /* Carta's two faces (carta.com production CSS): Plus Jakarta Sans for
+     everything, SangBleu Versailles for the serif display lines — the deck's
+     cover, section dividers and slide headlines. `font-display` stays the
+     sans because it is what the UI controls wear (Index, the closing
+     button); the serif is its own token and only the big titles use it. */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'SangBleu Versailles', 'Times New Roman', serif;
+  /* The near-black ground of Carta's title and divider slides. */
+  --color-night: #1a1a1a;
 
   /* The whole scrolly system is keyed to `lg` — chart position, description
      column, chapter rail, the mobile "Interpretation" modal button — so this
@@ -131,7 +121,7 @@
 
 /* Accent underline for a marked phrase in running text. A real underline, not
    a highlighter band: the text keeps its own ink and only the RULE is painted
-   in the accent gold, which is how the accent stays reserved for things that
+   in the accent, which is how the accent stays reserved for things that
    point. It stays a `mark` for semantics, with the browser's default yellow
    ground stripped — without this rule a `<mark>` would render as a highlighter
    band, so the rule has to exist before any copy uses one.
@@ -188,9 +178,9 @@
    credit links, the footer links — had nothing.
 
    The accent is the right ink for it: it is already the report's "this points
-   at something" colour. Since the switch from rust to deepened gold
-   (2026-09-30) it sits at 3.9:1 on base-100 — above the 3:1 a focus
-   indicator needs.
+   at something" colour. On this branch it is Carta's orange-80 #d26442:
+   3.5:1 on the cream, 3.7:1 on white — above the 3:1 a focus indicator
+   needs. (Their brand coral, 2.4:1, would not be.)
 
    `:focus-visible`, never `:focus` — a plain `:focus` rule would ring the
    buttons on every mouse click too. The outline is drawn OUTSIDE the box with

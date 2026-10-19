@@ -17,7 +17,7 @@
   // description column on the right. Geometry lives in styles/tailwind.css.
   // The rail is 2.5rem narrower than the description (--rail-w). Its text is
   // pinned to the WINDOW EDGE 24px in — the header's px-6, so it lines up
-  // under the FDL logo — not to the figure. (The nav itself sits at left-3
+  // under the header logo — not to the figure. (The nav itself sits at left-3
   // with px-3 of its own, so the hover block has room either side of the
   // text inside the nav's scroll clip.) It is not tied to the figure: it is surrounding information,
   // and should read as page furniture rather than sit beside the chart. On
@@ -192,7 +192,7 @@
           data-row
           class="group block cursor-pointer text-left"
         >
-          <span class="block text-xs text-base-content/55 tabular-nums">{chapterIndex + 1}.0</span>
+          <span class="block text-xs text-base-content/65 tabular-nums">{chapterIndex + 1}.0</span>
           <span class="mt-1 block text-sm leading-snug font-medium text-base-content/85">
             {chapter.title}
           </span>
@@ -210,7 +210,7 @@
                 aria-current={subOn && !activeChart ? "true" : undefined}
                 class="group flex cursor-pointer items-baseline gap-2 text-left text-sm leading-snug transition-colors duration-200 {subOn
                   ? 'text-base-content/85'
-                  : 'text-base-content/55 hover:text-base-content/90'}"
+                  : 'text-base-content/65 hover:text-base-content/90'}"
               >
                 <span class="shrink-0 tabular-nums">{chapterIndex + 1}.{k + 1}</span>
                 <span>{sub.title}</span>
@@ -238,13 +238,13 @@
                           <span
                             class="block h-2 w-2 rounded-full border-[1.5px] transition-all duration-200 {on
                               ? 'border-base-content/38 bg-base-content/38'
-                              : 'border-base-content/28 bg-transparent group-hover:scale-[0.6] group-hover:border-base-content/55 group-hover:bg-base-content/55'}"
+                              : 'border-base-content/28 bg-transparent group-hover:scale-[0.6] group-hover:border-base-content/65 group-hover:bg-base-content/65'}"
                           ></span>
                         </span>
                         <span
                           class="text-sm leading-snug transition-colors duration-200 {on
                             ? 'text-base-content/85'
-                            : 'text-base-content/55 group-hover:text-base-content/90'}"
+                            : 'text-base-content/65 group-hover:text-base-content/90'}"
                         >
                           <span class="mr-1 whitespace-nowrap">{chart.number}</span>
                           <span>{chart.title}</span>

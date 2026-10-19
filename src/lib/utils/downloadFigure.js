@@ -2,17 +2,18 @@ import { getChartSvgString } from "layerchart";
 
 // Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot. Figure
-// title/subtitle/source all render in font-sans (Barlow) on screen — Kapra
-// Neue Expanded is reserved for nav/headings, not figure text — and
-// base-content is pure black on this theme (see tailwind.css).
-const FONT_FAMILY = "Barlow, sans-serif";
-const INK = "#000000";
+// title/subtitle/source all render in font-sans (Plus Jakarta Sans) on
+// screen — the SangBleu serif is reserved for the big titles, not figure
+// text — and base-content is Carta's near-black #1a1a1a (see tailwind.css).
+const FONT_FAMILY = "'Plus Jakarta Sans', sans-serif";
+const INK = "#1a1a1a";
 // Alpha matches the page's quiet-text value for this branch's ink, so the
 // exported source line is as legible as the one under the figure.
 // Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
-const MUTED = "rgba(0, 0, 0, 0.55)";
-const RAIL_TRACK = "rgba(0, 0, 0, 0.1)";
-const BACKGROUND = "#ffffff";
+const MUTED = "rgba(26, 26, 26, 0.65)";
+const RAIL_TRACK = "rgba(26, 26, 26, 0.1)";
+// Carta prints its charts on the cream, and the page sets them on it too.
+const BACKGROUND = "#fcf8f3";
 // Tailwind's `tracking-wide`, which every caption-sized line on the page
 // carries: the figure eyebrow, the source line, the wordmark. Canvas2D
 // letterSpacing is recent (Chrome 99+, Safari 17.4+), so `withTracking` is a
@@ -135,8 +136,8 @@ export async function downloadFigureImage({
 }) {
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
   await Promise.all([
-    document.fonts.load(`500 16px "Barlow"`),
-    document.fonts.load(`400 16px "Barlow"`),
+    document.fonts.load(`500 16px "Plus Jakarta Sans"`),
+    document.fonts.load(`400 16px "Plus Jakarta Sans"`),
   ]);
 
   const chartRoots = Array.from(figureEl.querySelectorAll(".lc-root-container"));

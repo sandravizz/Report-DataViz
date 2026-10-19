@@ -3,27 +3,26 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>IDA 2030: Cliff or no cliff? — An Interactive Report</title>
+		<title>State of Private Markets: Q1 2026 — An Interactive Report</title>
 		<meta
 			name="description"
-			content="An interactive report by the Finance for Development Lab on IDA's growth, its financing, and whether disbursements face a cliff by 2030. Web development and data visualization by SandraViz."
+			content="An interactive edition of Carta's State of Private Markets, Q1 2026: fundraising volume, down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz."
 		/>
 		<meta name="robots" content="noindex, nofollow" />
 		<!-- FONTS LOAD HERE, not via @import in fonts.css. An @import is only
 		     found after the bundled CSS has downloaded and parsed, and the woff2
 		     only after THAT stylesheet — three round trips, during which the
 		     text painted in the fallback face and then visibly swapped.
-		     Preconnect + a plain <link> start them with the HTML; the two Kapra
-		     files are preloaded; `display=block` hides text for the few ms the
+		     Preconnect + a plain <link> start them with the HTML; the SangBleu
+		     roman (the cover title) is preloaded; `display=block` hides text for the few ms the
 		     fonts take instead of flashing a different face. -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@500&display=block"
+			href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block"
 		/>
-		<link rel="preload" href="/fonts/KapraNeue-RegularExpanded.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/KapraNeue-SemiBoldExpanded.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/SangBleuVersailles-Regular.woff2" as="font" type="font/woff2" crossorigin />
 		<style>
 			/* Pin Tailwind's cascade layer order before any bundled CSS loads.
 			   Vite 8 (Rolldown) hoists the empty `@layer components;` statement above

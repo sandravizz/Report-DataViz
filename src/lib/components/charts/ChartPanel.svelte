@@ -6,6 +6,7 @@
   import AreaChartPanel from "./AreaChartPanel.svelte";
   import AreaChartPanelOverlap from "./AreaChartPanelOverlap.svelte";
   import AreaChartPanelStacked from "./AreaChartPanelStacked.svelte";
+  import RangeChartPanel from "./RangeChartPanel.svelte";
 
   // `active` = this panel is the current scrolly step. Passed through from
   // ChartDisplay; only panels with draw-in behavior consume it.
@@ -22,4 +23,6 @@
   <AreaChartPanelOverlap {pair} {active} />
 {:else if pair.kind === "area-stacked"}
   <AreaChartPanelStacked {pair} />
+{:else if pair.kind === "range"}
+  <RangeChartPanel {pair} />
 {/if}

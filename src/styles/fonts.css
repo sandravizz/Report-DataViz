@@ -1,27 +1,26 @@
-/* FDL brand fonts (brand guidelines, Avril 2022):
-   - Kapra Neue Expanded — display/headline face (typography basis of the logo),
-     self-hosted woff2 files taken from findevlab.org, in static/fonts/. Only
-     the two weights the page sets are declared: 400 (Header) and 600 (cover).
-   - Barlow — print & web text face, loaded from Google Fonts like FDL's own site.
-   - IBM Plex Mono 500 — NOT an FDL face: only the "2030" tag on the cover
-     engraving (CoverEngraving.svelte), a technical-label nod.
-   Both Google faces are linked in src/app.html, not @imported here (the
-   @import chain made the fallback face flash on load — see app.html).
-   font-display: block for the same reason: a brief invisible moment instead
-   of a visible swap. The files are preloaded, so it stays brief. */
+/* Carta's faces, as carta.com sets them (production CSS, 2026-10-15):
+   - Plus Jakarta Sans — every line of running text, UI and chart text.
+     Open source (SIL OFL), loaded from Google Fonts; linked in src/app.html.
+   - SangBleu Versailles — the serif of the deck's cover, section dividers
+     and headlines. A commercial Swiss Typefaces face, vendored from Carta's
+     own build (carta.com/_next/static/media/) into static/fonts/ for this
+     client-only demo: it is licensed to Carta, so it must not be reused on
+     another client branch. Carta ships only the 400 roman and italic.
+   font-display: block, as on the other branches: a brief invisible moment
+   instead of a visible swap; the roman is preloaded in app.html. */
 
 @font-face {
-	font-family: 'Kapra Neue Expanded';
-	src: url('/fonts/KapraNeue-RegularExpanded.woff2') format('woff2');
+	font-family: 'SangBleu Versailles';
+	src: url('/fonts/SangBleuVersailles-Regular.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: block;
 }
 
 @font-face {
-	font-family: 'Kapra Neue Expanded';
-	src: url('/fonts/KapraNeue-SemiBoldExpanded.woff2') format('woff2');
-	font-weight: 600;
-	font-style: normal;
+	font-family: 'SangBleu Versailles';
+	src: url('/fonts/SangBleuVersailles-Italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
 	font-display: block;
 }
