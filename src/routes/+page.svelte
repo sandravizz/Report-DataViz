@@ -461,7 +461,7 @@
     <div
       class="relative min-h-[30svh] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_60%)] md:min-h-[34svh]"
     >
-      <DotGrid color="#ff7d55" animate={false} />
+      <DotGrid color="#ff7d55" animate={false} lens />
     </div>
   </section>
 

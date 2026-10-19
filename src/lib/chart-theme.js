@@ -1,4 +1,5 @@
 import { defaultChartPadding } from "layerchart";
+import { scaleBand } from "d3-scale";
 import { ink } from "./colors.js";
 
 // The one width that separates the tablet layout from the desktop one, and the
@@ -95,21 +96,26 @@ export function chartPadding(extra = {}) {
 }
 
 // Bars can't use plotXPadding: band scales ignore xPadding (LayerChart's
-// padScale returns an ordinal domain untouched). A bar chart instead keeps
-// its label strips as chart padding and pushes the y labels across the strip
-// with dx, so they still sit at the figure's edge. The gridlines stop at the
-// outer bands there — LayerChart has no prop to run a grid past its range.
-export function barChartPadding(innerWidth, namesOnRight, directLabelsActive) {
-  return chartPadding(
-    namesOnRight
-      ? { left: Y_LABEL_ROOM, right: directLabelsActive ? endLabelSpace(innerWidth) : 0 }
-      : { right: Y_LABEL_ROOM }
-  );
+// padScale returns an ordinal domain untouched). They get the same layout
+// another way: the chart's `xScale` prop takes a band scale whose OUTER
+// padding holds the label strips, so the range — and with it the gridlines
+// and the x axis line — still runs the full width, and the y labels sit on
+// top of their gridlines' ends exactly as on the line charts. d3's outer
+// padding is in steps, not pixels, so it is solved from the chart width:
+// the bands fill (width − left − right) with their usual `bandPadding`, and
+// `align` splits the rest between the two strips.
+export function barLabelRoom(innerWidth, namesOnRight, directLabelsActive) {
+  return namesOnRight
+    ? [Y_LABEL_ROOM, directLabelsActive ? endLabelSpace(innerWidth) : 0]
+    : [0, Y_LABEL_ROOM];
 }
-export function barYAxisProps(namesOnRight, padding) {
-  const base = yAxisFor(namesOnRight);
-  const dx = namesOnRight ? -padding.left : padding.right;
-  return { ...base, tickLabelProps: { ...base.tickLabelProps, dx } };
+export function barXScale(width, bandCount, bandPadding, [left, right]) {
+  const scale = scaleBand().paddingInner(bandPadding);
+  if (!(width > left + right) || bandCount < 1) return scale.paddingOuter(bandPadding);
+  const step = (width - left - right) / (bandCount + bandPadding);
+  const outerLeft = left + bandPadding * step;
+  const outerRight = right + bandPadding * step;
+  return scale.paddingOuter((outerLeft + outerRight) / (2 * step)).align(outerLeft / (outerLeft + outerRight));
 }
 
 // Default y ticks: about five round steps (50 / 100 / 150… on a 0–300

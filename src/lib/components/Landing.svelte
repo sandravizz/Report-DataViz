@@ -34,7 +34,7 @@
   class="relative flex min-h-svh flex-col bg-night font-sans text-white md:min-h-screen"
 >
   <div class="absolute inset-x-0 top-14 bottom-0 lg:top-18">
-    <DotGrid clear={titleBlock} color="#ff7d55" />
+    <DotGrid clear={titleBlock} color="#ff7d55" lens />
   </div>
 
   <div class="relative flex flex-1 flex-col items-center justify-center px-5 pt-20 pb-6 sm:px-10 lg:pt-24">

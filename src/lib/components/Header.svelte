@@ -270,7 +270,7 @@
        height below the top edge that it had when the close button lived
        here. The sheet closes on any click that is not a link (see
        onSheetClick) or on Escape. -->
-  <div class="min-h-[3.75rem] sm:min-h-[4.25rem]" aria-hidden="true"></div>
+  <div class="min-h-[3.75rem] sm:min-h-[4.25rem] lg:min-h-[max(2.5rem,5dvh)]" aria-hidden="true"></div>
 
   <!-- One centred reading column, like the chapter text. Two tiers:
          1.0  CHAPTER       semibold, full ink, hairline rule beneath
@@ -285,11 +285,15 @@
        underline: chapter rows already carry a rule beneath, so an underline
        read as a second line. A sub-chapter row also goes to full ink.
        The "Index" heading sits pulled up close to the top bar (negative top
-       margin from md up) rather than a gap below it. -->
-  <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4">
+       margin from md up) rather than a gap below it.
+       DESKTOP (lg) fits the whole list in one screen: the curtain drops to
+       the bottom edge and no further. Vertical spacing there is in dvh so it
+       shrinks with a shorter window, and the type steps down one size
+       (chapters lg, sub-chapters base). Below lg it may still scroll. -->
+  <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4 lg:pb-[3dvh]">
     <!-- SangBleu, like the chapter titles: Carta's serif for display lines. -->
     <h2
-      class="text-center font-serif text-[2rem] leading-none font-normal tracking-[-0.01em] md:text-[2.5rem] lg:text-[3rem]">
+      class="text-center font-serif text-[2rem] leading-none font-normal tracking-[-0.01em] md:text-[2.5rem]">
       Index
     </h2>
 
@@ -298,7 +302,7 @@
          sides so titles and numbers keep some air inside it. -->
     <div
       {@attach glide.attach}
-      class="relative isolate mt-8 md:mt-12 lg:mt-16"
+      class="relative isolate mt-8 md:mt-12 lg:mt-[3dvh]"
     >
     <div
       aria-hidden="true"
@@ -306,7 +310,7 @@
       style={glide.style}
     ></div>
 
-    <ol class="flex list-none flex-col gap-6 md:gap-10">
+    <ol class="flex list-none flex-col gap-6 md:gap-10 lg:gap-[2.4dvh]">
       {#each sections as section, i (section.id)}
         <!-- No transition of its own: the rows are printed on the sheet and
              ride down with it, already there as it drops. (They used to
@@ -317,21 +321,21 @@
             href="#{section.id}"
             onclick={(e) => goTo(e, section.id)}
             data-row
-            class="flex items-baseline gap-4 border-b border-base-content pt-2 pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:text-xl"
+            class="flex items-baseline gap-4 border-b border-base-content pt-2 pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
           >
             <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
             <span>{section.title}</span>
           </a>
 
           {#if section.subchapters?.length}
-            <ol class="mt-2 flex list-none flex-col md:mt-3">
+            <ol class="mt-2 flex list-none flex-col md:mt-3 lg:mt-[0.4dvh]">
               {#each section.subchapters as sub, k (sub.id)}
                 <li>
                   <a
                     href="#{sub.id}"
                     onclick={(e) => goTo(e, sub.id)}
                     data-row
-                    class="flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg transition-colors duration-150 hover:text-base-content"
+                    class="flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base transition-colors duration-150 hover:text-base-content"
                   >
                     <span class="w-8 shrink-0 text-base-content/65 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
                     <span>{sub.title}</span>

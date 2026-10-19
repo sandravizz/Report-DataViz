@@ -1,6 +1,6 @@
 <script>
   import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { xAxisProps, barYAxisProps, barChartPadding, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
@@ -70,10 +70,20 @@
   );
   // A figure whose series are named at the right edge keeps its y axis on
   // the left — decided per figure, not per width, so the axis doesn't jump
-  // sides when the direct labels give way to the mobile legend. Bars keep
-  // the label strips as chart padding (band scales ignore xPadding).
+  // sides when the direct labels give way to the mobile legend. The label
+  // strips live in the band scale's outer padding (barXScale), so the
+  // gridlines run on under the y labels as on the line charts.
   const namesOnRight = $derived(pair.series.length > 1 && pair.directLabels !== false);
-  const padding = $derived(barChartPadding(innerWidth, namesOnRight, directLabelsActive));
+  const padding = chartPadding();
+  let context = $state();
+  const xScale = $derived(
+    barXScale(
+      context?.width,
+      pair.data.length,
+      pair.bandPadding ?? 0.2,
+      barLabelRoom(innerWidth, namesOnRight, directLabelsActive)
+    )
+  );
 
   // The narrow mobile axis has no room for a year under every bar: label
   // every other band, counting back from the last bar so the latest year
@@ -118,6 +128,8 @@
       series={pair.series}
       seriesLayout={pair.percent ? "stackExpand" : "stack"}
       bandPadding={pair.bandPadding ?? 0.2}
+      {xScale}
+      bind:context
       legend={false}
       rule={false}
       tooltipContext={desktopTooltips(innerWidth)}
@@ -126,7 +138,7 @@
         bars: { strokeWidth: 0 },
         xAxis: { ...xAxisProps, ticks: xTicks, format: xTickFormat },
         yAxis: {
-          ...barYAxisProps(namesOnRight, padding),
+          ...yAxisFor(namesOnRight),
           ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
           format: pair.percent ? "percentRound" : formatValue,
         },
