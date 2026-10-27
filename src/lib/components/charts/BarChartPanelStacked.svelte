@@ -1,6 +1,7 @@
 <script>
-  import { AnnotationPoint, BarChart, Labels } from "layerchart";
-  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter } from "$lib/chart-theme";
+  import { AnnotationPoint, AnnotationRange, BarChart, Labels } from "layerchart";
+  import QuarterTickLabel from "./QuarterTickLabel.svelte";
+  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
@@ -74,14 +75,25 @@
   // strips live in the band scale's outer padding (barXScale), so the
   // gridlines run on under the y labels as on the line charts.
   const namesOnRight = $derived(pair.series.length > 1 && pair.directLabels !== false);
-  const padding = chartPadding();
+  // The two-line quarter axis (`pair.quarterAxis`, chart-theme.js) needs a
+  // second label row's worth of room under the plot, at every width (phones
+  // draw the ticks, connectors and years, desktop adds Q2–Q4).
+  const twoLineXAxis = $derived(pair.quarterAxis === true && twoLineQuarterAxis(innerWidth));
+  const padding = $derived(chartPadding(twoLineXAxis ? twoLineXPadding(innerWidth) : {}));
   let context = $state();
   const xScale = $derived(
     barXScale(
       context?.width,
       pair.data.length,
       pair.bandPadding ?? 0.2,
-      barLabelRoom(innerWidth, namesOnRight, directLabelsActive)
+      // `pair.endRoom`: a figure's own extra px after the last bar;
+      // `pair.endRoomMobile` overrides it below lg (e.g. 0 when the note it
+      // made room for is hidden on phones).
+      barLabelRoom(innerWidth, namesOnRight, directLabelsActive).map((room, i) =>
+        i === 1
+          ? room + ((innerWidth < 1024 ? pair.endRoomMobile : undefined) ?? pair.endRoom ?? 0)
+          : room
+      )
     )
   );
 
@@ -94,7 +106,9 @@
   // other metro name on a phone would hide content, not thin an axis.
   const isTimeAxis = $derived(pair.data[0]?.[pair.xKey] instanceof Date);
   const xTicks = $derived(
-    pair.quarterly
+    pair.quarterAxis
+      ? (scale) => quarterAxisTicks(scale.domain(), innerWidth)
+      : pair.quarterly
       ? (scale) => quarterTicks(scale.domain(), innerWidth)
       : innerWidth < 1024 && isTimeAxis
         ? (scale) => scale.domain().filter((_, i, all) => (all.length - 1 - i) % 2 === 0)
@@ -104,15 +118,37 @@
   // else the shared year treatment, read off the ticks the axis draws.
   const xTickFormat = $derived(
     pair.xTickFormat ??
-      yearTickFormat(
+      (pair.quarterAxis
+        ? quarterAxisFormat(pair.data.map((d) => d[pair.xKey]), innerWidth)
+        : yearTickFormat(
         pair.quarterly
           ? quarterTicks(pair.data.map((d) => d[pair.xKey]), innerWidth)
           : pair.data.map((d) => d[pair.xKey])
-      )
+      ))
+  );
+
+  // PER-BAR COLOUR (`pair.barColor`): one series whose bars split into two
+  // inks by period — e.g. figure 3's valuation-reset quarters in the accent,
+  // the rest in slate. Done with LayerChart's own colour scale (c / cDomain /
+  // cRange): Bars falls back to cGet(d) when the series carries no colour,
+  // so the series is passed without one.
+  //   barColor: { by: (d) => key, domain: [key, …], range: [color, …] }
+  const series = $derived(
+    pair.barColor ? pair.series.map(({ color, ...s }) => s) : pair.series
+  );
+  const colorScale = $derived(
+    pair.barColor
+      ? { c: pair.barColor.by, cDomain: pair.barColor.domain, cRange: pair.barColor.range }
+      : {}
   );
 </script>
 
 <svelte:window bind:innerWidth />
+
+<!-- The two-line quarter axis's labels — see QuarterTickLabel.svelte. -->
+{#snippet quarterTickLabel({ props })}
+  <QuarterTickLabel {props} />
+{/snippet}
 
 <!-- The built-in legend overlays the plot area (and the x axis), so render
      the same manual bottom legend as LineChartPanel's legendItems block:
@@ -125,9 +161,11 @@
     <BarChart
       data={pair.data}
       x={pair.xKey}
-      series={pair.series}
+      {series}
+      {...colorScale}
       seriesLayout={pair.percent ? "stackExpand" : "stack"}
       bandPadding={pair.bandPadding ?? 0.2}
+      yDomain={pair.yDomain}
       {xScale}
       bind:context
       legend={false}
@@ -136,7 +174,12 @@
       {padding}
       props={{
         bars: { strokeWidth: 0 },
-        xAxis: { ...xAxisProps, ticks: xTicks, format: xTickFormat },
+        xAxis: {
+          ...(twoLineXAxis ? quarterXAxisProps : xAxisProps),
+          ticks: xTicks,
+          format: xTickFormat,
+          tickLabel: twoLineXAxis ? quarterTickLabel : undefined,
+        },
         yAxis: {
           ...yAxisFor(namesOnRight),
           ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
@@ -148,7 +191,7 @@
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
-          header: { format: pair.tooltipHeaderFormat ?? (pair.quarterly ? tooltipHeaderQuarter : tooltipHeaderYear) },
+          header: { format: pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear) },
           ...(pair.percent
             ? // Series carry share values; a total row (always 100%) is noise.
               { item: { format: "percentRound" }, hideTotal: true }
@@ -156,6 +199,14 @@
         },
       }}
     >
+      <!-- Range washes (`pair.rangeAnnotations`) sit behind the bars. On a
+           band scale AnnotationRange runs from the first band's outer edge
+           to the last one's, so a wash covers its bars whole. -->
+      {#snippet belowMarks()}
+        {#each pair.rangeAnnotations ?? [] as annotation, i (i)}
+          <AnnotationRange {...annotation} />
+        {/each}
+      {/snippet}
       {#snippet aboveMarks()}
         <!-- placement="middle" honors the custom y accessor as-is; the dy
              lifts bottom-anchored numbers ~a line height into the bar. -->

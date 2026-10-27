@@ -36,12 +36,12 @@
      is a half pixel — every label, title and source line in the figure then
      rendered between pixels and looked soft. Auto margins stay on whole
      pixels. -->
-<div class="absolute inset-x-0 top-[4.5rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
+<div class="absolute inset-x-0 top-[5.5rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-6rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-7rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}

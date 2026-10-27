@@ -270,7 +270,7 @@
        height below the top edge that it had when the close button lived
        here. The sheet closes on any click that is not a link (see
        onSheetClick) or on Escape. -->
-  <div class="min-h-[3.75rem] sm:min-h-[4.25rem] lg:min-h-[max(2.5rem,5dvh)]" aria-hidden="true"></div>
+  <div class="min-h-[max(1.5rem,4dvh)] md:min-h-[4.25rem] lg:min-h-[max(2.5rem,5dvh)]" aria-hidden="true"></div>
 
   <!-- One centred reading column, like the chapter text. Two tiers:
          1.0  CHAPTER       semibold, full ink, hairline rule beneath
@@ -280,7 +280,7 @@
        The number column is a fixed w-10 so every title starts on one line
        down the page. PHONES (below md) get a compact tier: smaller type and
        gaps and a w-8 number column. Both tiers are still shown — content is
-       never dropped on a phone. Some scroll is fine.
+       never dropped on a phone.
        Hover is the gliding highlight block (see `glide` above), not an
        underline: chapter rows already carry a rule beneath, so an underline
        read as a second line. A sub-chapter row also goes to full ink.
@@ -289,11 +289,14 @@
        DESKTOP (lg) fits the whole list in one screen: the curtain drops to
        the bottom edge and no further. Vertical spacing there is in dvh so it
        shrinks with a shorter window, and the type steps down one size
-       (chapters lg, sub-chapters base). Below lg it may still scroll. -->
-  <div class="mx-auto w-[88vw] max-w-2xl pb-12 md:-mt-2 md:pb-24 lg:-mt-4 lg:pb-[3dvh]">
+       (chapters lg, sub-chapters base).
+       PHONES (below md, 2026-10-27) fit in one screen too, the same way:
+       spacing in dvh and 15px rows, so an iPhone SE's 667px holds the whole
+       outline. Tablets (md–lg) may still scroll. -->
+  <div class="mx-auto w-[88vw] max-w-2xl pb-[3dvh] md:-mt-2 md:pb-24 lg:-mt-4 lg:pb-[3dvh]">
     <!-- SangBleu, like the chapter titles: Carta's serif for display lines. -->
     <h2
-      class="text-center font-serif text-[2rem] leading-none font-normal tracking-[-0.01em] md:text-[2.5rem]">
+      class="text-center font-serif text-[1.75rem] leading-none font-normal tracking-[-0.01em] md:text-[2.5rem]">
       Index
     </h2>
 
@@ -302,7 +305,7 @@
          sides so titles and numbers keep some air inside it. -->
     <div
       {@attach glide.attach}
-      class="relative isolate mt-8 md:mt-12 lg:mt-[3dvh]"
+      class="relative isolate mt-[3dvh] md:mt-12 lg:mt-[3dvh]"
     >
     <div
       aria-hidden="true"
@@ -310,36 +313,59 @@
       style={glide.style}
     ></div>
 
-    <ol class="flex list-none flex-col gap-6 md:gap-10 lg:gap-[2.4dvh]">
+    <ol class="flex list-none flex-col gap-[2.4dvh] md:gap-10 lg:gap-[2.4dvh]">
       {#each sections as section, i (section.id)}
         <!-- No transition of its own: the rows are printed on the sheet and
              ride down with it, already there as it drops. (They used to
              settle in one by one behind it, which read as the text arriving
              late.) -->
+        <!-- A `locked` chapter (demo cut, see +page.svelte) keeps its rows so
+             the outline stays complete, but as plain greyed text: no link,
+             no data-row (so no hover block), and aria-disabled for readers. -->
         <li>
+          {#if section.locked}
+            <div
+              aria-disabled="true"
+              class="flex cursor-default items-baseline gap-4 border-b border-base-content/25 pt-[0.6dvh] pb-[0.8dvh] text-[0.9375rem] leading-snug font-semibold text-base-content/40 md:gap-5 md:pt-2 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
+            >
+              <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
+              <span>{section.title}</span>
+            </div>
+          {:else}
           <a
             href="#{section.id}"
             onclick={(e) => goTo(e, section.id)}
             data-row
-            class="flex items-baseline gap-4 border-b border-base-content pt-2 pb-2 text-base leading-snug font-semibold md:gap-5 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
+            class="flex items-baseline gap-4 border-b border-base-content pt-[0.6dvh] pb-[0.8dvh] text-[0.9375rem] leading-snug font-semibold md:gap-5 md:pt-2 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
           >
             <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
             <span>{section.title}</span>
           </a>
+          {/if}
 
           {#if section.subchapters?.length}
-            <ol class="mt-2 flex list-none flex-col md:mt-3 lg:mt-[0.4dvh]">
+            <ol class="mt-[0.6dvh] flex list-none flex-col md:mt-3 lg:mt-[0.4dvh]">
               {#each section.subchapters as sub, k (sub.id)}
                 <li>
+                  {#if section.locked}
+                    <div
+                      aria-disabled="true"
+                      class="flex cursor-default items-baseline gap-4 py-[0.5dvh] text-[0.9375rem] leading-snug text-base-content/40 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base"
+                    >
+                      <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
+                      <span>{sub.title}</span>
+                    </div>
+                  {:else}
                   <a
                     href="#{sub.id}"
                     onclick={(e) => goTo(e, sub.id)}
                     data-row
-                    class="flex items-baseline gap-4 py-1.5 text-base leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base transition-colors duration-150 hover:text-base-content"
+                    class="flex items-baseline gap-4 py-[0.5dvh] text-[0.9375rem] leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base transition-colors duration-150 hover:text-base-content"
                   >
                     <span class="w-8 shrink-0 text-base-content/65 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
                     <span>{sub.title}</span>
                   </a>
+                  {/if}
                 </li>
               {/each}
             </ol>

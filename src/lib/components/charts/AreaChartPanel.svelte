@@ -1,7 +1,8 @@
 <script>
   import { AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import QuarterTickLabel from "./QuarterTickLabel.svelte";
+  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
@@ -11,10 +12,20 @@
   const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   // The ticks the x axis draws: the figure's own list, or one per year
   // (every other on mobile). yearTickFormat reads the ends off this list.
+  // A quarterly figure with `quarterAxis` gets the two-line quarter axis
+  // (every quarter on desktop, the year under each Q1) — chart-theme.js.
+  const quarterDates = $derived(pair.data.map((d) => d[pair.xKey]));
   const xTicks = $derived(
-    halfCenturyTicksOnMobile(pair.xTicks, innerWidth) ??
-      defaultYearTicks(pair.data, pair.xKey, innerWidth)
+    pair.quarterAxis
+      ? quarterAxisTicks(quarterDates, innerWidth)
+      : (halfCenturyTicksOnMobile(pair.xTicks, innerWidth) ??
+          defaultYearTicks(pair.data, pair.xKey, innerWidth))
   );
+  const xTickFormat = $derived(
+    pair.xTickFormat ??
+      (pair.quarterAxis ? quarterAxisFormat(quarterDates, innerWidth) : yearTickFormat(xTicks))
+  );
+  const twoLineXAxis = $derived(pair.quarterAxis === true && twoLineQuarterAxis(innerWidth));
 
   // Same end-label convention as LineChartPanel: series opt in via `endLabel`
   // and get their name at the last observation instead of a legend.
@@ -28,10 +39,16 @@
   // axis moves to the left; otherwise it sits at the right (plotXPadding).
   const namesOnRight = $derived(endLabelAnnotations.length > 0);
   const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
-  const padding = chartPadding();
+  // The two-line axis needs a second label row's worth of room below.
+  const padding = $derived(chartPadding(twoLineXAxis ? twoLineXPadding(innerWidth) : {}));
 </script>
 
 <svelte:window bind:innerWidth />
+
+<!-- The two-line quarter axis's labels — see QuarterTickLabel.svelte. -->
+{#snippet quarterTickLabel({ props })}
+  <QuarterTickLabel {props} />
+{/snippet}
 
 <AreaChart
   data={pair.data}
@@ -51,7 +68,12 @@
       ? { fill: solidWash(pair.series[0].color), fillOpacity: 1 }
       : { fillOpacity: areaFillOpacity },
     line: { strokeWidth: 2.5, "stroke-linecap": "round", "stroke-linejoin": "round" },
-    xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
+    xAxis: {
+      ...(twoLineXAxis ? quarterXAxisProps : xAxisProps),
+      ticks: xTicks,
+      format: xTickFormat,
+      tickLabel: twoLineXAxis ? quarterTickLabel : undefined,
+    },
     yAxis: { ...yAxisFor(namesOnRight), ticks: pair.yTicks ?? yTicks, format: formatValue },
     // Gridlines on exactly the y-axis ticks: LayerChart's chart-level Grid
     // otherwise picks its own (fewer) ticks and skips some labelled values.
@@ -60,7 +82,7 @@
     // "1 January 2035" is precision the figures never had. A figure can still
     // override it with pair.tooltipHeaderFormat.
     tooltip: {
-      header: { format: pair.tooltipHeaderFormat ?? tooltipHeaderYear },
+      header: { format: pair.tooltipHeaderFormat ?? (pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear) },
       item: { format: formatValue },
     },
   }}

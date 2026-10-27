@@ -29,7 +29,7 @@ const short = {
 export default {
   title: "Bay Area #1, Austin #2, D.C. #3 for Investment in AI",
   subtitle:
-    "Share of Capital Invested in AI Companies by Metro Area, %, Seed–Series E+, Q4 2025–Q1 2026",
+    "Share of Capital Invested in AI Companies by Metro Area, %, Seed to Series E+, Q4 2025 to Q1 2026",
   description:
     "In the Bay Area 70.9% of capital went to AI, 21.2% to foundational models alone. Austin follows at 60.0%, almost all of it applied AI, then Washington, DC at 53.6%.",
   source: "Source: Carta, State of Private Markets: Q1 2026. Data as of May 22, 2026.",

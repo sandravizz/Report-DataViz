@@ -16,7 +16,7 @@ const peak = data.reduce((a, b) => (b.rounds > a.rounds ? b : a));
 
 export default {
   title: "Round Counts Peaked in Late 2021",
-  subtitle: "Total Rounds Raised by Quarter, Seed–Series E+, Q1 2018–Q1 2026",
+  subtitle: "Total Rounds Raised by Quarter, Seed to Series E+, Q1 2018 to Q1 2026",
   description:
     "Rounds peaked at 2,291 in Q4 2021 and have held between roughly 1,150 and 1,550 a quarter since 2023. Q1 2026's 1,051 is a first count: deals are still coming in, and with them 2026 is already $2B ahead of 2025 year to date.",
   source: SOURCE,

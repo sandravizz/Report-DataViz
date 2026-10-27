@@ -25,9 +25,9 @@
 
   const formatValue = (d) => `${pair.valuePrefix ?? ""}${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   // The tooltip's value is the range itself (the x accessor returns both
-  // ends), so it prints as "$68.9M–$303M".
+  // ends), so it prints as "$68.9M to $303M".
   const formatRange = (v) =>
-    Array.isArray(v) ? `${formatValue(v[0])}–${formatValue(v[1])}` : formatValue(v);
+    Array.isArray(v) ? `${formatValue(v[0])} to ${formatValue(v[1])}` : formatValue(v);
 
   // The median: a white dot ringed in ink (Carta's own marker), ≥8px, and
   // the row's name and value to its right in ink — over the bar where the

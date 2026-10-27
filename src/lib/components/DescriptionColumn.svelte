@@ -6,16 +6,17 @@
      same gap from the figure as the chapter rail on the left (variables in
      styles/tailwind.css). No padding of its own — --side-gap is the gap. -->
 <div
-  class="absolute top-10 left-(--desc-left) hidden w-(--side-w) flex-col lg:top-44 lg:flex"
+  class="absolute top-10 left-(--desc-left) hidden w-(--desc-w) flex-col lg:top-44 lg:flex"
 >
-  <!-- Set EXACTLY as the chapter body copy in +page.svelte (text-lg,
-       leading-[1.85], /80 ink): the description is reading the figure asks
-       for, so it must out-rank the chapter rail opposite (text-sm, quiet
-       greys). At equal size the two side columns had the same pull. -->
+  <!-- One step below the chapter body copy in +page.svelte (16px against
+       18px, same /80 ink). At an identical 18px/1.85 the narrow side column
+       read LARGER than the body (2026-10-27): short lines and tall leading
+       inflate it. It still out-ranks the chapter rail opposite (text-sm,
+       quiet greys). -->
   <div class="relative h-80">
     {#each items as item, i (i)}
       <p
-        class="absolute inset-0 font-sans text-lg leading-[1.85] text-base-content/80 transition-opacity duration-500 ease-[ease]"
+        class="absolute inset-0 font-sans text-base leading-[1.75] text-base-content/80 transition-opacity duration-500 ease-[ease]"
         style:opacity={i === activeIndex ? 1 : 0}
         style:pointer-events={i === activeIndex ? "auto" : "none"}
       >

@@ -14,9 +14,9 @@ export const SOURCE = "Source: Carta, State of Private Markets: Q1 2026. Data as
 
 export default {
   title: "2025 Deals Keep Rolling In",
-  subtitle: "Total Capital Invested by Year, USD Billion, Seed–Series G, 2018–Q1 2026",
+  subtitle: "Total Capital Invested by Year, USD Billion, Seed to Series G, 2018 to Q1 2026",
   description:
-    "Capital invested peaked at $228.5B in 2021, fell to $79.7B in 2023 and climbed back to $137.8B in 2025 — a year that is still growing: another $20B of 2025 deals was recorded in the last 12 weeks alone. 2026 counts the first quarter only, $30.4B so far.",
+    "Capital invested peaked at $228.5B in 2021, fell to $79.7B in 2023 and climbed back to $137.8B in 2025, a year that is still growing: another $20B of 2025 deals was recorded in the last 12 weeks alone. 2026 counts the first quarter only, $30.4B so far.",
   source: SOURCE,
   kind: "bar-stacked",
   xKey: "year",

@@ -1,6 +1,6 @@
 import { defaultChartPadding } from "layerchart";
 import { scaleBand } from "d3-scale";
-import { ink } from "./colors.js";
+import { ink, neutral } from "./colors.js";
 
 // The one width that separates the tablet layout from the desktop one, and the
 // single knob for every viewport-conditional value in this file.
@@ -227,8 +227,12 @@ export function desktopTooltips(innerWidth) {
 // Point annotations may carry a `mobile` override (placement, offsets, label
 // props) for narrow viewports where the desktop placement would run past the
 // plot edge; SVG text does not clip-or-wrap on its own, so reposition instead.
+// `mobile: false` drops an annotation below DESKTOP_MIN altogether (e.g. a
+// callout that only repeats the figure title, with no room on a phone).
 export function resolveAnnotations(annotations, innerWidth) {
-  return annotations.map(({ mobile, ...annotation }) =>
+  return annotations
+    .filter(({ mobile }) => !(innerWidth < DESKTOP_MIN && mobile === false))
+    .map(({ mobile, ...annotation }) =>
     innerWidth < DESKTOP_MIN && mobile
       ? {
           ...annotation,
@@ -318,3 +322,59 @@ export function quarterTicks(dates, innerWidth) {
 export function tooltipHeaderQuarter(d) {
   return d instanceof Date ? `Q${Math.floor(d.getMonth() / 3) + 1} ${d.getFullYear()}` : d;
 }
+
+// TWO-LINE QUARTER AXIS (ported from the iw branch's Abbildung 2-1,
+// 2026-10-27). A figure with `quarterAxis: true` labels every quarter — Q2,
+// Q3, Q4 along the top — and puts the year on a second line under the
+// quarter that opens it, so the year row lands where a plain year axis would
+// have put it and the quarters read as a finer grid hung off it. Q1 itself
+// is never written: its tick runs on down through the quarter row to just
+// above the year, which says "the year starts here" more directly than the
+// word would. The quarters go muted, the year stays in the ink, so the eye
+// lands on the year and reads the quarters off it.
+//
+// Both lines travel as one string ("\n2019", "Q3"); the panel's tickLabel
+// snippet splits them, draws the connector and inks the year.
+//
+// Below DESKTOP_MIN there is no room for a label per quarter (29 of them on
+// a phone's plot is ~10px each), so the quarter row goes unwritten — but the
+// axis keeps its shape (2026-10-27): a tick under EVERY quarter, the Q1
+// connector and the year under it (full year at the ends, ’yy between). The
+// plain "Q1 tick every other year" fallback left it unclear that each bar
+// was a quarter; four ticks per year say it without words.
+const quarterOf = (d) => Math.floor(d.getMonth() / 3) + 1;
+
+export function twoLineQuarterAxis() {
+  return true;
+}
+export function quarterAxisTicks(dates) {
+  return dates;
+}
+export function quarterAxisFormat(dates, innerWidth) {
+  if (innerWidth < DESKTOP_MIN) {
+    const year = yearTickFormat(dates.filter((d) => d.getMonth() === 0));
+    return (d) => (d.getMonth() === 0 ? `\n${year(d)}` : "");
+  }
+  return (d) => (d.getMonth() === 0 ? `\n${d.getFullYear()}` : `Q${quarterOf(d)}`);
+}
+
+// The year line sits yearLineOffset below the quarter row; the Q1 connector
+// stops yearGap short of it. The bottom padding clears both lines
+// (defaultChartPadding's 20px fits one).
+// On phones the quarter row is empty, so the year comes up close under
+// the axis (2026-10-27) instead of a whole blank row lower.
+// Phones run the Q1 line on to 3px above the year, so the year ticks read
+// clearly longer than the quarter ticks beside them.
+export function quarterYearGap(innerWidth) {
+  return innerWidth < DESKTOP_MIN ? 3 : 10;
+}
+export function yearLineOffset(innerWidth) {
+  return innerWidth < DESKTOP_MIN ? 10 : 20;
+}
+export function twoLineXPadding(innerWidth) {
+  return { bottom: innerWidth < DESKTOP_MIN ? 32 : 44 };
+}
+export const quarterXAxisProps = {
+  ...xAxisProps,
+  tickLabelProps: { ...xAxisProps.tickLabelProps, fill: neutral.label },
+};

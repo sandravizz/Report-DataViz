@@ -114,6 +114,12 @@
   --side-gap: 88px;
   --side-w: min(20rem, (100vw - var(--fig-w)) / 2 - var(--side-gap) - 24px);
   --rail-w: calc(var(--side-w) - 2.5rem);
+  /* The description's own width: like --side-w but keeping 64px clear of the
+     window's right edge instead of 24px (2026-10-27: at ~1470 the copy ran to
+     within 24px of the edge and felt jammed). Only bites below ~1700; on
+     wider screens the 20rem cap wins and nothing changes. The rail keeps
+     --side-w, so it is untouched. */
+  --desc-w: min(20rem, (100vw - var(--fig-w)) / 2 - var(--side-gap) - 64px);
   /* No --rail-left: the rail is pinned to the window edge under the logo
      (left-6 in ChapterRail), not to the figure. */
   --desc-left: calc(50vw + var(--fig-w) / 2 + var(--side-gap));

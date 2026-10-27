@@ -49,6 +49,7 @@
   const chapter = $derived(sections[chapterIndex]);
 
   let showRail = $state(false);
+  let nav = $state(null);
   // Id of the pinned figure's anchor (`<sub-chapter id>-chart-<step>`), or
   // null between figures. Read off ScrollySection's anchors rather than
   // redoing its progress maths.
@@ -86,7 +87,20 @@
       // cover's rule, so the two ends did not match.)
       const pastLanding = firstEl.getBoundingClientRect().top <= window.innerHeight * 0.4;
       const beforeFooter = footerEl.getBoundingClientRect().top > window.innerHeight * 0.6;
-      showRail = pastLanding && beforeFooter;
+      // Off while a dark chapter opener (+page.svelte) runs behind the rail
+      // (2026-10-27): it goes as the next chapter's band rises into it and
+      // comes back once the band has scrolled up past it, i.e. once the
+      // reader is into the new chapter's intro text — never half over the
+      // dark. Tested against the rail's own box (laid out even while
+      // hidden), so a band elsewhere on the screen leaves it alone.
+      const railBox = nav?.getBoundingClientRect();
+      const overOpener =
+        !!railBox &&
+        Array.from(document.querySelectorAll("[data-chapter-opener]")).some((el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.top < railBox.bottom && rect.bottom > railBox.top;
+        });
+      showRail = pastLanding && beforeFooter && !overOpener;
 
       const overChart = Array.from(document.querySelectorAll("[data-scrolly]")).some((el) => {
         const rect = el.getBoundingClientRect();
@@ -163,6 +177,7 @@
      alongside for engines that ignore inert. max-h + overflow: a long
      chapter scrolls inside the rail rather than running under the header. -->
 <nav
+  bind:this={nav}
   class="fixed top-1/2 left-3 z-40 hidden max-h-[calc(100vh-8rem)] w-[calc(var(--rail-w)+1.5rem)] -translate-y-1/2 px-3 overflow-y-auto transition-opacity duration-200 lg:block {showRail
     ? 'opacity-100'
     : 'pointer-events-none opacity-0'}"
@@ -192,7 +207,7 @@
           data-row
           class="group block cursor-pointer text-left"
         >
-          <span class="block text-xs text-base-content/65 tabular-nums">{chapterIndex + 1}.0</span>
+          <span class="block text-xs text-base-content/65 tabular-nums">{chapter.num ?? chapterIndex + 1}.0</span>
           <span class="mt-1 block text-sm leading-snug font-medium text-base-content/85">
             {chapter.title}
           </span>
@@ -212,7 +227,7 @@
                   ? 'text-base-content/85'
                   : 'text-base-content/65 hover:text-base-content/90'}"
               >
-                <span class="shrink-0 tabular-nums">{chapterIndex + 1}.{k + 1}</span>
+                <span class="shrink-0 tabular-nums">{chapter.num ?? chapterIndex + 1}.{k + 1}</span>
                 <span>{sub.title}</span>
               </button>
 

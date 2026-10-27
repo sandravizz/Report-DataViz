@@ -3,7 +3,7 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "State of Private Markets: Q1 2026 — An Interactive Report",
+    title: "State of Private Markets: Q1 2026 | An Interactive Report",
     description:
       "An interactive edition of Carta's State of Private Markets, Q1 2026: fundraising volume, down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz.",
   };
@@ -38,6 +38,15 @@
   // the slide headlines and the values printed on the slides. Nothing is
   // read off a chart into the copy (see docs/carta-brand.md). Body copy
   // defaults to nothing: no placeholder text on this branch.
+  //
+  // DEMO CUT (2026-10-27): only three chapters are built out — `locked`
+  // chapters keep their place in the Index (the full outline, greyed and
+  // not clickable) but are not rendered, not in the rail and not numbered.
+  // Shown: Fundraising Volume, Key Trends and AI (the lead highlight). The
+  // text-only "Terms Shift Toward Founders" and "Priced in Three Tiers" and
+  // the passage after Figure 1 were cut (Sandra,
+  // 2026-10-27), so the demo ends on Figure 3. Drop `locked` to open a
+  // chapter. Chapters keep their full-report number (`num`) everywhere.
   const sections = assignIds([
     {
       title: "Fundraising Volume",
@@ -50,16 +59,6 @@
             "Carta's data has an administrative lag: a round is recorded some time after it closes, so the latest periods keep growing for months after they end. The 2026 bar is the first quarter alone, $30.4B so far.",
           ],
           charts: [figures.capitalByYear],
-          passages: [
-            {
-              intro:
-                "Counted in rounds rather than dollars, the market peaked in the fourth quarter of 2021, at 2,291 rounds.",
-              body: [
-                "With Q1 deals still coming in, 2026 is already $2B ahead of 2025 year to date.",
-              ],
-              charts: [figures.roundsByQuarter],
-            },
-          ],
         },
       ],
     },
@@ -75,20 +74,11 @@
           ],
           charts: [figures.downRounds],
         },
-        {
-          // Text only: the rest of the deck's Key Trends, in its own numbers.
-          title: "Terms Shift Toward Founders",
-          intro: "Dilution has fallen 3–5 points across all stages in the last three years.",
-          body: [
-            "Median dilution in Q1 2026 stood at 19.0% at seed, 18.0% at Series A, 13.0% at Series B, 9.5% at Series C and 4.9% at Series D.",
-            "Primary terms continue to shift toward founder friendly: the share of primary rounds carrying a liquidation preference fell from 6.0% in Q1 2023 to 2.7% in Q1 2026.",
-          ],
-          charts: [],
-        },
       ],
     },
     {
       title: "Valuations",
+      locked: true,
       subchapters: [
         {
           title: "Valuations by Stage",
@@ -98,15 +88,6 @@
             "In Q1 2026 alone, the median post-money valuation stood at $62.8M for Series A, $177.0M for Series B and $385M for Series C. At the 90th percentile, Series B reached $1B and Series D $9.1B.",
           ],
           charts: [figures.postMoneyByStage],
-        },
-        {
-          title: "Series B and C Rising",
-          intro:
-            "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025.",
-          body: [
-            "This may be because AI companies are maturing and moving toward later stages after promising early wins. Over the same 15 months, primary pre-money valuations fell 6.6% at seed and 7.1% at Series A.",
-          ],
-          charts: [],
         },
       ],
     },
@@ -122,19 +103,11 @@
           ],
           charts: [figures.aiShareOfCapital],
         },
-        {
-          title: "Priced in Three Tiers",
-          intro:
-            "New this quarter, Carta breaks out non-AI, applied-AI and foundational-model companies at every stage from seed to Series E+.",
-          body: [
-            "The gap opens at the very first round. The median seed pre-money valuation in Q1 2026 was $18.4M for non-AI companies and $18.6M for applied AI — and $200.0M for foundational model companies, up from $42.5M a year earlier.",
-          ],
-          charts: [],
-        },
       ],
     },
     {
       title: "Geography & Industry",
+      locked: true,
       subchapters: [
         {
           title: "Where AI Capital Goes",
@@ -143,7 +116,7 @@
           body: [
             "California took 48.0% of all capital invested from Q2 2025 to Q1 2026, and the West region as a whole 55.4%. Behind California, New York (10.3%), Massachusetts (7.9%) and Texas (6.6%) receive the largest shares.",
           ],
-          charts: [figures.aiShareByMetro],
+          charts: [],
         },
         {
           title: "Each Metro, Its Own Mix",
@@ -159,6 +132,7 @@
       // The deck's own methodology, verbatim — and the text the report
       // ends on (a report never ends on a pinned figure).
       title: "Methodology",
+      locked: true,
       subchapters: [
         {
           title: "Overview",
@@ -191,7 +165,8 @@
     return chapters.map((chapter, i) => {
       const id = `chapter-${i + 1}`;
       const subchapters = chapter.subchapters.map((sub, k) => {
-        const number = (c) => ({ ...c, number: `Figure ${++figureCount}` });
+        // Locked chapters are not rendered, so they take no figure numbers.
+        const number = (c) => (chapter.locked ? c : { ...c, number: `Figure ${++figureCount}` });
         const charts = sub.charts.map(number);
         // Each passage's figure run numbers its anchors on from the runs
         // before it (anchorOffset), so the rail's `-chart-<j>` ids hold.
@@ -204,9 +179,43 @@
         const allCharts = [...charts, ...passages.flatMap((p) => p.charts)];
         return { body: [], ...sub, charts, passages, allCharts, id: `${id}-${k + 1}` };
       });
-      return { ...chapter, id, subchapters };
+      return { ...chapter, id, num: i + 1, subchapters };
     });
   }
+
+  // The chapters the demo renders (body and rail); the Index gets them all.
+  const shown = sections.filter((s) => !s.locked);
+  const openIds = new Set(shown.flatMap((s) => s.subchapters.map((sub) => sub.id)));
+
+  // THE HIGHLIGHTS, the deck's own slide (p. 4), word for word: four coral
+  // headed cards between the cover and chapter 1. Each card links to the
+  // sub-chapter that tells the same story at length.
+  const highlights = [
+    {
+      title: "AI crosses 60% of capital",
+      text: "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date. Foundational model companies specifically drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
+      href: "#chapter-4-1",
+    },
+    {
+      title: "Down rounds are low",
+      text: "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels. Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
+      href: "#chapter-2-1",
+    },
+    {
+      title: "Series B & Series C vals rising",
+      text: "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025. This may be because AI companies are maturing and moving toward later stages after promising early wins.",
+      href: "#chapter-3-2",
+    },
+    {
+      title: "New this quarter",
+      text: "Three side-by-side tables breaking out non-AI, AI applied, and AI foundational model companies across every stage from seed to Series E+. Post-money valuation, round size, and pre-money valuation. Q1 2025 versus Q1 2026. The clearest picture yet of how differently these three categories are being priced right now.",
+      href: "#chapter-4-2",
+    },
+  ];
+
+  // Each chapter opener's title element, for its dot grid to cut a window
+  // around (DotGrid `clear`).
+  let chapterTitles = $state([]);
 
   // ONE GROUND EVERYWHERE: text and pinned figures both sit on base-200,
   // Carta's cream #fcf8f3 — the paper their chart slides are printed on.
@@ -220,9 +229,13 @@
                      leading — the line that says what the sub-chapter is
                      about. Rendered as HTML so it can carry a
                      `mark.accent-mark`; the strings are editorial copy from
-                     this file, nothing fetched or user-supplied. -->
+                     this file, nothing fetched or user-supplied.
+                     PHONES (2026-10-27): the lede takes the body's size and
+                     leading (17px/1.6) and steps up by weight and ink only —
+                     at 21px/snug it read as a third size with its own rhythm
+                     on a narrow screen. The tier returns from md. -->
                 <p
-                  class="text-[1.375rem] leading-snug text-base-content/90 lg:text-[1.625rem]"
+                  class="text-[1.0625rem] leading-[1.6] font-medium text-base-content/90 md:text-[1.375rem] md:leading-snug md:font-normal lg:text-[1.625rem]"
                 >
                   {@html text.intro}
                 </p>
@@ -231,12 +244,15 @@
                    1.85 suits the full ~65-character desktop measure, but on a
                    phone's ~35-character lines it read as loose, the lines
                    drifting apart (compare Reuters' mobile stories, ~1.6).
+                   17px on phones, 18px from md (2026-10-19): Plus Jakarta's
+                   wide set made 18px read a touch big on a phone; one px
+                   down is enough. The lede steps down 1px with it (21px).
                    The /80 stays: Carta's #1a1a1a at /80 is ~10:1 on the
                    cream, well clear of 4.5 (docs/type-rendering.md rule 4). -->
               {#each text.body ?? [] as paragraph, j (j)}
                 <p
-                  class="text-lg leading-[1.6] text-base-content/80 md:leading-[1.85] {j === 0 && text.intro
-                    ? 'mt-8'
+                  class="text-[1.0625rem] leading-[1.6] text-base-content/80 md:text-lg md:leading-[1.85] {j === 0 && text.intro
+                    ? 'mt-6 md:mt-8'
                     : j > 0
                       ? 'mt-6'
                       : ''}"
@@ -280,7 +296,7 @@
      sheet is the outline (chapters and sub-chapters), the left rail (lg+)
      always shows the CURRENT sub-chapter and its figures. -->
 <Header {sections} />
-<ChapterRail {sections} />
+<ChapterRail sections={shown} />
 
 <!-- `main` rather than a bare div: the page had no landmark at all, so
      "jump to main content" had nothing to jump to. tabindex="-1" is what lets
@@ -291,7 +307,45 @@
   <Landing />
 
   <div id="charts"></div>
-  {#each sections as section, i (section.id)}
+
+  <!-- HIGHLIGHTS (2026-10-27): the deck's Highlights slide, between the
+       cover and the first chapter opener so two dark screens never meet.
+       On the cream: a serif "Highlights" on the left, then four cards — a
+       coral plate with the deck's white square and the headline in the ink
+       (6.9:1), over a white body. One column on phones, two from md, the
+       slide's four in a row from xl (at lg a quarter of the column is too
+       narrow for the body copy). Whole cards are links to their
+       sub-chapter; the headline underlines on hover. -->
+  <section aria-labelledby="highlights" class="bg-base-200 font-sans text-base-content">
+    <div class="mx-auto w-[88vw] max-w-[80rem] py-16 lg:py-28">
+      <h2
+        id="highlights"
+        class="font-serif text-[2.5rem] leading-[1.04] font-normal tracking-[-0.01em] sm:text-[3.25rem] lg:text-[4rem]"
+      >
+        Highlights
+      </h2>
+      <div class="mt-10 grid gap-2 md:grid-cols-2 lg:mt-16 xl:grid-cols-4">
+        {#each highlights as h (h.title)}
+          <!-- A card whose sub-chapter is locked in the demo is not a link. -->
+          {@const live = openIds.has(h.href.slice(1))}
+          <svelte:element this={live ? "a" : "div"} href={live ? h.href : undefined} class="group flex flex-col">
+            <h3
+              class="flex items-center gap-2.5 bg-primary px-4 py-3.5 text-base leading-tight font-semibold text-primary-content lg:px-5 lg:py-4 lg:text-lg"
+            >
+              <span class="size-3 shrink-0 bg-white" aria-hidden="true"></span>
+              <span class="decoration-1 underline-offset-[0.2em] {live ? 'group-hover:underline' : ''}">{h.title}</span>
+            </h3>
+            <p
+              class="mt-2 flex-1 bg-base-100 px-4 py-4 text-[1.0625rem] leading-[1.6] text-base-content/80 lg:px-5 lg:py-5"
+            >
+              {h.text}
+            </p>
+          </svelte:element>
+        {/each}
+      </div>
+    </div>
+  </section>
+  {#each shown as section, i (section.id)}
     <!-- Chapter text is NOT pinned and NOT sized to the viewport: only the
          figure surface in ScrollySection sticks. This is long-form copy, so
          the block is exactly as tall as its own paragraph — you scroll until
@@ -308,7 +362,29 @@
          than sitting in a block of its own, so two grounds never stack
          with a seam between them. -->
     <section id={section.id} class="font-sans text-base-content">
-      {#each section.subchapters as sub, k (sub.id)}
+      <!-- THE CHAPTER OPENER (2026-10-27): the deck's section-divider slide
+           ("Key Trends" etc.) — Carta's near-black ground, the coral
+           square-dot grid with a window cut around the chapter title in
+           SangBleu. NOT a full screen like the slide or the cover: a band of
+           ~half a screen, so it marks the turn of a chapter without stopping
+           the read. The window is cut around the title as it wraps
+           (DotGrid's `clear`), so a long title on a phone gets a taller
+           window rather than squares through it. -->
+      <div
+        data-chapter-opener
+        class="relative flex min-h-[48svh] items-center justify-center bg-night px-5 py-20 text-white sm:px-10 lg:min-h-[58vh]"
+      >
+        <DotGrid clear={chapterTitles[i]} color="#ff7d55" animate={false} lens />
+        <!-- SangBleu Versailles at 400 (the only weight Carta ships), as
+             on the deck's section-divider slides. -->
+        <h2
+          bind:this={chapterTitles[i]}
+          class="relative max-w-[14ch] text-center font-serif text-[2.5rem] leading-[1.04] font-normal tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
+        >
+          {section.title}
+        </h2>
+      </div>
+      {#each section.subchapters as sub (sub.id)}
       <!-- data-surface marks the sub-chapter's text block; ChapterRail reads
            it to tell which sub-chapter the reader is in. -->
       <div class="bg-base-200" data-surface="text">
@@ -318,38 +394,29 @@
              body and the body copy itself. Everything shares one centred
              column; the lede and body keep a ~65-character measure inside it.
              py-16/lg:py-28 sets the air above and below the copy directly —
-             the block is natural height (see docs/house-style.md). -->
-        <div class="mx-auto w-[88vw] max-w-200 py-16 lg:py-28">
-          <!-- The chapter title is the one piece of display type in the
-               report body: 36px climbing to 60px, leading 1.06 and a hair of
-               negative tracking so a two-line title reads as one object. -->
-          {#if k === 0}
-          <!-- SangBleu Versailles at 400 (the only weight Carta ships), as
-               on the deck's section-divider slides; a step bigger than the
-               sans it replaced, since a 400 serif reads lighter. -->
-          <h2
-            class="text-center font-serif text-[2.25rem] leading-[1.06] font-normal tracking-[-0.01em] text-balance sm:text-[2.75rem] lg:text-[3.75rem]"
-          >
-            {section.title}
-          </h2>
-          {/if}
-
-          <!-- Sub-chapter title: centred and underlined like a running
-               subtitle under the chapter title. Under a chapter opening it
-               gets a large gap so it reads as the start of a part, not a
-               second line of the title. The id is on this wrapper so a TOC
-               jump lands on the sub-chapter title; scroll-mt keeps air above. -->
-          <div
-            id={sub.id}
-            class="scroll-mt-20 lg:scroll-mt-24 {k === 0 ? 'mt-12 lg:mt-20' : ''}"
-          >
+             the block is natural height (see docs/house-style.md).
+             PHONES (2026-10-27): no padding below copy that a figure
+             follows (text before a chapter band or the ending keeps pb-14).
+             The sub-chapter title on phones is one size down, not
+             underlined (the accent-mark in the lede is the only underline
+             there) and sits mt-6 above the copy. The figure
+             screen that follows already opens with its own 88px before
+             "FIGURE n" (ChartDisplay top-[5.5rem]), so a full py-16 here
+             stacked into a ~150px hole between text and figure. -->
+        <div class="mx-auto w-[88vw] max-w-200 pt-14 lg:py-28 {sub.charts.length > 0 ? 'pb-0' : 'pb-14'}">
+          <!-- Sub-chapter title: centred and underlined. The chapter title
+               now lives in the dark opener band above, so the first
+               sub-chapter opens its block like any other. The id is on this
+               wrapper so a TOC jump lands on the sub-chapter title; scroll-mt
+               keeps air above. -->
+          <div id={sub.id} class="scroll-mt-20 lg:scroll-mt-24">
             <h3
-              class="text-center text-2xl leading-tight font-medium text-balance underline decoration-1 underline-offset-[0.2em] lg:text-[2rem]"
+              class="text-center text-xl leading-tight font-medium text-balance md:text-2xl md:underline md:decoration-1 md:underline-offset-[0.2em] lg:text-[2rem]"
             >
               {sub.title}
             </h3>
 
-            <div class="mx-auto mt-10 max-w-[40rem] lg:mt-14">
+            <div class="mx-auto mt-6 max-w-[40rem] md:mt-10 lg:mt-14">
               {@render copy(sub)}
             </div>
           </div>
@@ -362,7 +429,7 @@
         <!-- A passage: the sub-chapter's copy continuing between two figures,
              same column and air as the block above, no heading. -->
         <div class="bg-base-200" data-surface="text">
-          <div class="mx-auto w-[88vw] max-w-[40rem] py-16 lg:py-28">
+          <div class="mx-auto w-[88vw] max-w-[40rem] pt-14 lg:py-28 {passage.charts.length > 0 ? 'pb-0' : 'pb-14'}">
             {@render copy(passage)}
           </div>
         </div>
