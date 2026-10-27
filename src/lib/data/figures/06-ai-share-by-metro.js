@@ -1,5 +1,6 @@
 import { parseFigureCsv } from "./parse-csv.js";
 import { AI_SERIES } from "./05-ai-share-of-capital.js";
+import { SOURCE } from "./01-capital-by-year.js";
 // Carta, State of Private Markets Q1 2026, slide 43. Every segment is
 // labelled on the slide except Austin's foundational sliver, which is the
 // difference of two labels (60.0% total − 57.4% applied = 2.6%). Ordered as
@@ -32,7 +33,7 @@ export default {
     "Share of Capital Invested in AI Companies by Metro Area, %, Seed to Series E+, Q4 2025 to Q1 2026",
   description:
     "In the Bay Area 70.9% of capital went to AI, 21.2% to foundational models alone. Austin follows at 60.0%, almost all of it applied AI, then Washington, DC at 53.6%.",
-  source: "Source: Carta, State of Private Markets: Q1 2026. Data as of May 22, 2026.",
+  source: SOURCE,
   kind: "bar-stacked",
   xKey: "metro",
   xTickFormat: (d) => short[d] ?? d,

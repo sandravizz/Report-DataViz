@@ -21,9 +21,11 @@
   let stepProgress = $derived((activeIndex + 1) / pairs.length);
 </script>
 
-<!-- Below lg the header is a fixed 56px bar: 3.5rem + 1rem air =
-     top-[4.5rem] (was top-10 with no bar), height 100dvh-6rem so the 1.5rem
-     under the figure is unchanged.
+<!-- Below lg the header is a fixed bar, 50px since its logo and Index
+     shrank (2026-10-27): 50px + ~18px air = top-[4.25rem] (was 5.5rem under
+     the 56px bar, which left a big hole between the copy and "FIGURE n").
+     The height gives up the same 1.25rem, so the room under the figure is
+     unchanged.
      lg: the header is FIXED there as a 72px bar (Header.svelte), so the
      figure starts below it: 4.5rem bar + 1.5rem air = top-24. The height
      gives up the same (6rem → 9rem) so the 3rem margin under the figure is
@@ -36,12 +38,12 @@
      is a half pixel — every label, title and source line in the figure then
      rendered between pixels and looked soft. Auto margins stay on whole
      pixels. -->
-<div class="absolute inset-x-0 top-[5.5rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
+<div class="absolute inset-x-0 top-[4.25rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-7rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-5.75rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}

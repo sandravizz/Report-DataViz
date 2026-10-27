@@ -187,29 +187,27 @@
   const shown = sections.filter((s) => !s.locked);
   const openIds = new Set(shown.flatMap((s) => s.subchapters.map((sub) => sub.id)));
 
-  // THE HIGHLIGHTS, the deck's own slide (p. 4), word for word: four coral
-  // headed cards between the cover and chapter 1. Each card links to the
-  // sub-chapter that tells the same story at length.
+  // THE HIGHLIGHTS, from the "Q1 highlights" list on Carta's report page
+  // (carta.com/data/state-of-private-markets-q1-2026/): their bold lead-ins,
+  // three of the four, each cut to its first sentence(s) so the section stays
+  // a short summary on the way to the figures (Sandra, 2026-10-27). Still
+  // Carta's words, only trimmed. Each lead-in links to the sub-chapter that
+  // tells the same story at length.
   const highlights = [
     {
       title: "AI crosses 60% of capital",
-      text: "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date. Foundational model companies specifically drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
+      text: "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date.",
       href: "#chapter-4-1",
     },
     {
-      title: "Down rounds are low",
-      text: "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels. Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
+      title: "Down rounds at historical lows",
+      text: "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels.",
       href: "#chapter-2-1",
     },
     {
-      title: "Series B & Series C vals rising",
-      text: "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025. This may be because AI companies are maturing and moving toward later stages after promising early wins.",
+      title: "Series B and Series C valuations rising",
+      text: "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025.",
       href: "#chapter-3-2",
-    },
-    {
-      title: "New this quarter",
-      text: "Three side-by-side tables breaking out non-AI, AI applied, and AI foundational model companies across every stage from seed to Series E+. Post-money valuation, round size, and pre-money valuation. Q1 2025 versus Q1 2026. The clearest picture yet of how differently these three categories are being priced right now.",
-      href: "#chapter-4-2",
     },
   ];
 
@@ -233,9 +231,12 @@
                      PHONES (2026-10-27): the lede takes the body's size and
                      leading (17px/1.6) and steps up by weight and ink only —
                      at 21px/snug it read as a third size with its own rhythm
-                     on a narrow screen. The tier returns from md. -->
+                     on a narrow screen. The tier returns from md.
+                     Then the weight and ink step went too (Sandra,
+                     2026-10-27): on phones the lede is set exactly as the
+                     body, so a phone shows two text styles, title and body. -->
                 <p
-                  class="text-[1.0625rem] leading-[1.6] font-medium text-base-content/90 md:text-[1.375rem] md:leading-snug md:font-normal lg:text-[1.625rem]"
+                  class="text-[1.0625rem] leading-[1.6] text-base-content/80 md:text-[1.375rem] md:leading-snug md:text-base-content/90 lg:text-[1.625rem]"
                 >
                   {@html text.intro}
                 </p>
@@ -308,41 +309,39 @@
 
   <div id="charts"></div>
 
-  <!-- HIGHLIGHTS (2026-10-27): the deck's Highlights slide, between the
-       cover and the first chapter opener so two dark screens never meet.
-       On the cream: a serif "Highlights" on the left, then four cards — a
-       coral plate with the deck's white square and the headline in the ink
-       (6.9:1), over a white body. One column on phones, two from md, the
-       slide's four in a row from xl (at lg a quarter of the column is too
-       narrow for the body copy). Whole cards are links to their
-       sub-chapter; the headline underlines on hover. -->
+  <!-- HIGHLIGHTS (2026-10-27): between the cover and the first chapter
+       opener so two dark screens never meet. Kept QUIET on purpose (Sandra,
+       2026-10-27): the demo shows off the figures, so this is a short summary
+       to scroll past, not a feature. Styled as Carta's own report page does
+       it: a serif "Q1 highlights", then a plain bulleted list, each item a
+       bold lead-in with a colon running into the sentence. In the chapter
+       text column, at the body copy's size. A lead-in whose sub-chapter is
+       open links to it and underlines on hover. -->
   <section aria-labelledby="highlights" class="bg-base-200 font-sans text-base-content">
-    <div class="mx-auto w-[88vw] max-w-[80rem] py-16 lg:py-28">
+    <div class="mx-auto w-[88vw] max-w-[40rem] py-12 lg:py-20">
       <h2
         id="highlights"
-        class="font-serif text-[2.5rem] leading-[1.04] font-normal tracking-[-0.01em] sm:text-[3.25rem] lg:text-[4rem]"
+        class="font-serif text-[2rem] leading-[1.04] font-normal tracking-[-0.01em] sm:text-[2.5rem] lg:text-[3rem]"
       >
-        Highlights
+        Q1 highlights
       </h2>
-      <div class="mt-10 grid gap-2 md:grid-cols-2 lg:mt-16 xl:grid-cols-4">
+      <ul
+        class="mt-6 list-disc space-y-4 pl-5 text-[1.0625rem] leading-[1.6] text-base-content/80 marker:text-base-content md:mt-8 md:space-y-5 md:text-lg md:leading-[1.7]"
+      >
         {#each highlights as h (h.title)}
-          <!-- A card whose sub-chapter is locked in the demo is not a link. -->
           {@const live = openIds.has(h.href.slice(1))}
-          <svelte:element this={live ? "a" : "div"} href={live ? h.href : undefined} class="group flex flex-col">
-            <h3
-              class="flex items-center gap-2.5 bg-primary px-4 py-3.5 text-base leading-tight font-semibold text-primary-content lg:px-5 lg:py-4 lg:text-lg"
-            >
-              <span class="size-3 shrink-0 bg-white" aria-hidden="true"></span>
-              <span class="decoration-1 underline-offset-[0.2em] {live ? 'group-hover:underline' : ''}">{h.title}</span>
-            </h3>
-            <p
-              class="mt-2 flex-1 bg-base-100 px-4 py-4 text-[1.0625rem] leading-[1.6] text-base-content/80 lg:px-5 lg:py-5"
-            >
-              {h.text}
-            </p>
-          </svelte:element>
+          <li class="pl-1">
+            {#if live}
+              <a href={h.href} class="font-semibold text-base-content decoration-1 underline-offset-[0.2em] hover:underline"
+                >{h.title}:</a
+              >
+            {:else}
+              <strong class="font-semibold text-base-content">{h.title}:</strong>
+            {/if}
+            {h.text}
+          </li>
         {/each}
-      </div>
+      </ul>
     </div>
   </section>
   {#each shown as section, i (section.id)}
@@ -372,14 +371,17 @@
            window rather than squares through it. -->
       <div
         data-chapter-opener
-        class="relative flex min-h-[48svh] items-center justify-center bg-night px-5 py-20 text-white sm:px-10 lg:min-h-[58vh]"
+        class="relative flex min-h-[60svh] items-center justify-center bg-night px-5 py-20 text-white sm:min-h-[48svh] sm:px-10 lg:min-h-[58vh]"
       >
         <DotGrid clear={chapterTitles[i]} color="#ff7d55" animate={false} lens />
         <!-- SangBleu Versailles at 400 (the only weight Carta ships), as
-             on the deck's section-divider slides. -->
+             on the deck's section-divider slides.
+             PHONES (2026-10-27): 30px and no 14ch cap, so a title like "AI &
+             Foundational Models" takes two lines, not three; the band is
+             taller there (60svh) so more rows of squares frame it. -->
         <h2
           bind:this={chapterTitles[i]}
-          class="relative max-w-[14ch] text-center font-serif text-[2.5rem] leading-[1.04] font-normal tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
+          class="relative text-center font-serif text-[1.875rem] leading-[1.04] sm:max-w-[14ch] font-normal tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
         >
           {section.title}
         </h2>
@@ -400,8 +402,8 @@
              The sub-chapter title on phones is one size down, not
              underlined (the accent-mark in the lede is the only underline
              there) and sits mt-6 above the copy. The figure
-             screen that follows already opens with its own 88px before
-             "FIGURE n" (ChartDisplay top-[5.5rem]), so a full py-16 here
+             screen that follows already opens with its own 68px before
+             "FIGURE n" (ChartDisplay top-[4.25rem]), so a full py-16 here
              stacked into a ~150px hole between text and figure. -->
         <div class="mx-auto w-[88vw] max-w-200 pt-14 lg:py-28 {sub.charts.length > 0 ? 'pb-0' : 'pb-14'}">
           <!-- Sub-chapter title: centred and underlined. The chapter title

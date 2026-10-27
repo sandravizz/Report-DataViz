@@ -17,7 +17,9 @@
   // series is named beside its segment on the last bar, so reading order and
   // stack order agree with no legend eye travel. Mobile keeps the bottom
   // legend — the narrow viewport has no right margin to spare.
-  const directLabelsActive = $derived(pair.series.length > 1 && innerWidth >= 1024);
+  // `pair.directLabels: false` keeps the legend at every width, which frees
+  // the right edge for the y axis (namesOnRight below).
+  const directLabelsActive = $derived(pair.series.length > 1 && pair.directLabels !== false && innerWidth >= 1024);
 
   const directLabelAnnotations = $derived.by(() => {
     if (!directLabelsActive) return [];

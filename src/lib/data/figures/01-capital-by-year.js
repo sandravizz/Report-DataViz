@@ -10,7 +10,7 @@ import csv from "./csv/01-capital-by-year.csv?raw";
 const data = parseFigureCsv(csv);
 const last = data[data.length - 1];
 
-export const SOURCE = "Source: Carta, State of Private Markets: Q1 2026. Data as of May 22, 2026.";
+export const SOURCE = "Source: Carta 2026";
 
 export default {
   title: "2025 Deals Keep Rolling In",
@@ -32,8 +32,12 @@ export default {
       r: 4,
       label: "Q1 only",
       labelPlacement: "top",
-      labelYOffset: 28,
+      // Close over the bar (2026-10-27): 28 left the note floating.
+      labelYOffset: 14,
       labelProps: { textAnchor: "middle", verticalAnchor: "end", dx: 0, dy: -4 },
+      // Phones: the bars are narrow, so the centred note ran into the 2025
+      // bar beside it. Lower, and nudged right off that bar.
+      mobile: { labelYOffset: 8, props: { label: { dx: 12 } } },
     }),
   ],
   data,

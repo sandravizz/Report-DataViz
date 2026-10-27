@@ -42,7 +42,7 @@
       <!-- Serif at 400, the only weight Carta ships; the size climbs with
            the screen's shorter side so the block always fits one screen. -->
       <h1
-        class="font-serif text-[clamp(2.5rem,min(11vw,9svh),6rem)] leading-[1.02] font-normal tracking-[-0.01em] text-balance"
+        class="font-serif text-[clamp(2.5rem,min(11vw,9svh),6rem)] leading-[1.15] font-normal tracking-[-0.01em] text-balance md:leading-[1.02]"
       >
         State of<br />Private Markets<br /><span class="text-[#a7aaaa]">Q1 2026</span>
       </h1>

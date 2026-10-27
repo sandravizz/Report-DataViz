@@ -194,7 +194,7 @@
       <img
         src="/carta-logo-black.svg"
         alt="Carta"
-        class="h-8 w-auto"
+        class="h-6 w-auto lg:h-8"
       />
     </a>
 
@@ -216,7 +216,7 @@
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+        class="group h-6.5 cursor-pointer rounded-md bg-base-content/6 px-3 py-1 font-display text-xs tracking-wide lg:h-8 lg:px-4 lg:py-1.5 lg:text-sm text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
       >
         <!-- The word at every size — no hamburger on phones (Sandra,
              2026-09-29). active: darkens the fill on a tap, where there is

@@ -332,6 +332,11 @@ export function tooltipHeaderQuarter(d) {
 // above the year, which says "the year starts here" more directly than the
 // word would. The quarters go muted, the year stays in the ink, so the eye
 // lands on the year and reads the quarters off it.
+// TICK LINES IN THE GRIDLINE INK (Sandra, 2026-10-27): the quarter ticks and
+// the long Q1 lines are drawn like the y axis's gridlines (LayerChart Grid's
+// surface-content at 10%), not the axis ink — the axis rule stays ink. The
+// axis's own tickMarks are off: its `stroke` paints rule and ticks alike, so
+// QuarterTickLabel draws every tick itself in `gridStroke`.
 //
 // Both lines travel as one string ("\n2019", "Q3"); the panel's tickLabel
 // snippet splits them, draws the connector and inks the year.
@@ -376,5 +381,9 @@ export function twoLineXPadding(innerWidth) {
 }
 export const quarterXAxisProps = {
   ...xAxisProps,
+  tickMarks: false,
   tickLabelProps: { ...xAxisProps.tickLabelProps, fill: neutral.label },
 };
+// LayerChart Grid's own line colour (Grid.base.svelte), for lines that should
+// read as gridlines.
+export const gridStroke = "color-mix(in oklab, var(--color-surface-content, currentColor) 10%, transparent)";
