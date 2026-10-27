@@ -37,7 +37,8 @@ export default {
       labelProps: { textAnchor: "middle", verticalAnchor: "end", dx: 0, dy: -4 },
       // Phones: the bars are narrow, so the centred note ran into the 2025
       // bar beside it. Lower, and nudged right off that bar.
-      mobile: { labelYOffset: 8, props: { label: { dx: 12 } } },
+      // Lower still so it sits clear under the 50 gridline.
+      mobile: { labelYOffset: 4, props: { label: { dx: 12, dy: -2 } } },
     }),
   ],
   data,

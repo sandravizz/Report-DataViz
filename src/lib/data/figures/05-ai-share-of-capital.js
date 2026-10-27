@@ -17,9 +17,10 @@ const data = parseFigureCsv(csv).map((d) => ({
 export const AI_SERIES = [
   // Stack order: first series at the bottom. The two AI series are ONE
   // group, so one hue at two steps: foundational models, the newer story,
-  // in the accent at the base; applied AI in its pale partner on top.
-  { key: "Foundational", value: "foundational", color: colors.accent },
-  { key: "Applied", value: "applied", color: colors.accentSoft },
+  // in the deeper orange-80 at the base; applied AI, the bulk, in the coral
+  // on top (2026-10-27, when the coral became the accent).
+  { key: "Foundational", value: "foundational", color: colors.accentDeep },
+  { key: "Applied", value: "applied", color: colors.accent },
 ];
 
 export default {

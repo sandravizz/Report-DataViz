@@ -6,10 +6,11 @@
   // connector runs from the axis down to just above its year, so the line is
   // what names the quarter. The axis's own tick marks are off
   // (quarterXAxisProps), so this draws every tick: a short one under each
-  // quarter, the long Q1 line under each year, both in the gridline ink.
+  // quarter in a light grey, the long Q1 line under each year in the
+  // axis ink like every other x-axis tick.
   // Rendered from a panel's `tickLabel` snippet, which hands over `props`.
   import { Text } from "layerchart";
-  import { xAxisProps, gridStroke, quarterYearGap, yearLineOffset } from "$lib/chart-theme";
+  import { xAxisProps, quarterTickStroke, quarterYearGap, yearLineOffset } from "$lib/chart-theme";
   import { ink } from "$lib/colors";
 
   let { props } = $props();
@@ -25,7 +26,7 @@
   <Text {...props} value={lines[0]} />
 {/if}
 {#if !lines[1]}
-  <line x1={props.x} y1={props.y} x2={props.x} y2={props.y + xAxisProps.tickLength} style:stroke={gridStroke} stroke-width="1" />
+  <line x1={props.x} y1={props.y} x2={props.x} y2={props.y + xAxisProps.tickLength} style:stroke={quarterTickStroke} stroke-width="1" />
 {/if}
 {#if lines[1]}
   <line
@@ -33,7 +34,7 @@
     y1={props.y}
     x2={props.x}
     y2={props.y + (props.dy ?? 0) + offset - quarterYearGap(innerWidth)}
-    style:stroke={gridStroke}
+    stroke={xAxisProps.stroke}
     stroke-width="1"
   />
   <Text {...props} value={lines[1]} fill={ink} dy={(props.dy ?? 0) + offset} />

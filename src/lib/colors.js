@@ -57,9 +57,14 @@ export const neutral = {
 // Axis ticks and annotation labels: Carta's near-black, the page's ink.
 export const ink = "#1a1a1a";
 
-// The accent: orange-80, the deepest step of Carta's coral that still reads
-// as coral. 3.5:1 on the cream — clears 3:1 for lines, bars and rings.
-export const accent = "#d26442";
+// The accent: Carta's brand coral, as their own chart slides fill their bars
+// (Sandra, 2026-10-27 — it was orange-80 #d26442, which read browner than
+// Carta's charts). 2.39:1 on the cream: below 3:1, so it is a FILL ink for
+// bars and areas, and every coral mark carries a direct label, legend or
+// axis that names it. `accentDeep` is orange-80, the deeper step for a
+// second series of the same group.
+export const accent = carta.coral;
+export const accentDeep = carta.orange80;
 
 // Series colors, keyed by the JOB the series does in its figure. A figure
 // picks `accent` for the series its title is about and walks down the ramp
@@ -69,8 +74,11 @@ export const accent = "#d26442";
 // steps encodes the grouping. Fill only, always labeled.
 export const colors = {
   accent,
+  accentDeep,
   accentSoft: carta.orange50,
-  strong: neutral.strong,
+  // Context bars in Carta's black, as on their slides (Sandra, 2026-10-27;
+  // was gray-90 #394040).
+  strong: carta.black,
   mid: neutral.mid,
   soft: neutral.soft,
   faint: neutral.faint,

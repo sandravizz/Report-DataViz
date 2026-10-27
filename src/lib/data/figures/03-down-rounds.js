@@ -1,4 +1,4 @@
-import { colors, neutral } from "$lib/colors";
+import { colors } from "$lib/colors";
 import { parseQuarter, quarterDate } from "$lib/chart-theme";
 import { lineCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
@@ -45,12 +45,11 @@ export default {
   yTicks: [5, 10, 15, 20],
   series: [{ key: "Down rounds", value: "downRounds" }],
   // The reset quarters in the accent, the rest in slate: one series, two
-  // inks, as on Carta's slide (their black → Carta's gray-80: gray-90 read
-  // too dark beside the coral, gray-70 too light, 2026-10-27).
+  // inks, as on Carta's slide: their coral and their black (2026-10-27).
   barColor: {
     by: (d) => (inReset(d) ? "reset" : "other"),
     domain: ["reset", "other"],
-    range: [colors.accent, neutral.label],
+    range: [colors.accent, colors.strong],
   },
   // A light grey wash behind the coral bars, named over its top-left
   // corner — the same plain slate wash as the other figures' eras, no hatch
