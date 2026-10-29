@@ -131,6 +131,7 @@ export async function downloadFigureImage({
   progress,
   title,
   subtitle,
+  legend,
   source,
   filename,
 }) {
@@ -138,6 +139,7 @@ export async function downloadFigureImage({
   await Promise.all([
     document.fonts.load(`500 16px "Plus Jakarta Sans"`),
     document.fonts.load(`400 16px "Plus Jakarta Sans"`),
+    document.fonts.load(`300 16px "Plus Jakarta Sans"`),
   ]);
 
   const chartRoots = Array.from(figureEl.querySelectorAll(".lc-root-container"));
@@ -153,9 +155,26 @@ export async function downloadFigureImage({
       height: rect.height,
     };
   });
-  const unionLeft = Math.min(...placements.map((p) => p.x));
-  const unionTop = Math.min(...placements.map((p) => p.y));
-  const unionBottom = Math.max(...placements.map((p) => p.y + p.height));
+  // Text the page sets in HTML between the charts — a composite figure's
+  // panel names (DoubleChartPanel marks them `data-export-label`) — drawn
+  // at its on-screen position with its on-screen type.
+  const labels = Array.from(figureEl.querySelectorAll("[data-export-label]")).map((el) => {
+    const rect = el.getBoundingClientRect();
+    const style = getComputedStyle(el);
+    return {
+      text: el.textContent.trim(),
+      x: rect.left - containerRect.left,
+      y: rect.top - containerRect.top,
+      height: rect.height,
+      font: `${style.fontWeight} ${style.fontSize} ${FONT_FAMILY}`,
+      lineHeight: parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.4,
+      fontSize: parseFloat(style.fontSize),
+    };
+  });
+  const blocks = [...placements, ...labels];
+  const unionLeft = Math.min(...blocks.map((p) => p.x));
+  const unionTop = Math.min(...blocks.map((p) => p.y));
+  const unionBottom = Math.max(...blocks.map((p) => p.y + p.height));
   const unionHeight = unionBottom - unionTop;
 
   const captures = await Promise.all(
@@ -198,11 +217,18 @@ export async function downloadFigureImage({
   // the figure number and progress bar shown on screen.
   const numberBlockHeight = number ? numberLineHeight + 12 + railHeight + 16 : 0;
 
+  // The figure's legend (`legend`: [{ label, color }]), one row under the
+  // subtitle as on the page: 10px dots, text-xs light labels.
+  const legendSize = 12;
+  const legendLineHeight = legendSize * 1.4;
+  const legendBlockHeight = legend?.length ? 14 + legendLineHeight : 0;
+
   const headerHeight =
     pad +
     numberBlockHeight +
     titleLines.length * titleLineHeight +
     (subtitleLines.length ? 10 + subtitleLines.length * subtitleLineHeight : 0) +
+    legendBlockHeight +
     24;
   const footerHeight = 20 + sourceLines.length * footerLineHeight + 8 + wordmarkSize * 1.4 + pad;
 
@@ -255,6 +281,31 @@ export async function downloadFigureImage({
       ctx.fillText(line, pad, y);
       y += subtitleLineHeight;
     }
+  }
+
+  if (legend?.length) {
+    y += 14;
+    let lx = pad;
+    ctx.font = `300 ${legendSize}px ${FONT_FAMILY}`;
+    for (const item of legend) {
+      ctx.fillStyle = item.color;
+      ctx.beginPath();
+      ctx.arc(lx + 5, y + legendLineHeight / 2, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = INK;
+      ctx.fillText(item.label, lx + 16, y + (legendLineHeight - legendSize) / 2);
+      lx += 16 + ctx.measureText(item.label).width + 16;
+    }
+  }
+
+  ctx.fillStyle = INK;
+  for (const label of labels) {
+    ctx.font = label.font;
+    ctx.fillText(
+      label.text,
+      pad + (label.x - unionLeft),
+      headerHeight + (label.y - unionTop) + (label.lineHeight - label.fontSize) / 2
+    );
   }
 
   for (let i = 0; i < placements.length; i++) {

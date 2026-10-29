@@ -7,6 +7,8 @@ import downRounds from "./figures/03-down-rounds.js";
 import postMoneyByStage from "./figures/04-post-money-by-stage.js";
 import aiShareOfCapital from "./figures/05-ai-share-of-capital.js";
 import aiShareByMetro from "./figures/06-ai-share-by-metro.js";
+import preMoneyAiVsNonAi from "./figures/07-pre-money-ai-vs-non-ai.js";
+import capitalByRegion from "./figures/08-capital-by-region.js";
 
 export const figures = {
   capitalByYear,
@@ -15,4 +17,6 @@ export const figures = {
   postMoneyByStage,
   aiShareOfCapital,
   aiShareByMetro,
+  preMoneyAiVsNonAi,
+  capitalByRegion,
 };

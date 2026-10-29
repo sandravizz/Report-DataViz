@@ -25,6 +25,11 @@
         progress,
         title: pair.title,
         subtitle: pair.subtitle,
+        // A figure-level legend (composite figures, DoubleChartPanel) is
+        // page markup, not chart SVG, so it is handed over to be drawn.
+        legend: pair.legend && pair.series
+          ? pair.series.map((s) => ({ label: s.legend ?? s.key, color: s.color }))
+          : null,
         source: pair.source,
         filename: downloadName(pair),
       });
@@ -38,8 +43,13 @@
   }
 </script>
 
+<!-- A figure of three or more stacked panels (small multiples) gives most
+     of the air above the source back to its plots: mt-6/lg:mt-8 instead of
+     mt-10/lg:mt-20 (Sandra, 2026-10-29). -->
 <div
-  class="mt-10 flex flex-nowrap items-center justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/65 md:text-xs lg:mt-20"
+  class="{pair.panels?.length > 2
+    ? 'mt-6 lg:mt-8'
+    : 'mt-10 lg:mt-20'} flex flex-nowrap items-center justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/65 md:text-xs"
 >
   <span class="leading-snug">{pair.source}</span>
   <!-- The control on every figure: a HAIRLINE OUTLINE (option B,

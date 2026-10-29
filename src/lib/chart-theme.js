@@ -135,9 +135,12 @@ export const percentTicks = [0.25, 0.5, 0.75, 1];
 // Spline spreads those onto the top line too, and a filled open line closes
 // with a straight chord from the last point back to the first. Not for
 // overlapping series: an opaque later area would hide the earlier one.
-export function solidWash(color, opacity = areaFillOpacity) {
+// `surface` is the ground the wash sits on (white by default; the report's
+// cream for washes straight on the page).
+export function solidWash(color, opacity = areaFillOpacity, surface = "#ffffff") {
   const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  const [r, g, b] = rgb(color).map((c) => Math.round(255 + (c - 255) * opacity));
+  const ground = rgb(surface);
+  const [r, g, b] = rgb(color).map((c, i) => Math.round(ground[i] + (c - ground[i]) * opacity));
   return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
 }
 
@@ -202,26 +205,6 @@ export function tooltipHeaderYear(d) {
 export function excludeZeroTick(scale, count) {
   const candidates = typeof scale.ticks === "function" ? scale.ticks(count) : scale.domain();
   return candidates.filter((tick) => tick !== 0);
-}
-
-// Tooltips are desktop-only: on touch the tooltip interaction is buggy
-// (tap-triggered tooltips misbehave — see docs/tooltip-mobile-freeze-bug.md),
-// so every chart passes this as its `tooltipContext` instead of a hardcoded
-// boolean. Gated on DESKTOP_MIN so it tracks the layout's lg: breakpoint, like
-// the helpers below.
-//
-// CAVEAT, and the reason this is worth revisiting: the stated reason is TOUCH,
-// but the test is WIDTH. Those used to agree closely enough at 1024; at 1400
-// they don't. A 1280px-wide desktop window with a real mouse now gets no
-// tooltips, and an iPad in landscape at 1366 correctly gets none but only by
-// luck. The precise test is the pointer itself —
-// `matchMedia("(any-hover: hover) and (pointer: fine)")`, the same gate
-// CursorDot.svelte already uses — which would restore tooltips to narrow
-// desktop windows and keep them off every touch device regardless of width.
-// Not changed here because it alters behaviour on real desktops and wants an
-// eye-check first.
-export function desktopTooltips(innerWidth) {
-  return innerWidth >= DESKTOP_MIN;
 }
 
 // Point annotations may carry a `mobile` override (placement, offsets, label
@@ -388,3 +371,19 @@ export const quarterXAxisProps = {
 // The Q2–Q4 ticks: the gridlines' mix (LayerChart Grid.base.svelte, 10%)
 // taken up to 35% so a 5px tick still reads.
 export const quarterTickStroke = "color-mix(in oklab, var(--color-surface-content, currentColor) 35%, transparent)";
+
+// GROUPED X AXES (bar-grouped-stacked, carta-demo 2026-10-29): the
+// sub-band row (years) sits where the plain labels would, the category row
+// (stages) one line lower — the quarter axis's desktop spacing, at every
+// width, since both rows are always written.
+export const groupedAxisOffset = 20;
+export const groupedXPadding = { bottom: 44 };
+// Panels that hand their x labels to the panel below (phones, stacked small
+// multiples): no labels, no ticks, the zero line drawn in the gridlines' own
+// 10% mix (LayerChart Grid.base.svelte), so the bars still stand on a floor
+// without an ink axis competing with the last panel's.
+export const groupedXPaddingBare = { bottom: 8 };
+// The last panel on phones: the category row only (no year row), at the
+// plain axis spacing.
+export const groupedXPaddingSingle = { bottom: 24 };
+export const baselineStroke = "color-mix(in oklab, var(--color-surface-content, currentColor) 10%, transparent)";

@@ -1,0 +1,37 @@
+segment,stage,period,p25,p50,p75
+Non-AI,Seed,2025,9.5,16.0,27.7
+Non-AI,Seed,2026,10.0,18.4,32.2
+Non-AI,Series A,2025,21.5,39.1,78.5
+Non-AI,Series A,2026,27.3,46.0,100.0
+Non-AI,Series B,2025,44.8,90.0,201.4
+Non-AI,Series B,2026,50.0,135.0,242.5
+Non-AI,Series C,2025,60.6,181.6,528.4
+Non-AI,Series C,2026,96.4,299.5,518.3
+Non-AI,Series D,2025,115.0,375.5,1073.9
+Non-AI,Series D,2026,70.8,212.6,465.4
+Non-AI,Series E+,2025,159.8,494.8,1392.1
+Non-AI,Series E+,2026,256.7,816.6,2449.3
+AI Applied,Seed,2025,10.5,17.1,27.6
+AI Applied,Seed,2026,11.0,18.6,32.3
+AI Applied,Series A,2025,30.8,55.5,99.3
+AI Applied,Series A,2026,34.0,57.3,109.2
+AI Applied,Series B,2025,74.9,145.0,284.2
+AI Applied,Series B,2026,88.6,174.3,333.1
+AI Applied,Series C,2025,164.9,338.3,723.6
+AI Applied,Series C,2026,195.9,372.1,885.9
+AI Applied,Series D,2025,192.3,580.0,1141.0
+AI Applied,Series D,2026,367.8,841.1,4053.9
+AI Applied,Series E+,2025,778.8,2831.6,6575.7
+AI Applied,Series E+,2026,468.6,1246.3,5449.5
+AI Foundational Models,Seed,2025,23.1,42.5,97.0
+AI Foundational Models,Seed,2026,34.5,200.0,510.5
+AI Foundational Models,Series A,2025,83.8,127.6,351.5
+AI Foundational Models,Series A,2026,160.0,273.7,675.0
+AI Foundational Models,Series B,2025,387.5,1000.0,4122.3
+AI Foundational Models,Series B,2026,856.8,1263.2,2252.1
+AI Foundational Models,Series C,2025,712.3,2374.8,10266.9
+AI Foundational Models,Series C,2026,3990.3,4730.7,5711.5
+AI Foundational Models,Series D,2025,1081.3,1942.7,4198.9
+AI Foundational Models,Series D,2026,10527.5,10527.5,10527.5
+AI Foundational Models,Series E+,2025,2054.7,3192.4,4595.8
+AI Foundational Models,Series E+,2026,2321.8,2586.9,2851.9

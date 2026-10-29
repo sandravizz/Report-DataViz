@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, Area, AreaChart } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, halfCenturyTicksOnMobile, defaultYearTicks, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
 
   let { pair, active = false } = $props();
@@ -92,7 +92,7 @@
   legend={false}
   rule={false}
   {xPadding}
-  tooltipContext={desktopTooltips(innerWidth)}
+  tooltipContext={true}
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },

@@ -5,7 +5,7 @@
   const meta = {
     title: "State of Private Markets: Q1 2026 | An Interactive Report",
     description:
-      "An interactive edition of Carta's State of Private Markets, Q1 2026: fundraising volume, down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz.",
+      "An interactive edition of Carta's State of Private Markets, Q1 2026: down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -24,8 +24,9 @@
   // Where the closing "More from Carta" button sends the reader.
   const moreHref = "https://carta.com/data/";
 
-  // Chapters follow the deck's own sections (contents slide): Fundraising
-  // Volume, Key Trends, Valuations, AI & Foundational Models, Geography &
+  // Chapters follow the deck's own sections (contents slide), minus
+  // Fundraising Volume (dropped with its figure, Sandra 2026-10-29: too
+  // basic): Key Trends, Valuations, AI & Foundational Models, Geography &
   // Industry, Methodology — one figure per chapter, two where the deck's
   // slide drew two measures on two axes and the report splits them.
   //
@@ -48,20 +49,6 @@
   // 2026-10-27), so the demo ends on Figure 3. Drop `locked` to open a
   // chapter. Chapters keep their full-report number (`num`) everywhere.
   const sections = assignIds([
-    {
-      title: "Fundraising Volume",
-      subchapters: [
-        {
-          title: "Capital Invested",
-          intro:
-            "2025 deals continue to roll in: an additional $20B was recorded in the last 12 weeks, bringing 2025 to <mark class=\"accent-mark\">$137.8B of capital invested</mark>, the most since 2021.",
-          body: [
-            "Carta's data has an administrative lag: a round is recorded some time after it closes, so the latest periods keep growing for months after they end. The 2026 bar is the first quarter alone, $30.4B so far.",
-          ],
-          charts: [figures.capitalByYear],
-        },
-      ],
-    },
     {
       title: "Key Trends",
       subchapters: [
@@ -101,13 +88,12 @@
           body: [
             "Foundational model companies drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
           ],
-          charts: [figures.aiShareOfCapital],
+          charts: [figures.preMoneyAiVsNonAi],
         },
       ],
     },
     {
       title: "Geography & Industry",
-      locked: true,
       subchapters: [
         {
           title: "Where AI Capital Goes",
@@ -116,15 +102,7 @@
           body: [
             "California took 48.0% of all capital invested from Q2 2025 to Q1 2026, and the West region as a whole 55.4%. Behind California, New York (10.3%), Massachusetts (7.9%) and Texas (6.6%) receive the largest shares.",
           ],
-          charts: [],
-        },
-        {
-          title: "Each Metro, Its Own Mix",
-          intro: "Each of the big metros leans on a different industry.",
-          body: [
-            "SaaS makes up 46.5% of capital raised in the Bay Area. Austin sees 64.8% of its capital go into hardware; Boston 49.4% into biopharma, healthtech and medical devices. In New York, fintech and health together take a third.",
-          ],
-          charts: [],
+          charts: [figures.capitalByRegion],
         },
       ],
     },
@@ -193,21 +171,42 @@
   // a short summary on the way to the figures (Sandra, 2026-10-27). Still
   // Carta's words, only trimmed. Each lead-in links to the sub-chapter that
   // tells the same story at length.
+  // DESKTOP (Sandra, 2026-10-29): all FOUR, in full — `deskTitle` and
+  // `deskText` are the deck's own Highlights slide (PDF p. 4), verbatim.
+  // `deskOnly` items (the fourth, "New this quarter") are not on phones.
   const highlights = [
     {
       title: "AI crosses 60% of capital",
       text: "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date.",
-      href: "#chapter-4-1",
+      deskTitle: "AI crosses 60% of capital",
+      deskText:
+        "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date. Foundational model companies specifically drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
+      href: "#chapter-3-1",
     },
     {
       title: "Down rounds at historical lows",
       text: "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels.",
-      href: "#chapter-2-1",
+      deskTitle: "Down rounds are low",
+      deskText:
+        "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels. Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
+      href: "#chapter-1-1",
     },
     {
       title: "Series B and Series C valuations rising",
       text: "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025.",
-      href: "#chapter-3-2",
+      deskTitle: "Series B & Series C vals rising",
+      deskText:
+        "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025. This may be because AI companies are maturing and moving toward later stages after promising early wins.",
+      href: "#chapter-2-2",
+    },
+    {
+      // The three tables are Figure 7's three panels (AI chapter).
+      title: "New this quarter",
+      deskTitle: "New this quarter",
+      deskText:
+        "Three side-by-side tables breaking out non-AI, AI applied, and AI foundational model companies across every stage from seed to Series E+. Post-money valuation, round size, and pre-money valuation. Q1 2025 versus Q1 2026. The clearest picture yet of how differently these three categories are being priced right now.",
+      href: "#chapter-3-1",
+      deskOnly: true,
     },
   ];
 
@@ -316,9 +315,15 @@
        it: a serif "Q1 highlights", then a plain bulleted list, each item a
        bold lead-in with a colon running into the sentence. In the chapter
        text column, at the body copy's size. A lead-in whose sub-chapter is
-       open links to it and underlines on hover. -->
-  <section aria-labelledby="highlights" class="bg-base-200 font-sans text-base-content">
-    <div class="mx-auto w-[88vw] max-w-[40rem] py-12 lg:py-20">
+       open links to it and underlines on hover.
+       DESKTOP (Sandra, 2026-10-29): one narrow column left the wide screen
+       empty either side, so from lg the section takes the page width and
+       one full screen, and all four highlights run as four columns in the
+       deck's full wording, each under a hairline, its lead-in on a line of
+       its own (no colon) over its text. Phones and tablets keep the short
+       bulleted list of three. -->
+  <section aria-labelledby="highlights" class="bg-base-200 font-sans text-base-content lg:flex lg:min-h-screen lg:items-center">
+    <div class="mx-auto w-[88vw] max-w-[40rem] py-12 lg:max-w-[80rem] lg:py-20">
       <h2
         id="highlights"
         class="font-serif text-[2rem] leading-[1.04] font-normal tracking-[-0.01em] sm:text-[2.5rem] lg:text-[3rem]"
@@ -326,19 +331,21 @@
         Q1 highlights
       </h2>
       <ul
-        class="mt-6 list-disc space-y-4 pl-5 text-[1.0625rem] leading-[1.6] text-base-content/80 marker:text-base-content md:mt-8 md:space-y-5 md:text-lg md:leading-[1.7]"
+        class="mt-6 list-disc space-y-4 pl-5 text-[1.0625rem] leading-[1.6] text-base-content/80 marker:text-base-content md:mt-8 md:space-y-5 md:text-lg md:leading-[1.7] lg:mt-12 lg:grid lg:list-none lg:grid-cols-4 lg:gap-x-10 lg:space-y-0 lg:pl-0 lg:text-base lg:leading-[1.65]"
       >
         {#each highlights as h (h.title)}
           {@const live = openIds.has(h.href.slice(1))}
-          <li class="pl-1">
+          <li class="pl-1 lg:block lg:border-t lg:border-base-content/15 lg:pt-5 lg:pl-0 {h.deskOnly ? 'hidden' : ''}">
             {#if live}
-              <a href={h.href} class="font-semibold text-base-content decoration-1 underline-offset-[0.2em] hover:underline"
-                >{h.title}:</a
+              <a href={h.href} class="font-semibold text-base-content decoration-1 underline-offset-[0.2em] hover:underline lg:mb-2 lg:block"
+                ><span class="lg:hidden">{h.title}:</span><span class="hidden lg:inline">{h.deskTitle}</span></a
               >
             {:else}
-              <strong class="font-semibold text-base-content">{h.title}:</strong>
+              <strong class="font-semibold text-base-content lg:mb-2 lg:block"
+                ><span class="lg:hidden">{h.title}:</span><span class="hidden lg:inline">{h.deskTitle}</span></strong
+              >
             {/if}
-            {h.text}
+            <span class="lg:hidden">{h.text}</span><span class="hidden lg:inline">{h.deskText}</span>
           </li>
         {/each}
       </ul>

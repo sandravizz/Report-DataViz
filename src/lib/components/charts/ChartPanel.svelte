@@ -2,6 +2,7 @@
   // Kind → panel dispatch, extracted from ChartDisplay so composite figures
   // (DoubleChartPanel) can render sub-panels without duplicating the chain.
   import BarChartPanelStacked from "./BarChartPanelStacked.svelte";
+  import BarChartPanelGroupedStacked from "./BarChartPanelGroupedStacked.svelte";
   import LineChartPanel from "./LineChartPanel.svelte";
   import AreaChartPanel from "./AreaChartPanel.svelte";
   import AreaChartPanelOverlap from "./AreaChartPanelOverlap.svelte";
@@ -15,6 +16,8 @@
 
 {#if pair.kind === "bar-stacked"}
   <BarChartPanelStacked {pair} />
+{:else if pair.kind === "bar-grouped-stacked"}
+  <BarChartPanelGroupedStacked {pair} />
 {:else if pair.kind === "line"}
   <LineChartPanel {pair} />
 {:else if pair.kind === "area"}

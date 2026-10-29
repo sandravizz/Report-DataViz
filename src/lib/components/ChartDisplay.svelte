@@ -118,11 +118,22 @@
            keep the roomier gap. The double gap still fits its two-line band
            label, which overhangs the plot top by ~26px. -->
       <div
-        class="{pair.kind === 'double'
+        class="{pair.kind === 'double' && pair.legend
+          ? 'mb-3 lg:mb-4'
+          : pair.kind === 'double'
           ? 'mb-7 lg:mb-8'
           : 'mb-10 lg:mb-12'} font-sans text-xs text-base-content md:text-sm lg:text-sm"
       >
-        {pair.subtitle}
+        <!-- `pair.subtitleMobile`: a figure's own phone subtitle, for what
+             the phone layout leaves out (figure 7 names left/right bar
+             there, as phones drop its year row). Swaps at md, the same
+             width the panels drop that row. -->
+        {#if pair.subtitleMobile}
+          <span class="md:hidden">{pair.subtitleMobile}</span>
+          <span class="hidden md:inline">{pair.subtitle}</span>
+        {:else}
+          {pair.subtitle}
+        {/if}
       </div>
 
       <div class="flex min-h-0 flex-1 gap-6">

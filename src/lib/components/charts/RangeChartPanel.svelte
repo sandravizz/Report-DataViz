@@ -16,7 +16,7 @@
   // color (the bars' fill), xTicks, xDomain, valuePrefix / valueSuffix,
   // rangeLabel (the tooltip's row name).
   import { AnnotationPoint, BarChart } from "layerchart";
-  import { xAxisProps, chartPadding, desktopTooltips } from "$lib/chart-theme";
+  import { xAxisProps, chartPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { ink } from "$lib/colors";
 
@@ -66,7 +66,7 @@
       bandPadding={pair.bandPadding ?? 0.45}
       legend={false}
       rule={false}
-      tooltipContext={desktopTooltips(innerWidth)}
+      tooltipContext={true}
       padding={chartPadding({ right: 12 })}
       props={{
         // Explicit hex, not the chart's default `var(--color-primary)`: the

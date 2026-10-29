@@ -2,7 +2,7 @@
   import { AnnotationPoint, AnnotationRange, AreaChart } from "layerchart";
   import ConnectorRule from "./ConnectorRule.svelte";
   import QuarterTickLabel from "./QuarterTickLabel.svelte";
-  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, desktopTooltips, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
 
   let { pair } = $props();
@@ -57,7 +57,7 @@
   legend={false}
   rule={false}
   {xPadding}
-  tooltipContext={desktopTooltips(innerWidth)}
+  tooltipContext={true}
   {padding}
   props={{
     // A wash under a 2.5px top line, not a saturated block — the shared

@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels } from "layerchart";
   import QuarterTickLabel from "./QuarterTickLabel.svelte";
-  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, desktopTooltips, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
@@ -172,7 +172,7 @@
       bind:context
       legend={false}
       rule={false}
-      tooltipContext={desktopTooltips(innerWidth)}
+      tooltipContext={true}
       {padding}
       props={{
         bars: { strokeWidth: 0 },

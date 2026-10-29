@@ -41,6 +41,9 @@ export const carta = {
   midtone: "#ed914a", //     --clr-midtone-orange
   yellow60: "#f8d648", //    --color-yellow-60
   red90: "#c62128", //       --color-red-90
+  // Not a CSS token: the dark red of the deck's industry-distribution
+  // charts (Austin metro slide, Hardware segment), pixel-sampled.
+  deckRed: "#b61d3f",
 };
 
 // The neutral ramp: Carta's own grey scale (--color-gray-*). It sits at
