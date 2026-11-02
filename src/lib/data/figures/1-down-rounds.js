@@ -25,8 +25,7 @@ export const SOURCE = "Source: Carta 2026";
 
 export default {
   title: "Down Rounds Are Back to Pre-Boom Levels",
-  subtitle:
-    "Share of Rounds Raised at a Lower Valuation Than the Last Primary Round, %, Q1 2019 to Q1 2026",
+  subtitle: "Share of Down Rounds From Q1 2019 to Q1 2026, in %",
   description:
     "The down-round rate fell to 11.4% in Q1 2026, back in line with 2019 and 2020. It had run between 18.0% and 22.2% through 2023 and 2024, the hangover from the valuation lows of 2022.",
   source: SOURCE,

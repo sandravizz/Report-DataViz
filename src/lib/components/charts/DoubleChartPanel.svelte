@@ -26,7 +26,7 @@
   import ChartPanel from "./ChartPanel.svelte";
 
   let { pair } = $props();
-  // Phones take each series' `legendShort` (P25 · P50 · P75) so the legend
+  // Phones take each series' `legendShort` (25th · 50th · 75th) so the legend
   // and the scale switch share one line (Sandra, 2026-11-02).
   let innerWidth = $state(1024);
   const legendLabel = (s) => (innerWidth < 768 ? (s.legendShort ?? s.legend) : s.legend) ?? s.key;
@@ -96,8 +96,8 @@
         onclick={(e, item) => toggle(item.value) ?? true}
         classes={{
           root: "min-w-0",
-          items: "flex flex-wrap items-center gap-x-3 gap-y-1 md:gap-x-4",
-          item: "flex cursor-pointer items-center gap-1 transition-opacity duration-200 md:gap-1.5",
+          items: "flex flex-nowrap items-center gap-x-2.5 gap-y-1 md:flex-wrap md:gap-x-4",
+          item: "flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap transition-opacity duration-200 md:gap-1.5",
           swatch: "size-2.5 shrink-0 rounded-full",
           label: "font-sans text-xs font-light text-base-content",
         }}

@@ -1,6 +1,6 @@
 ---
 name: report-copy
-description: How to write the text in a Report Viz report: figure descriptions (the text beside a chart), sub-chapter intros and bodies. Use whenever writing or editing any figure's `description` or any report copy, on any branch, for any client.
+description: How to write the text in a Report Viz report: figure subtitles, figure descriptions (the text beside a chart), sub-chapter intros and bodies. Use whenever writing or editing any figure's `subtitle` or `description` or any report copy, on any branch, for any client.
 ---
 
 # Report copy: the pattern, not the numbers
@@ -31,6 +31,23 @@ in the tooltip.
 - ✅ "The West's lead has widened: from about half of all capital in early
   2023 to around 60% today. The Northeast stays second, while the South
   and Midwest share what is left."
+
+## Figure subtitles: what is shown, kept short
+
+Rule set 2026-11-02. The subtitle under a chart's title only **describes
+what is shown**: the measure, the period, the unit. No message, no
+definitions, no scope lists. One short line.
+
+- Pattern: `<What> From <start> to <end>, in <unit>`, e.g. "Spending From
+  2023 to 2026, in €", "Share of Down Rounds From Q1 2019 to Q1 2026, in %".
+- A comparison of two periods uses "vs": "Pre-Money Valuation by Stage,
+  Q1 2025 vs Q1 2026, in $".
+- The unit goes at the end ("in %", "in $"), so the ticks can drop it.
+- Leave out what the axis or legend already names (stage lists like "Seed
+  to Series E+", long definitions of the measure); the description can
+  explain them.
+- `subtitleMobile`, when a figure has one, follows the same rule and is
+  shorter still.
 
 ## What does not change
 

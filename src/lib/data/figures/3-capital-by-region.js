@@ -23,7 +23,7 @@ const data = parseFigureCsv(csv).map(({ period, west, northeast, south, midwest 
 
 export default {
   title: "60% of Capital in Q1 Went to the West Region",
-  subtitle: "Share of Total Capital Invested by Region, %, Seed to Series E+, Q1 2023 to Q1 2026",
+  subtitle: "Share of Capital Invested by Region From Q1 2023 to Q1 2026, in %",
   // The pattern, not the numbers (Sandra, 2026-10-29): the reader sees
   // the shares on the chart; the text says what they add up to.
   description:

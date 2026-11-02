@@ -37,13 +37,17 @@
      translate moved the box by half its width, which at an odd pixel width
      is a half pixel — every label, title and source line in the figure then
      rendered between pixels and looked soft. Auto margins stay on whole
-     pixels. -->
+     pixels.
+     Height in svh, NOT dvh, below lg: dvh tracks the mobile URL bar as it
+     collapses and expands mid-scroll, so the figure re-laid-out on every
+     scroll and the chart visibly stretched and squeezed. svh is the stable
+     small viewport (bar shown) — the figure always fits and never moves. -->
 <div class="absolute inset-x-0 top-[4.25rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100dvh-5.75rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100svh-5.75rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}

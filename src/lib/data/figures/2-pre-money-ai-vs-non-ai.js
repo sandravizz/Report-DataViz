@@ -30,11 +30,11 @@ const rows = parseFigureCsv(csv);
 // tooltip.
 const SERIES = [
   // `legend`: the legend writes "percentile" once, on the last item.
-  // `legendShort`: phones write the finance shorthand instead, so the legend
-  // and the scale switch share one line (Sandra, 2026-11-02).
-  { key: "25th percentile", short: "25th", legend: "25th", legendShort: "P25", value: "p25", color: colors.accent },
-  { key: "50th percentile", short: "50th", legend: "50th", legendShort: "P50", value: "p50", color: "#ff644b" },
-  { key: "75th percentile", short: "75th", legendShort: "P75", value: "p75", color: "#fd4746" },
+  // `legendShort`: phones drop "percentile" and write the tooltip's 25th · 50th ·
+  // 75th, so the legend and the scale switch share one line (Sandra, 2026-11-02).
+  { key: "25th percentile", short: "25th", legend: "25th", legendShort: "25th", value: "p25", color: colors.accent },
+  { key: "50th percentile", short: "50th", legend: "50th", legendShort: "50th", value: "p50", color: "#ff644b" },
+  { key: "75th percentile", short: "75th", legendShort: "75th", value: "p75", color: "#fd4746" },
 ];
 
 const panel = (segment, label) => ({
@@ -79,11 +79,11 @@ const panel = (segment, label) => ({
 export default {
   // Short enough for one line on a phone.
   title: "Pre-Money Valuation: AI vs Non-AI",
-  // Short: the title names the measure and the legend the percentiles;
-  // "$" here instead of on every tick (Sandra, 2026-10-29). Phones drop the
-  // year row, so their subtitle names the bar order instead of the stages.
-  subtitle: "Seed to Series E+, Q1 2025 vs Q1 2026, in $",
-  subtitleMobile: "Q1 2025 (Left Bar) vs Q1 2026 (Right Bar), in $",
+  // What is shown, when, in what unit; "$" here instead of on every tick
+  // (Sandra, 2026-10-29). Phones drop the year row, so their subtitle names
+  // the bar order instead.
+  subtitle: "Pre-Money Valuation by Stage, Q1 2025 vs Q1 2026, in $",
+  subtitleMobile: "Q1 2025 (Left) vs Q1 2026 (Right), in $",
   // The pattern, in the slide's own printed values (Sandra, 2026-10-29).
   description:
     "Foundational model companies are valued on a different scale from their first round. The gap is widest at Series C and D, where their median pre-money valuation in Q1 2026 was more than ten times that of applied AI or non-AI companies.",
