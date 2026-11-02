@@ -87,7 +87,7 @@
          tightened there (item, swatch and button gaps) so it fits with
          room to spare on a 360px Android as well as an iPhone, where
          Safari sets the type a touch wider than Chrome's emulator. -->
-    <div class="mb-5 flex flex-nowrap items-center justify-between gap-x-2 gap-y-2 md:flex-wrap md:gap-x-6 lg:mb-6">
+    <div class="mb-5 flex flex-nowrap items-center justify-between gap-x-4 gap-y-2 md:flex-wrap md:gap-x-6 lg:mb-6">
       <Legend
         scale={legendScale}
         variant="swatches"
@@ -96,7 +96,7 @@
         onclick={(e, item) => toggle(item.value) ?? true}
         classes={{
           root: "min-w-0",
-          items: "flex flex-nowrap items-center gap-x-2.5 gap-y-1 md:flex-wrap md:gap-x-4",
+          items: "flex flex-nowrap items-center gap-x-1.5 gap-y-1 md:flex-wrap md:gap-x-4",
           item: "flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap transition-opacity duration-200 md:gap-1.5",
           swatch: "size-2.5 shrink-0 rounded-full",
           label: "font-sans text-xs font-light text-base-content",
@@ -115,12 +115,13 @@
             <button
               type="button"
               aria-pressed={active}
+              aria-label={label}
               onclick={() => (individual = k === 1)}
               class="h-5 cursor-pointer rounded-sm px-1 font-sans md:px-1.5 text-xs font-light transition-colors duration-200 {active
                 ? 'bg-base-content/6 text-base-content'
                 : 'text-base-content/55 hover:text-base-content'}"
             >
-              {label}
+              {innerWidth < 768 ? (pair.scaleToggleShort?.[k] ?? label) : label}
             </button>
           {/each}
         </div>

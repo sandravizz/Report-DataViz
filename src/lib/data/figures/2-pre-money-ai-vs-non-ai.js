@@ -93,6 +93,9 @@ export default {
   // shows only the levels picked, in every panel at once.
   legend: true,
   scaleToggle: ["Same scale", "Own scale"],
+  // Phones write just "Same" / "Own", so the switch keeps clear of the
+  // legend on one line (Sandra, 2026-11-02).
+  scaleToggleShort: ["Same", "Own"],
   series: SERIES,
   panels: [
     panel("Non-AI", "Non-AI"),
