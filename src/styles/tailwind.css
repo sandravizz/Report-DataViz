@@ -214,13 +214,12 @@
 }
 
 /* Reduced motion. The report is built out of movement — 500ms figure
-   crossfades, the clip-path wipe and draw-in on the area panels, the rail's
-   fades, and `scroll-smooth` on <html> — and none of it was gated.
+   crossfades, the rail's fades, and `scroll-smooth` on <html> — and none of
+   it was gated.
 
-   The chart draw-ins are CSS `transition`s on clip-path/opacity (see
-   AreaChartPanelOverlap.svelte), so collapsing transition-duration lands them
-   on their FINISHED state instantly rather than freezing them mid-wipe: the
-   reader gets the completed figure, just without the animation. That is the
+   These are CSS `transition`s, so collapsing transition-duration lands them
+   on their FINISHED state instantly rather than freezing them midway: the
+   reader gets the finished state, just without the animation. That is the
    whole reason this can be done in CSS rather than threading a flag through
    every panel.
 

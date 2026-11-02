@@ -107,7 +107,9 @@
              ("Linear | Log"): both states named, the active one in the
              Index button's soft ink fill, the other quiet. Kept discreet
              (2026-10-29): no frame, the legend's own type, 20px tall. -->
-        <div role="group" aria-label="Y axis scale" class="inline-flex shrink-0 gap-0.5">
+        <!-- data-export-scale: the PNG export (downloadFigure.js) draws it,
+             active state included, at the right of the legend row. -->
+        <div role="group" aria-label="Y axis scale" data-export-scale class="inline-flex shrink-0 gap-0.5">
           {#each pair.scaleToggle as label, k (label)}
             {@const active = individual === (k === 1)}
             <button

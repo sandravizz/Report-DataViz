@@ -81,12 +81,6 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
-  // The first pair is "active" (activeIndex 0) even while the section is still
-  // below the fold — gate draw-in animations on the section actually being on
-  // screen so they don't play unseen before the user arrives.
-  let inView = $derived(
-    scrollY + vh * 0.7 > containerTop && scrollY < containerTop + containerHeight
-  );
 </script>
 
 <div
@@ -116,7 +110,7 @@
   <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
        hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-200">
-    <ChartDisplay {pairs} {activeIndex} {inView} />
+    <ChartDisplay {pairs} {activeIndex} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>

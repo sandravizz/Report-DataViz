@@ -2,13 +2,13 @@ import { colors } from "$lib/colors";
 import { formatNumber } from "$lib/format";
 import { excludeZeroTick } from "$lib/chart-theme";
 import { parseFigureCsv } from "./parse-csv.js";
-import { SOURCE } from "./01-capital-by-year.js";
+import { SOURCE } from "./1-down-rounds.js";
 // Carta, State of Private Markets Q1 2026, slide 37: a heatmap table of
 // pre-money valuations at the 25th, 50th and 75th percentile, by stage, for
 // Q1 2025 and Q1 2026, in three blocks (non-AI, applied AI, foundational
 // models). Every cell is printed on the slide, so the figure is exact.
 // USD million.
-import csv from "./csv/07-pre-money-ai-vs-non-ai.csv?raw";
+import csv from "./csv/2-pre-money-ai-vs-non-ai.csv?raw";
 
 const rows = parseFigureCsv(csv);
 

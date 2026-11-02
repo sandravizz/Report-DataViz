@@ -1,9 +1,9 @@
 import { colors } from "$lib/colors";
 import { parseFigureCsv } from "./parse-csv.js";
-import { SOURCE } from "./01-capital-by-year.js";
+import { SOURCE } from "./1-down-rounds.js";
 // Carta, State of Private Markets Q1 2026, slide 27: the median and both
 // quartiles are printed for every stage, so the figure is exact. USD million.
-import csv from "./csv/04-post-money-by-stage.csv?raw";
+import csv from "./csv/post-money-by-stage.csv?raw";
 
 export default {
   title: "Median Seed Post-Money $21M, Series D $540M",
@@ -19,6 +19,9 @@ export default {
   // The bars are a FILL under an ink-ringed dot and ink labels, so the
   // pale partner of the accent (1.97:1) is legal here — see colors.js.
   color: colors.accentSoft,
+  // More air between the stage rows than the panel's 0.45 default (Sandra,
+  // 2026-11-02).
+  bandPadding: 0.6,
   xDomain: [0, 1500],
   xTicks: [0, 500, 1000, 1500],
   valuePrefix: "$",

@@ -70,8 +70,7 @@ export function yAxisFor(namesOnRight) {
 // plus a gap before the data.
 const Y_LABEL_ROOM = 36;
 // Space end labels / direct labels need to the right of the last data
-// point. Mobile gets less — width is scarce there, and the labels wrap
-// (endLabelMobileWrap) instead of running wide.
+// point. Mobile gets less — width is scarce there.
 export function endLabelSpace(innerWidth) {
   return innerWidth < DESKTOP_MIN ? 52 : 80;
 }
@@ -130,11 +129,7 @@ export const percentTicks = [0.25, 0.5, 0.75, 1];
 // The area wash as an OPAQUE colour: the series colour laid over the white
 // figure surface at areaFillOpacity, pre-mixed. It looks the same as the
 // translucent wash, but the gridlines no longer show through the area — the
-// area paints over them, as in the Bloomberg reference. A single-series
-// figure opts in with `solidWash: true`; AreaChartPanel then passes the fill
-// through `props.area`. NOT through the series' own `props`: LayerChart's
-// Spline spreads those onto the top line too, and a filled open line closes
-// with a straight chord from the last point back to the first. Not for
+// area paints over them, as in the Bloomberg reference. Not for
 // overlapping series: an opaque later area would hide the earlier one.
 // `surface` is the ground the wash sits on (white by default; the report's
 // cream for washes straight on the page).
@@ -155,17 +150,6 @@ export function defaultYearTicks(data, xKey, innerWidth) {
   const years = data.map((d) => d[xKey]);
   if (innerWidth >= DESKTOP_MIN) return years;
   return years.filter((_, i) => (years.length - 1 - i) % 2 === 0);
-}
-
-// On mobile the quarter-century ticks crowd the narrow x axis, so keep only
-// the half-century years (1800, 1850, … 2100). Short-range charts would be
-// left with fewer than three ticks that way, so they keep the full
-// quarter-century set instead. Below DESKTOP_MIN, i.e. the same threshold as
-// the layout's lg: breakpoint.
-export function halfCenturyTicksOnMobile(ticks, innerWidth) {
-  if (!ticks || innerWidth >= DESKTOP_MIN) return ticks;
-  const halved = ticks.filter((d) => d.getFullYear() % 50 === 0);
-  return halved.length >= 3 ? halved : ticks;
 }
 
 // Year labels, at every width: the first and last tick spell the year in
@@ -194,6 +178,22 @@ export function yearTickFormat(ticks) {
 // pair.tooltipHeaderFormat.
 export function tooltipHeaderYear(d) {
   return d instanceof Date ? String(d.getFullYear()) : d;
+}
+
+// TOOLTIP CARD (Sandra, 2026-11-02): one type size, weight and spacing for
+// every chart's tooltip, modelled on figure 2. Desktop keeps LayerChart's
+// defaults (14px / 20px, semibold header, greyed labels, ink values); below
+// lg the full-size card covers most of the marks it describes, so it
+// tightens there: smaller type, less padding and row gap. Spread into a
+// chart's `props.tooltip`; `headerFormat` is the panel's header format.
+// The custom-snippet tooltip (BarChartPanelGroupedStacked) mirrors these
+// values by hand.
+export function tooltipCard(headerFormat) {
+  return {
+    root: { class: "max-lg:px-1.5 max-lg:py-1 max-lg:text-xs max-lg:leading-4" },
+    list: { class: "max-lg:gap-x-2 max-lg:gap-y-0.5" },
+    header: { class: "max-lg:mb-0.5 max-lg:pb-0.5", format: headerFormat },
+  };
 }
 
 // Default y-axis ticks when a figure doesn't supply its own array via
@@ -229,53 +229,6 @@ export function resolveAnnotations(annotations, innerWidth) {
         }
       : annotation
   );
-}
-
-// Mobile override for end-of-line label annotations: the reserved
-// margin is too tight for longer names on one line, so wrap instead. Also
-// pins lineHeight — Text's default line height is a flat 16px (1em resolved
-// against an assumed 16px base font, not our actual text-xs/12px), which
-// reads as oversized gaps between wrapped lines.
-const endLabelMobileWrap = {
-  props: { label: { width: 44, truncate: false, lineHeight: "13px" } },
-};
-
-// Halo behind every end/direct label: a same-color-as-background text stroke
-// so a label stays legible wherever it lands — most notably over a hatched
-// projection band, but just as true over a gridline or another series. Text
-// already paints its stroke under its fill (paint-order: stroke, set
-// globally on .lc-text-svg), so this reads as a tight halo, not an outline.
-// Mobile's smaller text and tighter layouts read the desktop width as a
-// bloated blob rather than a halo, so it's scaled down there.
-function endLabelHalo(innerWidth) {
-  return { stroke: "var(--color-base-200)", strokeWidth: innerWidth < DESKTOP_MIN ? 3 : 8 };
-}
-
-// The end-of-line label annotation itself, shared by every panel that names
-// series at their last observation instead of a legend. Dot and text wear the
-// series color; a series whose color is too light to read as type (e.g. a
-// muted tint) passes `endLabelColor` with a full-strength step of the same
-// hue. A series can end before the x-domain does (null cells in the CSV), so
-// the label anchors to its own last observation, not the last row.
-export function endLabelAnnotation(s, pair, innerWidth) {
-  const last = pair.data.findLast((d) => d[s.value] != null);
-  return {
-    x: last[pair.xKey],
-    y: last[s.value],
-    r: 4,
-    label: s.endLabel,
-    labelPlacement: "right",
-    labelXOffset: 8,
-    props: {
-      circle: { fill: s.color, stroke: "none" },
-      label: {
-        ...endLabelHalo(innerWidth),
-        fill: s.endLabelColor ?? s.color,
-        class: "text-xs font-light",
-      },
-    },
-    mobile: endLabelMobileWrap,
-  };
 }
 
 // QUARTERLY X AXES (carta-demo, 2026-10-15). Carta reports by quarter, so

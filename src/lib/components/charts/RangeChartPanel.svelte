@@ -16,7 +16,7 @@
   // color (the bars' fill), xTicks, xDomain, valuePrefix / valueSuffix,
   // rangeLabel (the tooltip's row name).
   import { AnnotationPoint, BarChart } from "layerchart";
-  import { xAxisProps, chartPadding } from "$lib/chart-theme";
+  import { xAxisProps, chartPadding, tooltipCard, tooltipHeaderYear } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { ink } from "$lib/colors";
@@ -50,15 +50,16 @@
   );
 
   let context = $state();
-  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
-  const tip = new TapTooltip(() => context);
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js). Desktop: the
+  // whole row answers, not just its bar — Seed's bar is a sliver.
+  const tip = new TapTooltip(() => context, { anywhere: () => innerWidth >= 1024 });
 </script>
 
 <svelte:window bind:innerWidth />
 
 <!-- The bar and the dot are two different statistics, so they get a key
      below the plot even though there is one series — the same manual legend
-     as LineChartPanel's legendItems, flush with the plot's left edge. -->
+     as BarChartPanelStacked's, flush with the plot's left edge. -->
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
     <BarChart
@@ -83,6 +84,7 @@
         // line charts' grid.
         grid: { stroke: "rgba(26, 26, 26, 0.1)", xTicks: pair.xTicks },
         tooltip: {
+          ...tooltipCard(tooltipHeaderYear),
           item: { label: pair.rangeLabel ?? "Range", format: formatRange },
         },
       }}

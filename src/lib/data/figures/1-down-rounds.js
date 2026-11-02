@@ -2,12 +2,11 @@ import { colors } from "$lib/colors";
 import { parseQuarter, quarterDate } from "$lib/chart-theme";
 import { lineCallout, projectionRange } from "../annotation-presets.js";
 import { parseFigureCsv } from "./parse-csv.js";
-import { SOURCE } from "./01-capital-by-year.js";
 // Carta, State of Private Markets Q1 2026, slide 19: every bar carries its
 // value, so the series is exact. Drawn as Carta draws it — 29 quarterly
 // bars, the valuation-reset quarters (2023–2025) in the accent — on the iw
 // branch's two-line quarter axis (Q2 Q3 Q4, the year under each Q1).
-import csv from "./csv/03-down-rounds.csv?raw";
+import csv from "./csv/1-down-rounds.csv?raw";
 
 const data = parseFigureCsv(csv).map(({ period, downRounds }) => ({
   quarter: parseQuarter(period),
@@ -21,6 +20,8 @@ const inReset = (d) => {
   const year = d.quarter.getFullYear();
   return year >= 2023 && year <= 2025;
 };
+
+export const SOURCE = "Source: Carta 2026";
 
 export default {
   title: "Down Rounds Are Back to Pre-Boom Levels",

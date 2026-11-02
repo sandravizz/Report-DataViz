@@ -26,6 +26,52 @@ function withTracking(ctx, on) {
   if ("letterSpacing" in ctx) ctx.letterSpacing = on ? TRACKING_WIDE : "0px";
 }
 
+// Fixed export resolution, not the screen's devicePixelRatio: a 2x PNG looks
+// sharp on the retina screen it was made on and soft everywhere it is likely
+// to go next (a slide, a doc, zoomed in a viewer). 4x of a ~700px figure is
+// ~2800px wide, well inside every browser's canvas limit.
+const EXPORT_SCALE = 4;
+
+// An SVG rasterized through `<img>` is sandboxed: it cannot reach the page's
+// web fonts, so the chart's axis and value labels silently fell back to the
+// system sans — a different, blurrier-looking face than the canvas-drawn
+// title above them. The fix is to hand the SVG its own copy of the face:
+// the same Google Fonts stylesheet app.html loads, with each latin woff2
+// inlined as a data URI. Fetched once per page load, then reused.
+const FONT_CSS_URL =
+  "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block";
+let embeddedFontCss;
+function getEmbeddedFontCss() {
+  embeddedFontCss ??= (async () => {
+    const css = await (await fetch(FONT_CSS_URL)).text();
+    // Google splits each weight into unicode-range subsets, each block led
+    // by a `/* subset */` comment; the charts only need latin + latin-ext.
+    const blocks = css
+      .split(/(?=\/\*)/)
+      .filter((b) => /^\/\*\s*latin(-ext)?\s*\*\//.test(b));
+    const dataUris = new Map();
+    for (const b of blocks) {
+      const src = b.match(/url\(([^)]+)\)/)?.[1];
+      if (!src || dataUris.has(src)) continue;
+      const buf = await (await fetch(src)).arrayBuffer();
+      let bin = "";
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i += 0x8000) {
+        bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      }
+      dataUris.set(src, `data:font/woff2;base64,${btoa(bin)}`);
+    }
+    return blocks
+      .map((b) => b.replace(/url\(([^)]+)\)/, (_, u) => `url(${dataUris.get(u)})`))
+      .join("\n");
+  })().catch(() => {
+    // Offline or blocked: export with the fallback face rather than not at all.
+    embeddedFontCss = undefined;
+    return "";
+  });
+  return embeddedFontCss;
+}
+
 // Extra canvas on every side so labels that overflow the SVG's nominal
 // bounds (invisible on the live page, hard-clipped when rasterized standalone)
 // survive the export — see docs/download-image-overflow-clip-bug.md.
@@ -50,11 +96,16 @@ function wrapLines(ctx, text, maxWidth) {
 
 // Captures one chart's own `.lc-root-container` as a rasterized image with
 // CAPTURE_BLEED of margin. Returns null for a Canvas-only chart (none here).
-async function captureChartBleed(root, pixelRatio) {
+async function captureChartBleed(root, pixelRatio, fontCss) {
   const svgStr = getChartSvgString(root);
   if (!svgStr) return null;
 
   const svg = new DOMParser().parseFromString(svgStr, "image/svg+xml").documentElement;
+  if (fontCss) {
+    const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+    style.textContent = fontCss;
+    svg.insertBefore(style, svg.firstChild);
+  }
   const width = parseFloat(svg.getAttribute("width"));
   const height = parseFloat(svg.getAttribute("height"));
   const [vx, vy, vw, vh] = (svg.getAttribute("viewBox") ?? `0 0 ${width} ${height}`)
@@ -113,8 +164,8 @@ async function captureChartBleed(root, pixelRatio) {
   // no bleed. Firefox and Safari decode correctly, so the bug reads as
   // Chrome-only.
   //
-  // Returned width/height are CSS units; the caller composites onto a context
-  // already scaled for export. `url` stays live until the caller has drawn:
+  // Returned width/height are CSS units; the caller draws the `<img>` at its
+  // own (already export-scaled) pixel size. `url` stays live until the caller has drawn:
   // revoking it can let the browser evict the decoded frame out from under a
   // later `drawImage`.
   return { img, url, width: outWidth, height: outHeight };
@@ -135,7 +186,8 @@ export async function downloadFigureImage({
   source,
   filename,
 }) {
-  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
+  const dpr = EXPORT_SCALE;
+  const fontCssPromise = getEmbeddedFontCss();
   await Promise.all([
     document.fonts.load(`500 16px "Plus Jakarta Sans"`),
     document.fonts.load(`400 16px "Plus Jakarta Sans"`),
@@ -179,8 +231,9 @@ export async function downloadFigureImage({
   const unionBottom = Math.max(...blocks.map((p) => p.y + p.height));
   const unionHeight = unionBottom - unionTop;
 
+  const fontCss = await fontCssPromise;
   const captures = await Promise.all(
-    chartRoots.map((root) => captureChartBleed(root, dpr))
+    chartRoots.map((root) => captureChartBleed(root, dpr, fontCss))
   );
 
   const pad = 28;
@@ -223,7 +276,20 @@ export async function downloadFigureImage({
   // subtitle as on the page: 10px dots, text-xs light labels.
   const legendSize = 12;
   const legendLineHeight = legendSize * 1.4;
-  const legendBlockHeight = legend?.length ? 14 + legendLineHeight : 0;
+  // The scale switch on the legend row (DoubleChartPanel marks it
+  // `data-export-scale`): both states named, the active one on its soft
+  // fill, read off the live buttons so the PNG shows the scale on screen.
+  const scaleButtons = Array.from(
+    figureEl.querySelectorAll("[data-export-scale] button")
+  ).map((el) => ({
+    text: el.textContent.trim(),
+    active: el.getAttribute("aria-pressed") === "true",
+  }));
+  const scaleButtonHeight = 20;
+  const legendRowHeight = scaleButtons.length
+    ? Math.max(legendLineHeight, scaleButtonHeight)
+    : legendLineHeight;
+  const legendBlockHeight = legend?.length || scaleButtons.length ? 14 + legendRowHeight : 0;
 
   const headerHeight =
     pad +
@@ -285,19 +351,38 @@ export async function downloadFigureImage({
     }
   }
 
-  if (legend?.length) {
+  if (legend?.length || scaleButtons.length) {
     y += 14;
     let lx = pad;
     ctx.font = `300 ${legendSize}px ${FONT_FAMILY}`;
-    for (const item of legend) {
+    for (const item of legend ?? []) {
       ctx.fillStyle = item.color;
       ctx.beginPath();
-      ctx.arc(lx + 5, y + legendLineHeight / 2, 5, 0, Math.PI * 2);
+      ctx.arc(lx + 5, y + legendRowHeight / 2, 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = INK;
-      ctx.fillText(item.label, lx + 16, y + (legendLineHeight - legendSize) / 2);
+      ctx.fillText(item.label, lx + 16, y + (legendRowHeight - legendSize) / 2);
       lx += 16 + ctx.measureText(item.label).width + 16;
     }
+
+    // Right-aligned like the page: h-5 px-1.5 buttons, 2px apart, 4px
+    // corners; active = ink at 6% fill + full ink, the other at 55% ink.
+    const buttonPadX = 6;
+    const buttonGap = 2;
+    const widths = scaleButtons.map((b) => ctx.measureText(b.text).width + buttonPadX * 2);
+    let bx = pad + textWidth - widths.reduce((a, w) => a + w, 0) - buttonGap * (widths.length - 1);
+    const by = y + (legendRowHeight - scaleButtonHeight) / 2;
+    scaleButtons.forEach((b, k) => {
+      if (b.active) {
+        ctx.fillStyle = "rgba(26, 26, 26, 0.06)";
+        ctx.beginPath();
+        ctx.roundRect(bx, by, widths[k], scaleButtonHeight, 4);
+        ctx.fill();
+      }
+      ctx.fillStyle = b.active ? INK : "rgba(26, 26, 26, 0.55)";
+      ctx.fillText(b.text, bx + buttonPadX, by + (scaleButtonHeight - legendSize) / 2);
+      bx += widths[k] + buttonGap;
+    });
   }
 
   ctx.fillStyle = INK;
@@ -316,7 +401,20 @@ export async function downloadFigureImage({
     const p = placements[i];
     const drawX = pad + (p.x - unionLeft) - CAPTURE_BLEED;
     const drawY = headerHeight + (p.y - unionTop) - CAPTURE_BLEED;
-    ctx.drawImage(capture.img, drawX, drawY, capture.width, capture.height);
+    // Drawn 1:1 in device pixels on a whole-pixel origin. getBoundingClientRect
+    // positions are fractional, and a half-pixel offset (or a size off by the
+    // rounding in captureChartBleed) makes drawImage resample the whole chart,
+    // which softens every line and label in it.
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(
+      capture.img,
+      Math.round(drawX * dpr),
+      Math.round(drawY * dpr),
+      capture.img.width,
+      capture.img.height
+    );
+    ctx.restore();
     // Safe now: drawImage is synchronous, so the frame is already committed.
     URL.revokeObjectURL(capture.url);
   }

@@ -251,19 +251,22 @@
              band's centre (x="data"), pushed half a band plus 12px to the
              side, and LayerChart flips it to the other side at the edge.
              The page's own type (font-sans, Plus Jakarta Sans — the tooltip
-             is portaled out of the figure, so it does not inherit it) at
-             13px (11px and a tighter grid below lg, so on a phone it adds
-             to the chart instead of covering it), one ink for every cell (LayerChart's default greys the
-             labels: `!` beats its attribute selector), the header row in the
-             page's medium weight, a rule under it. -->
+             is portaled out of the figure, so it does not inherit it). Size,
+             weight and spacing match every other chart's card (chart-theme
+             tooltipCard, modelled on figure 2): LayerChart's 14px / 20px
+             with its 4px row gap on desktop, 12px / 16px and a tighter grid
+             below lg; the header row semibold like LayerChart's header, the
+             level names in its greyed label colour, every number in ink
+             (`!` beats LayerChart's attribute selector), a rule under the
+             header. The column gap stays wider on desktop: four columns of
+             numbers need it to read as a table. -->
         <Tooltip.Root
           {context}
           x="data"
           anchor="left"
           xOffset={(context.xScale.bandwidth?.() ?? 0) / 2 + 12}
           classes={{
-            container:
-              "font-sans text-[0.6875rem]! leading-4! px-1.5! py-0.5! lg:text-[0.8125rem]! lg:leading-5! lg:px-2! lg:py-1!",
+            container: "font-sans max-lg:px-1.5 max-lg:py-1 max-lg:text-xs max-lg:leading-4",
           }}
         >
           {#snippet children({ data })}
@@ -275,18 +278,18 @@
             {@const ink = "text-base-content!"}
             <!-- The stage heads the label column on the column headers' own
                  row, so the table opens on one line instead of two. -->
-            <Tooltip.List class="grid-cols-[auto_auto_auto_auto] gap-x-2.5 gap-y-0 py-0.5 lg:gap-x-5 lg:gap-y-1 lg:py-1">
+            <Tooltip.List class="grid-cols-[auto_auto_auto_auto] gap-x-2 gap-y-0.5 lg:gap-x-5 lg:gap-y-1">
               <Tooltip.Item
                 label={data[pair.xKey]}
                 value={String(pair.x1Domain[0])}
                 valueAlign="right"
-                classes={{ label: `font-medium ${ink}`, value: `font-medium ${ink}` }}
+                classes={{ label: `font-semibold ${ink}`, value: `font-semibold ${ink}` }}
               />
               <Tooltip.Item
                 label={String(pair.x1Domain[1])}
                 value="Change"
                 valueAlign="right"
-                classes={{ label: `justify-end font-medium ${ink}`, value: `font-medium ${ink}` }}
+                classes={{ label: `justify-end font-semibold ${ink}`, value: `font-semibold ${ink}` }}
               />
               <Tooltip.Separator class="col-span-full" />
               {#each [...levels].reverse() as s (s.key)}
@@ -295,7 +298,7 @@
                   color={s.color}
                   value={formatTooltip(a?.[s.value])}
                   valueAlign="right"
-                  classes={{ label: ink, value: ink }}
+                  classes={{ value: ink }}
                 />
                 <Tooltip.Item
                   label={formatTooltip(b?.[s.value])}

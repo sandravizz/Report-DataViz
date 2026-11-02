@@ -13,13 +13,18 @@
 //   let context = $state();
 //   const tip = new TapTooltip(() => context);
 //   <BarChart bind:context tooltipContext={tip.props} ... />
+//
+// `{ anywhere: () => boolean }` lets the whole band answer instead of only
+// its bar — hover and click anywhere in a row/column, e.g. a range figure
+// whose short bars are hard to hit (desktop, 2026-11-02).
 export class TapTooltip {
   pinned = $state(false);
   // The plot's hit area; a click outside it unpins.
   #area = null;
 
-  constructor(getContext) {
+  constructor(getContext, { anywhere = () => false } = {}) {
     this.getContext = getContext;
+    this.anywhere = anywhere;
 
     // Listen for the outside click only while something is pinned. Capture
     // phase, so it runs before the chart's own click handler and the click
@@ -43,6 +48,7 @@ export class TapTooltip {
       if (!root) return;
       const guard = (e) => {
         const tooltip = this.getContext()?.tooltipState;
+        if (this.anywhere()) return;
         if (tooltip?.mode !== "band" && tooltip?.mode !== "bounds") return;
         if (!e.target.closest?.(".lc-tooltip-rect") || onBar(root, e)) return;
         e.stopPropagation();
@@ -71,7 +77,7 @@ export class TapTooltip {
     // In a bar chart the click lands on LayerChart's band rect, which spans
     // the whole column, empty space above the bar included. Only a click on
     // a bar itself pins; anywhere else in the plot unpins.
-    if (byRow && !onBar(this.#area, e)) return this.unpin();
+    if (byRow && !this.anywhere() && !onBar(this.#area, e)) return this.unpin();
     this.pinned = false;
     tooltip.show(e, byRow ? data : undefined);
     this.pinned = tooltip.data != null;

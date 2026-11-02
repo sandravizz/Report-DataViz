@@ -50,8 +50,7 @@ Quiet text is `/65` (`#1a1a1a` at 60% is 4.48:1 on the cream, just under 4.5).
 ## Logo
 
 `static/carta-logo-black.svg` is carta.com/logo.svg unchanged (the boxed
-wordmark). `carta-logo-white.svg` is the same file with the fill swapped,
-for any dark ground; unused for now.
+wordmark).
 
 ## Cover and ending
 

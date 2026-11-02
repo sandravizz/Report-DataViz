@@ -2,7 +2,8 @@
   import { AnnotationPoint, AnnotationRange, AreaChart, Labels } from "layerchart";
   import { curveMonotoneX } from "d3-shape";
   import ConnectorRule from "./ConnectorRule.svelte";
-  import { xAxisProps, yAxisFor, yTicks, percentTicks, chartPadding, plotXPadding, resolveAnnotations, areaFillOpacity, solidWash, defaultYearTicks, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter } from "$lib/chart-theme";
+  import QuarterTickLabel from "./QuarterTickLabel.svelte";
+  import { xAxisProps, yAxisFor, yTicks, percentTicks, chartPadding, plotXPadding, resolveAnnotations, areaFillOpacity, solidWash, defaultYearTicks, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter, tooltipCard, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { lineCallout } from "$lib/data/annotation-presets.js";
@@ -17,6 +18,11 @@
   // (e.g. each year's Q1 on a quarterly axis); yearTickFormat reads the
   // ends off this list.
   const xTicks = $derived(pair.xTicks ?? defaultYearTicks(pair.data, pair.xKey, innerWidth));
+  // The two-line quarter axis (`pair.quarterAxis`), as on the stacked bar
+  // panel: a tick under every quarter, Q2–Q4 written on desktop, the year
+  // under each Q1 — see chart-theme.js.
+  const quarters = $derived(pair.data.map((d) => d[pair.xKey]));
+  const twoLineXAxis = $derived(pair.quarterAxis === true && twoLineQuarterAxis(innerWidth));
 
   // Same direct-label convention as BarChartPanelStacked: on desktop each
   // series is named beside its band at the last observation instead of a
@@ -130,7 +136,7 @@
   // while they show; inside labels leave it on the right.
   const namesOnRight = $derived(directLabelsActive && !pair.insideLabels);
   const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
-  const padding = chartPadding();
+  const padding = $derived(chartPadding(twoLineXAxis ? twoLineXPadding(innerWidth) : {}));
 
   let context = $state();
   // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
@@ -138,6 +144,11 @@
 </script>
 
 <svelte:window bind:innerWidth />
+
+<!-- The two-line quarter axis's labels — see QuarterTickLabel.svelte. -->
+{#snippet quarterTickLabel({ props })}
+  <QuarterTickLabel {props} />
+{/snippet}
 
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
@@ -169,11 +180,18 @@
         },
         // Full years on desktop (2023 2024 2025 2026: room enough, Sandra
         // 2026-10-29); phones keep the ’yy middles.
-        xAxis: {
-          ...xAxisProps,
-          ticks: xTicks,
-          format: innerWidth >= 1024 ? (d) => String(d.getFullYear()) : yearTickFormat(xTicks),
-        },
+        xAxis: twoLineXAxis
+          ? {
+              ...quarterXAxisProps,
+              ticks: quarterAxisTicks(quarters),
+              format: quarterAxisFormat(quarters, innerWidth),
+              tickLabel: quarterTickLabel,
+            }
+          : {
+              ...xAxisProps,
+              ticks: xTicks,
+              format: innerWidth >= 1024 ? (d) => String(d.getFullYear()) : yearTickFormat(xTicks),
+            },
         yAxis: {
           ...yAxisFor(namesOnRight),
           ticks: pair.yTicks ?? (pair.percent ? percentTicks : yTicks),
@@ -186,7 +204,7 @@
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
           // Quarterly figures (`pair.quarterly`, carta-demo) name the quarter.
-          header: { format: pair.tooltipHeaderFormat ?? (pair.quarterly ? tooltipHeaderQuarter : tooltipHeaderYear) },
+          ...tooltipCard(pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear)),
           // `tooltipFormat` lets a figure keep the source's decimals
           // ("59.9%") where whole percents would round them away.
           ...(pair.percent

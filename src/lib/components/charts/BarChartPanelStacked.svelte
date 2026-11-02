@@ -1,7 +1,7 @@
 <script>
   import { AnnotationPoint, AnnotationRange, BarChart, Labels } from "layerchart";
   import QuarterTickLabel from "./QuarterTickLabel.svelte";
-  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
+  import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, resolveAnnotations, yearTickFormat, tooltipHeaderYear, tooltipCard, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { lineCallout } from "$lib/data/annotation-presets.js";
@@ -156,8 +156,7 @@
 {/snippet}
 
 <!-- The built-in legend overlays the plot area (and the x axis), so render
-     the same manual bottom legend as LineChartPanel's legendItems block:
-     below the plot, flush with the plot's left edge. -->
+     a manual bottom legend instead: below the plot, flush with the plot's left edge. -->
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
     <!-- pair.percent switches to a 100% stacked layout: bars are normalized
@@ -196,19 +195,23 @@
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
-          // Below lg the full-size card covers most of the stack it
-          // describes, so it tightens there: smaller type, less padding and
-          // row gap. Desktop keeps LayerChart's defaults.
-          root: { class: "max-lg:px-1.5 max-lg:py-1 max-lg:text-xs max-lg:leading-4" },
-          list: { class: "max-lg:gap-x-2 max-lg:gap-y-0.5" },
-          header: {
-            class: "max-lg:mb-0.5 max-lg:pb-0.5",
-            format: pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear),
-          },
+          // Shared card (chart-theme tooltipCard): tighter below lg.
+          ...tooltipCard(pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear)),
           ...(pair.percent
             ? // Series carry share values; a total row (always 100%) is noise.
               { item: { format: "percentRound" }, hideTotal: true }
             : { item: { format: formatValue } }),
+          // One series: the subtitle already names it, so the row is just
+          // the value — no dot, no series label (2026-11-02).
+          ...(pair.series.length === 1 && {
+            item: {
+              format: pair.percent ? "percentRound" : formatValue,
+              label: "",
+              color: "",
+              valueAlign: "left",
+              classes: { label: "hidden" },
+            },
+          }),
         },
       }}
     >

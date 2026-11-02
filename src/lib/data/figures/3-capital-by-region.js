@@ -2,13 +2,13 @@ import { colors, carta } from "$lib/colors";
 import { parseQuarter } from "$lib/chart-theme";
 import { formatNumber } from "$lib/format";
 import { parseFigureCsv } from "./parse-csv.js";
-import { SOURCE } from "./01-capital-by-year.js";
+import { SOURCE } from "./1-down-rounds.js";
 // Carta, State of Private Markets Q1 2026, "60% of capital in Q1 went to the
 // West region". Only the four Q1 values per region are printed on the slide
 // (Q1 2023, 2024, 2025, 2026); those are exact. The nine quarters between
 // carry no label and are READ OFF THE CHART (pixel-sampled from the slide,
 // ±0.5 pt): they draw the bands, the copy never quotes them.
-import csv from "./csv/08-capital-by-region.csv?raw";
+import csv from "./csv/3-capital-by-region.csv?raw";
 
 // The four regions are the whole of each quarter's capital (they sum to
 // 100), so Carta's four lines are drawn as one 100% stack. Shares as
@@ -31,11 +31,10 @@ export default {
   source: SOURCE,
   kind: "area-stacked",
   percent: true,
-  quarterly: true,
+  // The down-rounds figure's two-line quarter axis: Q2 Q3 Q4 along the
+  // top, the year under each Q1 (Sandra, 2026-11-02).
+  quarterAxis: true,
   xKey: "quarter",
-  // One tick per year, under its Q1 (2023 ’24 ’25 2026), at every width:
-  // four labels fit a phone.
-  xTicks: data.map((d) => d.quarter).filter((d) => d.getMonth() === 0),
   // Steps of 20, so the title's 60% has its own gridline (Sandra,
   // 2026-10-29).
   yTicks: [0.2, 0.4, 0.6, 0.8, 1],

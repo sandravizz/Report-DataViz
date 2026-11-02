@@ -200,7 +200,7 @@
       href: "#chapter-2-2",
     },
     {
-      // The three tables are Figure 7's three panels (AI chapter).
+      // The three tables are Figure 2's three panels (AI chapter).
       title: "New this quarter",
       deskTitle: "New this quarter",
       deskText:
