@@ -29,11 +29,12 @@ const rows = parseFigureCsv(csv);
 // read the same). One measure, not three; named by the legend and the
 // tooltip.
 const SERIES = [
-  // `legend`: the legend writes "percentile" once, on the last item, so it
-  // fits one line on a phone.
-  { key: "25th percentile", short: "25th", legend: "25th", value: "p25", color: colors.accent },
-  { key: "50th percentile", short: "50th", legend: "50th", value: "p50", color: "#ff644b" },
-  { key: "75th percentile", short: "75th", value: "p75", color: "#fd4746" },
+  // `legend`: the legend writes "percentile" once, on the last item.
+  // `legendShort`: phones write the finance shorthand instead, so the legend
+  // and the scale switch share one line (Sandra, 2026-11-02).
+  { key: "25th percentile", short: "25th", legend: "25th", legendShort: "P25", value: "p25", color: colors.accent },
+  { key: "50th percentile", short: "50th", legend: "50th", legendShort: "P50", value: "p50", color: "#ff644b" },
+  { key: "75th percentile", short: "75th", legendShort: "P75", value: "p75", color: "#fd4746" },
 ];
 
 const panel = (segment, label) => ({

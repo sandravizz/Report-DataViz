@@ -19,7 +19,7 @@
   // visible level below it, so the segment edges sit on the levels. Which
   // levels are visible comes from `pair.selected` (the figure's shared
   // legend, DoubleChartPanel); none selected = all.
-  import { Axis, BarChart, Bars, Group, Tooltip } from "layerchart";
+  import { Axis, BarChart, Bars, Group, Text, Tooltip } from "layerchart";
   import { scaleBand } from "d3-scale";
   import { group } from "d3-array";
   import { cubicInOut } from "svelte/easing";
@@ -131,6 +131,19 @@
   // it; the last keeps the full two-line spacing.
   const axisLabels = $derived(innerWidth >= 768 || pair.lastPanel !== false);
   const padding = $derived(chartPadding(axisLabels ? groupedXPadding : groupedXPaddingSingle));
+  // The panel's name sits INSIDE the plot, top left, on the line the top
+  // y label ("10B") already sits on (Sandra, 2026-11-02; every width), so
+  // it takes no height of its own and the bars get it. DoubleChartPanel
+  // hides its HTML name for these panels. Placed with the y labels' own
+  // props (bottom edge 3px above the gridline), in the name's medium
+  // weight and size.
+  const nameInPlot = $derived(!!pair.label);
+  const topTick = $derived.by(() => {
+    const scale = context?.yScale;
+    if (!scale) return null;
+    const ticks = typeof pair.yTicks === "function" ? pair.yTicks(scale) : (pair.yTicks ?? scale.ticks());
+    return ticks.length ? Math.max(...ticks) : null;
+  });
 </script>
 
 <svelte:window bind:innerWidth />
@@ -203,6 +216,16 @@
       {/snippet}
 
       {#snippet aboveMarks()}
+        {#if nameInPlot && topTick != null}
+          <Text
+            value={pair.label}
+            x={0}
+            y={context.yScale(topTick)}
+            {...yAxisProps.tickLabelProps}
+            textAnchor="start"
+            class="text-xs font-medium lg:text-sm"
+          />
+        {/if}
         {#each pair.x1Domain as v (v)}
           <Group x={subOffset(v)}>
             <Axis
@@ -229,7 +252,8 @@
              side, and LayerChart flips it to the other side at the edge.
              The page's own type (font-sans, Plus Jakarta Sans — the tooltip
              is portaled out of the figure, so it does not inherit it) at
-             13px, one ink for every cell (LayerChart's default greys the
+             13px (11px and a tighter grid below lg, so on a phone it adds
+             to the chart instead of covering it), one ink for every cell (LayerChart's default greys the
              labels: `!` beats its attribute selector), the header row in the
              page's medium weight, a rule under it. -->
         <Tooltip.Root
@@ -237,7 +261,10 @@
           x="data"
           anchor="left"
           xOffset={(context.xScale.bandwidth?.() ?? 0) / 2 + 12}
-          classes={{ container: "font-sans text-[0.8125rem]! leading-5!" }}
+          classes={{
+            container:
+              "font-sans text-[0.6875rem]! leading-4! px-1.5! py-0.5! lg:text-[0.8125rem]! lg:leading-5! lg:px-2! lg:py-1!",
+          }}
         >
           {#snippet children({ data })}
             {@const pairRows = pair.x1Domain.map((v) =>
@@ -248,7 +275,7 @@
             {@const ink = "text-base-content!"}
             <!-- The stage heads the label column on the column headers' own
                  row, so the table opens on one line instead of two. -->
-            <Tooltip.List class="grid-cols-[auto_auto_auto_auto] gap-x-5 gap-y-1 py-1">
+            <Tooltip.List class="grid-cols-[auto_auto_auto_auto] gap-x-2.5 gap-y-0 py-0.5 lg:gap-x-5 lg:gap-y-1 lg:py-1">
               <Tooltip.Item
                 label={data[pair.xKey]}
                 value={String(pair.x1Domain[0])}

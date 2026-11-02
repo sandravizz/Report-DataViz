@@ -158,7 +158,9 @@ export async function downloadFigureImage({
   // Text the page sets in HTML between the charts — a composite figure's
   // panel names (DoubleChartPanel marks them `data-export-label`) — drawn
   // at its on-screen position with its on-screen type.
-  const labels = Array.from(figureEl.querySelectorAll("[data-export-label]")).map((el) => {
+  // A hidden label (grouped bar panels write their names inside the plot,
+  // where the SVG export already carries them) is skipped.
+  const labels = Array.from(figureEl.querySelectorAll("[data-export-label]")).filter((el) => el.getClientRects().length > 0).map((el) => {
     const rect = el.getBoundingClientRect();
     const style = getComputedStyle(el);
     return {

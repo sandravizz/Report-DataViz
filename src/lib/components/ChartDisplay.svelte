@@ -152,7 +152,7 @@
   {/each}
 
   <dialog bind:this={interpretationModal} class="modal lg:hidden">
-    <div class="modal-box">
+    <div class="modal-box rounded-2xl">
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">✕</button>
       </form>

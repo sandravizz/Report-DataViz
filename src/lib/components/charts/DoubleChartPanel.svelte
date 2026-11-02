@@ -26,6 +26,10 @@
   import ChartPanel from "./ChartPanel.svelte";
 
   let { pair } = $props();
+  // Phones take each series' `legendShort` (P25 · P50 · P75) so the legend
+  // and the scale switch share one line (Sandra, 2026-11-02).
+  let innerWidth = $state(1024);
+  const legendLabel = (s) => (innerWidth < 768 ? (s.legendShort ?? s.legend) : s.legend) ?? s.key;
 
   // `picked` is what the legend shows at once; `selected` is what the
   // charts draw, applied mid-fade (see toggle).
@@ -75,14 +79,16 @@
   }
 </script>
 
+<svelte:window bind:innerWidth />
+
 <div class="flex min-h-0 min-w-0 flex-1 flex-col">
   {#if pair.legend && legendScale}
-    <div class="mb-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 lg:mb-6">
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 md:gap-x-6 lg:mb-6">
       <Legend
         scale={legendScale}
         variant="swatches"
         selected={picked}
-        tickFormat={(key) => pair.series.find((s) => s.key === key)?.legend ?? key}
+        tickFormat={(key) => { const s = pair.series.find((s) => s.key === key); return s ? legendLabel(s) : key; }}
         onclick={(e, item) => toggle(item.value) ?? true}
         classes={{
           items: "flex flex-wrap items-center gap-x-4 gap-y-1",
@@ -121,8 +127,14 @@
   >
     {#each pair.panels as panel, i (i)}
       {#if panel.label}
-        <!-- data-export-label: the PNG export (downloadFigure.js) draws it. -->
-        <div data-export-label class="{i > 0 ? 'mt-3 lg:mt-4' : ''} mb-1 font-sans text-xs font-medium text-base-content lg:text-sm">
+        <!-- data-export-label: the PNG export (downloadFigure.js) draws it.
+             Grouped bar panels write their name inside the plot instead
+             (BarChartPanelGroupedStacked), so for them this one hides and
+             the gap above the panel moves onto the panel box. -->
+        <div
+          data-export-label
+          class="{i > 0 ? 'mt-3 lg:mt-4' : ''} mb-1 font-sans text-xs font-medium text-base-content lg:text-sm {panel.kind === 'bar-grouped-stacked' ? 'hidden' : ''}"
+        >
           {panel.label}
         </div>
       {:else if i > 0}
@@ -137,7 +149,7 @@
            alike, so every PLOT gets the same height — on "Same scale" a bar's
            height must mean the same in each panel. -->
       <div
-        class="flex min-h-0 grow {pair.legend && i === pair.panels.length - 1 && panel.kind === 'bar-grouped-stacked'
+        class="flex min-h-0 grow {panel.label && panel.kind === 'bar-grouped-stacked' && i > 0 ? 'mt-3 lg:mt-4' : ''} {pair.legend && i === pair.panels.length - 1 && panel.kind === 'bar-grouped-stacked'
           ? 'basis-5 md:basis-0'
           : 'basis-0'}"
       >
