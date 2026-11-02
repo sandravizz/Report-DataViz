@@ -4,6 +4,7 @@
   import ConnectorRule from "./ConnectorRule.svelte";
   import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, halfCenturyTicksOnMobile, defaultYearTicks, yearTickFormat, tooltipHeaderYear } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
 
   let { pair, active = false } = $props();
   let innerWidth = $state(1024);
@@ -80,6 +81,10 @@
   const namesOnRight = $derived(endLabelAnnotations.length > 0);
   const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
   const padding = $derived(chartPadding(pair.padding));
+
+  let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
 </script>
 
 <svelte:window bind:innerWidth />
@@ -92,7 +97,8 @@
   legend={false}
   rule={false}
   {xPadding}
-  tooltipContext={true}
+  bind:context
+  tooltipContext={tip.props}
   {padding}
   props={{
     xAxis: { ...xAxisProps, ticks: xTicks, format: pair.xTickFormat ?? yearTickFormat(xTicks) },
@@ -142,13 +148,13 @@
 {#if pair.legendItems}
   <!-- Manual legend below the plot, same markup as LineChartPanel's: figures
        that name their series here instead of via endLabel supply {label,
-       color} entries. pl-3 matches chartPadding's 12px left edge so the
-       swatches align with the plot's left edge. -->
+       color} entries. No inset, so the swatches align with the plot's
+       left edge (chartPadding's left is 0). -->
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="min-h-0 flex-1">
       {@render chart()}
     </div>
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
       {#each pair.legendItems as item (item.label)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>

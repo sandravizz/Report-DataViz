@@ -87,12 +87,13 @@ export function plotXPadding(innerWidth, namesOnRight = false) {
   return namesOnRight ? [Y_LABEL_ROOM, endLabelSpace(innerWidth)] : [6, Y_LABEL_ROOM];
 }
 
-// Chart padding once the y labels live inside the range: no gutter, just
-// enough on the left for the first x label to hang off the axis line's
-// start, and nothing on the right, so the labels end flush with the figure
-// column (title, subtitle, source) above and below.
+// Chart padding once the y labels live inside the range: no gutter on
+// either side, so the axis line and gridlines start flush with the figure
+// column (title, subtitle, source) above and below (Sandra, 2026-11-02: the
+// old 12px left inset, kept for the first x label to hang off the axis
+// line's start, read as too much padding).
 export function chartPadding(extra = {}) {
-  return defaultChartPadding({ left: 12, right: 0, ...extra });
+  return defaultChartPadding({ left: 0, right: 0, ...extra });
 }
 
 // Bars can't use plotXPadding: band scales ignore xPadding (LayerChart's
@@ -378,12 +379,8 @@ export const quarterTickStroke = "color-mix(in oklab, var(--color-surface-conten
 // width, since both rows are always written.
 export const groupedAxisOffset = 20;
 export const groupedXPadding = { bottom: 44 };
-// Panels that hand their x labels to the panel below (phones, stacked small
-// multiples): no labels, no ticks, the zero line drawn in the gridlines' own
-// 10% mix (LayerChart Grid.base.svelte), so the bars still stand on a floor
-// without an ink axis competing with the last panel's.
-export const groupedXPaddingBare = { bottom: 8 };
-// The last panel on phones: the category row only (no year row), at the
-// plain axis spacing.
+// Panels that hand their category labels to the panel below (phones,
+// stacked small multiples) keep one row for the short year key under their
+// rightmost pair, at the plain axis spacing: groupedXPaddingSingle.
 export const groupedXPaddingSingle = { bottom: 24 };
 export const baselineStroke = "color-mix(in oklab, var(--color-surface-content, currentColor) 10%, transparent)";

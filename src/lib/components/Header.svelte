@@ -42,9 +42,8 @@
   let sheet = $state(null);
   let open = $state(false);
   let reduceMotion = $state(false);
-  // The link a reader picked, jumped to again once the dialog is really
-  // closed: closing a modal dialog hands focus back to the trigger, which sits
-  // on the cover, and the browser may scroll to it.
+  // The link a reader picked, scrolled to once the dialog is really closed
+  // (after its focus has gone back to the trigger, so nothing interrupts it).
   let pendingTarget = null;
   // Whether the sheet was opened with a mouse or tap (click `detail` > 0;
   // Enter/Space give 0). Closing a modal dialog hands focus back to the
@@ -69,7 +68,7 @@
   }
 
   // Starts the slide up. The scroll lock goes at once, so the page behind is
-  // already free (and already at the chosen chapter) while the sheet leaves.
+  // already free while the sheet leaves.
   function closeToc() {
     open = false;
     unlock();
@@ -82,20 +81,21 @@
     pendingTarget = null;
   }
 
-  // A link jumps the page INSTANTLY behind the sheet, then the sheet slides
-  // away to reveal the chapter already in place — rather than the sheet
-  // leaving first and the page then scrolling all the way down from the
-  // cover. Default navigation is prevented so the jump can be instant even
-  // though the page otherwise scrolls smoothly.
+  // A link lets the sheet slide away first, then the page SCROLLS down to the
+  // chapter — the same glide the logo gives back to the cover (Sandra,
+  // 2026-11-02: it used to jump instantly behind the sheet, which read as
+  // "just there"). Default navigation is prevented so the scroll waits for
+  // the sheet's outro (finishClose) instead of running underneath it.
   function goTo(event, id) {
     event.preventDefault();
     pendingTarget = id;
     closeToc();
-    jump(id);
   }
 
+  // No `behavior`, so it follows <html>'s scroll-smooth — which the
+  // reduced-motion rule in tailwind.css already turns off.
   function jump(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: "instant", block: "start" });
+    document.getElementById(id)?.scrollIntoView({ block: "start" });
   }
 
   // No close button: a click anywhere on the sheet closes it, except on a

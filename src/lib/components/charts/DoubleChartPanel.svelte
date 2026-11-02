@@ -130,15 +130,15 @@
           {panel.subtitle}
         </div>
       {/if}
-      <!-- `lastPanel`: on phones only the last panel writes its x labels
+      <!-- `lastPanel`: on phones only the last panel writes its category labels
            (BarChartPanelGroupedStacked), the panels above share them. The last
-           panel's box then starts 16px taller (basis-4 = chart-theme's
-           groupedXPaddingSingle 24 − groupedXPaddingBare 8) and all three grow
+           panel's box then starts 20px taller (basis-5 = chart-theme's
+           groupedXPadding 44 − groupedXPaddingSingle 24) and all three grow
            alike, so every PLOT gets the same height — on "Same scale" a bar's
            height must mean the same in each panel. -->
       <div
         class="flex min-h-0 grow {pair.legend && i === pair.panels.length - 1 && panel.kind === 'bar-grouped-stacked'
-          ? 'basis-4 md:basis-0'
+          ? 'basis-5 md:basis-0'
           : 'basis-0'}"
       >
         <ChartPanel

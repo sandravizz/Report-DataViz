@@ -25,8 +25,9 @@
   import { cubicInOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import { untrack } from "svelte";
-  import { xAxisProps, yAxisProps, chartPadding, barLabelRoom, barXScale, groupedXPadding, groupedXPaddingBare, groupedXPaddingSingle, groupedAxisOffset, baselineStroke, quarterTickStroke } from "$lib/chart-theme";
+  import { xAxisProps, yAxisProps, chartPadding, barLabelRoom, barXScale, groupedXPadding, groupedXPaddingSingle, groupedAxisOffset, baselineStroke, quarterTickStroke } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { neutral } from "$lib/colors";
 
   let { pair } = $props();
@@ -55,6 +56,8 @@
     yDomainTween.set(target, instant ? { duration: 0 } : { duration: 600, easing: cubicInOut });
   });
   let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
 
   const formatValue = (d) => `${pair.valuePrefix ?? ""}${formatNumber(d)}${pair.valueSuffix ?? ""}`;
   // `pair.tooltipFormat`: a figure's own rounding for the tooltip table.
@@ -109,8 +112,9 @@
   const categoryLabel = $derived(
     (context?.xScale?.step?.() ?? Infinity) < 70 && pair.xTickFormatShort ? pair.xTickFormatShort : (d) => d
   );
+  // Phones always take the short year (’25).
   const subLabel = $derived(
-    (context?.x1Scale?.step?.() ?? Infinity) < 34 ? (v) => `’${String(v).slice(-2)}` : (v) => String(v)
+    innerWidth < 768 || (context?.x1Scale?.step?.() ?? Infinity) < 34 ? (v) => `’${String(v).slice(-2)}` : (v) => String(v)
   );
   // From the centre of a band to the centre of one of its sub-bands.
   const subOffset = (v) =>
@@ -122,14 +126,11 @@
   // the ink axis line, keeping only a gridline-weight zero line.
   // `pair.lastPanel` is set by DoubleChartPanel; a lone panel has none and
   // keeps its labels.
-  // Phones drop the year row everywhere (the subtitle names left and right
-  // bar), so the last panel writes the category row alone, at the plain
-  // axis spacing.
+  // Phones write the year row short (’25 ’26) under every pair, in EVERY
+  // panel (Sandra, 2026-11-02). The panels above get one row of room for
+  // it; the last keeps the full two-line spacing.
   const axisLabels = $derived(innerWidth >= 768 || pair.lastPanel !== false);
-  const yearRow = $derived(innerWidth >= 768);
-  const padding = $derived(
-    chartPadding(!axisLabels ? groupedXPaddingBare : yearRow ? groupedXPadding : groupedXPaddingSingle)
-  );
+  const padding = $derived(chartPadding(axisLabels ? groupedXPadding : groupedXPaddingSingle));
 </script>
 
 <svelte:window bind:innerWidth />
@@ -152,7 +153,7 @@
       bind:context
       legend={false}
       rule={false}
-      tooltipContext={true}
+      tooltipContext={tip.props}
       {padding}
       props={{
         // The category row: the axis rule, no ticks of its own (the
@@ -168,7 +169,7 @@
               format: categoryLabel,
               tickLabelProps: {
                 ...xAxisProps.tickLabelProps,
-                dy: xAxisProps.tickLabelProps.dy + (yearRow ? groupedAxisOffset : 0),
+                dy: xAxisProps.tickLabelProps.dy + groupedAxisOffset,
               },
             }
           : { ...xAxisProps, stroke: baselineStroke, tickMarks: false, format: () => "" },
@@ -202,7 +203,7 @@
       {/snippet}
 
       {#snippet aboveMarks()}
-        {#each axisLabels && yearRow ? pair.x1Domain : [] as v (v)}
+        {#each pair.x1Domain as v (v)}
           <Group x={subOffset(v)}>
             <Axis
               placement="bottom"

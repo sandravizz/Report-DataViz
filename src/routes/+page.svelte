@@ -398,29 +398,28 @@
            it to tell which sub-chapter the reader is in. -->
       <div class="bg-base-200" data-surface="text">
         <!-- Report-style text block, after the Silver Linings reference:
-             a centred display title per chapter, a centred underlined
-             sub-chapter title under it, then a lede one tier bigger than the
+             a centred display title per chapter, a centred sub-chapter
+             title under it (not underlined at any size), then a lede one tier bigger than the
              body and the body copy itself. Everything shares one centred
              column; the lede and body keep a ~65-character measure inside it.
              py-16/lg:py-28 sets the air above and below the copy directly —
              the block is natural height (see docs/house-style.md).
              PHONES (2026-10-27): no padding below copy that a figure
              follows (text before a chapter band or the ending keeps pb-14).
-             The sub-chapter title on phones is one size down, not
-             underlined (the accent-mark in the lede is the only underline
-             there) and sits mt-6 above the copy. The figure
+             The sub-chapter title on phones is one size down and sits
+             mt-6 above the copy. The figure
              screen that follows already opens with its own 68px before
              "FIGURE n" (ChartDisplay top-[4.25rem]), so a full py-16 here
              stacked into a ~150px hole between text and figure. -->
         <div class="mx-auto w-[88vw] max-w-200 pt-14 lg:py-28 {sub.charts.length > 0 ? 'pb-0' : 'pb-14'}">
-          <!-- Sub-chapter title: centred and underlined. The chapter title
+          <!-- Sub-chapter title: centred, no underline at any size. The chapter title
                now lives in the dark opener band above, so the first
                sub-chapter opens its block like any other. The id is on this
                wrapper so a TOC jump lands on the sub-chapter title; scroll-mt
                keeps air above. -->
           <div id={sub.id} class="scroll-mt-20 lg:scroll-mt-24">
             <h3
-              class="text-center text-xl leading-tight font-medium text-balance md:text-2xl md:underline md:decoration-1 md:underline-offset-[0.2em] lg:text-[2rem]"
+              class="text-center text-xl leading-tight font-medium text-balance md:text-2xl lg:text-[2rem]"
             >
               {sub.title}
             </h3>

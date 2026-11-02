@@ -125,10 +125,10 @@
   --desc-left: calc(50vw + var(--fig-w) / 2 + var(--side-gap));
 }
 
-/* Accent underline for a marked phrase in running text. A real underline, not
-   a highlighter band: the text keeps its own ink and only the RULE is painted
-   in the accent, which is how the accent stays reserved for things that
-   point. It stays a `mark` for semantics, with the browser's default yellow
+/* Dotted underline for a marked phrase in running text. A real underline, not
+   a highlighter band: the text keeps its own ink and the rule is drawn dotted
+   in that same ink (carta-demo: black dots, not the accent). It stays a
+   `mark` for semantics, with the browser's default yellow
    ground stripped — without this rule a `<mark>` would render as a highlighter
    band, so the rule has to exist before any copy uses one.
 
@@ -145,7 +145,8 @@
     background: none;
     color: inherit;
     text-decoration-line: underline;
-    text-decoration-color: var(--color-accent);
+    text-decoration-style: dotted;
+    text-decoration-color: currentColor;
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
   }

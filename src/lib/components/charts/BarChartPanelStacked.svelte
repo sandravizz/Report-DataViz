@@ -3,6 +3,7 @@
   import QuarterTickLabel from "./QuarterTickLabel.svelte";
   import { xAxisProps, yAxisFor, chartPadding, barLabelRoom, barXScale, yTicks, percentTicks, resolveAnnotations, yearTickFormat, tooltipHeaderYear, quarterTicks, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink } from "$lib/colors";
 
@@ -83,6 +84,8 @@
   const twoLineXAxis = $derived(pair.quarterAxis === true && twoLineQuarterAxis(innerWidth));
   const padding = $derived(chartPadding(twoLineXAxis ? twoLineXPadding(innerWidth) : {}));
   let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
   const xScale = $derived(
     barXScale(
       context?.width,
@@ -154,7 +157,7 @@
 
 <!-- The built-in legend overlays the plot area (and the x axis), so render
      the same manual bottom legend as LineChartPanel's legendItems block:
-     below the plot, pl-3 matching chartPadding's 12px left edge. -->
+     below the plot, flush with the plot's left edge. -->
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
     <!-- pair.percent switches to a 100% stacked layout: bars are normalized
@@ -172,7 +175,7 @@
       bind:context
       legend={false}
       rule={false}
-      tooltipContext={true}
+      tooltipContext={tip.props}
       {padding}
       props={{
         bars: { strokeWidth: 0 },
@@ -193,7 +196,15 @@
         // Header is the year alone — the data is annual, so LayerChart's
         // default "1 January 2035" is precision the figures never had.
         tooltip: {
-          header: { format: pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear) },
+          // Below lg the full-size card covers most of the stack it
+          // describes, so it tightens there: smaller type, less padding and
+          // row gap. Desktop keeps LayerChart's defaults.
+          root: { class: "max-lg:px-1.5 max-lg:py-1 max-lg:text-xs max-lg:leading-4" },
+          list: { class: "max-lg:gap-x-2 max-lg:gap-y-0.5" },
+          header: {
+            class: "max-lg:mb-0.5 max-lg:pb-0.5",
+            format: pair.tooltipHeaderFormat ?? (pair.quarterly || pair.quarterAxis ? tooltipHeaderQuarter : tooltipHeaderYear),
+          },
           ...(pair.percent
             ? // Series carry share values; a total row (always 100%) is noise.
               { item: { format: "percentRound" }, hideTotal: true }
@@ -233,7 +244,7 @@
        desktop the direct labels above replace the legend entirely; the legend
        only renders as the mobile fallback. -->
   {#if pair.series.length > 1 && !directLabelsActive}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>

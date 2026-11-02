@@ -18,6 +18,7 @@
   import { AnnotationPoint, BarChart } from "layerchart";
   import { xAxisProps, chartPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { ink } from "$lib/colors";
 
   let { pair } = $props();
@@ -47,13 +48,17 @@
       },
     }))
   );
+
+  let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
 </script>
 
 <svelte:window bind:innerWidth />
 
 <!-- The bar and the dot are two different statistics, so they get a key
      below the plot even though there is one series — the same manual legend
-     as LineChartPanel's legendItems, pl-3 matching chartPadding's left edge. -->
+     as LineChartPanel's legendItems, flush with the plot's left edge. -->
 <div class="flex min-w-0 flex-1 flex-col">
   <div class="min-h-0 flex-1">
     <BarChart
@@ -66,7 +71,8 @@
       bandPadding={pair.bandPadding ?? 0.45}
       legend={false}
       rule={false}
-      tooltipContext={true}
+      bind:context
+      tooltipContext={tip.props}
       padding={chartPadding({ right: 12 })}
       props={{
         // Explicit hex, not the chart's default `var(--color-primary)`: the
@@ -88,7 +94,7 @@
       {/snippet}
     </BarChart>
   </div>
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
     <div class="flex items-center gap-1.5">
       <span class="h-2.5 w-4 shrink-0 rounded-sm" style:background-color={pair.color}></span>
       <span>{pair.rangeLabel ?? "Range"}</span>

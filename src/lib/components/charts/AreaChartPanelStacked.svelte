@@ -4,6 +4,7 @@
   import ConnectorRule from "./ConnectorRule.svelte";
   import { xAxisProps, yAxisFor, yTicks, percentTicks, chartPadding, plotXPadding, resolveAnnotations, areaFillOpacity, solidWash, defaultYearTicks, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { lineCallout } from "$lib/data/annotation-presets.js";
   import { ink, carta } from "$lib/colors";
 
@@ -130,6 +131,10 @@
   const namesOnRight = $derived(directLabelsActive && !pair.insideLabels);
   const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
   const padding = chartPadding();
+
+  let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
 </script>
 
 <svelte:window bind:innerWidth />
@@ -149,7 +154,8 @@
       legend={false}
       rule={false}
       {xPadding}
-      tooltipContext={true}
+      bind:context
+      tooltipContext={tip.props}
       {padding}
       props={{
         area: {
@@ -218,7 +224,7 @@
   </div>
   <!-- Mobile legend fallback, identical to the stacked bar panel's. -->
   {#if pair.series.length > 1 && !directLabelsActive && !insideLabelsActive}
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 pl-3 text-xs font-light">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs font-light">
       {#each pair.series as item (item.key)}
         <div class="flex items-center gap-1.5">
           <span class="size-2.5 shrink-0 rounded-full" style:background-color={item.color}></span>

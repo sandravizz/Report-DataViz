@@ -4,6 +4,7 @@
   import QuarterTickLabel from "./QuarterTickLabel.svelte";
   import { xAxisProps, yAxisFor, yTicks, chartPadding, plotXPadding, resolveAnnotations, endLabelAnnotation, areaFillOpacity, halfCenturyTicksOnMobile, defaultYearTicks, solidWash, yearTickFormat, tooltipHeaderYear, tooltipHeaderQuarter, twoLineQuarterAxis, quarterAxisTicks, quarterAxisFormat, quarterXAxisProps, twoLineXPadding } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
+  import { TapTooltip } from "$lib/tapTooltip.svelte.js";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -41,6 +42,10 @@
   const xPadding = $derived(plotXPadding(innerWidth, namesOnRight));
   // The two-line axis needs a second label row's worth of room below.
   const padding = $derived(chartPadding(twoLineXAxis ? twoLineXPadding(innerWidth) : {}));
+
+  let context = $state();
+  // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
+  const tip = new TapTooltip(() => context);
 </script>
 
 <svelte:window bind:innerWidth />
@@ -57,7 +62,8 @@
   legend={false}
   rule={false}
   {xPadding}
-  tooltipContext={true}
+  bind:context
+  tooltipContext={tip.props}
   {padding}
   props={{
     // A wash under a 2.5px top line, not a saturated block — the shared
