@@ -5,7 +5,13 @@
 // page (1-<name>.js is Figure 1).
 //
 import parisArrondissements from "./figures/1-paris-arrondissements.js";
+import parisQuartiers from "./figures/2-paris-quartiers.js";
+import parisIris from "./figures/3-paris-iris.js";
+import petiteCouronne from "./figures/4-petite-couronne.js";
 
 export const figures = {
   parisArrondissements,
+  parisQuartiers,
+  parisIris,
+  petiteCouronne,
 };

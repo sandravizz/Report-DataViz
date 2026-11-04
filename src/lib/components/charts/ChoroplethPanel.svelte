@@ -8,8 +8,12 @@
   // which reads the chart's cScale by itself.
   //
   // Figure fields: geojson (a FeatureCollection whose features carry
-  // `properties.value` and `properties.name`), domain ([min, max]),
-  // legendTitle, valueLabel (the tooltip's row name), valueSuffix.
+  // `properties.value`, `properties.name` and optionally `properties.sub`,
+  // the tooltip's second line), domain ([min, max]), legendTitle,
+  // valueLabel (the tooltip's row name), valueSuffix, strokeWidth (the gap
+  // between regions — thinner for dense maps like IRIS), outline (an
+  // optional FeatureCollection drawn on top as unfilled ink lines, e.g.
+  // the département borders around Paris).
   import { Chart, Layer, Legend, Tooltip } from "layerchart";
   import { GeoPath } from "layerchart/geo";
   import { geoMercator } from "d3-geo";
@@ -45,10 +49,22 @@
             geojson={feature}
             fill={context.cScale?.(valueOf(feature))}
             stroke={context.tooltip.data?.id === feature.id ? brand.ink : brand.ground}
-            strokeWidth={context.tooltip.data?.id === feature.id ? 1.5 : 1}
+            strokeWidth={context.tooltip.data?.id === feature.id ? 1.5 : (pair.strokeWidth ?? 1)}
             tooltip
           />
         {/each}
+        {#if pair.outline}
+          {#each pair.outline.features as feature (feature.id)}
+            <GeoPath
+              geojson={feature}
+              fill="none"
+              stroke={brand.ink}
+              strokeWidth={1.25}
+              strokeOpacity={0.7}
+              pointer-events="none"
+            />
+          {/each}
+        {/if}
       </Layer>
 
       <Legend
@@ -63,7 +79,10 @@
       <Tooltip.Root class="max-lg:px-1.5 max-lg:py-1 max-lg:text-xs max-lg:leading-4">
         {#snippet children({ data })}
           <Tooltip.Header class="max-lg:mb-0.5 max-lg:pb-0.5">
-            {data.properties.label} · {data.properties.name}
+            {data.properties.name}
+            {#if data.properties.sub}
+              <div class="font-normal text-base-content/70">{data.properties.sub}</div>
+            {/if}
           </Tooltip.Header>
           <Tooltip.List class="max-lg:gap-x-2 max-lg:gap-y-0.5">
             <Tooltip.Item
