@@ -250,7 +250,7 @@
         <!-- Placed BESIDE the hovered stage, never over it: anchored at the
              band's centre (x="data"), pushed half a band plus 12px to the
              side, and LayerChart flips it to the other side at the edge.
-             The page's own type (font-sans, Plus Jakarta Sans — the tooltip
+             The page's own type (font-sans, Satoshi — the tooltip
              is portaled out of the figure, so it does not inherit it). Size,
              weight and spacing match every other chart's card (chart-theme
              tooltipCard, modelled on figure 2): LayerChart's 14px / 20px

@@ -179,8 +179,8 @@
     will-change: transform;
   }
 
-  /* carta-demo: the cover is Carta's near-black, so the dot is WHITE — the
-     cover's own ink there. (Base-content, the ink on every other branch's
+  /* paris-demo: the cover is main's dark ink ground, so the dot is WHITE —
+     the cover's own ink there. (Base-content, the ink on every other branch's
      light cover, would vanish into it.) */
   .cursor-dot {
     width: 9px;

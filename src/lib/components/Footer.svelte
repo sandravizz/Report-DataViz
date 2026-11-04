@@ -1,4 +1,4 @@
-<!-- Colophon only: Carta's imprint and a small production credit, on the
+<!-- Colophon only: the publisher's imprint and a small production credit, on the
      chapter ground — the report simply ends.
 
      LAYOUT "D, bottom bar" (picked 2026-09-29 from five endings): one slim
@@ -23,11 +23,11 @@
   <div
     class="flex flex-col gap-1.5 px-[6vw] pt-4.5 pb-5.5 lg:px-6 md:flex-row md:items-baseline md:justify-between md:gap-6"
   >
-    <!-- Carta's own imprint, as every slide of the deck prints it. -->
+    <!-- The publisher's imprint. PLACEHOLDER: replace with the real line. -->
     <p class="text-[0.8125rem] leading-relaxed text-base-content/70">
       <!-- Below md: the company on one line, the rights on the next (the
            dot only separates them where they share a line). -->
-      © 2026 eShares, Inc. dba Carta, Inc.<span class="mx-1.5 hidden text-base-content/65 md:inline"
+      © 2026 Publisher<span class="mx-1.5 hidden text-base-content/65 md:inline"
         >·</span
       ><br class="md:hidden" />All rights reserved.
     </p>

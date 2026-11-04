@@ -16,11 +16,11 @@
   let titleBlock = $state(null);
 </script>
 
-<!-- Cover, after the deck's own title and section-divider slides
-     (2026-10-15): Carta's near-black ground, the coral square-dot grid
-     framing a window, and the title in SangBleu Versailles inside it —
-     "Q1 2026" a step quieter in grey, the date in Carta's coral tag with its
-     white square. The header (fixed, Header.svelte) sits on top; the grid
+<!-- Cover (paris-demo, 2026-11-04): carta-demo's structure in main's
+     colours — main's dark ink ground, the spring-green square-dot grid
+     framing a window, and the title in Satoshi bold inside it, the subtitle
+     line a step quieter, the date on a spring-green tag with an ink square.
+     PLACEHOLDER COPY: title, subtitle and date are to be written. The header (fixed, Header.svelte) sits on top; the grid
      starts below it.
      ONE SCREEN at every size: the type is sized against svh as well as vw,
      and the window is cut around the text as it actually wraps, so a narrow
@@ -34,24 +34,24 @@
   class="relative flex min-h-svh flex-col bg-night font-sans text-white md:min-h-screen"
 >
   <div class="absolute inset-x-0 top-14 bottom-0 lg:top-18">
-    <DotGrid clear={titleBlock} color="#ff7d55" lens />
+    <DotGrid clear={titleBlock} color="#0FFF95" lens />
   </div>
 
   <div class="relative flex flex-1 flex-col items-center justify-center px-5 pt-20 pb-6 sm:px-10 lg:pt-24">
     <div bind:this={titleBlock} class="flex flex-col items-start">
-      <!-- Serif at 400, the only weight Carta ships; the size climbs with
-           the screen's shorter side so the block always fits one screen. -->
+      <!-- Satoshi bold, main's heading weight; the size climbs with the
+           screen's shorter side so the block always fits one screen. -->
       <h1
-        class="font-serif text-[clamp(2.5rem,min(11vw,9svh),6rem)] leading-[1.15] font-normal tracking-[-0.01em] text-balance md:leading-[1.02]"
+        class="font-serif text-[clamp(2.5rem,min(11vw,9svh),6rem)] leading-[1.15] font-bold tracking-[-0.01em] text-balance md:leading-[1.02]"
       >
-        State of<br />Private Markets<br /><span class="text-[#a7aaaa]">Q1 2026</span>
+        Report<br />Title<br /><span class="text-white/60">Subtitle</span>
       </h1>
-      <!-- The deck's date tag: coral plate, white square, ink type (6.9:1). -->
+      <!-- The date tag: spring-green plate, ink square, ink type. -->
       <p
-        class="mt-6 inline-flex items-center gap-2.5 bg-primary px-3 py-1.5 text-sm text-primary-content md:mt-8 md:px-4 md:py-2 md:text-base"
+        class="mt-6 inline-flex items-center gap-2.5 bg-accent px-3 py-1.5 text-sm text-accent-content md:mt-8 md:px-4 md:py-2 md:text-base"
       >
-        <span class="size-2.5 shrink-0 bg-white md:size-3" aria-hidden="true"></span>
-        June 1, 2026 · Carta Data
+        <span class="size-2.5 shrink-0 bg-accent-content md:size-3" aria-hidden="true"></span>
+        Month 2026 · Publisher
       </p>
     </div>
   </div>

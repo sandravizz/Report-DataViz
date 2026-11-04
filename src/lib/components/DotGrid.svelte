@@ -1,7 +1,7 @@
 <script>
-  // Carta's square-dot grid — the field of small coral squares on the
-  // section-divider slides of the State of Private Markets deck, which frame
-  // the title by leaving a window around it empty. Decorative only.
+  // The square-dot grid (from carta-demo) — a field of small squares, in
+  // main's spring-green accent here, that frames a title by leaving a window
+  // around it empty. Decorative only.
   //
   // `clear` is an element (the title block): every square whose cell
   // touches its box, grown by `clearPad` cells, is left out, so the window
@@ -19,7 +19,7 @@
   // the pointer leaves. Real mouse only, the same gate as CursorDot; with
   // prefers-reduced-motion it follows the pointer exactly, with no easing.
   let {
-    color = "#ff7d55",
+    color = "#0FFF95",
     clear = null,
     clearPad = 1,
     animate = true,
@@ -182,7 +182,7 @@
       />
     {/each}
     <!-- The glass edge: a faint rim in the surrounding type's colour, not the
-         coral, since it is the loupe and not a pointer. -->
+         accent, since it is the loupe and not a pointer. -->
     {#if loupe.str > 0.01}
       <circle
         cx={loupe.x}

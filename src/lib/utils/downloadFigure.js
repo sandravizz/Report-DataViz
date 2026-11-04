@@ -2,18 +2,17 @@ import { getChartSvgString } from "layerchart";
 
 // Matches the report's own type ramp and ink color so the exported PNG reads
 // like the on-screen figure, not a generic system-font screenshot. Figure
-// title/subtitle/source all render in font-sans (Plus Jakarta Sans) on
-// screen — the SangBleu serif is reserved for the big titles, not figure
-// text — and base-content is Carta's near-black #1a1a1a (see tailwind.css).
-const FONT_FAMILY = "'Plus Jakarta Sans', sans-serif";
-const INK = "#1a1a1a";
-// Alpha matches the page's quiet-text value for this branch's ink, so the
-// exported source line is as legible as the one under the figure.
-// Computed to clear 4.5:1, not copied. See docs/type-rendering.md.
-const MUTED = "rgba(26, 26, 26, 0.65)";
-const RAIL_TRACK = "rgba(26, 26, 26, 0.1)";
-// Carta prints its charts on the cream, and the page sets them on it too.
-const BACKGROUND = "#fcf8f3";
+// text renders in Satoshi on screen (main's face, paris-demo) and
+// base-content is main's ink #1F281D (see tailwind.css).
+const FONT_FAMILY = "Satoshi, sans-serif";
+const INK = "#1F281D";
+// Alpha matches the page's quiet-text value for this ink (main's /70), so
+// the exported source line is as legible as the one under the figure.
+// See docs/type-rendering.md.
+const MUTED = "rgba(31, 40, 29, 0.7)";
+const RAIL_TRACK = "rgba(31, 40, 29, 0.1)";
+// The page sets its figures on the report ground (base-200), so the PNG does too.
+const BACKGROUND = "#EFF1EF";
 // Tailwind's `tracking-wide`, which every caption-sized line on the page
 // carries: the figure eyebrow, the source line, the wordmark. Canvas2D
 // letterSpacing is recent (Chrome 99+, Safari 17.4+), so `withTracking` is a
@@ -36,34 +35,30 @@ const EXPORT_SCALE = 4;
 // web fonts, so the chart's axis and value labels silently fell back to the
 // system sans — a different, blurrier-looking face than the canvas-drawn
 // title above them. The fix is to hand the SVG its own copy of the face:
-// the same Google Fonts stylesheet app.html loads, with each latin woff2
+// the same Fontshare stylesheet app.html loads, with each face's woff2
 // inlined as a data URI. Fetched once per page load, then reused.
-const FONT_CSS_URL =
-  "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block";
+const FONT_CSS_URL = "https://api.fontshare.com/v2/css?f[]=satoshi@1,2&display=block";
 let embeddedFontCss;
 function getEmbeddedFontCss() {
   embeddedFontCss ??= (async () => {
     const css = await (await fetch(FONT_CSS_URL)).text();
-    // Google splits each weight into unicode-range subsets, each block led
-    // by a `/* subset */` comment; the charts only need latin + latin-ext.
-    const blocks = css
-      .split(/(?=\/\*)/)
-      .filter((b) => /^\/\*\s*latin(-ext)?\s*\*\//.test(b));
-    const dataUris = new Map();
+    // Fontshare serves one @font-face per style, each listing woff2, woff
+    // and ttf. Keep each block with its woff2 alone, inlined.
+    const blocks = css.match(/@font-face\s*{[^}]*}/g) ?? [];
+    const out = [];
     for (const b of blocks) {
-      const src = b.match(/url\(([^)]+)\)/)?.[1];
-      if (!src || dataUris.has(src)) continue;
+      let src = b.match(/url\(['"]?([^'")]+\.woff2[^'")]*)['"]?\)/)?.[1];
+      if (!src) continue;
+      if (src.startsWith("//")) src = `https:${src}`;
       const buf = await (await fetch(src)).arrayBuffer();
       let bin = "";
       const bytes = new Uint8Array(buf);
       for (let i = 0; i < bytes.length; i += 0x8000) {
         bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
       }
-      dataUris.set(src, `data:font/woff2;base64,${btoa(bin)}`);
+      out.push(b.replace(/src:[^;]*;/, `src: url(data:font/woff2;base64,${btoa(bin)}) format("woff2");`));
     }
-    return blocks
-      .map((b) => b.replace(/url\(([^)]+)\)/, (_, u) => `url(${dataUris.get(u)})`))
-      .join("\n");
+    return out.join("\n");
   })().catch(() => {
     // Offline or blocked: export with the fallback face rather than not at all.
     embeddedFontCss = undefined;
@@ -189,9 +184,9 @@ export async function downloadFigureImage({
   const dpr = EXPORT_SCALE;
   const fontCssPromise = getEmbeddedFontCss();
   await Promise.all([
-    document.fonts.load(`500 16px "Plus Jakarta Sans"`),
-    document.fonts.load(`400 16px "Plus Jakarta Sans"`),
-    document.fonts.load(`300 16px "Plus Jakarta Sans"`),
+    document.fonts.load(`500 16px "Satoshi"`),
+    document.fonts.load(`400 16px "Satoshi"`),
+    document.fonts.load(`300 16px "Satoshi"`),
   ]);
 
   const chartRoots = Array.from(figureEl.querySelectorAll(".lc-root-container"));
@@ -374,12 +369,12 @@ export async function downloadFigureImage({
     const by = y + (legendRowHeight - scaleButtonHeight) / 2;
     scaleButtons.forEach((b, k) => {
       if (b.active) {
-        ctx.fillStyle = "rgba(26, 26, 26, 0.06)";
+        ctx.fillStyle = "rgba(31, 40, 29, 0.06)";
         ctx.beginPath();
         ctx.roundRect(bx, by, widths[k], scaleButtonHeight, 4);
         ctx.fill();
       }
-      ctx.fillStyle = b.active ? INK : "rgba(26, 26, 26, 0.55)";
+      ctx.fillStyle = b.active ? INK : "rgba(31, 40, 29, 0.55)";
       ctx.fillText(b.text, bx + buttonPadX, by + (scaleButtonHeight - legendSize) / 2);
       bx += widths[k] + buttonGap;
     });

@@ -7,7 +7,7 @@
   import { formatNumber } from "$lib/format";
   import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { lineCallout } from "$lib/data/annotation-presets.js";
-  import { ink, carta } from "$lib/colors";
+  import { ink, brand } from "$lib/colors";
 
   let { pair } = $props();
   let innerWidth = $state(1024);
@@ -68,7 +68,7 @@
             textAnchor: "start",
             verticalAnchor: "middle",
             fill: s.labelColor ?? ink,
-            stroke: solidWash(s.color, pair.fillOpacity ?? areaFillOpacity, carta.cream),
+            stroke: solidWash(s.color, pair.fillOpacity ?? areaFillOpacity, brand.ground),
             strokeWidth: innerWidth < 1024 ? 3 : 6,
             // A series can set its own weight (`labelWeight`), so the one
             // the figure is about reads heavier than its context.

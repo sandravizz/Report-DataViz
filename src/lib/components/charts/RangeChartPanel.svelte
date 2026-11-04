@@ -82,7 +82,7 @@
         xAxis: { ...xAxisProps, ticks: pair.xTicks, format: formatValue },
         // Vertical gridlines on exactly the labelled values, same ink as the
         // line charts' grid.
-        grid: { stroke: "rgba(26, 26, 26, 0.1)", xTicks: pair.xTicks },
+        grid: { stroke: "rgba(31, 40, 29, 0.1)", xTicks: pair.xTicks },
         tooltip: {
           ...tooltipCard(tooltipHeaderYear),
           item: { label: pair.rangeLabel ?? "Range", format: formatRange },

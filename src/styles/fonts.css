@@ -1,26 +1,5 @@
-/* Carta's faces, as carta.com sets them (production CSS, 2026-10-15):
-   - Plus Jakarta Sans — every line of running text, UI and chart text.
-     Open source (SIL OFL), loaded from Google Fonts; linked in src/app.html.
-   - SangBleu Versailles — the serif of the deck's cover, section dividers
-     and headlines. A commercial Swiss Typefaces face, vendored from Carta's
-     own build (carta.com/_next/static/media/) into static/fonts/ for this
-     client-only demo: it is licensed to Carta, so it must not be reused on
-     another client branch. Carta ships only the 400 roman and italic.
-   font-display: block, as on the other branches: a brief invisible moment
-   instead of a visible swap; the roman is preloaded in app.html. */
-
-@font-face {
-	font-family: 'SangBleu Versailles';
-	src: url('/fonts/SangBleuVersailles-Regular.woff2') format('woff2');
-	font-weight: 400;
-	font-style: normal;
-	font-display: block;
-}
-
-@font-face {
-	font-family: 'SangBleu Versailles';
-	src: url('/fonts/SangBleuVersailles-Italic.woff2') format('woff2');
-	font-weight: 400;
-	font-style: italic;
-	font-display: block;
-}
+/* paris-demo runs on main's (Global Justice Project) type:
+   - Satoshi — body, UI, headings and chart text, as on main. Headings are
+     Satoshi bold, so there is no separate display or serif face. Loaded from
+     Fontshare (variable font, normal + italic), linked in src/app.html so it
+     starts downloading with the HTML rather than after the bundled CSS. */

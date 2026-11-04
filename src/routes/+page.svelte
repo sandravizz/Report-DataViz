@@ -3,9 +3,8 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "State of Private Markets: Q1 2026 | An Interactive Report",
-    description:
-      "An interactive edition of Carta's State of Private Markets, Q1 2026: down rounds, valuations by stage, and AI's share of venture capital. Web development and data visualization by SandraViz.",
+    title: "Report Title | An Interactive Report",
+    description: "An interactive report. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -16,118 +15,61 @@
   import DotGrid from "$lib/components/DotGrid.svelte";
   import RollText from "$lib/components/RollText.svelte";
 
-  // The PDF the closing call to action downloads. Drop Carta's file in
+  // The PDF the closing call to action downloads. Drop the report's file in
   // static/ under this name (or change the path).
   const pdfHref = "/report.pdf";
   // The report's name as the closing colophon prints it.
-  const reportTitle = "State of Private Markets: Q1 2026";
-  // Where the closing "More from Carta" button sends the reader.
-  const moreHref = "https://carta.com/data/";
+  const reportTitle = "Report Title";
+  // The publisher line under it.
+  const publisherLine = "Publisher · Month 2026";
+  // Where the closing "More from …" button sends the reader.
+  const moreLabel = "More from GJP";
+  const moreHref = "https://globaljusticeproject.wid.world/";
 
-  // Chapters follow the deck's own sections (contents slide), minus
-  // Fundraising Volume (dropped with its figure, Sandra 2026-10-29: too
-  // basic): Key Trends, Valuations, AI & Foundational Models, Geography &
-  // Industry, Methodology — one figure per chapter, two where the deck's
-  // slide drew two measures on two axes and the report splits them.
+  // paris-demo (2026-11-04): carta-demo's structure in main's look, with
+  // THREE placeholder chapters and no figures yet — the copy and data are
+  // still to come.
   //
-  // THREE LAYERS: chapter → sub-chapter → figure, as on the other branches.
-  // A sub-chapter may have no figures (text only); `passages` continue a
-  // sub-chapter after its figure run with a heading-less text block and
-  // their own figures. Ids are assigned automatically below.
+  // THREE LAYERS: chapter → sub-chapter → figure. A sub-chapter may have no
+  // figures (text only); `passages` continue a sub-chapter after its figure
+  // run with a heading-less text block and their own figures. Ids are
+  // assigned automatically below. To add a figure: register it in
+  // $lib/data/index.js and list it in a sub-chapter's `charts`, e.g.
+  // `charts: [figures.myFigure]`.
   //
-  // COPY: every sentence and number is Carta's own — the Highlights slide,
-  // the slide headlines and the values printed on the slides. Nothing is
-  // read off a chart into the copy (see docs/carta-brand.md). Body copy
-  // defaults to nothing: no placeholder text on this branch.
-  //
-  // DEMO CUT (2026-10-27): only three chapters are built out — `locked`
-  // chapters keep their place in the Index (the full outline, greyed and
-  // not clickable) but are not rendered, not in the rail and not numbered.
-  // Shown: Fundraising Volume, Key Trends and AI (the lead highlight). The
-  // text-only "Terms Shift Toward Founders" and "Priced in Three Tiers" and
-  // the passage after Figure 1 were cut (Sandra,
-  // 2026-10-27), so the demo ends on Figure 3. Drop `locked` to open a
-  // chapter. Chapters keep their full-report number (`num`) everywhere.
+  // `locked: true` keeps a chapter in the Index (greyed, not clickable) but
+  // leaves it out of the page and the rail. The report must END ON TEXT —
+  // never a pinned figure straight into the ending screen.
   const sections = assignIds([
     {
-      title: "Key Trends",
+      title: "Chapter One",
       subchapters: [
         {
-          title: "Down Rounds Are Low",
-          intro:
-            "The down-round rate fell to <mark class=\"accent-mark\">11.4% in Q1 2026</mark>. This is back in line with 2019 and 2020 levels.",
-          body: [
-            "Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
-          ],
-          charts: [figures.downRounds],
-        },
-      ],
-    },
-    {
-      title: "Valuations",
-      locked: true,
-      subchapters: [
-        {
-          title: "Valuations by Stage",
-          intro:
-            "Over the last 12 months, the median seed round was priced at <mark class=\"accent-mark\">$21M post-money</mark>, the median Series D at $540M.",
-          body: [
-            "In Q1 2026 alone, the median post-money valuation stood at $62.8M for Series A, $177.0M for Series B and $385M for Series C. At the 90th percentile, Series B reached $1B and Series D $9.1B.",
-          ],
-          charts: [figures.postMoneyByStage],
-        },
-      ],
-    },
-    {
-      title: "AI & Foundational Models",
-      subchapters: [
-        {
-          title: "AI Crosses 60% of Capital",
-          intro:
-            "Over 60 cents of each dollar of venture capital invested on Carta in Q1 2026 went to AI companies, <mark class=\"accent-mark\">the highest share recorded to date</mark>.",
-          body: [
-            "Foundational model companies drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
-          ],
-          charts: [figures.preMoneyAiVsNonAi],
-        },
-      ],
-    },
-    {
-      title: "Geography & Industry",
-      subchapters: [
-        {
-          title: "Where AI Capital Goes",
-          intro:
-            "The Bay Area ranks first for investment in AI: <mark class=\"accent-mark\">70.9% of its capital</mark> went to AI companies, ahead of Austin and Washington, DC.",
-          body: [
-            "California took 48.0% of all capital invested from Q2 2025 to Q1 2026, and the West region as a whole 55.4%. Behind California, New York (10.3%), Massachusetts (7.9%) and Texas (6.6%) receive the largest shares.",
-          ],
-          charts: [figures.capitalByRegion],
-        },
-      ],
-    },
-    {
-      // The deck's own methodology, verbatim — and the text the report
-      // ends on (a report never ends on a pinned figure).
-      title: "Methodology",
-      locked: true,
-      subchapters: [
-        {
-          title: "Overview",
-          intro:
-            "Carta helps more than 50,000 primarily venture-backed companies who have combined to raise more than $1.2 trillion in equity.",
-          body: [
-            "This study uses an aggregated and anonymized sample of Carta customer data. Companies that have contractually requested that we not use their data in anonymized and aggregated studies are not included in this analysis.",
-            "The data presented in this private markets report represents a snapshot as of May 22, 2026. Historical data may change in future studies because there is typically an administrative lag between the time a transaction took place and when it is recorded in Carta. In addition, new companies signing up for Carta's services will increase historical data available for the report.",
-          ],
+          title: "Sub-chapter title",
+          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          body: ["Placeholder body copy for this sub-chapter."],
           charts: [],
         },
+      ],
+    },
+    {
+      title: "Chapter Two",
+      subchapters: [
         {
-          title: "Financings",
-          body: [
-            "Financings include equity deals raised in USD by U.S.-based corporations. The financing \u201cseries\u201d (e.g. Series A) is taken from the share class name in their applicable certificate or articles of incorporation. Financing rounds that don't follow this standard are not included in any data shown by series but are included in data not shown by series. Primary rounds are defined as the first equity round within a series. Bridge rounds are defined as any round raised after the first round in a given series.",
-            "In some cases, convertible notes are raised and converted at various discounted prices within a series (e.g. Series A-1, Series A-2, Series A-3). In these cases, converted securities are not included in cash raised, and only the post-money valuation of the new money is included.",
-          ],
+          title: "Sub-chapter title",
+          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          body: ["Placeholder body copy for this sub-chapter."],
+          charts: [],
+        },
+      ],
+    },
+    {
+      title: "Chapter Three",
+      subchapters: [
+        {
+          title: "Sub-chapter title",
+          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          body: ["Placeholder body copy for this sub-chapter."],
           charts: [],
         },
       ],
@@ -165,57 +107,25 @@
   const shown = sections.filter((s) => !s.locked);
   const openIds = new Set(shown.flatMap((s) => s.subchapters.map((sub) => sub.id)));
 
-  // THE HIGHLIGHTS, from the "Q1 highlights" list on Carta's report page
-  // (carta.com/data/state-of-private-markets-q1-2026/): their bold lead-ins,
-  // three of the four, each cut to its first sentence(s) so the section stays
-  // a short summary on the way to the figures (Sandra, 2026-10-27). Still
-  // Carta's words, only trimmed. Each lead-in links to the sub-chapter that
-  // tells the same story at length.
-  // DESKTOP (Sandra, 2026-10-29): all FOUR, in full — `deskTitle` and
-  // `deskText` are the deck's own Highlights slide (PDF p. 4), verbatim.
-  // `deskOnly` items (the fourth, "New this quarter") are not on phones.
-  const highlights = [
-    {
-      title: "AI crosses 60% of capital",
-      text: "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date.",
-      deskTitle: "AI crosses 60% of capital",
-      deskText:
-        "Over 60 cents of each dollar of venture capital investment on Carta in Q1 2026 went to AI companies, the highest share recorded to date. Foundational model companies specifically drove much of this, accounting for 14.2% of total capital and nearly a quarter of AI capital. In SaaS, 83% of capital went to AI startups.",
-      href: "#chapter-3-1",
-    },
-    {
-      title: "Down rounds at historical lows",
-      text: "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels.",
-      deskTitle: "Down rounds are low",
-      deskText:
-        "The down-round rate fell to 11.4% in Q1. This is back in line with 2019 and 2020 levels. Before the bull market, before the reset, before the recovery. The three-year hangover from the valuation lows of 2022 may now be in the past.",
-      href: "#chapter-1-1",
-    },
-    {
-      title: "Series B and Series C valuations rising",
-      text: "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025.",
-      deskTitle: "Series B & Series C vals rising",
-      deskText:
-        "While early-stage primary valuations softened, Series B and Series C primary pre-money valuations are up 17.2% and 12.5%, respectively, since Q1 2025. This may be because AI companies are maturing and moving toward later stages after promising early wins.",
-      href: "#chapter-2-2",
-    },
-    {
-      // The three tables are Figure 2's three panels (AI chapter).
-      title: "New this quarter",
-      deskTitle: "New this quarter",
-      deskText:
-        "Three side-by-side tables breaking out non-AI, AI applied, and AI foundational model companies across every stage from seed to Series E+. Post-money valuation, round size, and pre-money valuation. Q1 2025 versus Q1 2026. The clearest picture yet of how differently these three categories are being priced right now.",
-      href: "#chapter-3-1",
-      deskOnly: true,
-    },
-  ];
+  // THE HIGHLIGHTS: a short summary between the cover and the first
+  // chapter, one item per chapter. PLACEHOLDERS. Phones and tablets show
+  // `title` + `text` as a bulleted list; from lg `deskTitle` + `deskText`
+  // run as three columns (`deskOnly` items are hidden below lg). Each
+  // lead-in links to the sub-chapter that tells the same story at length.
+  const highlights = [1, 2, 3].map((n) => ({
+    title: `Highlight ${n}`,
+    text: "Placeholder: one or two sentences summarising a key finding.",
+    deskTitle: `Highlight ${n}`,
+    deskText: "Placeholder: one or two sentences summarising a key finding.",
+    href: `#chapter-${n}-1`,
+  }));
 
   // Each chapter opener's title element, for its dot grid to cut a window
   // around (DotGrid `clear`).
   let chapterTitles = $state([]);
 
   // ONE GROUND EVERYWHERE: text and pinned figures both sit on base-200,
-  // Carta's cream #fcf8f3 — the paper their chart slides are printed on.
+  // main's pale green-grey #EFF1EF.
 </script>
 
 <!-- A text block's lede and body, shared by a sub-chapter and its
@@ -244,11 +154,9 @@
                    1.85 suits the full ~65-character desktop measure, but on a
                    phone's ~35-character lines it read as loose, the lines
                    drifting apart (compare Reuters' mobile stories, ~1.6).
-                   17px on phones, 18px from md (2026-10-19): Plus Jakarta's
-                   wide set made 18px read a touch big on a phone; one px
-                   down is enough. The lede steps down 1px with it (21px).
-                   The /80 stays: Carta's #1a1a1a at /80 is ~10:1 on the
-                   cream, well clear of 4.5 (docs/type-rendering.md rule 4). -->
+                   17px on phones, 18px from md (2026-10-19).
+                   The /80 stays: main's ink #1F281D at /80 is well clear of
+                   4.5:1 on #EFF1EF (docs/type-rendering.md rule 4). -->
               {#each text.body ?? [] as paragraph, j (j)}
                 <p
                   class="text-[1.0625rem] leading-[1.6] text-base-content/80 md:text-lg md:leading-[1.85] {j === 0 && text.intro
@@ -308,30 +216,25 @@
 
   <div id="charts"></div>
 
-  <!-- HIGHLIGHTS (2026-10-27): between the cover and the first chapter
-       opener so two dark screens never meet. Kept QUIET on purpose (Sandra,
-       2026-10-27): the demo shows off the figures, so this is a short summary
-       to scroll past, not a feature. Styled as Carta's own report page does
-       it: a serif "Q1 highlights", then a plain bulleted list, each item a
-       bold lead-in with a colon running into the sentence. In the chapter
-       text column, at the body copy's size. A lead-in whose sub-chapter is
-       open links to it and underlines on hover.
-       DESKTOP (Sandra, 2026-10-29): one narrow column left the wide screen
-       empty either side, so from lg the section takes the page width and
-       one full screen, and all four highlights run as four columns in the
-       deck's full wording, each under a hairline, its lead-in on a line of
-       its own (no colon) over its text. Phones and tablets keep the short
-       bulleted list of three. -->
+  <!-- HIGHLIGHTS: between the cover and the first chapter opener so two
+       dark screens never meet. Kept QUIET on purpose: a short summary to
+       scroll past, not a feature. A bold heading, then a plain bulleted
+       list, each item a bold lead-in with a colon running into the
+       sentence, in the chapter text column at the body copy's size. A
+       lead-in whose sub-chapter is open links to it and underlines on hover.
+       DESKTOP: from lg the section takes the page width and one full
+       screen, the highlights running as three columns, each under a
+       hairline, its lead-in on a line of its own (no colon) over its text. -->
   <section aria-labelledby="highlights" class="bg-base-200 font-sans text-base-content lg:flex lg:min-h-screen lg:items-center">
     <div class="mx-auto w-[88vw] max-w-[40rem] py-12 lg:max-w-[80rem] lg:py-20">
       <h2
         id="highlights"
-        class="font-serif text-[2rem] leading-[1.04] font-normal tracking-[-0.01em] sm:text-[2.5rem] lg:text-[3rem]"
+        class="font-serif text-[2rem] leading-[1.04] font-bold tracking-[-0.01em] sm:text-[2.5rem] lg:text-[3rem]"
       >
-        Q1 highlights
+        Highlights
       </h2>
       <ul
-        class="mt-6 list-disc space-y-4 pl-5 text-[1.0625rem] leading-[1.6] text-base-content/80 marker:text-base-content md:mt-8 md:space-y-5 md:text-lg md:leading-[1.7] lg:mt-12 lg:grid lg:list-none lg:grid-cols-4 lg:gap-x-10 lg:space-y-0 lg:pl-0 lg:text-base lg:leading-[1.65]"
+        class="mt-6 list-disc space-y-4 pl-5 text-[1.0625rem] leading-[1.6] text-base-content/80 marker:text-base-content md:mt-8 md:space-y-5 md:text-lg md:leading-[1.7] lg:mt-12 lg:grid lg:list-none lg:grid-cols-3 lg:gap-x-10 lg:space-y-0 lg:pl-0 lg:text-base lg:leading-[1.65]"
       >
         {#each highlights as h (h.title)}
           {@const live = openIds.has(h.href.slice(1))}
@@ -368,27 +271,25 @@
          than sitting in a block of its own, so two grounds never stack
          with a seam between them. -->
     <section id={section.id} class="font-sans text-base-content">
-      <!-- THE CHAPTER OPENER (2026-10-27): the deck's section-divider slide
-           ("Key Trends" etc.) — Carta's near-black ground, the coral
+      <!-- THE CHAPTER OPENER: main's dark ink ground, the spring-green
            square-dot grid with a window cut around the chapter title in
-           SangBleu. NOT a full screen like the slide or the cover: a band of
-           ~half a screen, so it marks the turn of a chapter without stopping
-           the read. The window is cut around the title as it wraps
-           (DotGrid's `clear`), so a long title on a phone gets a taller
-           window rather than squares through it. -->
+           Satoshi bold. NOT a full screen like the cover: a band of ~half a
+           screen, so it marks the turn of a chapter without stopping the
+           read. The window is cut around the title as it wraps (DotGrid's
+           `clear`), so a long title on a phone gets a taller window rather
+           than squares through it. -->
       <div
         data-chapter-opener
         class="relative flex min-h-[60svh] items-center justify-center bg-night px-5 py-20 text-white sm:min-h-[48svh] sm:px-10 lg:min-h-[58vh]"
       >
-        <DotGrid clear={chapterTitles[i]} color="#ff7d55" animate={false} lens />
-        <!-- SangBleu Versailles at 400 (the only weight Carta ships), as
-             on the deck's section-divider slides.
+        <DotGrid clear={chapterTitles[i]} color="#0FFF95" animate={false} lens />
+        <!-- Satoshi bold, main's heading weight.
              PHONES (2026-10-27): 30px and no 14ch cap, so a title like "AI &
              Foundational Models" takes two lines, not three; the band is
              taller there (60svh) so more rows of squares frame it. -->
         <h2
           bind:this={chapterTitles[i]}
-          class="relative text-center font-serif text-[1.875rem] leading-[1.04] sm:max-w-[14ch] font-normal tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
+          class="relative text-center font-serif text-[1.875rem] leading-[1.04] sm:max-w-[14ch] font-bold tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
         >
           {section.title}
         </h2>
@@ -455,7 +356,7 @@
   {/each}
 </main>
 
-<!-- THE ENDING SCREEN (2026-09-30; band redrawn for Carta 2026-10-15), at every size. The last sub-chapter's
+<!-- THE ENDING SCREEN (2026-09-30), at every size. The last sub-chapter's
      text ends on its own natural height; the next scroll brings a screen of
      its own, a bookend to the cover: the same ground, nothing above but
      empty space, then the colophon the report closes on — title, publisher
@@ -486,18 +387,18 @@
       class="mx-auto flex w-[88vw] max-w-[40rem] flex-col gap-6 md:gap-8 lg:gap-10"
     >
       <div>
-        <!-- SangBleu, like the cover title it bookends. -->
+        <!-- Satoshi bold, like the cover title it bookends. -->
         <p
-          class="font-serif text-2xl leading-snug font-normal text-balance md:text-[2.25rem] md:leading-[1.12] lg:text-[3rem] lg:leading-[1.08] lg:tracking-[-0.01em]"
+          class="font-serif text-2xl leading-snug font-bold text-balance md:text-[2.25rem] md:leading-[1.12] lg:text-[3rem] lg:leading-[1.08] lg:tracking-[-0.01em]"
         >
           {reportTitle}
         </p>
         <p class="mt-1.5 text-sm text-base-content/65 md:mt-3 md:text-base lg:text-lg">
-          Carta · June 2026
+          {publisherLine}
         </p>
       </div>
       <!-- "Full report" is an exact copy of the figures' PNG button
-           (FigureFooter.svelte) — outline = download. "More from Carta" is the
+           (FigureFooter.svelte) — outline = download. "More from …" is the
            Index button's twin (Header.svelte) — soft fill = opens something;
            new tab, so the report stays open. EQUAL WIDTH: the stack is w-max
            and stretches both to the wider one, labels centred; both 32px
@@ -520,15 +421,15 @@
           rel="noopener"
           class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
         >
-          <RollText text="More from Carta" />
+          <RollText text={moreLabel} />
         </a>
       </div>
     </div>
     </div>
 
-    <!-- THE BAND: Carta's coral square-dot grid, the cover's pattern
-         returning on the cream to close the report — the bookend the
-         engraving panorama was on the findevlab branch. It fades in from
+    <!-- THE BAND: the cover's square-dot grid returning on the light ground
+         to close the report — in main's teal #009580 here, since the spring
+         green all but vanishes on a light ground (1.3:1). It fades in from
          the top (a CSS mask, the grid itself stays one flat colour) so it
          rises out of the colophon's space rather than starting on a hard
          edge. min-h keeps it a real band on a short or crowded screen.
@@ -536,7 +437,7 @@
     <div
       class="relative min-h-[30svh] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_60%)] md:min-h-[34svh]"
     >
-      <DotGrid color="#ff7d55" animate={false} lens />
+      <DotGrid color="#009580" animate={false} lens />
     </div>
   </section>
 

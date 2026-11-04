@@ -77,7 +77,7 @@
        more attention than a caption-row control should. The style never
        changes, only the size. The closing "Full report" button in
        +page.svelte wears the same style but stays h-8 everywhere, to pair
-       with "More from Carta". -->
+       with "More from GJP". -->
   <button
     type="button"
     class="group inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded-md border border-base-content/28 px-2.5 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:border-base-content/70 hover:text-base-content active:border-base-content/70 active:text-base-content disabled:cursor-wait disabled:opacity-60 md:text-xs lg:h-8 lg:gap-1.5 lg:px-4"
@@ -90,6 +90,6 @@
     <RollText text={downloading ? "Exporting…" : "PNG"} />
   </button>
 </div>
-<!-- No per-figure sandraviz.com wordmark on this branch: Carta is a client
-     report, and the credit lives once in the page footer instead. The other
+<!-- No per-figure sandraviz.com wordmark on this branch: the credit lives
+     once in the page footer instead. The other
      branches keep it (see main/template's FigureFooter). -->
