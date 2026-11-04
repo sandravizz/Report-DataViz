@@ -57,3 +57,10 @@ export const colors = {
   soft: neutral.soft,
   faint: neutral.faint,
 };
+
+// SEQUENTIAL ramp for magnitude (the choropleth): ONE hue, main's teal
+// `positive`, light → dark in five steps, `positive` itself as step four.
+// Never the spring green, never a rainbow. The lightest step is still clearly
+// off the ground #EFF1EF; regions are separated by a 1px ground-coloured
+// stroke, so neighbouring light steps never merge.
+export const sequential = ["#D3EAE4", "#93CFC2", "#4FB09F", "#009580", "#00695B"];

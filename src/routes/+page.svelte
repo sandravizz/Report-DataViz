@@ -27,8 +27,8 @@
   const moreHref = "https://globaljusticeproject.wid.world/";
 
   // paris-demo (2026-11-04): carta-demo's structure in main's look, with
-  // THREE placeholder chapters and no figures yet — the copy and data are
-  // still to come.
+  // THREE placeholder chapters — the copy and data are still to come.
+  // Chapter One holds the Paris choropleth (random placeholder values).
   //
   // THREE LAYERS: chapter → sub-chapter → figure. A sub-chapter may have no
   // figures (text only); `passages` continue a sub-chapter after its figure
@@ -48,7 +48,7 @@
           title: "Sub-chapter title",
           intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
           body: ["Placeholder body copy for this sub-chapter."],
-          charts: [],
+          charts: [figures.parisArrondissements],
         },
       ],
     },

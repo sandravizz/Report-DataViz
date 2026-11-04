@@ -4,6 +4,8 @@
 // define the story order. File names carry the figure number shown on the
 // page (1-<name>.js is Figure 1).
 //
-// paris-demo: no figures yet — the three chapters are text placeholders.
+import parisArrondissements from "./figures/1-paris-arrondissements.js";
 
-export const figures = {};
+export const figures = {
+  parisArrondissements,
+};
