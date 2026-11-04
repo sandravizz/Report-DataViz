@@ -23,8 +23,9 @@
   // The publisher line under it.
   const publisherLine = "Publisher · Month 2026";
   // Where the closing "More from …" button sends the reader.
-  const moreLabel = "More from GJP";
-  const moreHref = "https://globaljusticeproject.wid.world/";
+  // PLACEHOLDER: every general link goes to sandraviz.com for now.
+  const moreLabel = "More from SandraViz";
+  const moreHref = "https://www.sandraviz.com/";
 
   // paris-demo (2026-11-04): carta-demo's structure in main's look, with
   // THREE placeholder chapters — the copy and data are still to come.

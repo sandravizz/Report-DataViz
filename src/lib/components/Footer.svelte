@@ -39,7 +39,7 @@
       Web development and data visualization<br class="md:hidden" />
       by
       <a
-        href="https://sandraviz.com"
+        href="https://www.sandraviz.com/"
         target="_blank"
         rel="noopener"
         class="underline decoration-base-content/30 decoration-1 underline-offset-2 hover:text-accent hover:decoration-accent"
