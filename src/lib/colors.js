@@ -7,8 +7,9 @@
 // grey family, tinted toward the ink's own green hue so it reads as part of
 // this palette rather than a generic grey.
 //
-// Spring green #0FFF95 is NOT a chart ink: it is reserved for accent duty
-// (cover, chapter openers, underline rules) and is 1.3:1 on the ground.
+// Spring green #0FFF95 is reserved for accent duty (cover, chapter dividers,
+// underline rules) and is 1.3:1 on the ground, so it is never a chart ink on
+// the ground. The one exception is the métro maps, where it runs on violet.
 //
 // Re-validate any new series pairing against the screen surface before
 // shipping it (.claude/skills/dataviz/scripts/validate_palette.js).
@@ -58,9 +59,9 @@ export const colors = {
   faint: neutral.faint,
 };
 
-// SEQUENTIAL ramp for magnitude (the choropleth): ONE hue, main's teal
-// `positive`, light → dark in five steps, `positive` itself as step four.
-// Never the spring green, never a rainbow. The lightest step is still clearly
-// off the ground #EFF1EF; regions are separated by a 1px ground-coloured
-// stroke, so neighbouring light steps never merge.
-export const sequential = ["#D3EAE4", "#93CFC2", "#4FB09F", "#009580", "#00695B"];
+// SEQUENTIAL ramp for magnitude (the choropleth): ONE hue, the cover's violet
+// `middle`, light → dark in five steps, `middle` itself as step four (for now,
+// 2026-11-08: the maps take the cover's violet and green). Never a rainbow. The
+// lightest step is still clearly off the ground #EFF1EF; regions are separated
+// by a 1px ground-coloured stroke, so neighbouring light steps never merge.
+export const sequential = ["#E0DBF3", "#BCB1E6", "#9485D7", "#705DC8", "#4D3D9B"];

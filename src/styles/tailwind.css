@@ -109,12 +109,10 @@
   --desc-left: calc(50vw + var(--fig-w) / 2 + var(--side-gap));
 }
 
-/* Dotted underline for a marked phrase in running text. A real underline, not
-   a highlighter band: the text keeps its own ink and the rule is drawn dotted
-   in that same ink (black dots, not the accent). It stays a
-   `mark` for semantics, with the browser's default yellow
-   ground stripped — without this rule a `<mark>` would render as a highlighter
-   band, so the rule has to exist before any copy uses one.
+/* Accent underline for a marked phrase in running text, as on main: a solid
+   spring-green rule under text that keeps its own ink. A real underline, not
+   a highlighter band. It stays a `mark` for semantics, with the browser's
+   default yellow ground stripped.
 
    A flat 2px rule 4px under the baseline, both absolute rather than em-based
    on purpose: an em thickness grows with the 18px body copy and turns the
@@ -129,8 +127,7 @@
     background: none;
     color: inherit;
     text-decoration-line: underline;
-    text-decoration-style: dotted;
-    text-decoration-color: currentColor;
+    text-decoration-color: var(--color-accent);
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
   }

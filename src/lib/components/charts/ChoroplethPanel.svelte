@@ -25,9 +25,17 @@
 
   const valueOf = (f) => f.properties.value ?? 0;
   const formatValue = (v) => `${formatNumber(v)}${pair.valueSuffix ?? ""}`;
+
+  // From lg (1400) the map takes more room: it bleeds 64px past the figure
+  // column on both sides, up towards the subtitle, and the legend moves into
+  // the map's empty lower-left corner instead of reserving a strip below it.
+  let viewportWidth = $state(0);
+  const desktop = $derived(viewportWidth >= 1400);
 </script>
 
-<div class="relative min-w-0 flex-1">
+<svelte:window bind:innerWidth={viewportWidth} />
+
+<div class="relative min-w-0 flex-1 lg:-mx-16 lg:-mt-8">
   <Chart
     data={pair.data}
     c={valueOf}
@@ -35,7 +43,7 @@
     cDomain={pair.domain}
     cRange={sequential}
     geo={{ projection: geoMercator, fitGeojson: pair.geojson }}
-    padding={{ top: 8, bottom: 56 }}
+    padding={{ top: 8, bottom: desktop ? 8 : 56 }}
     tooltipContext={{ raiseTarget: true }}
   >
     {#snippet children({ context })}
@@ -71,7 +79,7 @@
         title={pair.legendTitle}
         placement="bottom-left"
         tickFormat={formatValue}
-        classes={{ title: "text-xs font-normal text-base-content", tick: "text-[11px] fill-base-content/70" }}
+        classes={{ root: "lg:left-16", title: "text-xs font-normal text-base-content", tick: "text-[11px] fill-base-content/70" }}
       />
 
       <!-- The same card as every other figure's tooltip (chart-theme's

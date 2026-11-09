@@ -6,6 +6,7 @@
   import AreaChartPanelStacked from "./AreaChartPanelStacked.svelte";
   import RangeChartPanel from "./RangeChartPanel.svelte";
   import ChoroplethPanel from "./ChoroplethPanel.svelte";
+  import MetroPanel from "./MetroPanel.svelte";
 
   let { pair } = $props();
 </script>
@@ -20,4 +21,6 @@
   <RangeChartPanel {pair} />
 {:else if pair.kind === "choropleth"}
   <ChoroplethPanel {pair} />
+{:else if pair.kind === "metro"}
+  <MetroPanel {pair} />
 {/if}

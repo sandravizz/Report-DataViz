@@ -4,14 +4,8 @@
   import { cubicIn, quintOut } from "svelte/easing";
   import { HoverGlide } from "$lib/hoverGlide.svelte.js";
   import RollText from "./RollText.svelte";
-  import ParisLogo from "./ParisLogo.svelte";
 
-  // Header overlays the landing cover (absolutely positioned, transparent
-  // background) rather than sitting in normal flow with its own bar. The
-  // cover is the engraving on the chapter ground, so logo/nav/icons are in
-  // the report's ink: the placeholder Paris logo (ParisLogo.svelte) and
-  // base-content. Hover marks are ink, never the accent red (as in
-  // ChapterRail — no red in either navigation).
+  // Hover marks are ink, never an accent colour (as in ChapterRail).
   //
   // `sections` is the chapter list from +page.svelte, the same array the
   // chapter rail gets: `{ id, title, subchapters: [{ id, title, charts }] }`.
@@ -83,7 +77,7 @@
   }
 
   // A link lets the sheet slide away first, then the page SCROLLS down to the
-  // chapter — the same glide the logo gives back to the cover (Sandra,
+  // chapter — the same glide the sheet's Index title gives back to the cover (Sandra,
   // 2026-11-02: it used to jump instantly behind the sheet, which read as
   // "just there"). Default navigation is prevented so the scroll waits for
   // the sheet's outro (finishClose) instead of running underneath it.
@@ -130,15 +124,11 @@
     document.documentElement.style.overflow = "";
   }
 
-  // A trial on this branch: the header is FIXED, so the logo (back to the
-  // cover) and the Index stay reachable anywhere in the report. Desktop
-  // first; phones and tablets followed on 2026-09-29 (see the markup).
-  // It keeps ONE size throughout — no compacting on scroll (Sandra: the
-  // logo changing size after the cover read as a change of header). At lg
-  // the logo is the SMALL size everywhere, cover included: a 72px bar
-  // (logo h-8 + lg:py-5) on a solid ground so copy never runs through it.
-  // (Was py-3, a 56px bar: the logo and Index sat too close to the top edge
-  // of the screen, 2026-09-29.) Two things are set from this height — if it
+  // The header is FIXED and holds ONLY the Index button (2026-11-08), so it
+  // stays reachable anywhere in the report. There is no logo: the "Index"
+  // title inside the sheet is the way back to the cover. It keeps ONE size
+  // throughout, no compacting on scroll. At lg a 72px bar (button h-8 +
+  // lg:py-5). Two things are set from this height — if it
   // changes, change them too: a pinned figure starts below the bar
   // (ChartDisplay's lg:top-24 = 72px + 24px air, and its lg:h- calc), and an
   // Index jump lands a sub-chapter title below it (+page.svelte's
@@ -147,41 +137,50 @@
   // The bar is plain base-200: the whole report (text AND pinned figures)
   // sits on that one ground, so the bar is the page's own colour everywhere
   // and never reads as a strip.
-  onMount(() => unlock);
+  //
+  // OVER THE MAP (2026-11-08) the bar has no colour at all and lies on the
+  // street map, its controls in white: on the cover until it has scrolled out
+  // from under the bar, and on the ending screen once that has reached the
+  // top (or the page has reached its end, for a phone whose screen is a little
+  // taller than the ending's svh).
+  let overCover = $state(true);
+  let bar = $state(null);
 
-  // PLACEHOLDER (2026-11-04): every general link goes to sandraviz.com for
-  // now, so the social row is a single website link.
-  const socials = [
-    {
-      label: "SandraViz website",
-      href: "https://www.sandraviz.com/",
-      viewBox: "0 0 24 24",
-      size: "h-4 w-4",
-      path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.93 6h-2.95a15.7 15.7 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.93 8ZM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96ZM4.26 14a8.2 8.2 0 0 1 0-4h3.38a16.5 16.5 0 0 0 0 4H4.26Zm.81 2h2.95c.32 1.25.78 2.45 1.38 3.56A8 8 0 0 1 5.07 16Zm2.95-8H5.07a8 8 0 0 1 4.33-3.56A15.7 15.7 0 0 0 8.02 8ZM12 19.96A14.1 14.1 0 0 1 10.09 16h3.82A14.1 14.1 0 0 1 12 19.96ZM14.34 14H9.66a14.7 14.7 0 0 1 0-4h4.68a14.7 14.7 0 0 1 0 4Zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56ZM16.36 14a16.5 16.5 0 0 0 0-4h3.38a8.2 8.2 0 0 1 0 4h-3.38Z",
-    },
-  ];
+  onMount(() => {
+    const cover = document.querySelector("[data-accent-cursor]");
+    const ending = document.querySelector("[data-report-end]");
+    const update = () => {
+      const onCover = !!cover && cover.getBoundingClientRect().bottom > bar.offsetHeight;
+      const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      const onEnding = !!ending && (ending.getBoundingClientRect().top <= 1 || atEnd);
+      overCover = onCover || onEnding;
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      unlock();
+    };
+  });
 </script>
 
 <!-- FIXED AT EVERY SIZE (phones joined the desktop trial, 2026-09-29): a
      solid base-200 bar, so copy never runs through it. Below lg it is a
-     56px bar (logo h-8 + py-3) holding only the logo and the Index button —
-     the social icons wait for md. Things set from that height: ChartDisplay's
+     50px bar (button h-6.5 + py-3) holding only the Index button. Things set
+     from that height: ChartDisplay's
      top-[4.5rem] and h- calc, +page.svelte's scroll-mt-20. -->
-<header class="fixed inset-x-0 top-0 z-20 bg-base-200">
-  <!-- Side margins: px-[6vw] below lg, so the logo starts and the Index
-       button ends exactly where the figures and text do — those are
-       w-[88vw] centred, i.e. 6vw each side (2026-09-30: with a fixed px-6
-       the Index button ended short of the figure's Interpretation button
-       on a real phone, visible because the header sits right above it).
-       At lg the figure layout changes, and the header keeps its 24px. -->
-  <div
-    class="flex items-center justify-between gap-4 px-[6vw] py-3 lg:px-6 lg:py-5"
-  >
-    <a href="#top" class="shrink-0 hover:opacity-80" aria-label="Back to the cover">
-      <ParisLogo class="h-6 text-xl lg:h-8 lg:text-[1.65rem]" />
-    </a>
-
-    <nav class="flex items-center gap-4 sm:gap-6 lg:gap-8">
+<header
+  bind:this={bar}
+  class="fixed inset-x-0 top-0 z-20 transition-colors duration-200 {overCover ? 'bg-transparent' : 'bg-base-200'}"
+>
+  <!-- Side margins: px-[6vw] below lg, so the Index button starts exactly
+       where the figures and text do — those are w-[88vw] centred, i.e. 6vw
+       each side. At lg the figure layout changes, and the header keeps its
+       24px. -->
+  <div class="flex items-center px-[6vw] py-3 lg:px-6 lg:py-5">
+    <nav class="flex items-center">
       <!-- Display caps (Satoshi on this branch) on a SOFT FILL ("option C", 2026-09-29, after
            bleibtgleich.dev's Menu button): ink at 6%, 6px corners, going to
            10% on hover while the word rolls (RollText). The same tint as the
@@ -199,29 +198,15 @@
         onclick={openToc}
         aria-haspopup="dialog"
         aria-label="Index"
-        class="group h-6.5 cursor-pointer rounded-md bg-base-content/6 px-3 py-1 font-display text-xs tracking-wide lg:h-8 lg:px-4 lg:py-1.5 lg:text-sm text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+        class="group h-6.5 cursor-pointer rounded-md px-3 py-1 font-display text-xs tracking-wide lg:h-8 lg:px-4 lg:py-1.5 lg:text-sm uppercase transition-colors duration-200 {overCover
+          ? 'bg-white/15 text-white hover:bg-white/25 active:bg-white/30'
+          : 'bg-base-content/6 text-base-content hover:bg-base-content/10 active:bg-base-content/16'}"
       >
         <!-- The word at every size — no hamburger on phones (Sandra,
              2026-09-29). active: darkens the fill on a tap, where there is
              no hover. -->
         <RollText text="Index" />
       </button>
-
-      <div class="hidden items-center gap-4 md:flex">
-        {#each socials as social (social.href)}
-          <a
-            href={social.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={social.label}
-            class="text-base-content/70 hover:text-base-content"
-          >
-            <svg class={social.size} viewBox={social.viewBox} fill="currentColor">
-              <path d={social.path} />
-            </svg>
-          </a>
-        {/each}
-      </div>
     </nav>
   </div>
 </header>
@@ -277,10 +262,20 @@
        spacing in dvh and 15px rows, so an iPhone SE's 667px holds the whole
        outline. Tablets (md–lg) may still scroll. -->
   <div class="mx-auto w-[88vw] max-w-2xl pb-[3dvh] md:-mt-2 md:pb-24 lg:-mt-4 lg:pb-[3dvh]">
-    <!-- Satoshi bold, like the chapter titles (main's heading weight). -->
+    <!-- Satoshi bold, like the chapter titles (main's heading weight).
+         THE WAY HOME (2026-11-08): the header has no logo, so this title is
+         the link back to the cover. The sheet slides away, then the page
+         scrolls up, like every other link here. -->
     <h2
       class="text-center font-serif text-[1.75rem] leading-none font-bold tracking-[-0.01em] md:text-[2.5rem]">
-      Index
+      <a
+        href="#top"
+        onclick={(e) => goTo(e, "top")}
+        aria-label="Index, back to the cover"
+        class="decoration-accent decoration-2 underline-offset-4 hover:underline"
+      >
+        Index
+      </a>
     </h2>
 
     <!-- `isolate` keeps the block's -z-10 inside this list: behind the rows,

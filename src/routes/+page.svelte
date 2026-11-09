@@ -12,7 +12,7 @@
   import Landing from "$lib/components/Landing.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import CursorDot from "$lib/components/CursorDot.svelte";
-  import DotGrid from "$lib/components/DotGrid.svelte";
+  import StreetMap from "$lib/components/StreetMap.svelte";
   import RollText from "$lib/components/RollText.svelte";
 
   // The PDF the closing call to action downloads. Drop the report's file in
@@ -30,8 +30,8 @@
   // paris-demo (2026-11-04): carta-demo's structure in main's look, with
   // THREE placeholder chapters — the copy and data are still to come.
   // Chapter One steps through Paris at three levels of detail (arrondissements,
-  // quartiers, IRIS); Chapter Two sets Paris inside the petite couronne.
-  // All map values are random placeholders. Chapter Three stays text-only,
+  // quartiers, IRIS), with random placeholder values; Chapter Two draws the
+  // whole métro network, then zooms in on the city of Paris. Chapter Three stays text-only,
   // so the report ends on text.
   //
   // THREE LAYERS: chapter → sub-chapter → figure. A sub-chapter may have no
@@ -50,7 +50,7 @@
       subchapters: [
         {
           title: "Sub-chapter title",
-          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
           body: ["Placeholder body copy for this sub-chapter."],
           charts: [figures.parisArrondissements, figures.parisQuartiers, figures.parisIris],
         },
@@ -61,9 +61,9 @@
       subchapters: [
         {
           title: "Sub-chapter title",
-          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
           body: ["Placeholder body copy for this sub-chapter."],
-          charts: [figures.petiteCouronne],
+          charts: [figures.parisMetro, figures.parisMetroCentre],
         },
       ],
     },
@@ -72,7 +72,7 @@
       subchapters: [
         {
           title: "Sub-chapter title",
-          intro: "Placeholder lede: the one line that says what this sub-chapter is about.",
+          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
           body: ["Placeholder body copy for this sub-chapter."],
           charts: [],
         },
@@ -124,9 +124,10 @@
     href: `#chapter-${n}-1`,
   }));
 
-  // Each chapter opener's title element, for its dot grid to cut a window
-  // around (DotGrid `clear`).
-  let chapterTitles = $state([]);
+  // Each chapter divider shows its own part of the street map, in turn: the
+  // Étoile, the centre around Châtelet, Nation. The centres sit left of the
+  // place they name, so it lands on the right, away from the title.
+  const chapterMaps = [[2.283, 48.8738], [2.335, 48.8585], [2.384, 48.8485]];
 
   // ONE GROUND EVERYWHERE: text and pinned figures both sit on base-200,
   // main's pale green-grey #EFF1EF.
@@ -214,7 +215,7 @@
      "jump to main content" had nothing to jump to. tabindex="-1" is what lets
      the skip link above actually move focus here (a container is not focusable
      on its own); it does NOT put the element in the tab order. The id stays
-     `top` because Header's logo links to it. -->
+     `top` because the Index sheet's title links to it. -->
 <main id="top" tabindex="-1">
   <Landing />
 
@@ -275,25 +276,20 @@
          than sitting in a block of its own, so two grounds never stack
          with a seam between them. -->
     <section id={section.id} class="font-sans text-base-content">
-      <!-- THE CHAPTER OPENER: main's dark ink ground, the spring-green
-           square-dot grid with a window cut around the chapter title in
-           Satoshi bold. NOT a full screen like the cover: a band of ~half a
-           screen, so it marks the turn of a chapter without stopping the
-           read. The window is cut around the title as it wraps (DotGrid's
-           `clear`), so a long title on a phone gets a taller window rather
-           than squares through it. -->
+      <!-- THE CHAPTER DIVIDER (2026-11-08): a band of the cover's violet
+           street map, zoomed in on a different part of Paris per chapter,
+           with the title on the side where it fades out. NOT a full screen
+           like the cover: under half a screen, so it marks the turn of a
+           chapter without stopping the read. -->
       <div
         data-chapter-opener
-        class="relative flex min-h-[60svh] items-center justify-center bg-night px-5 py-20 text-white sm:min-h-[48svh] sm:px-10 lg:min-h-[58vh]"
+        class="relative flex min-h-[44svh] items-center bg-secondary px-[6vw] py-16 text-white lg:min-h-[46vh]"
       >
-        <DotGrid clear={chapterTitles[i]} color="#0FFF95" animate={false} lens />
-        <!-- Satoshi bold, main's heading weight.
-             PHONES (2026-10-27): 30px and no 14ch cap, so a title like "AI &
-             Foundational Models" takes two lines, not three; the band is
-             taller there (60svh) so more rows of squares frame it. -->
+        <StreetMap center={chapterMaps[i % chapterMaps.length]} span={[0.06, 0.03]} side="left" />
+        <!-- Satoshi bold, main's heading weight. On phones 30px and no 14ch
+             cap, so a longer title takes two lines, not three. -->
         <h2
-          bind:this={chapterTitles[i]}
-          class="relative text-center font-serif text-[1.875rem] leading-[1.04] sm:max-w-[14ch] font-bold tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
+          class="relative font-serif text-[1.875rem] leading-[1.04] sm:max-w-[14ch] font-bold tracking-[-0.01em] text-balance sm:text-[3.25rem] lg:text-[4.5rem]"
         >
           {section.title}
         </h2>
@@ -368,8 +364,7 @@
      endings). Ending screen + footer together fill exactly one small
      viewport (min-h-svh, like the cover), so the footer sits on the bottom
      edge and the colophon is centred in the room above it.
-     STACKED AT EVERY SIZE — title, publisher · year, then the buttons —
-     on the left edge of the chapter text's column (88vw, max 40rem). The
+     STACKED AT EVERY SIZE — title, publisher · year, then the buttons. The
      type scales up from md so the block holds a desktop screen: the title
      goes 20 → 32 → 44px, near the chapter titles (52px at lg). (It was a
      row from md, title left and buttons right, at phone type size: on a
@@ -377,19 +372,18 @@
      their size.
      data-report-end tells ChapterRail to leave here rather than at the
      footer. -->
-<div class="flex min-h-svh flex-col bg-base-200">
-  <!-- The screen splits at every size: the colophon in the upper part, then
-       a low decorative band filling the rest down to the footer (the
-       "option E" layout, picked 2026-09-30) — here the cover's dot grid. -->
+<div class="relative flex min-h-svh flex-col bg-secondary">
+  <!-- The cover's street map returns and fills the WHOLE screen: the header
+       and the footer lie on top of it with no bar of their own. The colophon
+       is on the opposite side from the cover (option J, 2026-11-08), so the
+       two screens mirror each other. The map's credit is in the footer. -->
+  <StreetMap side="right" credit={false} />
   <section
     data-report-end
     aria-label="End of report"
-    class="flex flex-1 flex-col font-sans text-base-content"
+    class="relative flex flex-1 items-center px-[6vw] py-20 font-sans text-white md:justify-end"
   >
-    <div class="pt-[16svh] pb-10 md:pt-[22svh] md:pb-12">
-    <div
-      class="mx-auto flex w-[88vw] max-w-[40rem] flex-col gap-6 md:gap-8 lg:gap-10"
-    >
+    <div class="relative flex flex-col gap-6 md:w-[34vw] md:gap-8 lg:gap-10">
       <div>
         <!-- Satoshi bold, like the cover title it bookends. -->
         <p
@@ -397,7 +391,7 @@
         >
           {reportTitle}
         </p>
-        <p class="mt-1.5 text-sm text-base-content/65 md:mt-3 md:text-base lg:text-lg">
+        <p class="mt-1.5 text-sm md:mt-3 md:text-base lg:text-lg">
           {publisherLine}
         </p>
       </div>
@@ -412,9 +406,9 @@
         <a
           href={pdfHref}
           download
-          class="group inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-base-content/28 px-4 font-sans text-xs tracking-wide text-base-content/75 transition-colors duration-200 hover:border-base-content/70 hover:text-base-content active:border-base-content/70 active:text-base-content"
+          class="group inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-white/55 px-4 font-sans text-xs tracking-wide text-white transition-colors duration-200 hover:border-white active:border-white"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-3.5 text-base-content">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-3.5">
             <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
           </svg>
           <RollText text="Full report" />
@@ -423,25 +417,11 @@
           href={moreHref}
           target="_blank"
           rel="noopener"
-          class="group h-8 cursor-pointer rounded-md bg-base-content/6 px-4 py-1.5 text-center font-display text-sm tracking-wide text-base-content uppercase transition-colors duration-200 hover:bg-base-content/10 active:bg-base-content/16"
+          class="group h-8 cursor-pointer rounded-md bg-white/15 px-4 py-1.5 text-center font-display text-sm tracking-wide text-white uppercase transition-colors duration-200 hover:bg-white/25 active:bg-white/30"
         >
           <RollText text={moreLabel} />
         </a>
       </div>
-    </div>
-    </div>
-
-    <!-- THE BAND: the cover's square-dot grid returning on the light ground
-         to close the report — in main's teal #009580 here, since the spring
-         green all but vanishes on a light ground (1.3:1). It fades in from
-         the top (a CSS mask, the grid itself stays one flat colour) so it
-         rises out of the colophon's space rather than starting on a hard
-         edge. min-h keeps it a real band on a short or crowded screen.
-         Decorative: the colophon above says what the page is. -->
-    <div
-      class="relative min-h-[30svh] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_60%)] md:min-h-[34svh]"
-    >
-      <DotGrid color="#009580" animate={false} lens />
     </div>
   </section>
 

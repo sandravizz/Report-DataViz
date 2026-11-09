@@ -16,40 +16,41 @@
   let { disclosure } = $props();
 </script>
 
-<!-- No hairline (2026-09-30): the ending screen's engraved band runs right
-     down to the footer, and a rule under the image read as a line cutting
-     it off. -->
-<footer class="bg-base-200 font-sans text-base-content">
+<!-- ON THE MAP (2026-11-08): no ground of its own and no hairline, so the
+     ending screen's street map runs to the bottom edge uncut. White type with
+     a violet halo, the same device as the map's street names, keeps it legible
+     over the lines. -->
+<footer class="relative font-sans text-white [text-shadow:0_0_3px_var(--color-secondary),0_0_6px_var(--color-secondary),0_0_10px_var(--color-secondary)]">
   <div
     class="flex flex-col gap-1.5 px-[6vw] pt-4.5 pb-5.5 lg:px-6 md:flex-row md:items-baseline md:justify-between md:gap-6"
   >
     <!-- The publisher's imprint. PLACEHOLDER: replace with the real line. -->
-    <p class="text-[0.8125rem] leading-relaxed text-base-content/70">
+    <p class="text-[0.8125rem] leading-relaxed">
       <!-- Below md: the company on one line, the rights on the next (the
-           dot only separates them where they share a line). -->
-      © 2026 Publisher<span class="mx-1.5 hidden text-base-content/65 md:inline"
-        >·</span
-      ><br class="md:hidden" />All rights reserved.
+           dot only separates them where they share a line). The map's ODbL
+           credit lives here on the ending screen. -->
+      © 2026 Publisher<span class="mx-1.5 hidden md:inline">·</span><br class="md:hidden" />All rights reserved.<span
+        class="mx-1.5 hidden md:inline">·</span
+      ><br class="md:hidden" />Map © OpenStreetMap contributors
     </p>
 
     <!-- Production credit, deliberately the quietest line on the page: small,
-         /55 (the lowest step that clears 4.5:1), a hairline underline that
-         only turns accent on hover. -->
-    <p class="text-xs text-base-content/65">
+         with a hairline underline that only turns accent on hover. -->
+    <p class="text-xs">
       Web development and data visualization<br class="md:hidden" />
       by
       <a
         href="https://www.sandraviz.com/"
         target="_blank"
         rel="noopener"
-        class="underline decoration-base-content/30 decoration-1 underline-offset-2 hover:text-accent hover:decoration-accent"
+        class="underline decoration-white/50 decoration-1 underline-offset-2 hover:text-accent hover:decoration-accent"
         >Sandra Becker</a
       >
     </p>
   </div>
 
   {#if disclosure}
-    <div class="px-[6vw] pb-6 lg:px-6 text-[10px] leading-relaxed text-base-content/65 md:text-[11px]">
+    <div class="px-[6vw] pb-6 lg:px-6 text-[10px] leading-relaxed md:text-[11px]">
       {@render disclosure()}
     </div>
   {/if}

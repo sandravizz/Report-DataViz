@@ -7,11 +7,13 @@
 import parisArrondissements from "./figures/1-paris-arrondissements.js";
 import parisQuartiers from "./figures/2-paris-quartiers.js";
 import parisIris from "./figures/3-paris-iris.js";
-import petiteCouronne from "./figures/4-petite-couronne.js";
+import parisMetro from "./figures/4-paris-metro.js";
+import parisMetroCentre from "./figures/5-paris-metro-centre.js";
 
 export const figures = {
   parisArrondissements,
   parisQuartiers,
   parisIris,
-  petiteCouronne,
+  parisMetro,
+  parisMetroCentre,
 };
