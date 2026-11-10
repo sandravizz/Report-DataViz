@@ -1,155 +1,260 @@
 <script>
-  // METRO figure (paris-demo, 2026-11-08): the network drawn over a quiet
-  // base map. Same LayerChart set-up as ChoroplethPanel: the projection is
-  // fitted through `geo.fitGeojson`, every shape is a GeoPath, the key is
-  // LayerChart's Legend, given an ordinal scale of the lines.
+  // METRO figure (paris-demo, 2026-11-08): the network on its own, no base
+  // map (2026-11-10, a base comes back later). Same LayerChart set-up as
+  // ChoroplethPanel: the projection is fitted through `geo.fitGeojson` and
+  // every line is a GeoPath.
   //
-  // Figure fields: base (FeatureCollection, the map underneath), lines
-  // (MultiLineStrings with `properties.name / line / color / stops`), stops
-  // (Points, one per station per line, with `properties.name`, `line` and
-  // `lines`, every line at that station), fit (what the map is framed on),
-  // legendTitle. Optional: clip (the lines end at this shape's edge),
-  // lineWeight (thicker lines for a zoomed-in map), stopsLabel (the line
-  // tooltip's row name).
+  // Figure fields: lines (MultiLineStrings with `properties.name / line /
+  // color / stops`), stops (Points, one per station per line, with
+  // `properties.name`, `line`, `lines`), ends (each line's ends, from
+  // metro-termini.js), fit (what the map is framed on). Optional: clip (the
+  // lines end at this shape's edge), lineWeight (thicker lines for a
+  // zoomed-in map), stopsLabel (the line tooltip's row name). `base` stays in
+  // the figure files but is not drawn.
   //
-  // The legend filters the map, so lines can be compared. With nothing
-  // picked every line shows. The first click shows only that line and its
-  // stations, each further click adds a line, and clicking a picked line
-  // removes it. Removing the last one brings the whole network back.
+  // MÉTRO-MAP STYLE (Sandra, 2026-11-10, after the RATP night map): the
+  // lines on the real map, but drawn the way a métro map draws them —
+  // - lines thick and round-capped, each on a casing of the ground colour, so
+  //   where lines cross or run side by side a thin gap separates them;
+  // - a station on one line is a white dot ringed in the line's colour;
+  // - an interchange is a white capsule with an ink outline, spanning the
+  //   lines it joins (metro-stations.js);
+  // - NO LEGEND: each line's number sits in a badge of its colour centred
+  //   exactly on each end of the line (no station names, Sandra 2026-11-10).
+  //   A line with branches gets a badge per branch end.
+  // All of it is LayerChart: GeoPath, GeoPoint, Circle, Text.
   //
-  // COLOURS (for now, 2026-11-08): the cover's. The city is violet and every
-  // line is the same spring green, so the legend's line numbers and the
-  // tooltips carry the identity. A violet edge under each green line keeps it
-  // visible where it leaves the city onto the light ground (Figure 4). The
-  // network's official colours are still in the data (`properties.color`).
-  import { Chart, Layer, Legend, Tooltip } from "layerchart";
+  // CLICKING A LINE (or its badge) filters the map, so lines can be compared.
+  // With nothing picked every line shows. The first click keeps that line in
+  // colour and fades the rest, each further click adds a line, and clicking
+  // a picked line removes it. Removing the last one brings the whole network
+  // back. Faded lines stay clickable, so they can be added.
+  //
+  // COLOURS (2026-11-10): each line in its official colour
+  // (`properties.color`).
+  //
+  // For the map-to-chart morph (MetroMorphPanel), inside the same Chart so it
+  // shares the map's projection and size exactly:
+  // - `keepLines`: the lines that leave the map. Their tracks are NOT drawn
+  //   here; `overlay` draws them (and moves them), above the other lines but
+  //   UNDER every station and badge, so the badges stay on top of the line
+  //   ends (Sandra, 2026-11-10).
+  // - `mapOpacity` fades everything else: the other lines and their
+  //   stations and badges (and turns hovering and clicking off below 1).
+  // - `keepOpacity` fades the kept lines' stations, interchanges and badges,
+  //   which stay while the rest goes and leave as the lines start to move.
+  // - `baseOpacity` draws the figure's `base` (the arrondissements) under
+  //   everything, very light grey with white borders — off unless asked for
+  //   (the morph study, Figure 7, 2026-11-10).
+  import { Chart, Circle, Group, Layer, Text, Tooltip } from "layerchart";
   import { GeoClipPath, GeoPath, GeoPoint } from "layerchart/geo";
   import { geoMercator } from "d3-geo";
-  import { scaleOrdinal } from "d3-scale";
-  import { brand } from "$lib/colors";
+  import { brand, neutral } from "$lib/colors";
+  import { stationMarks } from "$lib/data/figures/metro-stations.js";
 
-  let { pair } = $props();
+  let { pair, mapOpacity = 1, keepLines = [], keepOpacity = 1, baseOpacity = 0, overlay } = $props();
 
-  const lineScale = $derived(
-    scaleOrdinal()
-      .domain(pair.lines.features.map((f) => f.properties.line))
-      .range([brand.accent]),
-  );
+  const isKept = (line) => keepLines.includes(line);
+  const fade = (line) => (isKept(line) ? keepOpacity : mapOpacity);
+  // An interchange stays as long as one of its lines does.
+  const fadeAny = (lines) => (lines.some(isKept) ? keepOpacity : mapOpacity);
+  const morphing = $derived(mapOpacity < 1 || keepOpacity < 1);
 
-  // From lg (1400) the map takes more room: it bleeds 64px past the figure
-  // column on both sides, up towards the subtitle, and the legend moves into
-  // the map's empty lower-left corner instead of reserving a strip below it.
-  let viewportWidth = $state(0);
-  const desktop = $derived(viewportWidth >= 1400);
-
-  // The lines picked in the legend (`properties.line`); empty means all.
+  // The lines picked by clicking (`properties.line`); empty means all.
   let selectedLines = $state([]);
+  const isShown = (line) => selectedLines.length === 0 || selectedLines.includes(line);
+  const FADED = 0.15;
+  const anyShown = (lines) => lines.some(isShown);
 
-  const shownLines = $derived(
-    selectedLines.length
-      ? pair.lines.features.filter((f) => selectedLines.includes(f.properties.line))
-      : pair.lines.features,
+  // Picked lines draw last, on top of the faded ones.
+  const orderedLines = $derived(
+    [...pair.lines.features].sort((a, b) => isShown(a.properties.line) - isShown(b.properties.line)),
   );
-  const shownStops = $derived(
-    selectedLines.length
-      ? pair.stops.features.filter((f) => selectedLines.includes(f.properties.line))
-      : pair.stops.features,
-  );
+  const stations = $derived(stationMarks(pair.stops));
 
-  // Returns true so that Legend skips its own series toggle (`onclick ?? …`).
-  function toggleLine(_event, item) {
-    selectedLines = selectedLines.includes(item.value)
-      ? selectedLines.filter((l) => l !== item.value)
-      : [...selectedLines, item.value];
-    return true;
+  function toggleLine(line) {
+    selectedLines = selectedLines.includes(line)
+      ? selectedLines.filter((l) => l !== line)
+      : [...selectedLines, line];
+  }
+
+  // The badge's number in white or ink, whichever the line colour carries
+  // (line 1's yellow takes ink, as on the real map).
+  function badgeText(hex) {
+    const [r, g, b] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? brand.ink : "#FFFFFF";
   }
 </script>
-
-<svelte:window bind:innerWidth={viewportWidth} />
 
 <div class="relative min-w-0 flex-1 lg:-mx-16 lg:-mt-8">
   <Chart
     data={pair.data}
     geo={{ projection: geoMercator, fitGeojson: pair.fit }}
-    padding={{ top: 8, bottom: desktop ? 8 : 56 }}
+    padding={{ top: 16, bottom: 16, left: 16, right: 16 }}
   >
     {#snippet children({ context })}
       {@const compact = context.width < 640}
-      {@const lineWidth = (compact ? 1.5 : 2.25) * (pair.lineWeight ?? 1)}
-      {@const stopRadius = compact ? 1.9 : 3}
+      {@const lineWidth = (compact ? 2 : 3) * (pair.lineWeight ?? 1)}
+      {@const casing = compact ? 1 : 1.5}
+      {@const dotRadius = lineWidth * 0.42}
+      {@const capsuleWidth = lineWidth * 1.7}
+      {@const badgeRadius = compact ? 6 : 8}
       {@const hovered = context.tooltip.data?.id}
       <Layer>
+        <Group pointer-events={morphing ? "none" : undefined}>
         <!-- Explicit hex fills and strokes (not classes): the PNG export
              re-serializes the SVG outside the page's stylesheet. -->
-        {#each pair.base.features as feature (feature.id)}
-          <GeoPath geojson={feature} fill={brand.middle} stroke="#8F81D4" strokeWidth={1} pointer-events="none" />
-        {/each}
-
+        {#if baseOpacity > 0 && pair.base}
+          <Group opacity={baseOpacity}>
+            {#each pair.base.features as area, k (k)}
+              <GeoPath
+                geojson={area}
+                fill={neutral.wash}
+                stroke="#FFFFFF"
+                strokeWidth={compact ? 0.75 : 1}
+                pointer-events="none"
+              />
+            {/each}
+          </Group>
+        {/if}
         <GeoClipPath geojson={pair.clip} disabled={!pair.clip}>
-          {#each shownLines as feature (feature.id)}
-            <GeoPath
-              geojson={feature}
-              fill="none"
-              stroke={brand.middle}
-              strokeWidth={(hovered === feature.id ? lineWidth + 1.25 : lineWidth) + 1.4}
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              pointer-events="none"
-            />
-          {/each}
-          {#each shownLines as feature (feature.id)}
-            <GeoPath
-              geojson={feature}
-              fill="none"
-              stroke={brand.accent}
-              strokeWidth={hovered === feature.id ? lineWidth + 1.25 : lineWidth}
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              pointer-events="none"
-            />
+          {#each orderedLines as feature (feature.id)}
+            {#if !(overlay && isKept(feature.properties.line))}
+              {@const width = hovered === feature.id ? lineWidth + 1.25 : lineWidth}
+              {@const opacity = (isShown(feature.properties.line) ? 1 : FADED) * mapOpacity}
+              <!-- The casing, then the line: drawn as a pair, so each line
+                   cuts a gap through the lines beneath it. -->
+              <GeoPath
+                geojson={feature}
+                fill="none"
+                stroke={brand.ground}
+                strokeWidth={width + 2 * casing}
+                opacity={mapOpacity}
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                pointer-events="none"
+              />
+              <GeoPath
+                geojson={feature}
+                fill="none"
+                stroke={feature.properties.color}
+                strokeWidth={width}
+                {opacity}
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                pointer-events="none"
+              />
+            {/if}
           {/each}
 
-          <!-- Wider invisible copies of the lines, so a 2px line can be hovered. -->
-          {#each shownLines as feature (feature.id)}
-            <GeoPath geojson={feature} fill="none" stroke="transparent" strokeWidth={10} tooltip />
+          <!-- Wider invisible copies of the lines, so a line can be hovered
+               and clicked. -->
+          {#each pair.lines.features as feature (feature.id)}
+            <GeoPath
+              geojson={feature}
+              fill="none"
+              stroke="transparent"
+              strokeWidth={10}
+              tooltip
+              class="cursor-pointer"
+              onclick={() => toggleLine(feature.properties.line)}
+            />
           {/each}
         </GeoClipPath>
 
-        {#each shownStops as feature (feature.id)}
-          {@const [long, lat] = feature.geometry.coordinates}
+        <!-- The morph's moving lines (and its panel frames): over the other
+             lines, under the stations and badges. -->
+        {@render overlay?.(context)}
+
+        <!-- Stations on one line: a white dot ringed in the line's colour. -->
+        {#each stations.singles as stop (stop.id)}
+          {@const [long, lat] = stop.geometry.coordinates}
+          {@const color = pair.lines.features.find((f) => f.properties.line === stop.properties.line)?.properties.color}
           <GeoPoint
             {lat}
             {long}
-            r={hovered === feature.id ? stopRadius + 1.5 : stopRadius}
+            r={hovered === stop.id ? dotRadius + 1 : dotRadius}
             fill="#FFFFFF"
-            stroke="none"
+            stroke={color}
+            strokeWidth={lineWidth * 0.3}
+            opacity={(isShown(stop.properties.line) ? 1 : FADED) * fade(stop.properties.line)}
             pointer-events="none"
           />
         {/each}
 
-        <!-- A Point GeoPath draws a 4.5px-radius circle: the stop's hit area,
-             larger than the dot and on top of the lines' hit areas. -->
-        {#each shownStops as feature (feature.id)}
-          <GeoPath geojson={feature} fill="transparent" stroke="none" tooltip />
+        <!-- Interchanges: an ink-outlined white capsule (an ink stroke under
+             a narrower white one, both round-capped) across the lines. -->
+        {#each stations.interchanges as station (station.id)}
+          {@const opacity =
+            (anyShown(station.properties.lineList) ? 1 : FADED) * fadeAny(station.properties.lineList)}
+          {@const width = hovered === station.id ? capsuleWidth + 1 : capsuleWidth}
+          <GeoPath
+            geojson={station}
+            fill="none"
+            stroke={brand.ink}
+            strokeWidth={width + 1.5}
+            stroke-linecap="round"
+            {opacity}
+            pointer-events="none"
+          />
+          <GeoPath
+            geojson={station}
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth={width}
+            stroke-linecap="round"
+            {opacity}
+            pointer-events="none"
+          />
         {/each}
-      </Layer>
 
-      <Legend
-        scale={lineScale}
-        title={pair.legendTitle}
-        placement="bottom-left"
-        variant="swatches"
-        selected={selectedLines}
-        onclick={toggleLine}
-        classes={{
-          root: "max-w-full lg:left-16 lg:max-w-[20rem]",
-          title: "text-xs font-normal text-base-content",
-          items: "flex-wrap gap-x-2.5 gap-y-1",
-          item: "cursor-pointer",
-          swatch: "size-2.5 ring-1 ring-base-content/40",
-          label: "text-[11px] text-base-content/80",
-        }}
-      />
+        <!-- Station hit areas, above the lines' (a Point GeoPath draws a
+             4.5px circle). -->
+        {#each stations.singles as stop (stop.id)}
+          <GeoPath geojson={stop} fill="transparent" stroke="none" tooltip />
+        {/each}
+        {#each stations.interchanges as station (station.id)}
+          <GeoPath
+            geojson={station}
+            fill="none"
+            stroke="transparent"
+            strokeWidth={capsuleWidth + 6}
+            stroke-linecap="round"
+            tooltip
+          />
+        {/each}
+
+        <!-- The line badges, centred on the end of the line. -->
+        {#each pair.ends as end (end.id)}
+          {@const [long, lat] = end.coordinates}
+          <GeoPoint {lat} {long} opacity={(isShown(end.line) ? 1 : FADED) * fade(end.line)}>
+            <Circle
+              cx={0}
+              cy={0}
+              r={badgeRadius}
+              fill={end.color}
+              stroke="none"
+              class="cursor-pointer"
+              onclick={() => toggleLine(end.line)}
+            />
+            <Text
+              x={0}
+              y={0}
+              value={end.line}
+              textAnchor="middle"
+              verticalAnchor="middle"
+              fill={badgeText(end.color)}
+              fontSize={(compact ? 7 : 9) * (end.line.length > 2 ? 0.75 : 1)}
+              font-weight={600}
+              pointer-events="none"
+            />
+          </GeoPoint>
+        {/each}
+        </Group>
+      </Layer>
 
       <!-- The same card as every other figure's tooltip (chart-theme's
            tooltipCard), written out because this one is a custom snippet. -->
@@ -157,7 +262,7 @@
         {#snippet children({ data })}
           <Tooltip.Header class="max-lg:mb-0.5 max-lg:pb-0.5">{data.properties.name}</Tooltip.Header>
           <Tooltip.List class="max-lg:gap-x-2 max-lg:gap-y-0.5">
-            {#if data.geometry.type === "Point"}
+            {#if data.properties.lines !== undefined}
               <Tooltip.Item
                 label={data.properties.lines.includes(",") ? "Lines" : "Line"}
                 value={data.properties.lines}

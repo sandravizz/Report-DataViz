@@ -1,0 +1,328 @@
+line,station,longitude,latitude
+1,Argentine,2.29013,48.87534
+1,Bastille,2.36867,48.85201
+1,Champs-Élysées – Clemenceau,2.31355,48.86791
+1,Charles De Gaulle-Étoile,2.2959,48.87515
+1,Châtelet,2.3458,48.85929
+1,Concorde,2.32294,48.86629
+1,Franklin D. Roosevelt,2.30861,48.86944
+1,Gare de Lyon,2.37377,48.84587
+1,George V,2.30056,48.87202
+1,Hôtel de Ville,2.35158,48.85748
+1,Louvre-Rivoli,2.34111,48.86081
+1,Nation,2.39555,48.84758
+1,Palais Royal - Musée du Louvre,2.3365,48.86235
+1,Porte de Vincennes,2.40809,48.84734
+1,Porte Maillot,2.28316,48.87755
+1,Reuilly-Diderot,2.38524,48.84718
+1,Saint-Paul,2.36096,48.85524
+1,Tuileries,2.33013,48.86434
+2,Alexandre Dumas,2.39468,48.85623
+2,Anvers,2.34467,48.88297
+2,Avron,2.398,48.85191
+2,Barbès-Rochechouart,2.35061,48.8838
+2,Belleville,2.37673,48.87228
+2,Blanche,2.33338,48.88356
+2,Charles De Gaulle-Étoile,2.2958,48.87481
+2,Colonel Fabien,2.37081,48.87761
+2,Courcelles,2.30407,48.87933
+2,Couronnes,2.38054,48.86909
+2,Jaurès,2.37026,48.88162
+2,La Chapelle,2.3604,48.8844
+2,Ménilmontant,2.3836,48.86645
+2,Monceau,2.30877,48.88033
+2,Nation,2.39506,48.84847
+2,Père Lachaise,2.38784,48.86218
+2,Philippe Auguste,2.39086,48.85806
+2,Pigalle,2.33823,48.88223
+2,Place de Clichy,2.32853,48.884
+2,Porte Dauphine,2.27708,48.87147
+2,Rome,2.3218,48.88233
+2,Stalingrad,2.36582,48.88428
+2,Ternes,2.29831,48.87797
+2,Victor Hugo,2.28534,48.8698
+2,Villiers,2.31472,48.88109
+3,Arts et Métiers,2.35674,48.86559
+3,Bourse,2.34137,48.86865
+3,Europe,2.32227,48.87877
+3,Gambetta,2.39691,48.86498
+3,Havre-Caumartin,2.32754,48.87351
+3,Malesherbes,2.30905,48.88289
+3,Opéra,2.33149,48.87131
+3,Parmentier,2.37458,48.86525
+3,Père Lachaise,2.38588,48.86312
+3,Pereire-Levallois,2.29773,48.8849
+3,Porte de Bagnolet,2.40803,48.8646
+3,Porte de Champerret,2.29353,48.88601
+3,Quatre Septembre,2.33623,48.86964
+3,Réaumur Sébastopol,2.35136,48.8665
+3,République,2.36425,48.86703
+3,Rue Saint-Maur,2.37974,48.86429
+3,Saint-Lazare,2.32438,48.87515
+3,Sentier,2.34655,48.86751
+3,Temple,2.36081,48.86651
+3,Villiers,2.31472,48.88109
+3,Wagram,2.30467,48.88381
+3bis,Gambetta,2.39875,48.86516
+3bis,Pelleport,2.40156,48.86844
+3bis,Porte des Lilas,2.40673,48.87711
+3bis,Saint-Fargeau,2.40451,48.8721
+4,Alésia,2.32716,48.82819
+4,Barbès-Rochechouart,2.34967,48.88342
+4,Château d'Eau,2.35615,48.87262
+4,Château Rouge,2.34956,48.88671
+4,Châtelet,2.34677,48.85972
+4,Cité,2.34732,48.85494
+4,Denfert-Rochereau,2.33174,48.83345
+4,Étienne Marcel,2.34962,48.86397
+4,Gare de l'Est,2.35788,48.87599
+4,Gare du Nord,2.35579,48.87979
+4,Les Halles,2.34579,48.86251
+4,Marcadet-Poissonniers,2.34963,48.89144
+4,Montparnasse-Bienvenüe,2.3244,48.84378
+4,Mouton-Duvernet,2.32971,48.83111
+4,Odéon,2.33973,48.8523
+4,Porte d'Orléans,2.32558,48.82341
+4,Porte de Clignancourt,2.34485,48.8974
+4,Raspail,2.33075,48.83896
+4,Réaumur Sébastopol,2.35283,48.86673
+4,Saint-Germain-des-Prés,2.33378,48.85372
+4,Saint-Michel,2.34329,48.85317
+4,Saint-Placide,2.32679,48.84688
+4,Saint-Sulpice,2.3307,48.85107
+4,Simplon,2.34743,48.89434
+4,Strasbourg-Saint-Denis,2.35447,48.86963
+4,Vavin,2.32901,48.84222
+5,Bastille,2.36874,48.85344
+5,Bréguet-Sabin,2.37021,48.85614
+5,Campo Formio,2.35857,48.83515
+5,Gare d'Austerlitz,2.36558,48.84236
+5,Gare de l'Est,2.35805,48.87613
+5,Gare du Nord,2.35763,48.8802
+5,Jacques Bonsergent,2.3614,48.8704
+5,Jaurès,2.37193,48.88319
+5,Laumière,2.37872,48.88497
+5,Oberkampf,2.3679,48.86496
+5,Ourcq,2.38591,48.88686
+5,Place d'Italie,2.35558,48.83097
+5,Porte de Pantin,2.39178,48.88842
+5,Quai de la Rapée,2.36591,48.84648
+5,République,2.36374,48.86783
+5,Richard Lenoir,2.37191,48.85987
+5,Saint-Marcel,2.36097,48.83843
+5,Stalingrad,2.36737,48.88433
+6,Bel-Air,2.40092,48.84134
+6,Bercy,2.37991,48.84039
+6,Bir-Hakeim,2.28933,48.85394
+6,Boissière,2.29006,48.86698
+6,Cambronne,2.30297,48.84751
+6,Charles De Gaulle-Étoile,2.29556,48.87475
+6,Chevaleret,2.36813,48.83495
+6,Corvisart,2.35041,48.82979
+6,Daumesnil,2.3957,48.83955
+6,Denfert-Rochereau,2.33285,48.83429
+6,Dugommier,2.38962,48.83904
+6,Dupleix,2.29361,48.85043
+6,Edgar Quinet,2.32638,48.84066
+6,Glacière,2.34351,48.83113
+6,Kléber,2.29324,48.87126
+6,La Motte Picquet-Grenelle,2.29893,48.84874
+6,Montparnasse-Bienvenüe,2.32128,48.8421
+6,Nation,2.39546,48.84737
+6,Nationale,2.36286,48.83322
+6,Passy,2.28581,48.85745
+6,Pasteur,2.31281,48.84268
+6,Picpus,2.40129,48.84506
+6,Place d'Italie,2.35612,48.83093
+6,Quai de la Gare,2.37282,48.83705
+6,Raspail,2.33075,48.83896
+6,Saint-Jacques,2.33714,48.8329
+6,Sèvres-Lecourbe,2.30953,48.84563
+6,Trocadéro,2.28758,48.86361
+7,Cadet,2.34457,48.87601
+7,Censier-Daubenton,2.35161,48.84023
+7,Château-Landon,2.36197,48.87844
+7,Châtelet,2.34815,48.85694
+7,Chaussée d'Antin - La Fayette,2.33395,48.87325
+7,Corentin Cariou,2.38216,48.89466
+7,Crimée,2.37709,48.89091
+7,Gare de l'Est,2.35806,48.87627
+7,Jussieu,2.35505,48.84595
+7,Le Peletier,2.34058,48.87497
+7,Les Gobelins,2.35254,48.83593
+7,Louis Blanc,2.36499,48.88095
+7,Maison Blanche,2.35855,48.82218
+7,Opéra,2.33259,48.86994
+7,Palais Royal - Musée du Louvre,2.33688,48.86283
+7,Place d'Italie,2.35564,48.83143
+7,Place Monge,2.35222,48.84287
+7,Poissonnière,2.34878,48.8771
+7,Pont Marie,2.35716,48.85358
+7,Pont Neuf,2.34223,48.85855
+7,Porte d'Italie,2.35971,48.81922
+7,Porte d'Ivry,2.36929,48.82136
+7,Porte de Choisy,2.36453,48.81988
+7,Porte de la Villette,2.38551,48.89739
+7,Pyramides,2.33444,48.86574
+7,Riquet,2.37346,48.88797
+7,Stalingrad,2.36958,48.8848
+7,Sully-Morland,2.36152,48.85162
+7,Tolbiac,2.35725,48.82643
+7bis,Bolivar,2.3745,48.88067
+7bis,Botzaris,2.38857,48.87949
+7bis,Buttes-Chaumont,2.38162,48.87851
+7bis,Danube,2.39401,48.88182
+7bis,Jaurès,2.37016,48.88247
+7bis,Louis Blanc,2.36438,48.88119
+7bis,Place des Fêtes,2.39298,48.87695
+7bis,Pré Saint-Gervais,2.39847,48.88027
+8,Balard,2.27833,48.8363
+8,Bastille,2.36951,48.85344
+8,Bonne Nouvelle,2.34849,48.87059
+8,Boucicaut,2.28795,48.84109
+8,Chemin Vert,2.36818,48.8571
+8,Commerce,2.29395,48.84479
+8,Concorde,2.32208,48.86682
+8,Daumesnil,2.39619,48.83945
+8,École Militaire,2.3064,48.85489
+8,Faidherbe Chaligny,2.38409,48.85018
+8,Félix Faure,2.29191,48.84275
+8,Filles du Calvaire,2.36666,48.86326
+8,Grands Boulevards,2.34456,48.87126
+8,Invalides,2.31489,48.86038
+8,La Motte Picquet-Grenelle,2.29862,48.84958
+8,La Tour Maubourg,2.31056,48.85773
+8,Ledru Rollin,2.3751,48.85152
+8,Lourmel,2.28215,48.83873
+8,Madeleine,2.32627,48.86963
+8,Michel Bizot,2.40233,48.83712
+8,Montgallet,2.39048,48.84407
+8,Opéra,2.33119,48.87048
+8,Porte de Charenton,2.40031,48.83274
+8,Porte Dorée,2.40538,48.83479
+8,République,2.36276,48.8676
+8,Reuilly-Diderot,2.38703,48.84713
+8,Richelieu-Drouot,2.33846,48.87169
+8,Saint-Sébastien-Froissart,2.36721,48.86117
+8,Strasbourg-Saint-Denis,2.35382,48.8694
+9,Alma-Marceau,2.30099,48.86477
+9,Bonne Nouvelle,2.34849,48.87059
+9,Buzenval,2.40193,48.85198
+9,Charonne,2.3847,48.85509
+9,Chaussée d'Antin - La Fayette,2.33446,48.8728
+9,Exelmans,2.25961,48.84241
+9,Franklin D. Roosevelt,2.30951,48.8687
+9,Grands Boulevards,2.34456,48.87126
+9,Havre-Caumartin,2.32769,48.87371
+9,Iéna,2.29416,48.86479
+9,Jasmin,2.26818,48.8525
+9,La Muette,2.27415,48.85805
+9,Maraîchers,2.40609,48.85273
+9,Michel Ange-Auteuil,2.26408,48.8479
+9,Michel Ange-Molitor,2.26175,48.84506
+9,Miromesnil,2.31474,48.87373
+9,Nation,2.39588,48.84894
+9,Oberkampf,2.36801,48.86502
+9,Porte de Montreuil,2.4119,48.85377
+9,Porte de Saint-Cloud,2.25712,48.83796
+9,Ranelagh,2.27011,48.85549
+9,République,2.36293,48.86778
+9,Richelieu-Drouot,2.33886,48.87219
+9,Rue de la Pompe,2.27844,48.86394
+9,Rue des Boulets,2.38963,48.85217
+9,Saint-Ambroise,2.37394,48.86148
+9,Saint-Augustin,2.322,48.87448
+9,Saint-Philippe du Roule,2.31002,48.87205
+9,Strasbourg-Saint-Denis,2.35382,48.8694
+9,Trocadéro,2.28624,48.86307
+9,Voltaire,2.38002,48.85788
+10,Avenue Émile Zola,2.29502,48.847
+10,Cardinal Lemoine,2.35162,48.84666
+10,Chardon Lagache,2.26644,48.8452
+10,Charles Michels,2.286,48.84653
+10,Cluny-La Sorbonne,2.34427,48.85105
+10,Duroc,2.31701,48.84699
+10,Église d'Auteuil,2.26914,48.84715
+10,Gare d'Austerlitz,2.36518,48.84244
+10,Javel - André Citroën,2.2784,48.84616
+10,Jussieu,2.35492,48.84615
+10,La Motte Picquet-Grenelle,2.29862,48.84958
+10,Mabillon,2.3355,48.85302
+10,Maubert-Mutualité,2.34821,48.85009
+10,Michel Ange-Auteuil,2.26422,48.84793
+10,Michel Ange-Molitor,2.26162,48.84525
+10,Mirabeau,2.27276,48.84713
+10,Odéon,2.34061,48.85194
+10,Porte d'Auteuil,2.25774,48.84797
+10,Ségur,2.3074,48.84707
+10,Sèvres-Babylone,2.3261,48.85103
+10,Vaneau,2.32126,48.84882
+11,Arts et Métiers,2.35673,48.86532
+11,Belleville,2.37659,48.87185
+11,Châtelet,2.34804,48.85763
+11,Goncourt,2.37109,48.86996
+11,Hôtel de Ville,2.35101,48.85745
+11,Jourdain,2.38942,48.87511
+11,Place des Fêtes,2.39305,48.87681
+11,Porte des Lilas,2.40648,48.87717
+11,Pyrénées,2.38532,48.87388
+11,Rambuteau,2.3535,48.8612
+11,République,2.36507,48.868
+11,Télégraphe,2.39887,48.87547
+12,Abbesses,2.33795,48.88459
+12,Assemblée Nationale,2.321,48.86079
+12,Concorde,2.32318,48.86617
+12,Convention,2.29623,48.8371
+12,Falguière,2.31785,48.84447
+12,Jules Joffrin,2.34476,48.89242
+12,Lamarck-Caulaincourt,2.33876,48.88967
+12,Madeleine,2.32516,48.87023
+12,Marcadet-Poissonniers,2.34982,48.89147
+12,Marx Dormoy,2.36,48.89049
+12,Montparnasse-Bienvenüe,2.32436,48.84374
+12,Notre-Dame-de-Lorette,2.3375,48.87605
+12,Notre-Dame-des-Champs,2.32878,48.84494
+12,Pasteur,2.31245,48.84287
+12,Pigalle,2.33716,48.88225
+12,Porte de la Chapelle,2.35951,48.89725
+12,Porte de Versailles,2.28802,48.83245
+12,Rennes,2.32778,48.84846
+12,Rue du Bac,2.32582,48.8552
+12,Saint-Georges,2.33786,48.87817
+12,Saint-Lazare,2.32784,48.87567
+12,Sèvres-Babylone,2.32682,48.85176
+12,Solférino,2.32317,48.8585
+12,Trinité d'Estienne d'Orves,2.33311,48.87633
+12,Vaugirard,2.30111,48.83952
+12,Volontaires,2.30795,48.84151
+13,Brochant,2.32017,48.89059
+13,Champs-Élysées – Clemenceau,2.31389,48.8676
+13,Duroc,2.31642,48.84705
+13,Gaîté,2.32249,48.83863
+13,Guy Môquet,2.32722,48.89221
+13,Invalides,2.31392,48.86003
+13,La Fourche,2.32578,48.88718
+13,Liège,2.32702,48.87963
+13,Miromesnil,2.31446,48.87377
+13,Montparnasse-Bienvenüe,2.32098,48.84233
+13,Pernety,2.31861,48.83423
+13,Place de Clichy,2.32724,48.8838
+13,Plaisance,2.31412,48.83183
+13,Porte de Clichy,2.31377,48.89425
+13,Porte de Saint-Ouen,2.32894,48.89737
+13,Porte de Vanves,2.30553,48.8278
+13,Saint-François-Xavier,2.31441,48.85144
+13,Saint-Lazare,2.32548,48.87542
+13,Varenne,2.31506,48.85687
+14,Bercy,2.37955,48.84
+14,Bibliothèque François Mitterrand,2.3763,48.83025
+14,Châtelet,2.34648,48.85959
+14,Cour Saint-Émilion,2.38663,48.83334
+14,Gare de Lyon,2.37392,48.84349
+14,Madeleine,2.32575,48.87067
+14,Maison Blanche,2.35906,48.82142
+14,Olympiades,2.36718,48.82714
+14,Pont Cardinet,2.31518,48.88956
+14,Porte de Clichy,2.31279,48.89498
+14,Pyramides,2.33419,48.86591
+14,Saint-Lazare,2.32422,48.87572

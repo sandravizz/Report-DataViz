@@ -5,7 +5,9 @@
   // banks in white. It fills its positioned parent.
   //
   // THE LENS: a loupe follows the mouse (the same easing as DotGrid's), bends
-  // the map under it and shows the street names there. Real mouse only.
+  // the map under it and shows the street names there. Touch screens get no
+  // lens: the map zooms in on one area as the page scrolls (drawZoom), away
+  // from the text — on phones the upper part, with the text set at the bottom.
   //
   //   center  [lon, lat] at the middle of the box
   //   span    [lon, lat] degrees to fit; the box is covered, so one axis crops
@@ -109,7 +111,108 @@
       g.beginPath();
       for (const w of water) trace(g, w);
       g.stroke();
-      draw();
+      // Below md the text runs full width, so the whole map is toned down.
+      // Done in the canvas, not with an overlay, so the lens (drawn on top)
+      // shows the map at full strength on phones too.
+      if (!window.matchMedia("(min-width: 48rem)").matches) {
+        g.globalAlpha = 0.6;
+        g.fillStyle = GROUND;
+        g.fillRect(0, 0, W, H);
+        g.globalAlpha = 1;
+      }
+      if (onBuilt) onBuilt();
+      else draw();
+    };
+    let onBuilt = null;
+
+    // Street names inside the circle (lx, ly, R), placed through `toScreen`
+    // (the lens's fisheye, or the touch zoom). The circle only limits where
+    // names may go; nothing draws it.
+    const drawLabels = (lx, ly, R, toScreen, alpha) => {
+      const fontSize = Math.max(10.5, Math.min(14, 11 * u));
+      const font = (rank) => `${rank <= 1 ? 700 : 500} ${fontSize}px Satoshi, sans-serif`;
+      const measure = (name, rank) => {
+        const key = rank + name;
+        if (!widths.has(key)) {
+          ctx.font = font(rank);
+          widths.set(key, ctx.measureText(name).width);
+        }
+        return widths.get(key);
+      };
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const label of pickLabels(ways, lx, ly, R, toScreen, measure, fontSize)) {
+        ctx.save();
+        ctx.translate(label.x, label.y);
+        ctx.rotate(label.angle);
+        ctx.font = font(label.rank);
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = GROUND;
+        ctx.strokeText(label.name, 0, 0);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(label.name, 0, 0);
+        ctx.restore();
+      }
+      ctx.restore();
+    };
+
+    // TOUCH ZOOM (paris-demo, 2026-11-10): no lens on touch screens. The
+    // whole map pushes in on one area as the page scrolls — Z runs 1 → 2.6
+    // around the focus (fx, fy) — and that area's street names fade in.
+    // Phones: the focus sits in the upper part of the box and the lower part,
+    // where the text is, is toned down. From md it sits on the side away
+    // from the text, which the CSS gradient already clears.
+    const z = { Z: 1, fx: 0, fy: 0, phone: false };
+    const drawZoom = () => {
+      const { Z, fx, fy, phone } = z;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = GROUND;
+      ctx.fillRect(0, 0, W, H);
+      ctx.setTransform(dpr * Z, 0, 0, dpr * Z, dpr * fx * (1 - Z), dpr * fy * (1 - Z));
+      const vx0 = fx - fx / Z;
+      const vx1 = fx + (W - fx) / Z;
+      const vy0 = fy - fy / Z;
+      const vy1 = fy + (H - fy) / Z;
+      const visible = (w) => w.x1 >= vx0 && w.x0 <= vx1 && w.y1 >= vy0 && w.y0 <= vy1;
+      ctx.lineCap = ctx.lineJoin = "round";
+      // Lines thicken a little as they come closer, not by the full zoom.
+      const swell = (1 + 0.6 * (Z - 1)) / Z;
+      for (const rank of [3, 2, 1, 0]) {
+        ctx.strokeStyle = colour(rank);
+        ctx.lineWidth = WIDTHS[rank] * u * swell;
+        ctx.beginPath();
+        for (const w of ways) if (w.rank === rank && visible(w)) trace(ctx, w);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = WATER;
+      ctx.lineWidth = 1.4 * u * swell;
+      ctx.beginPath();
+      for (const w of water) if (visible(w)) trace(ctx, w);
+      ctx.stroke();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      if (phone) {
+        // GROUND is #rrggbb; both stops keep its colour so the fade never
+        // passes through grey.
+        const tone = ctx.createLinearGradient(0, H * 0.4, 0, H * 0.68);
+        tone.addColorStop(0, GROUND + "00");
+        tone.addColorStop(1, GROUND + "B8");
+        ctx.fillStyle = tone;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      const alpha = Math.max(0, Math.min(1, (Z - 1.25) / 0.5));
+      if (alpha > 0) {
+        const toScreen = (x, y) => {
+          const sx = fx + (x - fx) * Z;
+          const sy = fy + (y - fy) * Z;
+          return [sx, sy, sx >= 0 && sx <= W && sy >= 0 && sy <= H ? 0 : 1];
+        };
+        const R = phone ? Math.min(W * 0.5, H * 0.28) : Math.min(W * 0.25, H * 0.4);
+        drawLabels(phone ? W / 2 : fx, phone ? H * 0.3 : fy, R, toScreen, alpha);
+      }
     };
 
     const l = { x: 0, y: 0, str: 0, px: 0, py: 0, inside: false };
@@ -176,31 +279,7 @@
       for (const w of water) lensTrace(w);
       ctx.stroke();
 
-      const fontSize = Math.max(10.5, Math.min(14, 11 * u));
-      const font = (rank) => `${rank <= 1 ? 700 : 500} ${fontSize}px Satoshi, sans-serif`;
-      const measure = (name, rank) => {
-        const key = rank + name;
-        if (!widths.has(key)) {
-          ctx.font = font(rank);
-          widths.set(key, ctx.measureText(name).width);
-        }
-        return widths.get(key);
-      };
-      ctx.globalAlpha = Math.min(1, str * 1.3);
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      for (const label of pickLabels(ways, lx, ly, R, lensPoint, measure, fontSize)) {
-        ctx.save();
-        ctx.translate(label.x, label.y);
-        ctx.rotate(label.angle);
-        ctx.font = font(label.rank);
-        ctx.lineWidth = 3.5;
-        ctx.strokeStyle = GROUND;
-        ctx.strokeText(label.name, 0, 0);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillText(label.name, 0, 0);
-        ctx.restore();
-      }
+      drawLabels(lx, ly, R, lensPoint, Math.min(1, str * 1.3));
       ctx.restore();
 
       ctx.globalAlpha = str;
@@ -275,6 +354,44 @@
         document.documentElement.removeEventListener("pointerleave", onOut);
         cancelAnimationFrame(frame);
       };
+    } else {
+      // TOUCH: the zoom rides the scroll (drawZoom). Progress p runs 0 → 1 as
+      // the map travels from the bottom of the viewport to off the top. A
+      // cover sitting at the top of the page starts at p = 0.5, so it is
+      // already part-way in, names showing, before anyone scrolls. Reduced
+      // motion holds that middle frame.
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let frame = 0;
+      const place = () => {
+        frame = 0;
+        if (!base) return;
+        const r = host.getBoundingClientRect();
+        const vh = window.innerHeight;
+        if (r.bottom <= 0 || r.top >= vh) return;
+        const p = reduce ? 0.5 : Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height)));
+        const ease = p * p * (3 - 2 * p);
+        z.phone = !window.matchMedia("(min-width: 48rem)").matches;
+        z.Z = 1 + 1.6 * ease;
+        if (z.phone) {
+          z.fx = W * (0.35 + 0.3 * p);
+          z.fy = H * 0.3;
+        } else {
+          z.fx = W * (side === "right" ? 0.28 : 0.72);
+          z.fy = H * (0.4 + 0.2 * p);
+        }
+        drawZoom();
+      };
+      const onScroll = () => {
+        if (!frame) frame = requestAnimationFrame(place);
+      };
+      onBuilt = place;
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      removeLens = () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+        cancelAnimationFrame(frame);
+      };
     }
 
     return () => {
@@ -288,7 +405,6 @@
 
 <div bind:this={host} class="absolute inset-0 overflow-hidden bg-secondary" aria-hidden="true">
   <canvas bind:this={canvas} class="absolute inset-0 h-full w-full"></canvas>
-  <div class="absolute inset-0 bg-secondary/60 md:hidden"></div>
   <div
     class="absolute inset-0 hidden md:block"
     style:background="linear-gradient(to {side === 'right' ? 'left' : 'right'}, var(--color-secondary) 22%, transparent 58%)"

@@ -29,12 +29,12 @@
 >
   <StreetMap side="left" />
 
-  <div class="relative flex flex-1 flex-col justify-center px-[6vw] pt-20 pb-6 lg:pt-24">
+  <div class="relative flex flex-1 flex-col justify-end px-[6vw] pt-20 pb-6 md:justify-center lg:pt-24">
     <div class="md:max-w-[44vw]">
       <h1
-        class="font-serif text-[clamp(2.5rem,min(10vw,11svh),6.5rem)] leading-[1.04] font-bold tracking-[-0.01em] text-balance"
+        class="font-serif text-[clamp(2.5rem,min(10vw,11svh),6.5rem)] leading-[1.04] font-bold tracking-[-0.01em] whitespace-nowrap"
       >
-        Report Title
+        Paris by Maps
       </h1>
       <p class="mt-4 text-lg sm:text-xl md:mt-5 md:text-2xl">Subtitle of the report</p>
       <p class="mt-6 text-sm md:mt-8 md:text-base">

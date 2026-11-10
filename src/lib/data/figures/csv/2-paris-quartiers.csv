@@ -1,81 +1,81 @@
-quartier,value
-1,49
-2,30
-3,16
-4,26
-5,30
-6,26
-7,37
-8,25
-9,38
-10,31
-11,22
-12,31
-13,22
-14,26
-15,39
-16,29
-17,42
-18,35
-19,28
-20,28
-21,15
-22,18
-23,25
-24,17
-25,13
-26,20
-27,19
-28,44
-29,31
-30,28
-31,60
-32,41
-33,46
-34,42
-35,52
-36,64
-37,61
-38,37
-39,46
-40,45
-41,38
-42,33
-43,41
-44,59
-45,95
-46,83
-47,52
-48,47
-49,26
-50,56
-51,45
-52,29
-53,14
-54,43
-55,6
-56,21
-57,29
-58,5
-59,18
-60,44
-61,67
-62,51
-63,65
-64,38
-65,44
-66,69
-67,53
-68,67
-69,44
-70,88
-71,69
-72,78
-73,58
-74,42
-75,40
-76,58
-77,38
-78,43
-79,59
-80,55
+quartier,name,arrondissement,value
+1,Saint-Germain-l'Auxerrois,1er arrondissement,49
+2,Halles,1er arrondissement,30
+3,Palais-Royal,1er arrondissement,16
+4,Place-Vendôme,1er arrondissement,26
+5,Gaillon,2e arrondissement,30
+6,Vivienne,2e arrondissement,26
+7,Mail,2e arrondissement,37
+8,Bonne-Nouvelle,2e arrondissement,25
+9,Arts-et-Métiers,3e arrondissement,38
+10,Enfants-Rouges,3e arrondissement,31
+11,Archives,3e arrondissement,22
+12,Sainte-Avoie,3e arrondissement,31
+13,Saint-Merri,4e arrondissement,22
+14,Saint-Gervais,4e arrondissement,26
+15,Arsenal,4e arrondissement,39
+16,Notre-Dame,4e arrondissement,29
+17,Saint-Victor,5e arrondissement,42
+18,Jardin-des-Plantes,5e arrondissement,35
+19,Val-de-Grace,5e arrondissement,28
+20,Sorbonne,5e arrondissement,28
+21,Monnaie,6e arrondissement,15
+22,Odéon,6e arrondissement,18
+23,Notre-Dame-des-Champs,6e arrondissement,25
+24,Saint-Germain-des-Prés,6e arrondissement,17
+25,Saint-Thomas-d'Aquin,7e arrondissement,13
+26,Invalides,7e arrondissement,20
+27,Ecole-Militaire,7e arrondissement,19
+28,Gros-Caillou,7e arrondissement,44
+29,Champs-Elysées,8e arrondissement,31
+30,Faubourg-du-Roule,8e arrondissement,28
+31,Madeleine,8e arrondissement,60
+32,Europe,8e arrondissement,41
+33,Saint-Georges,9e arrondissement,46
+34,Chaussée-d'Antin,9e arrondissement,42
+35,Faubourg-Montmartre,9e arrondissement,52
+36,Rochechouart,9e arrondissement,64
+37,Saint-Vincent-de-Paul,10e arrondissement,61
+38,Porte-Saint-Denis,10e arrondissement,37
+39,Porte-Saint-Martin,10e arrondissement,46
+40,Hôpital-Saint-Louis,10e arrondissement,45
+41,Folie-Méricourt,11e arrondissement,38
+42,Saint-Ambroise,11e arrondissement,33
+43,Roquette,11e arrondissement,41
+44,Sainte-Marguerite,11e arrondissement,59
+45,Bel-Air,12e arrondissement,95
+46,Picpus,12e arrondissement,83
+47,Bercy,12e arrondissement,52
+48,Quinze-Vingts,12e arrondissement,47
+49,Salpêtrière,13e arrondissement,26
+50,Gare,13e arrondissement,56
+51,Maison-Blanche,13e arrondissement,45
+52,Croulebarbe,13e arrondissement,29
+53,Montparnasse,14e arrondissement,14
+54,Parc-de-Montsouris,14e arrondissement,43
+55,Petit-Montrouge,14e arrondissement,6
+56,Plaisance,14e arrondissement,21
+57,Saint-Lambert,15e arrondissement,29
+58,Necker,15e arrondissement,5
+59,Grenelle,15e arrondissement,18
+60,Javel,15e arrondissement,44
+61,Auteuil,16e arrondissement,67
+62,Muette,16e arrondissement,51
+63,Porte-Dauphine,16e arrondissement,65
+64,Chaillot,16e arrondissement,38
+65,Ternes,17e arrondissement,44
+66,Plaine de Monceaux,17e arrondissement,69
+67,Batignolles,17e arrondissement,53
+68,Epinettes,17e arrondissement,67
+69,Grandes-Carrières,18e arrondissement,44
+70,Clignancourt,18e arrondissement,88
+71,Goutte-d'Or,18e arrondissement,69
+72,La Chapelle,18e arrondissement,78
+73,Villette,19e arrondissement,58
+74,Pont-de-Flandre,19e arrondissement,42
+75,Amérique,19e arrondissement,40
+76,Combat,19e arrondissement,58
+77,Belleville,20e arrondissement,38
+78,Saint-Fargeau,20e arrondissement,43
+79,Père-Lachaise,20e arrondissement,59
+80,Charonne,20e arrondissement,55

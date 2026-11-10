@@ -7,8 +7,12 @@
   import RangeChartPanel from "./RangeChartPanel.svelte";
   import ChoroplethPanel from "./ChoroplethPanel.svelte";
   import MetroPanel from "./MetroPanel.svelte";
+  import LineMultiplesPanel from "./LineMultiplesPanel.svelte";
+  import MetroMorphPanel from "./MetroMorphPanel.svelte";
 
-  let { pair } = $props();
+  // progress: the figure's scroll progress (ChartDisplay), for scroll-driven
+  // panels only.
+  let { pair, progress = 1 } = $props();
 </script>
 
 {#if pair.kind === "bar-stacked"}
@@ -23,4 +27,8 @@
   <ChoroplethPanel {pair} />
 {:else if pair.kind === "metro"}
   <MetroPanel {pair} />
+{:else if pair.kind === "line-multiples"}
+  <LineMultiplesPanel {pair} />
+{:else if pair.kind === "metro-morph"}
+  <MetroMorphPanel {pair} {progress} />
 {/if}

@@ -48,6 +48,7 @@ The bottom of every figure carries four small pieces of furniture:
 | `FIGURE 2` | eyebrow above the title, in `ChartDisplay.svelte` |
 | `Sources & series: …` | source line, in `FigureFooter.svelte` |
 | `PNG` | download button, same file |
+| `CSV` | data download, same file — shares ONE split outline with PNG (glyph once, `PNG \| CSV`, h-7 at lg), 2026-11-10; shown when the figure has a `csv` |
 | `sandraviz.com` | wordmark, same file — **not present on this branch** |
 | `Interpretation` | modal trigger below `lg`, in `ChartDisplay.svelte` |
 

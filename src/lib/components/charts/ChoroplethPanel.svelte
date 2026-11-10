@@ -43,7 +43,7 @@
     cDomain={pair.domain}
     cRange={sequential}
     geo={{ projection: geoMercator, fitGeojson: pair.geojson }}
-    padding={{ top: 8, bottom: desktop ? 8 : 56 }}
+    padding={{ top: 8, bottom: desktop ? 8 : 40 }}
     tooltipContext={{ raiseTarget: true }}
   >
     {#snippet children({ context })}
@@ -75,11 +75,18 @@
         {/if}
       </Layer>
 
+      <!-- A key, not a feature: LayerChart's default 320×10 bar is sized
+           down through its own width/height/tickFontSize props (160 / 120px
+           wide, 6px tall), so it stays small and fits a phone's map. -->
       <Legend
         title={pair.legendTitle}
         placement="bottom-left"
         tickFormat={formatValue}
-        classes={{ root: "lg:left-16", title: "text-xs font-normal text-base-content", tick: "text-[11px] fill-base-content/70" }}
+        width={desktop ? 160 : 120}
+        height={6}
+        tickFontSize={9}
+        tickLength={3}
+        classes={{ root: "lg:left-16", title: "text-[10px] font-normal text-base-content", tick: "fill-base-content/70" }}
       />
 
       <!-- The same card as every other figure's tooltip (chart-theme's

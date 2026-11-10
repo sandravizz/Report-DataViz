@@ -3,7 +3,19 @@
   import DoubleChartPanel from "./charts/DoubleChartPanel.svelte";
   import FigureFooter from "./FigureFooter.svelte";
 
-  let { pairs, activeIndex } = $props();
+  let { pairs, activeIndex, stepPosition, holdSteps = 0 } = $props();
+
+  // A figure's own scroll progress, 0 → 1, for scroll-driven panels only
+  // (MetroMorphPanel). It starts when the figure goes active (half a step
+  // before its anchor) and reaches 1 at the anchor — or, for a section's
+  // LAST figure, half a step before the end of the hold, so the morph plays
+  // through the hold and the finished state still gets half a step of dwell.
+  const figureProgress = (i) => {
+    const start = i - 0.5;
+    const end = i === pairs.length - 1 ? i + Math.max(0, holdSteps - 0.5) : i;
+    const position = stepPosition ?? activeIndex;
+    return end > start ? Math.min(1, Math.max(0, (position - start) / (end - start))) : 1;
+  };
 
   let interpretationModal;
   // One ref per pair, bound below — FigureFooter's download button walks
@@ -144,7 +156,7 @@
         {#if pair.kind === "double"}
           <DoubleChartPanel {pair} />
         {:else}
-          <ChartPanel {pair} />
+          <ChartPanel {pair} progress={figureProgress(i)} />
         {/if}
       </div>
 

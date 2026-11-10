@@ -306,7 +306,7 @@
               aria-disabled="true"
               class="flex cursor-default items-baseline gap-4 border-b border-base-content/25 pt-[0.6dvh] pb-[0.8dvh] text-[0.9375rem] leading-snug font-semibold text-base-content/40 md:gap-5 md:pt-2 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
             >
-              <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
+              <span class="w-8 shrink-0 tabular-nums md:w-10">{section.num ?? i + 1}.0</span>
               <span>{section.title}</span>
             </div>
           {:else}
@@ -316,7 +316,7 @@
             data-row
             class="flex items-baseline gap-4 border-b border-base-content pt-[0.6dvh] pb-[0.8dvh] text-[0.9375rem] leading-snug font-semibold md:gap-5 md:pt-2 md:pb-2.5 md:text-lg lg:pt-[0.4dvh] lg:pb-[0.8dvh]"
           >
-            <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.0</span>
+            <span class="w-8 shrink-0 tabular-nums md:w-10">{section.num ?? i + 1}.0</span>
             <span>{section.title}</span>
           </a>
           {/if}
@@ -330,7 +330,7 @@
                       aria-disabled="true"
                       class="flex cursor-default items-baseline gap-4 py-[0.5dvh] text-[0.9375rem] leading-snug text-base-content/40 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base"
                     >
-                      <span class="w-8 shrink-0 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
+                      <span class="w-8 shrink-0 tabular-nums md:w-10">{section.num ?? i + 1}.{k + 1}</span>
                       <span>{sub.title}</span>
                     </div>
                   {:else}
@@ -340,7 +340,7 @@
                     data-row
                     class="flex items-baseline gap-4 py-[0.5dvh] text-[0.9375rem] leading-snug text-base-content/80 md:gap-5 md:py-2 md:text-lg lg:py-[0.4dvh] lg:text-base transition-colors duration-150 hover:text-base-content"
                   >
-                    <span class="w-8 shrink-0 text-base-content/65 tabular-nums md:w-10">{i + 1}.{k + 1}</span>
+                    <span class="w-8 shrink-0 text-base-content/65 tabular-nums md:w-10">{section.num ?? i + 1}.{k + 1}</span>
                     <span>{sub.title}</span>
                   </a>
                   {/if}

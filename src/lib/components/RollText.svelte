@@ -3,8 +3,8 @@
   // Each letter sits in its own clip; on hover it slides up out of it while a
   // copy (the ::after) rises from below into its place. The letters go one
   // after another, but fast: 0.4s each, the whole stagger spread over 75ms,
-  // on his in-out ease (0.76, 0, 0.24, 1). Leaving plays it backwards, last
-  // letter first.
+  // on his in-out ease (0.76, 0, 0.24, 1). Leaving does NOT roll back: the
+  // letters snap to rest, which looks like nothing happened (2026-11-10).
   //
   // The hover belongs to the CONTROL, not the text: put `group` on the
   // button or link that holds this. Pointer devices only — on touch a tap
@@ -40,9 +40,10 @@
   .ch > span {
     display: inline-block;
     position: relative;
-    transition: transform 400ms cubic-bezier(0.76, 0, 0.24, 1);
-    /* Out: last letter first. */
-    transition-delay: calc((var(--n) - 1 - var(--i)) * 75ms / max(var(--n) - 1, 1));
+    /* Out: NO animation (Sandra, 2026-11-10 — rolling both ways was too much
+       motion). The copy that rolled in is the same letter, so snapping back
+       to rest is invisible. The roll lives on the hover/focus rules below. */
+    transition: none;
   }
 
   /* The copy waiting below, .1em clear so none of it shows at rest. */
@@ -56,17 +57,21 @@
   @media (hover: hover) {
     :global(.group:hover) .ch > span {
       transform: translateY(calc(-100% - 0.1em));
+      transition: transform 400ms cubic-bezier(0.76, 0, 0.24, 1);
       transition-delay: calc(var(--i) * 75ms / max(var(--n) - 1, 1));
     }
   }
 
   :global(.group:focus-visible) .ch > span {
     transform: translateY(calc(-100% - 0.1em));
+    transition: transform 400ms cubic-bezier(0.76, 0, 0.24, 1);
     transition-delay: calc(var(--i) * 75ms / max(var(--n) - 1, 1));
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .ch > span {
+    .ch > span,
+    :global(.group:hover) .ch > span,
+    :global(.group:focus-visible) .ch > span {
       transition: none;
     }
   }

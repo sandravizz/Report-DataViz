@@ -10,3 +10,4 @@ prompts.md
 
 # Agent worktrees live inside the repo but are their own checkouts.
 .claude/worktrees/
+.vercel

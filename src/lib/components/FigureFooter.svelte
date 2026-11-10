@@ -7,12 +7,25 @@
   let { pair, figureEl, number, progress } = $props();
   let downloading = $state(false);
 
-  function downloadName(p) {
+  function downloadName(p, ext) {
     const slug = `${p.number} ${p.title}`
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
-    return `${slug}.png`;
+    return `${slug}.${ext}`;
+  }
+
+  // The figure's data file (`pair.csv`, its CSV imported `?raw` in the
+  // figure file) handed over as-is. The BOM makes Excel read it as UTF-8, so
+  // accented names (Sèvres, Barbès…) do not arrive garbled.
+  function handleCsvDownload() {
+    const blob = new Blob(["\uFEFF", pair.csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = downloadName(pair, "csv");
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   async function handleDownload() {
@@ -31,7 +44,7 @@
           ? pair.series.map((s) => ({ label: s.legend ?? s.key, color: s.color }))
           : null,
         source: pair.source,
-        filename: downloadName(pair),
+        filename: downloadName(pair, "png"),
       });
     } catch (error) {
       // Without this the export's rejections become unhandled: the button
@@ -78,17 +91,36 @@
        changes, only the size. The closing "Full report" button in
        +page.svelte wears the same style but stays h-8 everywhere, to pair
        with "More from SandraViz". -->
-  <button
-    type="button"
-    class="group inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded-md border border-base-content/28 px-2.5 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:border-base-content/70 hover:text-base-content active:border-base-content/70 active:text-base-content disabled:cursor-wait disabled:opacity-60 md:text-xs lg:h-8 lg:gap-1.5 lg:px-4"
-    disabled={downloading}
-    onclick={handleDownload}
+  <!-- PNG + CSV as ONE SPLIT CONTROL (2026-11-10): two full pills side by
+       side read as twice the furniture, so they share one outline — the
+       download glyph once, then PNG | CSV split by a hairline. Same outline,
+       type and roll as before; each half washes on hover, the whole outline
+       darkens. A step shorter at lg (h-7, was h-8). A figure without `csv`
+       shows the PNG half alone. -->
+  <div
+    class="inline-flex h-6 shrink-0 items-stretch overflow-hidden rounded-md border border-base-content/28 font-sans text-[11px] tracking-wide text-base-content/75 transition-colors duration-200 hover:border-base-content/70 md:text-xs lg:h-7"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-base-content">
-      <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-    </svg>
-    <RollText text={downloading ? "Exporting…" : "PNG"} />
-  </button>
+    <span class="flex items-center pl-2 lg:pl-2.5" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3.5 text-base-content">
+        <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V3.75A.75.75 0 0 1 10 3ZM3.75 13a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+      </svg>
+    </span>
+    <button
+      type="button"
+      aria-label="Download PNG"
+      class="group inline-flex cursor-pointer items-center px-2 transition-colors duration-200 hover:bg-base-content/6 hover:text-base-content active:bg-base-content/6 active:text-base-content disabled:cursor-wait disabled:opacity-60 lg:px-2.5 pl-1.5 lg:pl-1.5"
+      disabled={downloading}
+      onclick={handleDownload}
+    >
+      <RollText text={downloading ? "Exporting…" : "PNG"} />
+    </button>
+    {#if pair.csv}
+      <span class="my-1.5 w-px bg-base-content/20" aria-hidden="true"></span>
+      <button type="button" aria-label="Download CSV" class="group inline-flex cursor-pointer items-center px-2 transition-colors duration-200 hover:bg-base-content/6 hover:text-base-content active:bg-base-content/6 active:text-base-content disabled:cursor-wait disabled:opacity-60 lg:px-2.5" onclick={handleCsvDownload}>
+        <RollText text="CSV" />
+      </button>
+    {/if}
+  </div>
 </div>
 <!-- No per-figure sandraviz.com wordmark on this branch: the credit lives
      once in the page footer instead. The other

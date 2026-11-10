@@ -28,7 +28,13 @@
   const STEP_VH = 80;
   const BASE_VH = 140;
   const HOLD_VH = 60;
-  let holdVh = $derived(pairs.length > 1 ? HOLD_VH : 0);
+  // A section's LAST figure can ask for a longer hold (`pair.holdVh`): the
+  // métro morph (Figure 6) plays through it, so it needs the room. A figure
+  // ALONE in its section gets no hold unless it asks for one (the morph
+  // study, Figure 7, 2026-11-10).
+  let holdVh = $derived(
+    pairs.length > 1 ? (pairs[pairs.length - 1].holdVh ?? HOLD_VH) : (pairs[0]?.holdVh ?? 0)
+  );
   let heightVh = $derived((pairs.length - 1) * STEP_VH + BASE_VH + holdVh);
 
   let containerEl;
@@ -81,6 +87,21 @@
   );
 
   let activeIndex = $derived(Math.round(progress * (pairs.length - 1)));
+  // Where the scroll is between the steps, unrounded, for figures that
+  // animate WITH the scroll instead of switching (the métro map-to-chart
+  // morph). 0 … pairs.length − 1 over the steps, then it keeps counting
+  // through the hold (in steps of STEP_VH), up to holdSteps more.
+  let holdSteps = $derived(holdVh / STEP_VH);
+  // A lone figure has no steps to spread over: its position starts at −0.5
+  // (its own progress 0, ChartDisplay) as it pins and counts a step every
+  // STEP_VH of scroll through its hold.
+  let stepPosition = $derived(
+    pairs.length === 1
+      ? Math.min(holdSteps, Math.max(-0.5, -0.5 + (scrollY - containerTop) / ((STEP_VH / 100) * vh)))
+      : stepRange > 0
+        ? Math.min(pairs.length - 1 + holdSteps, Math.max(0, ((scrollY - containerTop) / stepRange) * (pairs.length - 1)))
+        : 0
+  );
 </script>
 
 <div
@@ -110,7 +131,7 @@
   <!-- data-scrolly marks the figure surface: ChapterRail reads it to tint its
        hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-200">
-    <ChartDisplay {pairs} {activeIndex} />
+    <ChartDisplay {pairs} {activeIndex} {stepPosition} {holdSteps} />
     <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
   </div>
 </div>

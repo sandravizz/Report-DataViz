@@ -3,7 +3,7 @@
   import { figures } from "$lib/data/index.js";
 
   const meta = {
-    title: "Report Title | An Interactive Report",
+    title: "Paris by Maps | An Interactive Report",
     description: "An interactive report. Web development and data visualization by SandraViz.",
   };
   import ScrollySection from "$lib/components/ScrollySection.svelte";
@@ -19,7 +19,7 @@
   // static/ under this name (or change the path).
   const pdfHref = "/report.pdf";
   // The report's name as the closing colophon prints it.
-  const reportTitle = "Report Title";
+  const reportTitle = "Paris by Maps";
   // The publisher line under it.
   const publisherLine = "Publisher · Month 2026";
   // Where the closing "More from …" button sends the reader.
@@ -57,23 +57,33 @@
       ],
     },
     {
+      title: "Chapter X",
+      // Hidden for now (Sandra, 2026-11-10): the métro maps and Figure 6's
+      // three-scroll morph; Chapter Two's two-scroll study is shown instead.
+      locked: true,
+      subchapters: [
+        {
+          title: "Sub-chapter title",
+          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
+          body: ["Placeholder body copy for this sub-chapter."],
+          charts: [figures.parisMetro, figures.parisMetroCentre, figures.parisMetroRidership],
+        },
+      ],
+    },
+    {
       title: "Chapter Two",
       subchapters: [
         {
           title: "Sub-chapter title",
           intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
           body: ["Placeholder body copy for this sub-chapter."],
-          charts: [figures.parisMetro, figures.parisMetroCentre],
+          charts: [figures.parisMetroRidershipLines],
         },
-      ],
-    },
-    {
-      title: "Chapter Three",
-      subchapters: [
+        // The report ENDS ON TEXT: a closing sub-chapter after the figure.
         {
           title: "Sub-chapter title",
-          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
-          body: ["Placeholder body copy for this sub-chapter."],
+          intro: "Placeholder lede: <mark class=\"accent-mark\">the closing line of the report</mark>.",
+          body: ["Placeholder body copy for the closing sub-chapter."],
           charts: [],
         },
       ],
@@ -86,6 +96,9 @@
   // shared module exports.
   function assignIds(chapters) {
     let figureCount = 0;
+    // The NUMBER shown (rail, Index) counts only the chapters on the page; a
+    // locked one shows "X" (Sandra, 2026-11-10). Ids stay by position.
+    let chapterCount = 0;
     return chapters.map((chapter, i) => {
       const id = `chapter-${i + 1}`;
       const subchapters = chapter.subchapters.map((sub, k) => {
@@ -103,7 +116,7 @@
         const allCharts = [...charts, ...passages.flatMap((p) => p.charts)];
         return { body: [], ...sub, charts, passages, allCharts, id: `${id}-${k + 1}` };
       });
-      return { ...chapter, id, num: i + 1, subchapters };
+      return { ...chapter, id, num: chapter.locked ? "X" : ++chapterCount, subchapters };
     });
   }
 
@@ -283,7 +296,7 @@
            chapter without stopping the read. -->
       <div
         data-chapter-opener
-        class="relative flex min-h-[44svh] items-center bg-secondary px-[6vw] py-16 text-white lg:min-h-[46vh]"
+        class="relative flex min-h-[44svh] items-end bg-secondary px-[6vw] py-16 text-white md:items-center lg:min-h-[46vh]"
       >
         <StreetMap center={chapterMaps[i % chapterMaps.length]} span={[0.06, 0.03]} side="left" />
         <!-- Satoshi bold, main's heading weight. On phones 30px and no 14ch
@@ -381,7 +394,7 @@
   <section
     data-report-end
     aria-label="End of report"
-    class="relative flex flex-1 items-center px-[6vw] py-20 font-sans text-white md:justify-end"
+    class="relative flex flex-1 items-end px-[6vw] py-20 font-sans text-white md:items-center md:justify-end"
   >
     <div class="relative flex flex-col gap-6 md:w-[34vw] md:gap-8 lg:gap-10">
       <div>

@@ -31,6 +31,7 @@ export const neutral = {
   mid: "#7E8E77", //    ordinary context series / quiet line
   soft: "#8F9F89", //   washes, a labeled thin line
   faint: "#C5CCC2", //  background fill only, never a line
+  wash: "#E0E4DE", //   the lightest: a base map under the métro (just off the ground)
 };
 
 // Axis ticks and annotation labels: main's mid-dark chart ink, not black.
