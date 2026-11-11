@@ -35,30 +35,25 @@
   //
   // For the map-to-chart morph (MetroMorphPanel), inside the same Chart so it
   // shares the map's projection and size exactly:
-  // - `keepLines`: the lines that leave the map. Their tracks are NOT drawn
-  //   here; `overlay` draws them (and moves them), above the other lines but
-  //   UNDER every station and badge, so the badges stay on top of the line
-  //   ends (Sandra, 2026-11-10).
-  // - `mapOpacity` fades everything else: the other lines and their
-  //   stations and badges (and turns hovering and clicking off below 1).
-  // - `keepOpacity` fades the kept lines' stations, interchanges and badges,
-  //   which stay while the rest goes and leave as the lines start to move.
+  // - `overlay`: a snippet that draws the lines INSTEAD of this component
+  //   (and moves them), under every station and badge, so the badges stay on
+  //   top of the line ends (Sandra, 2026-11-10). With an overlay the map is
+  //   a stage: tooltips still work, but clicking does not filter, as the
+  //   overlay's lines would not follow.
+  // - `marksOpacity` fades the stations, interchanges and badges, which leave
+  //   before the lines start to move (and turns hovering off below 1).
   // - `baseOpacity` draws the figure's `base` (the arrondissements) under
   //   everything, very light grey with white borders — off unless asked for
   //   (the morph study, Figure 7, 2026-11-10).
   import { Chart, Circle, Group, Layer, Text, Tooltip } from "layerchart";
   import { GeoClipPath, GeoPath, GeoPoint } from "layerchart/geo";
   import { geoMercator } from "d3-geo";
-  import { brand, neutral } from "$lib/colors";
+  import { brand, neutral, textOn } from "$lib/colors";
   import { stationMarks } from "$lib/data/figures/metro-stations.js";
 
-  let { pair, mapOpacity = 1, keepLines = [], keepOpacity = 1, baseOpacity = 0, overlay } = $props();
+  let { pair, marksOpacity = 1, baseOpacity = 0, overlay } = $props();
 
-  const isKept = (line) => keepLines.includes(line);
-  const fade = (line) => (isKept(line) ? keepOpacity : mapOpacity);
-  // An interchange stays as long as one of its lines does.
-  const fadeAny = (lines) => (lines.some(isKept) ? keepOpacity : mapOpacity);
-  const morphing = $derived(mapOpacity < 1 || keepOpacity < 1);
+  const morphing = $derived(marksOpacity < 1);
 
   // The lines picked by clicking (`properties.line`); empty means all.
   let selectedLines = $state([]);
@@ -73,19 +68,10 @@
   const stations = $derived(stationMarks(pair.stops));
 
   function toggleLine(line) {
+    if (overlay) return;
     selectedLines = selectedLines.includes(line)
       ? selectedLines.filter((l) => l !== line)
       : [...selectedLines, line];
-  }
-
-  // The badge's number in white or ink, whichever the line colour carries
-  // (line 1's yellow takes ink, as on the real map).
-  function badgeText(hex) {
-    const [r, g, b] = [1, 3, 5].map((i) => {
-      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
-      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? brand.ink : "#FFFFFF";
   }
 </script>
 
@@ -122,9 +108,9 @@
         {/if}
         <GeoClipPath geojson={pair.clip} disabled={!pair.clip}>
           {#each orderedLines as feature (feature.id)}
-            {#if !(overlay && isKept(feature.properties.line))}
+            {#if !overlay}
               {@const width = hovered === feature.id ? lineWidth + 1.25 : lineWidth}
-              {@const opacity = (isShown(feature.properties.line) ? 1 : FADED) * mapOpacity}
+              {@const opacity = isShown(feature.properties.line) ? 1 : FADED}
               <!-- The casing, then the line: drawn as a pair, so each line
                    cuts a gap through the lines beneath it. -->
               <GeoPath
@@ -132,7 +118,6 @@
                 fill="none"
                 stroke={brand.ground}
                 strokeWidth={width + 2 * casing}
-                opacity={mapOpacity}
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 pointer-events="none"
@@ -159,14 +144,14 @@
               stroke="transparent"
               strokeWidth={10}
               tooltip
-              class="cursor-pointer"
+              class={overlay ? undefined : "cursor-pointer"}
               onclick={() => toggleLine(feature.properties.line)}
             />
           {/each}
         </GeoClipPath>
 
-        <!-- The morph's moving lines (and its panel frames): over the other
-             lines, under the stations and badges. -->
+        <!-- The morph's moving lines (and its panel frames), under the
+             stations and badges. -->
         {@render overlay?.(context)}
 
         <!-- Stations on one line: a white dot ringed in the line's colour. -->
@@ -180,7 +165,7 @@
             fill="#FFFFFF"
             stroke={color}
             strokeWidth={lineWidth * 0.3}
-            opacity={(isShown(stop.properties.line) ? 1 : FADED) * fade(stop.properties.line)}
+            opacity={(isShown(stop.properties.line) ? 1 : FADED) * marksOpacity}
             pointer-events="none"
           />
         {/each}
@@ -189,7 +174,7 @@
              a narrower white one, both round-capped) across the lines. -->
         {#each stations.interchanges as station (station.id)}
           {@const opacity =
-            (anyShown(station.properties.lineList) ? 1 : FADED) * fadeAny(station.properties.lineList)}
+            (anyShown(station.properties.lineList) ? 1 : FADED) * marksOpacity}
           {@const width = hovered === station.id ? capsuleWidth + 1 : capsuleWidth}
           <GeoPath
             geojson={station}
@@ -230,14 +215,14 @@
         <!-- The line badges, centred on the end of the line. -->
         {#each pair.ends as end (end.id)}
           {@const [long, lat] = end.coordinates}
-          <GeoPoint {lat} {long} opacity={(isShown(end.line) ? 1 : FADED) * fade(end.line)}>
+          <GeoPoint {lat} {long} opacity={(isShown(end.line) ? 1 : FADED) * marksOpacity}>
             <Circle
               cx={0}
               cy={0}
               r={badgeRadius}
               fill={end.color}
               stroke="none"
-              class="cursor-pointer"
+              class={overlay ? undefined : "cursor-pointer"}
               onclick={() => toggleLine(end.line)}
             />
             <Text
@@ -246,7 +231,7 @@
               value={end.line}
               textAnchor="middle"
               verticalAnchor="middle"
-              fill={badgeText(end.color)}
+              fill={textOn(end.color)}
               fontSize={(compact ? 7 : 9) * (end.line.length > 2 ? 0.75 : 1)}
               font-weight={600}
               pointer-events="none"

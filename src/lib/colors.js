@@ -34,6 +34,16 @@ export const neutral = {
   wash: "#E0E4DE", //   the lightest: a base map under the métro (just off the ground)
 };
 
+// The text colour a filled badge takes: white, or ink where the fill is
+// light (métro line 1's yellow takes ink, as on the real map).
+export function textOn(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? brand.ink : "#FFFFFF";
+}
+
 // Axis ticks and annotation labels: main's mid-dark chart ink, not black.
 export const ink = "#5C6C56";
 

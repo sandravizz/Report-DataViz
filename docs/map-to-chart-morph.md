@@ -5,7 +5,44 @@ unroll into a grid of small-multiple line charts (paris-demo, Figure 6,
 `MetroMorphPanel.svelte`). The house rule is to build every figure from
 LayerChart's own components and props, so this explains which part of the
 morph LayerChart can do and which part it can't. Written 2026-11-10 against
-LayerChart 2.9.1.
+LayerChart 2.9.1; reworked 2026-11-11, when the morph went from six lines to
+all sixteen.
+
+## How it works, in short
+
+Every point of a métro line has **two positions**: where it is on the map,
+and where it belongs on its line chart. The scroll decides how far along the
+straight path between the two it is drawn. That is the whole animation.
+
+1. **Preparation, once** (`src/lib/data/figures/metro-unroll.js`). Each point
+   of a line's track gets a number `u` between 0 and 1: its distance along
+   the track from the line's west end, as a share of the longest distance.
+   Extra points are added along the track so the shapes stay smooth.
+2. **Map position.** The point's longitude/latitude through the map's own
+   projection.
+3. **Chart position.** `u` of the way across the years, at the height of the
+   chart line there. The west end (`u` = 0) is the first year, the far end
+   (`u` = 1) the last.
+4. **The blend.** `ScrollySection` reports how far the reader has scrolled
+   through the figure (`progress`, 0 → 1). `MetroMorphPanel` turns that into
+   a value `t` per line (0 = on the map, 1 = in the chart) and draws each
+   point at `map + (chart − map) × t`. Scroll back and `t` falls again.
+
+Around the blend, two things are not scrubbed by the scroll: the stations and
+badges leave in one short timed fade before the lines move, and the panel
+frames (titles, gridline, years) fade in once the lines have landed.
+
+**Forks and loops need no special case.** Because `u` is a distance from the
+start, the two branches of line 13 both count on from the fork and close onto
+the same stretch of the chart line, like a zip. The two halves of a loop
+(7bis, and line 10 at Auteuil) count up from where the loop begins, meet at
+its far side, and fold flat. The first version walked each line as one run
+of points, which only works for a line with no fork and no loop; that is why
+it stopped at six.
+
+**3bis and 7bis** have no series of their own for the whole period: the
+source publishes them inside lines 3 and 7. They unroll into their parent's
+panel (named "Lines 3 + 3bis", "Lines 7 + 7bis") and end under its line.
 
 ## Short version
 
@@ -18,7 +55,7 @@ for four reasons:
 2. Its animation runs on a timer, not on the scroll position.
 3. Its path animation matches drawing commands, not positions along the
    line.
-4. The métro data is not one continuous line per métro line.
+4. The métro data does not say how far along its line each point is.
 
 So the in-between shapes are computed in our own code. They are still drawn
 with LayerChart's `Path`, `Circle` and `Text`, inside the same `Chart` as the
@@ -71,29 +108,32 @@ different numbers of points, and their points don't correspond. Matching them
 by command order gives a shape that folds in on itself. It doesn't look like
 a line uncurling.
 
-**What we do:** both shapes are resampled to the **same 160 points, evenly
-spaced**:
+**What we do:** the two shapes are not matched point by point at all. Each
+point of the track knows how far along the line it is (`u`, see above), and
+its chart position is read off the chart line at that same share of the
+years, with values interpolated between the yearly data points. The track
+gets extra points first (about 160 per line length), so the chart's kinks
+between two years are followed closely.
 
-- **map end:** spaced evenly by distance along the track;
-- **chart end:** spaced evenly across the years, with values interpolated
-  between the yearly data points.
+So the line's start goes to the chart's first year and its end to the last.
 
-Point k on the map then moves to point k on the chart, so the line's start
-goes to the chart's first year and its end to the last.
-
-## 4. The data isn't one continuous line per métro line
+## 4. The data doesn't say how far along the line a point is
 
 LayerChart draws the geometry exactly as it receives it. The track file
 (IDFM) stores each line as a set of **unordered** station-to-station
 segments, with a few small breaks of under 100 m. That draws correctly as a
 map, but it has no start and no end, so there is nothing to unroll.
 
-**What we do:** `src/lib/data/figures/metro-chain.js` chains the segments into
-one ordered run of points:
+**What we do:** `src/lib/data/figures/metro-unroll.js` works out, for each
+line:
 
-- it joins segment ends that meet or nearly meet;
-- it starts the walk at the line's **west** end, so every line unrolls left
-  to right, like the years.
+- which segment ends meet or nearly meet (the places where segments join);
+- the distance along the track from the line's **west** end to each of those
+  places, so every line unrolls left to right, like the years;
+- from that, `u` for every point of every segment.
+
+The segments stay separate and each one morphs on its own; only the
+distances connect them. That is what lets forks and loops through.
 
 This step is data preparation, which is outside a chart library's job.
 
@@ -105,7 +145,7 @@ This step is data preparation, which is outside a chart library's job.
 | Projection used for the map end of the morph | the same `Chart`'s `context.geo.projection` |
 | The moving lines | LayerChart `Path` with a computed `pathData` |
 | Panel frames at the end (badge, name, gridlines, labels, years) | LayerChart `Circle`, `Text`, `Line`, `Group` |
-| **Custom:** ordering the track, resampling, panel layout, blending by scroll | `metro-chain.js` and `MetroMorphPanel.svelte` |
+| **Custom:** measuring the track, panel layout, blending by scroll | `metro-unroll.js` and `MetroMorphPanel.svelte` |
 
 ## Pacing
 
@@ -115,24 +155,29 @@ the last figure in its section and sets `holdVh: 132` (the default hold is
 hold, and `ChartDisplay` stretches the figure's 0 → 1 over it, leaving half a
 step at the end to look at the finished grid.
 
-Within that 0 → 1, `MetroMorphPanel` runs its stages one after another:
+Within that 0 → 1, `MetroMorphPanel` runs its stages one after another. The
+figure file sets them (`stages`); Figure 6's are:
 
-| Progress | What happens |
-| --- | --- |
-| 0 → 0.06 | the full map, as Figure 5 left it |
-| at 0.06 | scroll 1: every other line, with its stations and badges, disappears in one quick timed fade (350ms, not scrubbed; reverses on the way back) |
-| at 0.21 | scroll 2: the six lines' stations, interchanges and badges disappear the same way, leaving the bare lines |
-| 0.3 → 0.94 | the six lines move into place with the scroll, one slightly after another |
-| 0.92 → 1 | the panel frames fade in |
+| Progress | Setting | What happens |
+| --- | --- | --- |
+| 0 → 0.21 | | the full map, as Figure 5 left it |
+| at 0.21 | `marksOutAt` | the stations, interchanges and badges disappear in one quick timed fade (350ms, not scrubbed; reverses on the way back), leaving the bare lines |
+| 0.3 → 0.94 | `morphStart`, `morphEnd` | the lines move into place with the scroll, one slightly after another: they leave over the first quarter of this stretch and each takes the other three quarters |
+| 0.92 → 1 | | the panel frames fade in (from just before `morphEnd`) |
 
 The fractions are fitted to the figure's `holdVh: 132` (1.65 steps of 80vh);
-change the two together.
+change the two together. Figure 7 is the same figure over a light base map
+(`baseMap: true`), with its own hold and stages.
+
+Before all lines morphed, there was one more stage, in which the lines that
+did not morph faded out first. It is gone, as no line stays behind.
 
 ## The panel frames (titles, axes)
 
 Once the lines have landed, each panel's frame fades in: a line badge and
 name on top, y gridlines with labels (none for the top tick, which is only
-headroom), and the years under the bottom row. The panels sit in the text
+headroom), and the years under the lowest panel of each column. The grid is
+four columns wide, three on phones. The panels sit in the text
 column, their left edge on the title's, not in the wider box the map bleeds
 into.
 The frame is drawn by the morph panel itself with LayerChart's `Line` and
@@ -164,7 +209,7 @@ found turns a metro line into a line chart. The closest examples:
   - **Approach:** a geographic metro map turns into a schematic one, on a
     looping timer, with `d3-interpolate-path`.
   - **Hand-prepared data:** both versions of each line are prepared in
-    advance as single ordered lines, so it skips what `metro-chain.js` does.
+    advance as single ordered lines, so it skips what `metro-unroll.js` does.
   - **Same known flaw:** its own to-do list includes "Improve interpolation
     of line B & A", the point-matching problem from section 3.
 - **[flubber](https://github.com/veltman/flubber)** (MIT), the standard
@@ -176,7 +221,8 @@ found turns a metro line into a line chart. The closest examples:
   - **Size and upkeep:** 53 kB, and no longer updated.
 - **[syntagmatic, D3 shape-morphing notes](https://syntagmatic.github.io/d3-power-tools/skills/shape-morphing/SKILL.md)**
   name the same two routes: `d3-interpolate-path`, or resampling both shapes
-  to a fixed number of points (ours).
+  to a fixed number of points (ours until 2026-11-11; a position along the
+  line per point is the same idea without the fixed count).
 
 `d3-interpolate-path` is already installed with LayerChart, and calling it
 directly (`interpolatePath(a, b)(t)`) would follow the scroll. We don't use

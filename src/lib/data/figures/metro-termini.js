@@ -13,7 +13,7 @@
 //
 // The badge is centred exactly on the end (Sandra, 2026-11-10), with no
 // station name beside it.
-const GAP = 0.0012; // degrees, ~90–130 m in Paris
+export const GAP = 0.0012; // degrees, ~90–130 m in Paris
 
 export function termini(lines, keep = () => true) {
   return lines.features.flatMap((feature) => {
