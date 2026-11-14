@@ -9,7 +9,8 @@
 //
 // Spring green #0FFF95 is reserved for accent duty (cover, chapter dividers,
 // underline rules) and is 1.3:1 on the ground, so it is never a chart ink on
-// the ground. The one exception is the métro maps, where it runs on violet.
+// the ground. The exceptions: the cover's street map, where it runs on
+// violet, and the parks of the métro story's street map (`mapTint`), a fill.
 //
 // Re-validate any new series pairing against the screen surface before
 // shipping it (.claude/skills/dataviz/scripts/validate_palette.js).
@@ -34,13 +35,41 @@ export const neutral = {
   wash: "#E0E4DE", //   the lightest: a base map under the métro (just off the ground)
 };
 
-// The street map under the métro (MetroPanel's `streets`): water and parks
-// as the faintest tints that still read as blue and green on the ground —
-// the métro lines are the figure, the map is only where they are (Sandra,
-// 2026-11-14: "sehr, sehr dezent").
+// The street map under the métro (MetroPanel's `streets`), IN THE REPORT'S
+// OWN COLOURS (Sandra, 2026-11-14): the parks and woods in the spring green
+// that underlines text (`brand.accent`, as a fill, never a line or a label),
+// the Seine, canals and lakes in the lightest step of the cover's violet
+// (`sequential[0]`). The streets stay in the grey family. Before: the
+// faintest blue and green tints, #D3E1EC and #DDE8D8 ("sehr, sehr dezent").
 export const mapTint = {
-  water: "#D3E1EC",
-  green: "#DDE8D8",
+  water: "#E0DBF3",
+  green: brand.accent,
+};
+
+// The métro story's street map: A LIGHT, QUIET MAP (Sandra, 2026-11-14,
+// after two violet trials: "the map can't be violet, it's too much
+// distraction", and "the lines in the base map should be very thin").
+// The métro lines are the only strong colour on it; the map is only where
+// they are, and must stay readable under names and circles.
+// - ground: one step darker than the page (`neutral.wash`), so the map
+//   reads as a rectangle of its own;
+// - streets: WHITE HAIRLINES on that ground, lighter than it, never darker
+//   — main roads only a little wider and clearer than side streets;
+// - the Seine, canals and lakes: a pale tint of the cover's violet;
+// - parks and woods: a pale tint of the spring green that underlines text.
+// The report's two colours are there, as tints only.
+// Set `streetMap` to null for the older map (grey streets on the page
+// ground, `mapTint` fills).
+export const streetMap = {
+  ground: neutral.wash,
+  green: "#CDEBDA",
+  waterArea: "#D6CFF0",
+  // [stroke, stroke opacity, width]
+  minor: ["#FFFFFF", 0.7, 0.35],
+  mid: ["#FFFFFF", 0.85, 0.5],
+  major: ["#FFFFFF", 1, 0.8],
+  // The Seine's banks as a line: only where the water's area is missing.
+  water: ["#B9AEE6", 1, 0.8],
 };
 
 // The text colour a filled badge takes: white, or ink where the fill is

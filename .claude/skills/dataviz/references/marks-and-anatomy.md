@@ -8,7 +8,7 @@ The data is the only thing allowed to be loud.
 | Mark | Spec |
 |---|---|
 | Bar / column | **≤ 24px thick** (cap it — never fill the slot; let the band's leftover be air); **4px rounded data-end, square at the baseline**; grows from a single baseline |
-| Line | **2px**, round join/cap |
+| Line | **2px**, round join/cap (Report Viz: 2.5px, monotone curve, ground-coloured casing — see "how a line is drawn" in `SKILL.md`) |
 | Marker / end-dot | **≥ 8px** (r ≥ 4), filled with the series color |
 | Area fill | the series hue at **~10% opacity** (a wash, never a saturated block) |
 | Gridlines / axes | one-step-off-surface gray, **hairline (1px), solid** (never dashed), recessive |

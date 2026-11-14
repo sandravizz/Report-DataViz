@@ -63,7 +63,7 @@ export default {
   title: "Placeholder: Passengers by Métro Line",
   subtitle: "Trips per year by line, millions, 2015–2025",
   description: "Placeholder: what the panels show and the one pattern the reader should take from it.",
-  source: "Source: Île-de-France Mobilités / Omnil, from RATP data",
+  source: "Source: Île-de-France Mobilités (Omnil)",
   data,
   csv,
   xKey: "year",

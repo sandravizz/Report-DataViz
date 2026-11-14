@@ -45,7 +45,7 @@ export default {
   title: "Placeholder: The Métro Inside Paris",
   subtitle: "Métro Lines and Stations Within the City of Paris, November 2026",
   description: "Placeholder: what the map shows and the one pattern the reader should take from it.",
-  source: "Source: Île-de-France Mobilités (Licence Ouverte); boundaries © Paris Open Data (ODbL)",
+  source: "Source: Île-de-France Mobilités; map © Paris Open Data",
   data: stopFeatures,
   csv,
   base: arrondissements,

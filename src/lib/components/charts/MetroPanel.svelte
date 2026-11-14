@@ -45,16 +45,19 @@
   // - `baseOpacity` draws the figure's `base` (the arrondissements) under
   //   everything, very light grey with white borders — off unless asked for
   //   (the morph study, Figure 7, 2026-11-10).
-  import { Chart, Circle, Group, Layer, RectClipPath, Text, Tooltip } from "layerchart";
+  import { Chart, Circle, Group, Layer, Rect, RectClipPath, Text, Tooltip } from "layerchart";
   import { GeoClipPath, GeoPath, GeoPoint } from "layerchart/geo";
   import { geoMercator } from "d3-geo";
-  import { brand, mapTint, neutral, textOn } from "$lib/colors";
+  import { cubicInOut } from "svelte/easing";
+  import { untrack } from "svelte";
+  import { brand, mapTint, neutral, streetMap, textOn } from "$lib/colors";
   import { stationMarks } from "$lib/data/figures/metro-stations.js";
   import { formatNumber } from "$lib/format";
 
   // - `roomy` gives the map a bigger box (the métro story, 2026-11-14): it
   //   bleeds further past the text column and into the air above the source
-  //   line, on phones out to the screen's edges. MetroStoryPanel keeps its
+  //   line, on phones out to the screen's edges and 24px up into the 40px
+  //   under the subtitle (2026-11-14). MetroStoryPanel keeps its
   //   charts inside the column by the same amounts — change both together.
   // - `streets` + `streetsOpacity`: the street map under the network (the
   //   métro story's last state, 2026-11-14) — the landing page's own
@@ -65,18 +68,24 @@
   //   under the figure number ends (Sandra, 2026-11-14). Drawn in the figure's greys, lightest for the
   //   side streets, so the métro lines stay the only colour.
   //   Under the streets, where the file has them (`waterArea`, `green`): the
-  //   Seine, the canals and the lakes in a faint blue, the parks and woods
-  //   in a faint green (colors.js' mapTint).
-  // - `zoom` (true / false; leave it out for a map that never zooms): PLUS
-  //   and MINUS buttons in the map's top right corner, LayerChart's own
-  //   `transform` in `projection` mode — the projection itself is scaled, so
-  //   lines, dots and type keep their size and only the map grows. `false`
-  //   hides the buttons and takes any zoom back (the story's chart states).
-  //   The scroll wheel never zooms (the page scrolls); dragging moves the
-  //   map only once it is zoomed in, so an untouched map never traps a
-  //   scroll or a swipe. Zoomed, everything is cut to the map's rectangle.
-  // - `focus` ({ lines, amount, more, moreAmount }): the métro story's "only
-  //   this line" state; `more` lines come back as `moreAmount` goes 0 → 1.
+  //   Seine, the canals and the lakes in a light violet, the parks and woods
+  //   in the report's spring green (colors.js' mapTint).
+  // - `zoom` (null, or { coordinates: [long, lat], scale }; leave it out for
+  //   a map that never zooms): THE STORY ZOOMS, not the reader (Sandra,
+  //   2026-11-14; the plus and minus buttons are gone). Given a place, the
+  //   map eases in on it until it sits in the middle of the box, `scale`
+  //   times closer; back to null, it eases out to the whole map. It is
+  //   LayerChart's own `transform` in `projection` mode — the projection
+  //   itself is scaled, so lines, dots and type keep their size and only the
+  //   map grows. The pointer and the scroll wheel never move the map, so it
+  //   never traps a scroll or a swipe. Zoomed, everything is cut to the
+  //   map's rectangle.
+  // - `focus` ({ lines, amount, back, all }): the métro story's "only this
+  //   line" state; `back` ({ line: 0 → 1 }) brings other lines back one by
+  //   one, `all` (0 → 1) brings every line back at once (their end badges
+  //   too; the station marks stay away, the story draws its own circles).
+  // - `controls`: a snippet of HTML placed over the map (the story's
+  //   station switch); it gets the chart context.
   //   As `amount` goes 0 → 1 every line and badge NOT in `lines` goes
   //   completely (Sandra, 2026-11-14: faint leftovers hid the one line), and
   //   so do ALL station marks: the overlay draws the kept line's own
@@ -92,23 +101,39 @@
     streetsInset = 0,
     focus = null,
     zoom = undefined,
+    controls,
   } = $props();
 
   let chart = $state();
-  let zoomed = $state(false);
-  function zoomBy(direction) {
-    const transform = chart?.transform;
-    if (!transform) return;
-    if (direction > 0) transform.zoomIn();
-    else transform.zoomOut();
-    zoomed = transform.targetScale > transform.initialScale * 1.001;
-  }
-  function zoomReset() {
-    chart?.transform?.reset();
-    zoomed = false;
-  }
+  // Zoomed, or still on the way back out: the map is cut to its rectangle.
+  const zoomed = $derived(
+    !!zoom || (!!chart?.transform && chart.transform.scale > chart.transform.initialScale * 1.001),
+  );
+  // The projection draws a place at scale × raw + translate. To bring
+  // `zoom.coordinates` to the middle of the box, `zoom.scale` times closer:
+  // scale up, and move the translate so the place lands on the middle. Both
+  // ease together (the transform's `motion`), so the place travels straight
+  // there. Runs again when the box changes size.
   $effect(() => {
-    if (zoom === false && zoomed) zoomReset();
+    const transform = chart?.transform;
+    const fitted = chart?.geo?.untransformedProjection;
+    if (!transform || !fitted || !chart.width) return;
+    const width = chart.width;
+    const height = chart.height;
+    const target = zoom;
+    // Untracked: setting the transform reads its own easing value, and the
+    // effect must not start over on every frame of its own move.
+    untrack(() => {
+      if (!target) {
+        transform.reset();
+        return;
+      }
+      const [x, y] = fitted(target.coordinates);
+      const [left, top] = fitted.translate();
+      const k = target.scale ?? 4;
+      transform.setScale(fitted.scale() * k);
+      transform.setTranslate({ x: width / 2 - k * (x - left), y: height / 2 - k * (y - top) });
+    });
   });
 
   // Under the lines, weakest first: the filled areas, then [layer, stroke,
@@ -118,11 +143,16 @@
     ["green", mapTint.green],
     ["waterArea", mapTint.water],
   ];
-  const STREETS = [
-    ["minor", neutral.faint, 0.5],
-    ["mid", neutral.faint, 0.9],
-    ["major", neutral.soft, 1.1],
-  ];
+  // [layer, stroke, stroke opacity, width]. With colors.js' `streetMap` the
+  // map is the light one described there (white hairline streets on a
+  // slightly darker ground); without it, grey streets on the page ground.
+  const STREETS = streetMap
+    ? ["minor", "mid", "major"].map((layer) => [layer, ...streetMap[layer]])
+    : [
+        ["minor", neutral.faint, 1, 0.5],
+        ["mid", neutral.faint, 1, 0.9],
+        ["major", neutral.soft, 1, 1.1],
+      ];
 
   const morphing = $derived(marksOpacity < 1 || (focus?.amount ?? 0) > 0);
 
@@ -135,7 +165,7 @@
     focus
       ? focus.lines.includes(line)
         ? 1
-        : 1 - focus.amount * (focus.more?.includes(line) ? 1 - focus.moreAmount : 1)
+        : 1 - focus.amount * (1 - Math.max(focus.back?.[line] ?? 0, focus.all ?? 0))
       : isShown(line)
         ? 1
         : FADED;
@@ -156,7 +186,7 @@
   }
 </script>
 
-<div class="relative min-w-0 flex-1 {roomy ? '-mx-[6vw] -mb-6 lg:-mx-10 lg:-mt-10 lg:-mb-14' : 'lg:-mx-10 lg:-mt-8'}">
+<div class="relative min-w-0 flex-1 {roomy ? '-mx-[6vw] -mt-6 -mb-6 lg:-mx-10 lg:-mt-10 lg:-mb-14' : 'lg:-mx-10 lg:-mt-8'}">
   <Chart
     bind:context={chart}
     data={pair.data}
@@ -164,7 +194,13 @@
     padding={{ top: 16, bottom: 16, left: 16, right: 16 }}
     transform={zoom === undefined
       ? undefined
-      : { mode: "projection", scaleExtent: [1, 8], scrollMode: "none", disablePointer: !(zoom && zoomed) }}
+      : {
+          mode: "projection",
+          scaleExtent: [1, 8],
+          scrollMode: "none",
+          disablePointer: true,
+          motion: { type: "tween", duration: 900, easing: cubicInOut },
+        }}
   >
     {#snippet children({ context })}
       {@const compact = context.width < 640}
@@ -203,27 +239,52 @@
         {#if streetsOpacity > 0 && streets}
           <Group opacity={streetsOpacity}>
             <RectClipPath {...mapRect}>
-              {#each AREAS as [layer, fill] (layer)}
-                {#if streets[layer]}
-                  <GeoPath geojson={streets[layer]} {fill} stroke="none" pointer-events="none" />
+              {#if streetMap}
+                <!-- colors.js' `streetMap`: its ground fills the rectangle,
+                     then the parks and the water as pale fills (the Seine's
+                     banks as a line only where the water's area is missing). -->
+                <Rect {...mapRect} fill={streetMap.ground} stroke="none" pointer-events="none" />
+                {#each [["green", streetMap.green], ["waterArea", streetMap.waterArea]] as [layer, fill] (layer)}
+                  {#if fill && streets[layer]}
+                    <GeoPath geojson={streets[layer]} {fill} stroke="none" pointer-events="none" />
+                  {/if}
+                {/each}
+                {#if streetMap.water && !(streetMap.waterArea && streets.waterArea)}
+                  <GeoPath
+                    geojson={streets.water}
+                    fill="none"
+                    stroke={streetMap.water[0]}
+                    stroke-opacity={streetMap.water[1]}
+                    strokeWidth={streetMap.water[2] * (compact ? 0.75 : 1)}
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    pointer-events="none"
+                  />
                 {/if}
-              {/each}
-              {#if !streets.waterArea}
-                <GeoPath
-                  geojson={streets.water}
-                  fill="none"
-                  stroke={neutral.mid}
-                  strokeWidth={1.2 * (compact ? 0.75 : 1)}
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  pointer-events="none"
-                />
+              {:else}
+                {#each AREAS as [layer, fill] (layer)}
+                  {#if streets[layer]}
+                    <GeoPath geojson={streets[layer]} {fill} stroke="none" pointer-events="none" />
+                  {/if}
+                {/each}
+                {#if !streets.waterArea}
+                  <GeoPath
+                    geojson={streets.water}
+                    fill="none"
+                    stroke={neutral.mid}
+                    strokeWidth={1.2 * (compact ? 0.75 : 1)}
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    pointer-events="none"
+                  />
+                {/if}
               {/if}
-              {#each STREETS as [layer, stroke, width] (layer)}
+              {#each STREETS as [layer, stroke, strokeOpacity, width] (layer)}
                 <GeoPath
                   geojson={streets[layer]}
                   fill="none"
                   {stroke}
+                  stroke-opacity={strokeOpacity}
                   strokeWidth={width * (compact ? 0.75 : 1)}
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -369,31 +430,7 @@
         </Group>
       </Layer>
 
-      <!-- Zoom: plus, minus and (once zoomed) back to the whole map. -->
-      {#if zoom}
-        <div
-          role="group"
-          aria-label="Map zoom"
-          class="absolute z-10 flex flex-col gap-1"
-          style:top="24px"
-          style:right="{streetsInset + 24}px"
-          onpointerdown={(event) => event.stopPropagation()}
-        >
-          <button type="button" class="btn btn-sm btn-square" aria-label="Zoom in" onclick={() => zoomBy(1)}>+</button>
-          <button
-            type="button"
-            class="btn btn-sm btn-square"
-            aria-label="Zoom out"
-            disabled={!zoomed}
-            onclick={() => zoomBy(-1)}>−</button
-          >
-          {#if zoomed}
-            <button type="button" class="btn btn-sm btn-square" aria-label="Show the whole map" onclick={zoomReset}
-              >⟲</button
-            >
-          {/if}
-        </div>
-      {/if}
+      {@render controls?.(context)}
 
       <!-- The same card as every other figure's tooltip (chart-theme's
            tooltipCard), written out because this one is a custom snippet. -->
@@ -417,7 +454,11 @@
               </span>
             </Tooltip.Header>
             <Tooltip.List class="max-lg:gap-x-2 max-lg:gap-y-0.5">
-              <Tooltip.Item label={data.station.label} value={formatNumber(data.station.value)} valueAlign="right" />
+              <Tooltip.Item
+                label={data.station.label}
+                value={data.station.value == null ? "not counted on its own" : formatNumber(data.station.value)}
+                valueAlign="right"
+              />
             </Tooltip.List>
           {:else}
           <Tooltip.Header class="max-lg:mb-0.5 max-lg:pb-0.5">{data.properties.name}</Tooltip.Header>

@@ -97,6 +97,35 @@ sitting on top of the line. Never at the start (left) of the gridline.
 - When the subtitle already states the unit ("in Millions"), the labels drop
   it, so they stay short enough for their strip.
 
+## Report Viz house rule: how a line is drawn
+
+Written down 2026-11-14 from the line charts of the earlier reports
+(`LineChartPanel.svelte` on `main`, `template`, `iw`, `kiel-institute`,
+`findevlab`; `docs/line-chart-casing.md` on `iw`). It applies to every line
+in every chart on every branch, small multiples and scroll-driven figures
+included. It overrides the generic "Line: 2px" in
+`references/marks-and-anatomy.md`.
+
+- **Width:** 2.5px, 2px on phones (below 1024px wide). A de-emphasised
+  context line is thinner (1.25px), never lighter in colour only.
+- **Curve:** `curveMonotoneX` (d3-shape). It rounds the corners and never
+  overshoots a data value. Never straight segments, never a curve that can
+  overshoot (`curveBasis`, `curveCardinal`, `curveNatural`).
+- **Joins and caps:** round (`stroke-linejoin` and `stroke-linecap`).
+- **Casing:** every line is drawn twice: first a wider stroke in the
+  ground colour, then the coloured line on top, so where two lines cross
+  one passes in front of the other. The casing is 1px wider on each side
+  (4.5px under a 2.5px line, 3.5px under 2px). Keep it narrow: a wider
+  casing eats the lines where they run close together.
+- **Order:** casing and line are drawn as a pair, series by series, in the
+  figure's own series order, so the line the figure is about is on top.
+- **Names:** a series is named at the end of its line (an end label or a
+  badge), not in a legend box, where there is room.
+- **In code:** with LayerChart, two `Spline`s per series in the `marks`
+  snippet (`casingStyle`, then `lineStyle`). A figure that computes its own
+  paths (the métro story's morph) follows the same numbers by hand: see
+  `valueAt` and `chartWidth` in `MetroStoryPanel.svelte`.
+
 ## Plugging in a design system
 
 The method is invariant; only these parameters change per system. The reference

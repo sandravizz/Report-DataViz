@@ -132,6 +132,6 @@
        hover panel to whatever is behind the rail (docs in ChapterRail.svelte). -->
   <div data-scrolly class="sticky top-0 h-screen overflow-hidden bg-base-200">
     <ChartDisplay {pairs} {activeIndex} {stepPosition} {holdSteps} />
-    <DescriptionColumn items={pairs.map((p) => p.description)} {activeIndex} />
+    <DescriptionColumn {pairs} {activeIndex} {stepPosition} {holdSteps} />
   </div>
 </div>

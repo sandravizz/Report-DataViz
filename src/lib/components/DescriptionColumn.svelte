@@ -1,5 +1,19 @@
 <script>
-  let { items, activeIndex } = $props();
+  import { figureProgress, noteIndex } from "$lib/figure-progress.js";
+
+  let { pairs, activeIndex, stepPosition, holdSteps = 0 } = $props();
+
+  // One text per figure, or — a story figure with `notes` — one per note:
+  // the one in force follows the figure's scroll progress, so the text
+  // changes as the figure moves from state to state. All of them are
+  // stacked in the same box and cross-fade, like the figures.
+  const items = $derived(
+    pairs.flatMap((pair, i) => {
+      if (!pair.notes?.length) return [{ text: pair.description, active: i === activeIndex }];
+      const current = noteIndex(pair, figureProgress(i, pairs.length, stepPosition ?? activeIndex, holdSteps));
+      return pair.notes.map((note, k) => ({ text: note.text, active: i === activeIndex && k === current }));
+    }),
+  );
 </script>
 
 <!-- Right-hand side column of the symmetric desktop layout: same width and
@@ -17,8 +31,8 @@
     {#each items as item, i (i)}
       <p
         class="absolute inset-0 font-sans text-base leading-[1.75] text-base-content/80 transition-opacity duration-500 ease-[ease]"
-        style:opacity={i === activeIndex ? 1 : 0}
-        style:pointer-events={i === activeIndex ? "auto" : "none"}
+        style:opacity={item.active ? 1 : 0}
+        style:pointer-events={item.active ? "auto" : "none"}
       >
         <!-- Rendered as HTML so a description can carry a `mark.accent-mark`
              — the same accent underline the chapter copy uses. Every string
@@ -30,7 +44,7 @@
              out of the sentence and stacks it in its own column beside the
              rest of the copy. `absolute inset-0` already pins the text to the
              top of the box, so the flex bought nothing here. -->
-        {@html item}
+        {@html item.text}
       </p>
     {/each}
   </div>

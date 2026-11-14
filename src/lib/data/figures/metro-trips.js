@@ -14,6 +14,8 @@
 // 2022, line 12 in 2013 and 2022, line 11 in 2024; strikes in Q2 2018, Q4
 // 2019 and 2023, the health crisis in 2020, the Olympics in 2024.
 // Reproduction is allowed with the source named (the workbook's preamble).
-export const source = "Source: Île-de-France Mobilités (Omnil), Trafic annuel et journalier 2025, Figure 2, from RATP data";
+// SHORT ON THE PAGE (Sandra, 2026-11-14): the publisher only; the link
+// leads to the workbook, and the full reference is in the note above.
+export const source = "Source: Île-de-France Mobilités (Omnil)";
 // The workbook itself, behind the footer's link.
 export const sourceUrl = "https://omnil.cdn.prismic.io/omnil/ajFb3Y1P9HI4Uk5i_TCC_trafic_annuel_2025.xlsx";

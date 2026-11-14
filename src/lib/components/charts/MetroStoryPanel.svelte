@@ -6,11 +6,16 @@
   //
   // FIVE STATES, four moves (`pair.stages`, fractions of progress):
   //   A  the whole métro as one black line, 2000–2025, its events named;
+  //   →  stretchStart … stretchEnd (Sandra, 2026-11-14): the x axis
+  //      stretches until it starts in 2007, where the lines' series start.
+  //      The total line stays one black line and the scale stays its own;
+  //      the years before 2007 leave at the plot's left edge;
+  //   A′ the total, 2007–2025;
   //   →  linesStart … linesEnd: a copy of that line per métro line moves to
   //      the line's own values, still black (the colours come in one quick
-  //      fade once all have landed), while the scale goes
-  //      from the total's to the lines' and the years from 2000– to 2007–
-  //      (the lines' series start in 2007);
+  //      fade once all have landed), while the scale goes from the total's
+  //      to the lines'. (Without the two stretch stages the years stretch
+  //      during this move, as they did before.)
   //   B  every line in one chart, a badge at each line's end;
   //   →  panelsStart … panelsEnd: each line moves into its own panel;
   //   C  the small multiples (MetroMorphPanel's grid);
@@ -31,9 +36,16 @@
   //   →  at sizeAt: the dots grow, timed;
   //   H  each dot's AREA is the station's value (entries in 2025), with a
   //      size legend in the map's lower left corner;
-  //   →  at moreAt (with `pair.focus.more`): one more timed fade;
+  //   →  at each `pair.focus.more` line's `at`: one more timed fade;
   //   I  those lines (4 and 14) come back, their stations sized at once, on
-  //      the same size scale.
+  //      the same size scale;
+  //   →  at each stop of `pair.focus.zoom`: the map eases in on a station,
+  //      timed, and stays (MetroPanel's `zoom`); at the next stop it travels
+  //      on to the next station; the last stop shows the whole map again.
+  //      The text beside the figure changes with every state (`pair.notes`,
+  //      lib/figure-progress.js).
+  //   →  at `pair.explore.at`: the last state, the reader's own map — see
+  //      `exploring` below.
   //   The dots, names and legend are custom too: LayerChart's Legend shows
   //   colour scales, it has no size legend.
   //
@@ -81,6 +93,10 @@
   const between = (from, to) => ease(clamp01((progress - from) / (to - from)));
   // A → B and B → C: 0 before the move, 1 after it.
   const tLines = $derived(between(stages.linesStart, stages.linesEnd));
+  // A → A′: the x axis stretches to the lines' first year.
+  const tStretch = $derived(
+    stages.stretchStart === undefined ? tLines : between(stages.stretchStart, stages.stretchEnd),
+  );
   const tPanels = $derived(between(stages.panelsStart, stages.panelsEnd));
   // C → D, per line: 0 in its panel → 1 on the map. The lines leave one
   // after another over the first quarter of the move and each takes the
@@ -123,24 +139,120 @@
     duration: 350,
     easing: cubicOut,
   });
-  // H → I: the `more` lines come back.
-  const moreFade = Tween.of(() => (stages.moreAt !== undefined && progress >= stages.moreAt ? 1 : 0), {
-    duration: 500,
-    easing: cubicOut,
+  // H → I…: the `more` lines come back ONE AT A TIME (Sandra, 2026-11-14:
+  // first line 4, then line 14), each with a timed fade of its own once the
+  // scroll passes its `at`. (`pair.focus.more` is fixed for the figure's
+  // life, so one Tween per line is made here, once.)
+  const moreFades = (pair.focus?.more ?? []).map((more) => ({
+    line: more.line,
+    fade: Tween.of(() => (progress >= more.at ? 1 : 0), { duration: 500, easing: cubicOut }),
+  }));
+  // THE LAST STATE, AFTER THE STORY: THE READER'S OWN MAP (Sandra,
+  // 2026-11-14; `pair.explore`). Past `explore.at` every line comes back and
+  // EVERY station inside Paris is a circle, with no name written (the name
+  // is in the tooltip):
+  // - its area is the station's entries (the story's own size scale);
+  // - its colour is the station's `line` in the CSV: where several lines
+  //   stop, the one that carries the most trips in a year;
+  // - a switch beside the legend sets the circles: off, equal dots, or
+  //   sized by entries (`stationMode`);
+  // - clicking a station zooms in on it, as the story's stops do; clicking
+  //   anywhere else zooms out again (`picked`).
+  const exploring = $derived(!!pair.explore && progress >= pair.explore.at);
+  const exploreFade = Tween.of(() => (exploring ? 1 : 0), { duration: 500, easing: cubicOut });
+  const STATION_MODES = [
+    ["off", "Off"],
+    ["dots", "Dots"],
+    ["entries", "By entries"],
+  ];
+  let stationMode = $state("entries");
+  const shownFade = Tween.of(() => (stationMode === "off" ? 0 : 1), { duration: 350, easing: cubicOut });
+  const sizedFade = Tween.of(() => (stationMode === "entries" ? 1 : 0), { duration: 500, easing: cubicOut });
+  let picked = $state(null);
+  // A click on a station or on the switch also reaches the window, whose
+  // handler zooms out: this marks it as handled first.
+  let handled = false;
+  function clickedElsewhere() {
+    if (handled) handled = false;
+    else picked = null;
+  }
+  // Leaving the state (scrolling back) lets go of the picked station.
+  $effect(() => {
+    if (!exploring) picked = null;
   });
+  // Every station of `pair.explore.stations`, at its dominant line's stop.
+  const exploreStations = $derived.by(() => {
+    const e = pair.explore;
+    if (!e?.stations) return [];
+    return e.stations.flatMap((row) => {
+      const line = String(row[e.lineKey]);
+      const name = row[e.nameKey];
+      const stop = pair.map.stops.features.find((s) => s.properties.line === line && s.properties.name === name);
+      if (!stop) return [];
+      return [
+        {
+          name,
+          value: row[e.valueKey],
+          coordinates: stop.geometry.coordinates,
+          lines: stop.properties.lines.split(",").map((l) => l.trim()),
+          color: pair.tracks.find((t) => t.line === line)?.color ?? brand.ink,
+        },
+      ];
+    });
+  });
+
+  // `back`: how far each of those lines is back, 0 → 1, by line; `all`:
+  // every line back at once, for the last state.
   const focus = $derived(
     pair.focus
-      ? { lines: pair.focus.lines, amount: focusFade.current, more: pair.focus.more ?? [], moreAmount: moreFade.current }
+      ? {
+          lines: pair.focus.lines,
+          amount: focusFade.current,
+          back: Object.fromEntries(moreFades.map((more) => [more.line, more.fade.current])),
+          all: exploreFade.current,
+        }
       : null,
   );
   // As MetroPanel's `strength`.
   const lineStrength = (line) =>
-    !focus || focus.lines.includes(line) ? 1 : 1 - focus.amount * (focus.more.includes(line) ? 1 - focus.moreAmount : 1);
+    !focus || focus.lines.includes(line)
+      ? 1
+      : 1 - focus.amount * (1 - Math.max(focus.back[line] ?? 0, focus.all));
   // G → H: the dots take their size.
   const sizeFade = Tween.of(() => (stages.sizeAt !== undefined && progress >= stages.sizeAt ? 1 : 0), {
     duration: 500,
     easing: cubicOut,
   });
+  // I → J…: THE MAP TRAVELS (after subwaystories.nyc). `pair.focus.zoom` is
+  // a list of stops in scroll order, [{ at, station, scale }]: past a stop's
+  // `at` the map eases in on that station and stays there; past the next it
+  // travels on to the next station; a stop without a station shows the
+  // whole map again. Before the first stop: null, the whole map.
+  // (The stop's index first, so the target is one object for as long as the
+  // map stays there, not a new one on every scroll frame.)
+  const zoomIndex = $derived.by(() => {
+    let current = -1;
+    (pair.focus?.zoom ?? []).forEach((stop, k) => {
+      if (progress >= stop.at) current = k;
+    });
+    return current;
+  });
+  const zoomTarget = $derived.by(() => {
+    // The last state: the station the reader clicked, if any.
+    if (exploring) {
+      const station = picked && exploreStations.find((s) => s.name === picked);
+      return station ? { coordinates: station.coordinates, scale: pair.explore.scale ?? 4 } : null;
+    }
+    const z = pair.focus?.zoom?.[zoomIndex];
+    if (!z?.station) return null;
+    const stop = pair.map.stops.features.find((s) => s.properties.name === z.station);
+    return stop ? { coordinates: stop.geometry.coordinates, scale: z.scale ?? 4 } : null;
+  });
+  // STATION NAMES (Sandra, 2026-11-14: not every station needs its name).
+  // On the whole map only the big stations are named (`focus.labelMin`, a
+  // value; without it all are); zoomed in there is room, so the others'
+  // names fade in with the zoom and out again with it.
+  const namesFade = Tween.of(() => (zoomTarget ? 1 : 0), { duration: 500, easing: cubicOut });
   // The stations of the kept and the added lines (`pair.focus.stations`),
   // each with its place on the map, from the map's own stops, and its
   // line's colour. A station on several of the lines is drawn ONCE, for the
@@ -163,12 +275,15 @@
           // Every métro line at the station, for the tooltip's badges.
           lines: stop.properties.lines.split(",").map((l) => l.trim()),
           color: pair.tracks.find((t) => t.line === line)?.color ?? brand.ink,
+          line,
           added: !f.lines.includes(line),
+          minor: row[f.valueKey] < (f.labelMin ?? 0),
         },
       ];
     });
   });
-  const focusMax = $derived(Math.max(1, ...focusStations.map((s) => s.value)));
+  // One size scale for the story's stations and the last state's.
+  const focusMax = $derived(Math.max(1, ...focusStations.map((s) => s.value), ...exploreStations.map((s) => s.value ?? 0)));
 
   // What shows when.
   // The one chart's axes: there for A and B, gone early in the move to C.
@@ -190,8 +305,9 @@
   // (MetroPanel's `roomy`): at lg it bleeds 40px each side (the gap to the
   // side columns since 2026-11-14), 40px up and 56px down (lg:-mx-10
   // lg:-mt-10 lg:-mb-14; lg is 87.5rem on this project, not 64rem); below lg
-  // 6vw each side (the figure is 88vw, so out to the screen's edges) and
-  // 24px down. The Chart pads 16px inside that. The charts stay in the
+  // 6vw each side (the figure is 88vw, so out to the screen's edges), 24px
+  // down and 24px up (-mt-6, 2026-11-14: on a phone the charts take that
+  // height too, so `topInset` stays 0 there). The Chart pads 16px inside that. The charts stay in the
   // column, where they were before the map grew: inset by the bleed minus
   // the padding at the sides, by the extra bleed at top and bottom.
   const wide = new MediaQuery("min-width: 87.5rem");
@@ -213,6 +329,12 @@
   const values = $derived(rows.map((r) => r.map((d) => d[pair.yKey])));
   const lineFirst = $derived(yearOf(rows[0][0]));
   const lineLast = $derived(yearOf(rows[0][rows[0].length - 1]));
+  // The year the total's x axis starts at: 2000, then (A → A′) 2007.
+  const firstShown = $derived(lerp(totalFirst, lineFirst, tStretch));
+  // The year labels cross-fade from the total's to the lines' half-way
+  // through the stretch.
+  const totalYears = $derived(clamp01(1 - 2 * tStretch));
+  const lineYears = $derived(clamp01(2 * tStretch - 1));
 
   // Round scale tops, and the gridlines under them (the top tick is the
   // scale's headroom only: no gridline or label for it).
@@ -242,19 +364,56 @@
     totalRows.map(yearOf).filter((year) => (totalLast - year) % 5 === 0),
   );
   const lineSpan = $derived(lineLast - lineFirst);
-  const lineYearStep = $derived(lineSpan % 6 === 0 ? 6 : lineSpan % 5 === 0 ? 5 : lineSpan);
-  const lineYearTicks = $derived(
-    rows[0].map(yearOf).filter((year) => (lineLast - year) % lineYearStep === 0),
+  // The one chart, 2007–2025: EVERY SECOND YEAR, counted back from the last
+  // (Sandra, 2026-11-14: with four labels the stretched axis looked empty).
+  const lineYearTicks = $derived(rows[0].map(yearOf).filter((year) => (lineLast - year) % 2 === 0));
+  // A small panel has room for four at most: even steps of six (or five).
+  const panelYearStep = $derived(lineSpan % 6 === 0 ? 6 : lineSpan % 5 === 0 ? 5 : lineSpan);
+  const panelYearTicks = $derived(
+    rows[0].map(yearOf).filter((year) => (lineLast - year) % panelYearStep === 0),
   );
   // Full at the ends, ’yy between.
   const yearLabel = (year, ticks) =>
     year === ticks[0] || year === ticks[ticks.length - 1] ? String(year) : `’${String(year % 100).padStart(2, "0")}`;
 
-  // A series' value u of the way through its years (u: 0 → 1).
+  // A series' value u of the way through its years (u: 0 → 1), ON THE
+  // HOUSE LINE: the curve the other reports' line charts draw (d3's
+  // curveMonotoneX — it rounds the corners and never overshoots a value),
+  // worked out here because these lines are morphing paths, not a Spline.
+  // The slope at each year is d3's own rule (Steffen's monotone slopes).
+  const slopeCache = new WeakMap();
+  function slopes(series) {
+    if (slopeCache.has(series)) return slopeCache.get(series);
+    const n = series.length;
+    const secant = (i) => series[i + 1] - series[i];
+    const m = series.map((_, i) => {
+      if (i === 0 || i === n - 1) return 0;
+      const a = secant(i - 1);
+      const b = secant(i);
+      return (Math.sign(a) + Math.sign(b)) * Math.min(Math.abs(a), Math.abs(b), 0.25 * Math.abs(a + b));
+    });
+    if (n > 2) {
+      m[0] = (3 * secant(0) - m[1]) / 2;
+      m[n - 1] = (3 * secant(n - 2) - m[n - 2]) / 2;
+    } else if (n === 2) {
+      m[0] = m[1] = secant(0);
+    }
+    slopeCache.set(series, m);
+    return m;
+  }
   function valueAt(series, u) {
     const f = clamp01(u) * (series.length - 1);
     const i = Math.min(series.length - 2, Math.floor(f));
-    return lerp(series[i], series[i + 1], f - i);
+    const t = f - i;
+    const m = slopes(series);
+    const t2 = t * t;
+    const t3 = t2 * t;
+    return (
+      (2 * t3 - 3 * t2 + 1) * series[i] +
+      (t3 - 2 * t2 + t) * m[i] +
+      (-2 * t3 + 3 * t2) * series[i + 1] +
+      (t3 - t2) * m[i + 1]
+    );
   }
 
   // THE ONE CHART (states A and B): in the text column, the plot ending
@@ -275,8 +434,10 @@
       bottom,
       yOf,
       badgeRadius,
-      // A: the total's years across the plot.
-      totalX: (year) => lerp(left, x1 - labelRoom, (year - totalFirst) / (totalLast - totalFirst)),
+      left,
+      // A: the total's years across the plot, from `firstShown` on (earlier
+      // years fall left of the plot and are not drawn).
+      totalX: (year) => lerp(left, x1 - labelRoom, (year - firstShown) / (totalLast - firstShown)),
       // B: the lines' years across a slightly narrower plot.
       lineX: (u) => lerp(left, x1 - labelRoom - 2 * badgeRadius - 12, u),
       badgeX: x1 - labelRoom - badgeRadius - 4,
@@ -342,14 +503,33 @@
     const one = oneChart(context.width, context.height, compact);
     const panels = panelGrid(context.width, context.height, compact);
     const mapWidth = (compact ? 2 : 3) * (pair.map.lineWeight ?? 1);
+    // THE HOUSE LINE in the chart states, as in every report's line chart
+    // (.claude/skills/dataviz, "Line charts"): 2.5px (2px on phones), round
+    // joins and caps, on a ground-coloured casing 1px wider each side, so
+    // where two lines cross one passes in front of the other.
+    const chartWidth = compact ? 2 : 2.5;
 
     // The black total, and its events.
+    // The line starts at `firstShown` (a point between two years while the
+    // axis stretches), so nothing is drawn left of the plot.
     const totalPoint = (i) => [one.totalX(totalFirst + i), one.yOf(totalValues[i] / totalTop)];
-    const totalPath = "M" + totalValues.map((_, i) => totalPoint(i).map((v) => v.toFixed(1)).join(",")).join("L");
-    const events = (pair.events ?? []).map((event) => {
-      const [x, y] = totalPoint(event.year - totalFirst);
-      return { ...event, x, y, drop: event.drop ?? 14 };
-    });
+    const startValue = valueAt(totalValues, (firstShown - totalFirst) / (totalLast - totalFirst));
+    // Four points a year, so the path follows the house curve (valueAt).
+    const totalPoints = [[one.left, one.yOf(startValue / totalTop)]];
+    for (let year = Math.floor(firstShown * 4 + 1) / 4; year <= totalLast; year += 0.25) {
+      const value = valueAt(totalValues, (year - totalFirst) / (totalLast - totalFirst));
+      totalPoints.push([one.totalX(year), one.yOf(value / totalTop)]);
+    }
+    const totalPath = "M" + totalPoints.map((point) => point.map((v) => v.toFixed(1)).join(",")).join("L");
+    // An event's name stays inside the plot: at the left edge it sits as far
+    // right of its point as it needs to (its width estimated from its length).
+    const events = (pair.events ?? [])
+      .filter((event) => event.year >= firstShown - 0.001)
+      .map((event) => {
+        const [x, y] = totalPoint(event.year - totalFirst);
+        const halfWidth = (event.label.length * (compact ? 10 : 12) * 0.55) / 2;
+        return { ...event, x, y, labelX: Math.max(x, one.x0 + halfWidth), drop: event.drop ?? 14 };
+      });
 
     // The lines: nothing to draw until the copies leave the total.
     const paths =
@@ -382,9 +562,9 @@
               opacity: lineStrength(track.line),
               color: mix(brand.ink, track.color, colourFade.current),
               d: track.strands.map((strand) => "M" + strand.map(point).join("L")).join(""),
-              width: lerp(2, mapWidth, toMap),
-              // The map's ground-coloured casing, only once the line is on its way there.
-              casing: lerp(0, compact ? 1 : 1.5, toMap),
+              width: lerp(chartWidth, mapWidth, toMap),
+              // The ground-coloured casing each side: the chart's 1px, the map's 1.5px.
+              casing: lerp(1, compact ? 1 : 1.5, toMap),
             };
           });
 
@@ -409,27 +589,40 @@
     // stays on top.
     let dots = [];
     let legend = null;
+    const dot = mapWidth * 0.95;
+    const radius = scaleSqrt().domain([0, focusMax]).range([0, compact ? 16 : 28]);
+    // The last state's circles: every station, equal dots or sized
+    // (`sizedFade`); a station without a count of its own stays a dot.
+    let explore = [];
+    if (exploreFade.current > 0 && shownFade.current > 0) {
+      explore = exploreStations
+        .map((station) => {
+          const [x, y] = projection(station.coordinates);
+          const r = station.value == null ? dot : lerp(dot, Math.max(dot, radius(station.value)), sizedFade.current);
+          return { ...station, x, y, r };
+        })
+        .sort((a, b) => b.r - a.r);
+    }
     if (focus && focus.amount > 0 && focusStations.length) {
-      const dot = mapWidth * 0.95;
-      const radius = scaleSqrt().domain([0, focusMax]).range([0, compact ? 16 : 28]);
       // The kept line's dots grow with sizeFade; an added line's arrive
       // sized, and only fade in.
       const sized = (value, added) => lerp(dot, Math.max(dot, radius(value)), added ? 1 : sizeFade.current);
       dots = focusStations
-        .filter((station) => !station.added || moreFade.current > 0)
-        .map((station) => {
+        // (The story's own stations go as the last state's arrive.)
+        .map((station) => ({
+          station,
+          back: (station.added ? (focus.back[station.line] ?? 0) : 1) * (1 - exploreFade.current),
+        }))
+        .filter(({ back }) => back > 0)
+        .map(({ station, back }) => {
           const [x, y] = projection(station.coordinates);
-          return {
-            ...station,
-            x,
-            y,
-            r: sized(station.value, station.added),
-            opacity: station.added ? moreFade.current : 1,
-          };
+          return { ...station, x, y, r: sized(station.value, station.added), opacity: back };
         })
         .sort((a, b) => b.r - a.r);
       // The legend: nested circles standing on one baseline, in the lower
-      // left corner of the street map's rectangle.
+      // left corner of the street map's rectangle. DISCREET (Sandra,
+      // 2026-11-14): straight on the map, no card behind it, the circles as
+      // thin outlines only.
       const steps = (pair.focus.legendValues ?? []).map((value) => ({ value, r: radius(value) }));
       if (steps.length) {
         const big = Math.max(...steps.map((s) => s.r));
@@ -437,12 +630,13 @@
           steps,
           big,
           x: columnInset + 14 + big,
-          bottom: context.height + 16 - (compact ? 12 : 16),
+          // In the last state it moves up, clear of the station switch under it.
+          bottom: context.height + 16 - (compact ? 12 : 16) - 30 * exploreFade.current,
         };
       }
     }
 
-    return { compact, one, panels, paths, totalPath, events, badges, dots, legend };
+    return { compact, one, panels, paths, totalPath, chartWidth, events, badges, dots, explore, legend };
   }
 </script>
 
@@ -472,7 +666,10 @@
 
   <!-- The x axis: an ink line, a short tick and a label per labelled year. -->
   <Line x1={one.x0} x2={one.x1} y1={one.bottom} y2={one.bottom} stroke={ink} strokeWidth={1} />
-  {#each [[totalYearTicks, totalLabels, one.totalX], [lineYearTicks, lineLabels, (year) => one.lineX((year - lineFirst) / (lineLast - lineFirst))]] as [ticks, opacity, xOf], k (k)}
+  <!-- The total's years (those still in the plot), then the lines' years,
+       which stand where the stretched axis has them and move with the
+       plot as it narrows for the badges (tLines). -->
+  {#each [[totalYearTicks.filter((year) => year >= firstShown), totalYears, one.totalX], [lineYearTicks, lineYears, (year) => lerp(one.totalX(year), one.lineX((year - lineFirst) / (lineLast - lineFirst)), tLines)]] as [ticks, opacity, xOf], k (k)}
     {#if opacity > 0}
       <Group {opacity}>
         {#each ticks as year (year)}
@@ -500,7 +697,7 @@
       {#each events as event (event.year)}
         <Line x1={event.x} x2={event.x} y1={event.y + 5} y2={event.y + event.drop} stroke={neutral.label} strokeWidth={1} />
         <Text
-          x={event.x}
+          x={event.labelX}
           y={event.y + event.drop + 3}
           value={event.label}
           textAnchor="middle"
@@ -548,7 +745,7 @@
        lowest panel of each column; a plain baseline in the panels above. -->
   <Line x1={panel.x0} x2={panel.x1} y1={panel.plotBottom} y2={panel.plotBottom} stroke={ink} strokeWidth={1} />
   {#if panel.lowest}
-    {#each lineYearTicks as year (year)}
+    {#each panelYearTicks as year (year)}
       {@const x = lerp(panel.x0, panel.plotX1, (year - lineFirst) / (lineLast - lineFirst))}
       <Line x1={x} x2={x} y1={panel.plotBottom} y2={panel.plotBottom + 4} stroke={ink} strokeWidth={1} />
       <!-- The first year's label starts at the axis' start, so it does not
@@ -556,7 +753,7 @@
       <Text
         {x}
         y={panel.plotBottom + 6}
-        value={yearLabel(year, lineYearTicks)}
+        value={yearLabel(year, panelYearTicks)}
         textAnchor={year === lineFirst ? "start" : "middle"}
         verticalAnchor="start"
         fill={ink}
@@ -570,7 +767,7 @@
 {#snippet overlay(context)}
   {@const drawn = scene(context)}
   {#if drawn}
-    {@const { compact, one, panels, paths, totalPath, events, badges, dots, legend } = drawn}
+    {@const { compact, one, panels, paths, totalPath, chartWidth, events, badges, dots, explore, legend } = drawn}
     <!-- Inside MetroPanel's Layer, under its stations and badges. -->
     <Group pointer-events="none">
       {#if oneChartOpacity > 0}
@@ -590,8 +787,17 @@
         <Path
           pathData={totalPath}
           fill="none"
+          stroke={brand.ground}
+          strokeWidth={chartWidth + 2}
+          opacity={totalOpacity}
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          pathData={totalPath}
+          fill="none"
           stroke={brand.ink}
-          strokeWidth={2}
+          strokeWidth={chartWidth}
           opacity={totalOpacity}
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -627,7 +833,7 @@
            is written twice, a ground-coloured outline under the ink, so it
            reads over the streets (and in the PNG, which has no stylesheet). -->
       {#if dots.length}
-        {@const nameSize = compact ? 8 : 11}
+        {@const nameSize = compact ? 9 : 12}
         <Group opacity={focus.amount}>
           {#each dots as dot (dot.name)}
             <Circle
@@ -641,7 +847,7 @@
               strokeWidth={compact ? 1 : 1.5}
             />
           {/each}
-          {#each dots as dot (dot.name)}
+          {#each dots.filter((dot) => !dot.minor || namesFade.current > 0) as dot (dot.name)}
             {@const reach = (dot.r + (compact ? 3 : 5)) * Math.SQRT1_2}
             {#each [true, false] as outline (outline)}
               <Text
@@ -654,7 +860,7 @@
                 fill={outline ? brand.ground : brand.ink}
                 stroke={outline ? brand.ground : "none"}
                 strokeWidth={outline ? 3 : 0}
-                opacity={dot.opacity}
+                opacity={dot.opacity * (dot.minor ? namesFade.current : 1)}
                 stroke-linejoin="round"
                 fontSize={nameSize}
                 font-weight={500}
@@ -695,51 +901,92 @@
             {/if}
           {/each}
         {/if}
+      {/if}
 
-        {#if legend && sizeFade.current > 0}
-          {@const labelSize = compact ? 9 : 11}
-          {@const labelX = legend.x + legend.big + (compact ? 14 : 18)}
-          <Group opacity={sizeFade.current * focus.amount}>
-            <!-- A ground-coloured card, so the legend reads over the streets. -->
-            <Path
-              pathData={`M${legend.x - legend.big - 8},${legend.bottom - 2 * legend.big - labelSize - 18}H${labelX + (compact ? 96 : 122)}V${legend.bottom + 8}H${legend.x - legend.big - 8}Z`}
-              fill={brand.ground}
-              fill-opacity={0.9}
+      <!-- THE LAST STATE: every station, its dominant line's colour, no
+           names. Then one hit circle each (small ones last, so on top): the
+           tooltip on hover, the zoom on click. -->
+      {#if explore.length}
+        <Group opacity={exploreFade.current * shownFade.current}>
+          {#each explore as dot (dot.name)}
+            <Circle
+              cx={dot.x}
+              cy={dot.y}
+              r={dot.r}
+              fill={dot.color}
+              fill-opacity={lerp(1, 0.85, sizedFade.current)}
+              stroke={brand.ground}
+              strokeWidth={compact ? 0.75 : 1}
+            />
+          {/each}
+        </Group>
+        {#if exploreFade.current === 1 && stationMode !== "off"}
+          {#each explore as dot (dot.name)}
+            {@const show = (event) =>
+              context.tooltip.show(event, {
+                id: `station-${dot.name}`,
+                station: {
+                  name: dot.name,
+                  lines: dot.lines,
+                  value: dot.value,
+                  label: pair.focus.tooltipLabel ?? "Entries",
+                },
+              })}
+            <Circle
+              cx={dot.x}
+              cy={dot.y}
+              r={Math.max(dot.r, compact ? 7 : 6)}
+              fill="transparent"
               stroke="none"
+              pointer-events="all"
+              class="cursor-pointer"
+              onpointerenter={show}
+              onpointermove={show}
+              onpointerleave={() => context.tooltip.hide()}
+              onclick={() => {
+                handled = true;
+                picked = picked === dot.name ? null : dot.name;
+              }}
             />
-            <Text
-              x={legend.x - legend.big}
-              y={legend.bottom - 2 * legend.big - 10}
-              value={pair.focus.legendTitle}
-              verticalAnchor="end"
-              fill={brand.ink}
-              fontSize={labelSize}
-              font-weight={500}
-            />
-            {#each legend.steps as step (step.value)}
-              {@const top = legend.bottom - 2 * step.r}
-              <Circle
-                cx={legend.x}
-                cy={legend.bottom - step.r}
-                r={step.r}
-                fill={neutral.faint}
-                fill-opacity={0.35}
-                stroke={neutral.label}
-                strokeWidth={1}
-              />
-              <Line x1={legend.x} x2={labelX - 4} y1={top} y2={top} stroke={neutral.label} strokeWidth={1} />
-              <Text
-                x={labelX}
-                y={top}
-                value={formatNumber(step.value / 1e6)}
-                verticalAnchor="middle"
-                fill={ink}
-                fontSize={labelSize}
-                font-weight={300}
-              />
-            {/each}
-          </Group>
+          {/each}
         {/if}
+      {/if}
+
+      {#if legend && sizeFade.current > 0}
+        {@const labelSize = compact ? 9 : 10}
+        {@const labelX = legend.x + legend.big + (compact ? 10 : 12)}
+        <Group opacity={sizeFade.current * focus.amount * lerp(1, sizedFade.current * shownFade.current, exploreFade.current)}>
+          <Text
+            x={legend.x - legend.big}
+            y={legend.bottom - 2 * legend.big - 10}
+            value={pair.focus.legendTitle}
+            verticalAnchor="end"
+            fill={ink}
+            fontSize={labelSize}
+            font-weight={400}
+          />
+          {#each legend.steps as step (step.value)}
+            {@const top = legend.bottom - 2 * step.r}
+            <Circle
+              cx={legend.x}
+              cy={legend.bottom - step.r}
+              r={step.r}
+              fill="none"
+              stroke={neutral.label}
+              strokeWidth={0.75}
+            />
+            <Line x1={legend.x} x2={labelX - 4} y1={top} y2={top} stroke={neutral.label} strokeWidth={0.75} />
+            <Text
+              x={labelX}
+              y={top}
+              value={formatNumber(step.value / 1e6)}
+              verticalAnchor="middle"
+              fill={ink}
+              fontSize={labelSize}
+              font-weight={300}
+            />
+          {/each}
+        </Group>
       {/if}
 
       {#if badgeOpacity > 0}
@@ -763,7 +1010,44 @@
   {/if}
 {/snippet}
 
-<svelte:window bind:innerWidth />
+<!-- THE STATION SWITCH (the last state only): off / equal dots / sized by
+     entries. HTML over the map's lower left corner, under the size legend;
+     the same hairline outline as the figure's PNG | CSV control. A click on
+     it must not count as "somewhere else" (which zooms out). -->
+{#snippet controls(context)}
+  {#if exploreFade.current > 0}
+    <div
+      role="group"
+      aria-label="Station circles"
+      class="absolute z-10 inline-flex h-6 items-stretch overflow-hidden rounded-md border border-base-content/28 bg-base-200/80 font-sans text-[11px] tracking-wide text-base-content/75"
+      style:left="{columnInset + 16 + 14}px"
+      style:bottom="12px"
+      style:opacity={exploreFade.current}
+      style:pointer-events={exploring ? "auto" : "none"}
+      onclick={() => (handled = true)}
+    >
+      {#each STATION_MODES as [mode, label], k (mode)}
+        {#if k > 0}
+          <span class="my-1.5 w-px bg-base-content/20" aria-hidden="true"></span>
+        {/if}
+        <button
+          type="button"
+          aria-pressed={stationMode === mode}
+          class="cursor-pointer px-2 transition-colors duration-200 hover:text-base-content {stationMode === mode
+            ? 'bg-base-content/10 text-base-content'
+            : ''}"
+          onclick={() => (stationMode = mode)}
+        >
+          {label}
+        </button>
+      {/each}
+    </div>
+  {/if}
+{/snippet}
+
+<!-- A click anywhere but on a station (or the switch) lets the map out
+     again. -->
+<svelte:window bind:innerWidth onclick={clickedElsewhere} />
 
 <MetroPanel
   roomy
@@ -773,7 +1057,8 @@
   {streets}
   {streetsOpacity}
   streetsInset={columnInset}
-  zoom={marksFade.current === 1}
+  zoom={zoomTarget}
   {focus}
   {overlay}
+  {controls}
 />

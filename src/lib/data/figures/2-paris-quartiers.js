@@ -17,5 +17,5 @@ export default {
   title: "Placeholder: Paris by Quartier",
   subtitle: "Random placeholder values for the 80 quartiers administratifs, index 0–100",
   description: "Placeholder: what the map shows and the one pattern the reader should take from it.",
-  source: "Source: random placeholder data; boundaries © Paris Open Data (ODbL)",
+  source: "Source: placeholder data; map © Paris Open Data",
 };
