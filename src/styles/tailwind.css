@@ -90,23 +90,43 @@
    left side 88px and the right only 48. Sandra liked the left and wanted the
    right to match, taking the width from the figure.)
 
+   MORE ROOM FOR THE FIGURE (paris-demo, Sandra 2026-11-14: "this project
+   needs much more visualization space"): the figure now takes what the two
+   side columns can spare — up to 1100px — and both gaps are 40px.
+   At 1400: figure 820, description 210, rail 186.
+   At 1470: figure 890, description 210, rail 186.
+   At 1920: figure 1100, description 320, rail 280.
+   (Before: 640 / 710 / 760 wide, gaps 88px.)
+
+   THE WHOLE WIDTH (same day, after the index studies, option E): the
+   chapter rail is gone from the left — the place is one line in the header
+   (ChapterRail.svelte) — so there are TWO columns now, centred as a pair:
+
+     ←40→ [        pinned figure        ] ←40→ [ description 16rem ] ←40→
+
+   The figure takes everything the description leaves, up to 1280px.
+   At 1400: figure 1024. At 1470: figure 1094. At 1920: figure 1280.
+   Everything above about the rail and the symmetric layout is history.
+
    Used only by lg: classes, so the values below lg are never read. vw rather
    than %: the rail is position:fixed and the others live in full-width
    sticky boxes, and vw gives all three the same centre line. */
 :root {
-  --fig-w: min(760px, 100vw - 760px);
-  --side-gap: 88px;
-  --side-w: min(20rem, (100vw - var(--fig-w)) / 2 - var(--side-gap) - 24px);
-  --rail-w: calc(var(--side-w) - 2.5rem);
-  /* The description's own width: like --side-w but keeping 64px clear of the
+  --side-gap: 40px;
+  --fig-w: min(1280px, 100vw - 3 * var(--side-gap) - var(--desc-w));
+  /* Left edge of the figure: the pair (figure, gap, description) centred. */
+  --fig-left: max(var(--side-gap), (100vw - var(--fig-w) - var(--side-gap) - var(--desc-w)) / 2);
+  /* (2026-11-14: 40px clear, not 64 — the column is narrower now and needs
+     the measure more than the margin.)
+     The description's own width: like --side-w but keeping 64px clear of the
      window's right edge instead of 24px (2026-10-27: at ~1470 the copy ran to
      within 24px of the edge and felt jammed). Only bites below ~1700; on
      wider screens the 20rem cap wins and nothing changes. The rail keeps
      --side-w, so it is untouched. */
-  --desc-w: min(20rem, (100vw - var(--fig-w)) / 2 - var(--side-gap) - 64px);
+  --desc-w: 16rem;
   /* No --rail-left: the rail is pinned to the window edge under the logo
      (left-6 in ChapterRail), not to the figure. */
-  --desc-left: calc(50vw + var(--fig-w) / 2 + var(--side-gap));
+  --desc-left: calc(var(--fig-left) + var(--fig-w) + var(--side-gap));
 }
 
 /* Accent underline for a marked phrase in running text, as on main: a solid

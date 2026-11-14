@@ -10,9 +10,18 @@
   //
   // Figure fields: data (long rows), xKey (Dates), yKey, groupKey, groups
   // (panel order), colors (one per group, same order), groupLabel (group →
-  // panel name). Optional: valueSuffix.
-  import { LineChart } from "layerchart";
-  import { xAxisProps, yAxisLeftProps, plotXPadding, endLabelSpace, chartPadding, excludeZeroTick, defaultYearTicks, yearTickFormat, tooltipHeaderYear, tooltipCard } from "$lib/chart-theme";
+  // panel name). Optional: valueSuffix; xTicks (the labelled years, as
+  // Dates, for a span too long to label every year — always ’yy between
+  // full-year ends); yMax (the top of the y scale, so two figures can share
+  // one scale); yTickCount (gridlines per panel, default 2); tickSuffix
+  // (the y labels' suffix where it differs from the tooltip's valueSuffix);
+  // annotations (callouts from annotation-presets.js, as on the other panels).
+  //
+  // ONE GROUP (2026-11-14): a single line needs no panel name, so the right
+  // edge is free and the y labels go where the house rule puts them — at the
+  // END of their gridlines, right-aligned, sitting on the line (yAxisProps).
+  import { AnnotationPoint, LineChart } from "layerchart";
+  import { xAxisProps, yAxisProps, yAxisLeftProps, plotXPadding, endLabelSpace, chartPadding, excludeZeroTick, resolveAnnotations, defaultYearTicks, yearTickFormat, tooltipHeaderYear, tooltipCard } from "$lib/chart-theme";
   import { formatNumber } from "$lib/format";
   import { TapTooltip } from "$lib/tapTooltip.svelte.js";
   import { ink } from "$lib/colors";
@@ -21,17 +30,22 @@
   let innerWidth = $state(1024);
 
   const formatValue = (d) => `${formatNumber(d)}${pair.valueSuffix ?? ""}`;
+  const formatTick = (d) => `${formatNumber(d)}${pair.tickSuffix ?? pair.valueSuffix ?? ""}`;
+  // Several panels are named down the right edge; one panel is not named.
+  const named = $derived(pair.groups.length > 1);
 
   // Year ticks from one panel's rows (every panel has the same years).
   const firstGroup = $derived(pair.data.filter((d) => d[pair.groupKey] === pair.groups[0]));
-  const xTicks = $derived(defaultYearTicks(firstGroup, pair.xKey, innerWidth));
-  // Each panel is short, so two gridlines each.
-  const yTicks = (scale) => excludeZeroTick(scale, 2);
+  const xTicks = $derived(pair.xTicks ?? defaultYearTicks(firstGroup, pair.xKey, innerWidth));
+  // Each panel is short, so two gridlines each (a lone tall panel asks for more).
+  const yTicks = (scale) => excludeZeroTick(scale, pair.yTickCount ?? 2);
 
   // The left strip holds the y labels; the names sit in the chart's right
   // padding, outside the plot, so the plot's own right strip stays narrow.
-  const xPadding = $derived([plotXPadding(innerWidth, true)[0], 6]);
-  const padding = $derived(chartPadding({ right: endLabelSpace(innerWidth) }));
+  const xPadding = $derived(named ? [plotXPadding(innerWidth, true)[0], 6] : plotXPadding(innerWidth));
+  const padding = $derived(named ? chartPadding({ right: endLabelSpace(innerWidth) }) : chartPadding());
+
+  const annotations = $derived(resolveAnnotations(pair.annotations ?? [], innerWidth));
 
   let context = $state();
   // Tooltip pins on click/tap (lib/tapTooltip.svelte.js).
@@ -50,12 +64,12 @@
     cRange={pair.colors}
     fy={pair.groupKey}
     fyDomain={pair.groups}
-    yDomain={[0, null]}
+    yDomain={[0, pair.yMax ?? null]}
     yNice
     facet={{
       paddingY: 0.35,
       tooltip: (d) => pair.groupLabel(d[pair.groupKey]),
-      axis: {
+      axis: named && {
         format: pair.groupLabel,
         tickLabelProps: { dx: 8, textAnchor: "start", verticalAnchor: "middle", fill: ink, class: "text-xs font-medium" },
       },
@@ -71,11 +85,17 @@
       xAxis: {
         ...xAxisProps,
         ticks: xTicks,
-        format: innerWidth >= 1024 ? (d) => String(d.getFullYear()) : yearTickFormat(xTicks),
+        format: !pair.xTicks && innerWidth >= 1024 ? (d) => String(d.getFullYear()) : yearTickFormat(xTicks),
       },
-      yAxis: { ...yAxisLeftProps, ticks: yTicks, format: formatValue },
+      yAxis: { ...(named ? yAxisLeftProps : yAxisProps), ticks: yTicks, format: formatTick },
       grid: { yTicks },
       tooltip: { ...tooltipCard(tooltipHeaderYear), item: { format: formatValue } },
     }}
-  />
+  >
+    {#snippet aboveMarks()}
+      {#each annotations as annotation, i (i)}
+        <AnnotationPoint {...annotation} />
+      {/each}
+    {/snippet}
+  </LineChart>
 </div>

@@ -79,10 +79,11 @@
   const frameOpacity = $derived(clamp01((progress - (morphEnd - 0.02)) / (1 - (morphEnd - 0.02))));
 
   // From the Chart's inner box to the text column: MetroPanel's wrapper
-  // bleeds 64px each side at lg (lg:-mx-16, 64rem = Tailwind's lg) and the
-  // Chart pads 16px, so the column starts 48px in at lg and 16px OUT below.
-  const wide = new MediaQuery("min-width: 64rem");
-  const columnInset = $derived(wide.current ? 64 - 16 : -16);
+  // bleeds 40px each side at lg (lg:-mx-10, the gap to the side columns
+  // since 2026-11-14; lg is 87.5rem on this project) and the Chart pads
+  // 16px, so the column starts 24px in at lg and 16px OUT below.
+  const wide = new MediaQuery("min-width: 87.5rem");
+  const columnInset = $derived(wide.current ? 40 - 16 : -16);
 
   // Each panel's values in year order.
   const rows = $derived(

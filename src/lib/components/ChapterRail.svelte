@@ -1,7 +1,13 @@
 <script>
-  import { fade } from "svelte/transition";
-  import { HoverGlide } from "$lib/hoverGlide.svelte.js";
-
+  // THE PLACE LINE (paris-demo, Sandra 2026-11-14, "option E" of the index
+  // studies): the rail described below is GONE from the left side, so the
+  // pinned figure can use the page's whole width. What is left of it is one
+  // line beside the Index button: the current chapter › the current
+  // sub-chapter. No figure in it (the figure names itself right below) and
+  // no list: the Index sheet lists every chapter and sub-chapter. Each of
+  // the two names jumps to its own start. All the scroll logic below is the
+  // rail's, unchanged; the notes on the rail's look are history.
+  //
   // CHAPTER RAIL (2026-09-29). The Index sheet in the header is the report's
   // outline (chapters and sub-chapters). This rail is its complement: it is
   // ALWAYS open on the CURRENT chapter — its title, every sub-chapter in it,
@@ -158,13 +164,6 @@
     };
   });
 
-  const glide = new HoverGlide(4);
-  // A new chapter swaps the rows out from under the block.
-  $effect(() => {
-    chapter?.id;
-    glide.hide();
-  });
-
   // Chapters, sub-chapter headings and figure anchors alike.
   function jumpToId(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -172,107 +171,41 @@
 
 </script>
 
-<!-- `inert` takes the rail out of the tab order and the accessibility tree
-     while it is hidden; opacity alone does neither. aria-hidden is kept
-     alongside for engines that ignore inert. max-h + overflow: a long
-     chapter scrolls inside the rail rather than running under the header. -->
+<!-- THE PLACE LINE (see the top of the script). `inert` takes it out of the
+     tab order and the accessibility tree while it is hidden; opacity alone
+     does neither. Beside the Index button: the header's 24px margin + the
+     button (~78px) + 14px = left-[7.25rem]; as tall as the header bar
+     (4.5rem), so the words sit on the button's line. Above the header
+     (z-20), under the Index sheet. -->
 <nav
   bind:this={nav}
-  class="fixed top-1/2 left-3 z-40 hidden max-h-[calc(100vh-8rem)] w-[calc(var(--rail-w)+1.5rem)] -translate-y-1/2 px-3 overflow-y-auto transition-opacity duration-200 lg:block {showRail
+  class="fixed top-0 left-[7.25rem] z-30 hidden h-[4.5rem] max-w-[calc(100vw-9rem)] items-center gap-2 font-sans text-sm transition-opacity duration-200 lg:flex {showRail
     ? 'opacity-100'
     : 'pointer-events-none opacity-0'}"
-  aria-label="In this chapter"
+  aria-label="Where you are in the report"
   aria-hidden={!showRail}
   inert={!showRail}
 >
   {#if chapter}
-    <!-- Keyed on the chapter, so moving to another one fades the new
-         contents in rather than swapping rows in place. -->
-    {#key chapter.id}
-      <div
-        {@attach glide.attach}
-        in:fade={{ duration: 200 }}
-        class="relative isolate py-2 font-sans text-base-content"
+    {@const number = chapter.num ?? chapterIndex + 1}
+    {@const subIndex = chapter.subchapters.findIndex((sub) => sub.id === activeSubId)}
+    <button
+      type="button"
+      onclick={() => jumpToId(chapter.id)}
+      class="cursor-pointer truncate text-base-content/65 transition-colors duration-200 hover:text-base-content"
+    >
+      <span class="tabular-nums">{number}</span>&nbsp; {chapter.title}
+    </button>
+    {#if subIndex >= 0}
+      <span class="text-base-content/40" aria-hidden="true">›</span>
+      <button
+        type="button"
+        onclick={() => jumpToId(chapter.subchapters[subIndex].id)}
+        aria-current="true"
+        class="cursor-pointer truncate text-base-content/85 transition-colors duration-200 hover:text-base-content"
       >
-        <div
-          aria-hidden="true"
-          class="pointer-events-none absolute -inset-x-3 top-0 -z-10 bg-base-content/6"
-          style={glide.style}
-        ></div>
-
-        <!-- Chapter: its Index number as a quiet eyebrow, then the title. -->
-        <button
-          type="button"
-          onclick={() => jumpToId(chapter.id)}
-          data-row
-          class="group block cursor-pointer text-left"
-        >
-          <span class="block text-xs text-base-content/65 tabular-nums">{chapter.num ?? chapterIndex + 1}.0</span>
-          <span class="mt-1 block text-sm leading-snug font-medium text-base-content/85">
-            {chapter.title}
-          </span>
-        </button>
-
-        <!-- Sub-chapters hang from a hairline, each with its figures under it. -->
-        <ol class="mt-4 flex list-none flex-col gap-4 border-l border-base-content/15 pl-4">
-          {#each chapter.subchapters as sub, k (sub.id)}
-            {@const subOn = activeSubId === sub.id}
-            <li>
-              <button
-                type="button"
-                onclick={() => jumpToId(sub.id)}
-                data-row
-                aria-current={subOn && !activeChart ? "true" : undefined}
-                class="group flex cursor-pointer items-baseline gap-2 text-left text-sm leading-snug transition-colors duration-200 {subOn
-                  ? 'text-base-content/85'
-                  : 'text-base-content/65 hover:text-base-content/90'}"
-              >
-                <span class="shrink-0 tabular-nums">{chapter.num ?? chapterIndex + 1}.{k + 1}</span>
-                <span>{sub.title}</span>
-              </button>
-
-              {#if sub.allCharts.length}
-                <!-- One dot per figure. Hovering a non-current figure marks
-                     it without imitating the current state: the dot shrinks
-                     to a pinpoint (the old halo went — the glide block does
-                     that job now). The shrink is a scale transform, never
-                     smaller h/w, so the text beside it does not slide. -->
-                <ul class="mt-2.5 flex list-none flex-col gap-2.5">
-                  {#each sub.allCharts as chart, j (chart.number ?? j)}
-                    {@const chartId = `${sub.id}-chart-${j}`}
-                    {@const on = activeChart === chartId}
-                    <li>
-                      <button
-                        type="button"
-                        onclick={() => jumpToId(chartId)}
-                        data-row
-                        aria-current={on ? "true" : undefined}
-                        class="group flex cursor-pointer items-start gap-2.5 text-left"
-                      >
-                        <span class="flex h-5 w-3 shrink-0 items-center justify-center">
-                          <span
-                            class="block h-2 w-2 rounded-full border-[1.5px] transition-all duration-200 {on
-                              ? 'border-base-content/38 bg-base-content/38'
-                              : 'border-base-content/28 bg-transparent group-hover:scale-[0.6] group-hover:border-base-content/65 group-hover:bg-base-content/65'}"
-                          ></span>
-                        </span>
-                        <span
-                          class="text-sm leading-snug transition-colors duration-200 {on
-                            ? 'text-base-content/85'
-                            : 'text-base-content/65 group-hover:text-base-content/90'}"
-                        >
-                          <span class="mr-1 whitespace-nowrap">{chart.number}</span>
-                          <span>{chart.title}</span>
-                        </span>
-                      </button>
-                    </li>
-                  {/each}
-                </ul>
-              {/if}
-            </li>
-          {/each}
-        </ol>
-      </div>
-    {/key}
+        <span class="tabular-nums">{number}.{subIndex + 1}</span>&nbsp; {chapter.subchapters[subIndex].title}
+      </button>
+    {/if}
   {/if}
 </nav>

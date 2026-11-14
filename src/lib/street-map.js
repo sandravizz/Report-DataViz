@@ -35,6 +35,56 @@ export function loadStreets() {
   return streets;
 }
 
+// static/paris-land.json: the water (the Seine, the canals and their basins,
+// the lakes) and the green (parks, public gardens, the two woods) of the same
+// area, from © OpenStreetMap contributors (ODbL), downloaded 2026-11-14 with
+// Overpass (natural=water; leisure=park|garden, landuse=forest,
+// natural=wood; no fountains, no private gardens; water from 0.15 ha, green
+// from 0.5 ha). Simplified to 3–5 m. { water, green }: lists of polygons, a
+// polygon a list of rings (the outer first, then its holes: the islands),
+// a ring integer deltas from ORIGIN like a street. Rings are wound the way
+// d3-geo wants them (outer rings clockwise).
+let land;
+export function loadLand() {
+  const polygons = (list) => ({
+    type: "MultiPolygon",
+    coordinates: list.map((rings) =>
+      rings.map((ring) => {
+        const flat = decodeLine(ring, 0);
+        const out = [];
+        for (let i = 0; i < flat.length; i += 2) out.push([flat[i], flat[i + 1]]);
+        return out;
+      }),
+    ),
+  });
+  land ??= fetch("/paris-land.json")
+    .then((r) => r.json())
+    .then((d) => ({ waterArea: polygons(d.water), green: polygons(d.green) }));
+  return land;
+}
+
+// The same streets as GeoJSON, for a map drawn by LayerChart (MetroPanel's
+// `streets`, the métro story's last state, 2026-11-14): one MultiLineString
+// per weight, so each is a single path. All of the file's streets, so the
+// map can fill a box wider than the city (about 2.21–2.48°E, 48.80–48.92°N).
+// `areas` (loadLand's result, optional) rides along as two more layers.
+export function streetLayers(data, areas = {}) {
+  const pairs = (coords) => {
+    const out = [];
+    for (let i = 0; i < coords.length; i += 2) out.push([coords[i], coords[i + 1]]);
+    return out;
+  };
+  const lines = (list) => ({ type: "MultiLineString", coordinates: list.map(pairs) });
+  const ranked = (test) => lines(data.ways.filter((w) => test(w.rank)).map((w) => w.coords));
+  return {
+    minor: ranked((rank) => rank === 3),
+    mid: ranked((rank) => rank === 2),
+    major: ranked((rank) => rank <= 1),
+    water: lines(data.water),
+    ...areas,
+  };
+}
+
 const MAX_LABELS = 16;
 const lerp = (a, b, t) => a + (b - a) * t;
 

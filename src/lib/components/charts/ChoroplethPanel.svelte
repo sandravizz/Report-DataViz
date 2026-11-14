@@ -35,7 +35,7 @@
 
 <svelte:window bind:innerWidth={viewportWidth} />
 
-<div class="relative min-w-0 flex-1 lg:-mx-16 lg:-mt-8">
+<div class="relative min-w-0 flex-1 lg:-mx-10 lg:-mt-8">
   <Chart
     data={pair.data}
     c={valueOf}

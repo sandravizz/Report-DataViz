@@ -7,6 +7,12 @@
   let { pair, figureEl, number, progress } = $props();
   let downloading = $state(false);
 
+  // SOURCE AS A LINK (2026-11-14): a figure with `sourceUrl` shows its source
+  // line as a link to the publication itself, opened in a new tab. The
+  // "Source:" lead stays plain text; the PNG export keeps the plain line.
+  // `sourceNote` is plain text after the link (a second source, a licence).
+  const sourceLead = $derived(pair.source?.match(/^Source:\s*/)?.[0] ?? "");
+
   function downloadName(p, ext) {
     const slug = `${p.number} ${p.title}`
       .toLowerCase()
@@ -43,7 +49,7 @@
         legend: pair.legend && pair.series
           ? pair.series.map((s) => ({ label: s.legend ?? s.key, color: s.color }))
           : null,
-        source: pair.source,
+        source: `${pair.source}${pair.sourceNote ?? ""}`,
         filename: downloadName(pair, "png"),
       });
     } catch (error) {
@@ -64,7 +70,19 @@
     ? 'mt-6 lg:mt-8'
     : 'mt-10 lg:mt-20'} flex flex-nowrap items-center justify-between gap-2 font-sans text-[11px] tracking-wide text-base-content/65 md:text-xs"
 >
-  <span class="leading-snug">{pair.source}</span>
+  <span class="leading-snug">
+    {#if pair.sourceUrl}
+      {sourceLead}<a
+        href={pair.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline decoration-base-content/35 underline-offset-2 transition-colors duration-200 hover:text-base-content hover:decoration-base-content"
+        >{pair.source.slice(sourceLead.length)}</a
+      >{pair.sourceNote ?? ""}
+    {:else}
+      {pair.source}
+    {/if}
+  </span>
   <!-- The control on every figure: a HAIRLINE OUTLINE (option B,
        2026-09-29) — 1px ink at 28%, 6px corners, darkening to 70% on hover
        while the label rolls (RollText). It replaces the neutral wash-to-fill

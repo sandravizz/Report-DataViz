@@ -77,7 +77,11 @@
           title: "Sub-chapter title",
           intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
           body: ["Placeholder body copy for this sub-chapter."],
-          charts: [figures.parisMetroRidershipLines],
+          // The métro story (Sandra, 2026-11-14): total line → all lines →
+          // small multiples → map → base map, one pinned figure. It replaces
+          // the map-to-chart study here (figures.parisMetroRidershipLines,
+          // still registered), which was the same morph the other way round.
+          charts: [figures.parisMetroStory],
         },
         // The report ENDS ON TEXT: a closing sub-chapter after the figure.
         {

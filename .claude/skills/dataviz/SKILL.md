@@ -79,6 +79,24 @@ of what goes wrong. If your chart matches an entry, it's wrong.
 - **Status colors are reserved** (good/warning/serious/critical) and never reused
   for "series 4"; they ship with an icon + label, never color alone.
 
+## Report Viz house rule: y labels at the END of the gridline
+
+Rule set by Sandra, 2026-11-14. It applies to every chart on every branch.
+
+The y axis numbers (the gridline labels) always sit at the **end** of their
+gridline: on the **right** side, **inside** the plot, right-aligned and
+sitting on top of the line. Never at the start (left) of the gridline.
+
+- In code this is `yAxisProps` in `src/lib/chart-theme.js` (right placement,
+  no rule, no tick marks) with `plotXPadding(innerWidth)` reserving the
+  labels' strip at the right end of the range.
+- `yAxisLeftProps` is the older exception for charts that name their series
+  at the right edge. Do not reach for it in a new chart. If names and y
+  labels both want the right edge, tell Sandra and show the options instead
+  of moving the labels left.
+- When the subtitle already states the unit ("in Millions"), the labels drop
+  it, so they stay short enough for their strip.
+
 ## Plugging in a design system
 
 The method is invariant; only these parameters change per system. The reference

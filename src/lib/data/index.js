@@ -12,6 +12,7 @@ import parisMetro from "./figures/4-paris-metro.js";
 import parisMetroCentre from "./figures/5-paris-metro-centre.js";
 import parisMetroRidership from "./figures/6-paris-metro-ridership.js";
 import parisMetroRidershipLines from "./figures/7-paris-metro-ridership-lines.js";
+import parisMetroStory from "./figures/8-paris-metro-story.js";
 
 export const figures = {
   parisArrondissements,
@@ -21,4 +22,5 @@ export const figures = {
   parisMetroCentre,
   parisMetroRidership,
   parisMetroRidershipLines,
+  parisMetroStory,
 };

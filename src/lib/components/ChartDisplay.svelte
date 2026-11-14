@@ -45,6 +45,11 @@
      lg: CENTRED at --fig-w, with the chapter rail and the description column
      as equal side columns — see the symmetric layout variables in
      styles/tailwind.css. (Was left-[43%] w-200, off-centre.)
+     2026-11-14 (paris-demo): no rail beside the figure any more, so at lg
+     it is NOT centred: it starts at --fig-left and takes --fig-w, all the
+     width the description leaves (styles/tailwind.css). The header bar
+     (Index button + place line) is 4.5rem; the figure starts 0.25rem under
+     it (lg:top-[4.75rem]) and keeps the 3rem under itself (100svh − 7.75rem).
      Centred with inset-x-0 + mx-auto, NOT left-1/2 -translate-x-1/2: the
      translate moved the box by half its width, which at an odd pixel width
      is a half pixel — every label, title and source line in the figure then
@@ -54,12 +59,12 @@
      collapses and expands mid-scroll, so the figure re-laid-out on every
      scroll and the chart visibly stretched and squeezed. svh is the stable
      small viewport (bar shown) — the figure always fits and never moves. -->
-<div class="absolute inset-x-0 top-[4.25rem] mx-auto w-[88vw] lg:top-24 lg:w-(--fig-w)">
+<div class="absolute inset-x-0 top-[4.25rem] mx-auto w-[88vw] lg:top-[4.75rem] lg:right-auto lg:left-(--fig-left) lg:mx-0 lg:w-(--fig-w)">
   <!-- Keyed by index: the bar/area comparison pair of Figure 1 shares one
        title, so titles are no longer unique. -->
   {#each pairs as pair, i (i)}
     <div
-      class="absolute inset-x-0 top-0 flex h-[calc(100svh-5.75rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-9rem)]"
+      class="absolute inset-x-0 top-0 flex h-[calc(100svh-5.75rem)] flex-col transition-opacity duration-500 ease-[ease] lg:h-[calc(100svh-7.75rem)]"
       style:opacity={i === activeIndex ? 1 : 0}
       style:pointer-events={i === activeIndex ? "auto" : "none"}
       bind:this={figureRefs[i]}

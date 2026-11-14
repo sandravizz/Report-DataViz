@@ -171,6 +171,9 @@
      50px bar (button h-6.5 + py-3) holding only the Index button. Things set
      from that height: ChartDisplay's
      top-[4.5rem] and h- calc, +page.svelte's scroll-mt-20. -->
+<!-- At lg the place line (ChapterRail.svelte: chapter › sub-chapter) sits
+     on this bar beside the Index button, and the pinned figures start right
+     under the bar (ChartDisplay's lg:top-[4.75rem]). -->
 <header
   bind:this={bar}
   class="fixed inset-x-0 top-0 z-20 transition-colors duration-200 {overCover ? 'bg-transparent' : 'bg-base-200'}"

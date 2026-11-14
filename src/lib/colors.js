@@ -34,6 +34,15 @@ export const neutral = {
   wash: "#E0E4DE", //   the lightest: a base map under the métro (just off the ground)
 };
 
+// The street map under the métro (MetroPanel's `streets`): water and parks
+// as the faintest tints that still read as blue and green on the ground —
+// the métro lines are the figure, the map is only where they are (Sandra,
+// 2026-11-14: "sehr, sehr dezent").
+export const mapTint = {
+  water: "#D3E1EC",
+  green: "#DDE8D8",
+};
+
 // The text colour a filled badge takes: white, or ink where the fill is
 // light (métro line 1's yellow takes ink, as on the real map).
 export function textOn(hex) {

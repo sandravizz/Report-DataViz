@@ -6,7 +6,7 @@
      same gap from the figure as the chapter rail on the left (variables in
      styles/tailwind.css). No padding of its own — --side-gap is the gap. -->
 <div
-  class="absolute top-10 left-(--desc-left) hidden w-(--desc-w) flex-col lg:top-44 lg:flex"
+  class="absolute top-10 left-(--desc-left) hidden w-(--desc-w) flex-col lg:top-[9.75rem] lg:flex"
 >
   <!-- One step below the chapter body copy in +page.svelte (16px against
        18px, same /80 ink). At an identical 18px/1.85 the narrow side column

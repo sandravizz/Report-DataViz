@@ -172,6 +172,62 @@ change the two together. Figure 7 is the same figure over a light base map
 Before all lines morphed, there was one more stage, in which the lines that
 did not morph faded out first. It is gone, as no line stays behind.
 
+## The morph backwards: the métro story
+
+Since 2026-11-14 the métro chapter opens with the same morph run the other
+way, with two chart stages in front (`MetroStoryPanel.svelte`,
+`8-paris-metro-story.js`, `kind: "metro-story"`). One pinned figure, nine
+states:
+
+| State | What is on screen |
+| --- | --- |
+| A | the whole métro as one black line, 2000–2025, with its events named |
+| B | every line in one chart, a badge at each line's end |
+| C | the small multiples |
+| D | the bare lines on the map |
+| E | the map with its base, stations and badges |
+| F | the same map over the streets of Paris |
+| G | only line 1, the other lines gone, its stations as equal named dots |
+| H | each station's dot sized by its entries in 2025, with a size legend |
+| I | lines 4 and 14 back, their stations sized on the same scale |
+
+It works the same way as the morph above. Every track point has a position
+in each state, all read from its `u`: on the total line at that year (A), on
+its own line in the one chart (B), in its panel (C), on the map (D). The
+scroll decides which two states it is between, and how far. A → B also
+changes the scale (the total's to the lines') and the years (2000– to
+2007–, where the lines' series start), so the gridlines slide and the two
+sets of labels cross-fade. D → E is the one timed fade, as in the forward
+morph.
+
+E → F (`streetsInAt`, optional) is a second timed fade: the grey city shapes
+go and the street map comes in under the lines. The streets are the landing
+page's OpenStreetMap data (`street-map.js`, `streetLayers`), drawn by
+`MetroPanel` as LayerChart `GeoPath`s in a rectangle as wide as the text column
+(`RectClipPath`, `streetsInset`) and kept in
+the figure's greys so the métro lines stay the only colour.
+
+F → G (`focusAt` with `focus`, optional) is a third timed fade: every other
+line goes completely, with all station marks and the other lines' badges, and
+the kept line's stations appear as equal dots in its colour, each named at
+45°. G → H (`sizeAt`) grows each dot until its area is the station's value
+(`focus.stations`, `valueKey`) and brings in the size legend, drawn by hand
+since LayerChart has none. What the station values count is written out in
+`8-paris-metro-story.js`.
+
+H → I (`moreAt` with `focus.more`) brings further lines back with their
+stations already sized. All stations share ONE size scale from the start, so
+the first line's circles do not change when the others arrive.
+
+The street map also carries the water (Seine, canals, lakes) and the green
+(parks, the two woods) as very faint fills (`static/paris-land.json`,
+`colors.js` `mapTint`). From state E on the map can be zoomed with plus and
+minus buttons (`MetroPanel`'s `zoom`, LayerChart's `transform` in
+`projection` mode); scrolling back into the chart states takes the zoom back.
+
+The figure sets `holdVh: 720` (nine steps of 80vh) and its `stages` as
+fractions of that; change the two together.
+
 ## The panel frames (titles, axes)
 
 Once the lines have landed, each panel's frame fades in: a line badge and
