@@ -1,993 +1,993 @@
-iris,name,arrondissement,value
-751010101,Saint-Germain l'Auxerrois 1,1er arrondissement,54
-751010102,Saint-Germain l'Auxerrois 2,1er arrondissement,47
-751010103,Saint-Germain l'Auxerrois 3,1er arrondissement,41
-751010104,Saint-Germain l'Auxerrois 4,1er arrondissement,49
-751010105,Tuileries,1er arrondissement,44
-751010199,Seine et Berges,1er arrondissement,48
-751010201,Les Halles 1,1er arrondissement,57
-751010202,Les Halles 2,1er arrondissement,51
-751010203,Les Halles 3,1er arrondissement,36
-751010204,Les Halles 4,1er arrondissement,53
-751010205,Les Halles 5,1er arrondissement,52
-751010206,Les Halles 6,1er arrondissement,62
-751010301,Palais Royal 1,1er arrondissement,50
-751010302,Palais Royal 2,1er arrondissement,53
-751010303,Palais Royal 3,1er arrondissement,36
-751010401,Place Vendôme 1,1er arrondissement,54
-751010402,Place Vendôme 2,1er arrondissement,52
-751020501,Gaillon 1,2e arrondissement,49
-751020502,Gaillon 2,2e arrondissement,63
-751020503,Gaillon 3,2e arrondissement,47
-751020601,Vivienne 1,2e arrondissement,54
-751020602,Vivienne 2,2e arrondissement,57
-751020701,Mail 1,2e arrondissement,47
-751020702,Mail 2,2e arrondissement,48
-751020703,Mail 3,2e arrondissement,47
-751020704,Mail 4,2e arrondissement,49
-751020801,Bonne Nouvelle 1,2e arrondissement,53
-751020802,Bonne Nouvelle 2,2e arrondissement,50
-751020803,Bonne Nouvelle 3,2e arrondissement,54
-751020804,Bonne Nouvelle 4,2e arrondissement,56
-751020805,Bonne Nouvelle 5,2e arrondissement,60
-751030901,Arts et Métiers 1,3e arrondissement,41
-751030902,Arts et Métiers 2,3e arrondissement,51
-751030903,Arts et Métiers 3,3e arrondissement,57
-751030904,Arts et Métiers 4,3e arrondissement,56
-751030905,Arts et Métiers 5,3e arrondissement,51
-751031001,Enfants Rouges 1,3e arrondissement,58
-751031002,Enfants Rouges 2,3e arrondissement,44
-751031003,Enfants Rouges 3,3e arrondissement,60
-751031004,Enfants Rouges 4,3e arrondissement,48
-751031101,Les Archives 1,3e arrondissement,49
-751031102,Les Archives 2,3e arrondissement,48
-751031103,Les Archives 3,3e arrondissement,50
-751031104,Les Archives 4,3e arrondissement,42
-751031201,Sainte-Avoye 1,3e arrondissement,55
-751031202,Sainte-Avoye 2,3e arrondissement,57
-751031203,Sainte-Avoye 3,3e arrondissement,41
-751031204,Sainte-Avoye 4,3e arrondissement,58
-751041301,Saint-Merri 1,4e arrondissement,46
-751041302,Saint-Merri 2,4e arrondissement,64
-751041303,Saint-Merri 3,4e arrondissement,56
-751041304,Saint-Merri 4,4e arrondissement,63
-751041305,Saint-Merri 5,4e arrondissement,53
-751041399,Seine et Berges 1,4e arrondissement,46
-751041401,Saint-Gervais 1,4e arrondissement,51
-751041402,Saint-Gervais 2,4e arrondissement,58
-751041403,Saint-Gervais 3,4e arrondissement,45
-751041404,Saint-Gervais 4,4e arrondissement,53
-751041499,Seine et Berges 2,4e arrondissement,56
-751041501,Arsenal 1,4e arrondissement,46
-751041502,Arsenal 2,4e arrondissement,51
-751041503,Arsenal 3,4e arrondissement,59
-751041504,Arsenal 4,4e arrondissement,49
-751041588,Bassin de l'Arsenal,4e arrondissement,45
-751041599,Seine et Berges 3,4e arrondissement,51
-751041601,Notre-Dame 1,4e arrondissement,48
-751041602,Notre-Dame 2,4e arrondissement,61
-751041603,Notre-Dame 3,4e arrondissement,44
-751041699,Seine et Berges 4,4e arrondissement,54
-751051701,Saint-Victor 1,5e arrondissement,50
-751051702,Saint-Victor 2,5e arrondissement,45
-751051703,Saint-Victor 3,5e arrondissement,53
-751051704,Saint-Victor 4,5e arrondissement,50
-751051705,Saint-Victor 5,5e arrondissement,44
-751051706,Saint-Victor 6,5e arrondissement,51
-751051799,Seine et Berges 1,5e arrondissement,57
-751051801,Jardin des Plantes 1,5e arrondissement,55
-751051802,Jardin des Plantes 2,5e arrondissement,41
-751051803,Jardin des Plantes 3,5e arrondissement,57
-751051804,Jardin des Plantes 4,5e arrondissement,40
-751051805,Jardin des Plantes 5,5e arrondissement,58
-751051806,Jardin des Plantes 6,5e arrondissement,33
-751051807,Jardin des Plantes 7,5e arrondissement,51
-751051808,Jardin des Plantes 8,5e arrondissement,56
-751051809,Jardin des Plantes,5e arrondissement,53
-751051899,Seine et Berges 2,5e arrondissement,48
-751051901,Val de Grâce 1,5e arrondissement,45
-751051902,Val de Grâce 2,5e arrondissement,53
-751051903,Val de Grâce 3,5e arrondissement,40
-751051904,Val de Grâce 4,5e arrondissement,61
-751051905,Val de Grâce 5,5e arrondissement,54
-751051906,Val de Grâce 6,5e arrondissement,56
-751051907,Val de Grâce 7,5e arrondissement,53
-751051908,Val de Grâce 8,5e arrondissement,51
-751052001,Sorbonne 1,5e arrondissement,47
-751052002,Sorbonne 2,5e arrondissement,52
-751052003,Sorbonne 3,5e arrondissement,56
-751052004,Sorbonne 4,5e arrondissement,52
-751052005,Sorbonne 5,5e arrondissement,49
-751052099,Seine et Berges 3,5e arrondissement,41
-751062101,Monnaie 1,6e arrondissement,53
-751062102,Monnaie 2,6e arrondissement,50
-751062103,Monnaie 3,6e arrondissement,52
-751062199,Seine et Berges 1,6e arrondissement,53
-751062201,Odéon 1,6e arrondissement,44
-751062202,Odéon 2,6e arrondissement,55
-751062203,Odéon 3,6e arrondissement,47
-751062204,Odéon 4,6e arrondissement,52
-751062205,Jardin du Luxembourg,6e arrondissement,51
-751062301,Notre-Dame des Champs 1,6e arrondissement,55
-751062302,Notre-Dame des Champs 2,6e arrondissement,57
-751062303,Notre-Dame des Champs 3,6e arrondissement,52
-751062304,Notre-Dame des Champs 4,6e arrondissement,34
-751062305,Notre-Dame des Champs 5,6e arrondissement,47
-751062306,Notre-Dame des Champs 6,6e arrondissement,39
-751062307,Notre-Dame des Champs 7,6e arrondissement,46
-751062308,Notre-Dame des Champs 8,6e arrondissement,36
-751062309,Notre-Dame des Champs 9,6e arrondissement,36
-751062310,Notre-Dame des Champs 10,6e arrondissement,40
-751062311,Notre-Dame des Champs 11,6e arrondissement,46
-751062401,Saint-Germain des Prés 1,6e arrondissement,47
-751062402,Saint-Germain des Prés 2,6e arrondissement,43
-751062499,Seine et Berges 2,6e arrondissement,47
-751072501,Saint-Thomas d'Aquin 1,7e arrondissement,44
-751072502,Saint-Thomas d'Aquin 2,7e arrondissement,54
-751072503,Saint-Thomas d'Aquin 3,7e arrondissement,48
-751072504,Saint-Thomas d'Aquin 4,7e arrondissement,36
-751072505,Saint-Thomas d'Aquin 5,7e arrondissement,48
-751072506,Saint-Thomas d'Aquin 6,7e arrondissement,50
-751072507,Saint-Thomas d'Aquin 7,7e arrondissement,46
-751072508,Saint-Thomas d'Aquin 8,7e arrondissement,55
-751072599,Seine et Berges 1,7e arrondissement,60
-751072601,Invalides 1,7e arrondissement,39
-751072602,Invalides 2,7e arrondissement,42
-751072603,Invalides 3,7e arrondissement,51
-751072604,Invalides 4,7e arrondissement,36
-751072605,Invalides 5,7e arrondissement,51
-751072606,Invalides 6,7e arrondissement,47
-751072699,Seine et Berges 2,7e arrondissement,49
-751072701,École Militaire 1,7e arrondissement,40
-751072702,École Militaire 2,7e arrondissement,40
-751072703,École Militaire 3,7e arrondissement,44
-751072704,École Militaire 4,7e arrondissement,40
-751072705,École Militaire 5,7e arrondissement,39
-751072706,École Militaire 6,7e arrondissement,39
-751072707,École Militaire 7,7e arrondissement,36
-751072801,Gros Caillou 1,7e arrondissement,36
-751072802,Gros Caillou 2,7e arrondissement,39
-751072803,Gros Caillou 3,7e arrondissement,33
-751072804,Gros Caillou 4,7e arrondissement,47
-751072805,Gros Caillou 5,7e arrondissement,31
-751072806,Gros Caillou 6,7e arrondissement,29
-751072807,Gros Caillou 7,7e arrondissement,40
-751072808,Gros Caillou 8,7e arrondissement,35
-751072809,Gros Caillou 9,7e arrondissement,49
-751072810,Gros Caillou 10,7e arrondissement,47
-751072811,Gros Caillou 11,7e arrondissement,45
-751072812,Champ de Mars,7e arrondissement,53
-751072899,Seine et Berges 3,7e arrondissement,41
-751082901,Champs Élysées 1,8e arrondissement,50
-751082902,Champs Élysées 2,8e arrondissement,50
-751082903,Champs Élysées 3,8e arrondissement,50
-751082904,Champs Élysées 4,8e arrondissement,58
-751082905,Champs Élysées 5,8e arrondissement,53
-751082906,Champs Élysées 6,8e arrondissement,69
-751082907,Concorde Jardin Champs Élysées,8e arrondissement,39
-751082999,Seine et Berges,8e arrondissement,56
-751083001,Faubourg du Roule 1,8e arrondissement,63
-751083002,Faubourg du Roule 2,8e arrondissement,71
-751083003,Faubourg du Roule 3,8e arrondissement,68
-751083004,Faubourg du Roule 4,8e arrondissement,53
-751083005,Faubourg du Roule 5,8e arrondissement,56
-751083006,Faubourg du Roule 6,8e arrondissement,56
-751083101,Madeleine 1,8e arrondissement,45
-751083102,Madeleine 2,8e arrondissement,60
-751083103,Madeleine 3,8e arrondissement,74
-751083104,Madeleine 4,8e arrondissement,54
-751083105,Madeleine 5,8e arrondissement,49
-751083106,Madeleine 6,8e arrondissement,59
-751083107,Madeleine 7,8e arrondissement,50
-751083108,Madeleine 8,8e arrondissement,47
-751083201,Europe 1,8e arrondissement,61
-751083202,Europe 2,8e arrondissement,67
-751083203,Europe 3,8e arrondissement,64
-751083204,Europe 4,8e arrondissement,64
-751083205,Europe 5,8e arrondissement,71
-751083206,Europe 6,8e arrondissement,64
-751083207,Europe 7,8e arrondissement,75
-751083208,Europe 8,8e arrondissement,69
-751083209,Europe 9,8e arrondissement,50
-751083210,Europe 10,8e arrondissement,58
-751093301,Saint-Georges 1,9e arrondissement,61
-751093302,Saint-Georges 2,9e arrondissement,49
-751093303,Saint-Georges 3,9e arrondissement,60
-751093304,Saint-Georges 4,9e arrondissement,65
-751093305,Saint-Georges 5,9e arrondissement,75
-751093306,Saint-Georges 6,9e arrondissement,57
-751093307,Saint-Georges 7,9e arrondissement,57
-751093308,Saint-Georges 8,9e arrondissement,58
-751093309,Saint-Georges 9,9e arrondissement,51
-751093310,Saint-Georges 10,9e arrondissement,65
-751093311,Saint-Georges 11,9e arrondissement,58
-751093401,Chaussée d'Antin 1,9e arrondissement,53
-751093402,Chaussée d'Antin 2,9e arrondissement,52
-751093403,Chaussée d'Antin 3,9e arrondissement,48
-751093404,Chaussée d'Antin 4,9e arrondissement,54
-751093405,Chaussée d'Antin 5,9e arrondissement,63
-751093406,Chaussée d'Antin 6,9e arrondissement,62
-751093407,Chaussée d'Antin 7,9e arrondissement,51
-751093408,Chaussée d'Antin 8,9e arrondissement,66
-751093409,Chaussée d'Antin 9,9e arrondissement,52
-751093501,Faubourg Montmartre 1,9e arrondissement,61
-751093502,Faubourg Montmartre 2,9e arrondissement,68
-751093503,Faubourg Montmartre 3,9e arrondissement,56
-751093504,Faubourg Montmartre 4,9e arrondissement,56
-751093601,Rochechouart 1,9e arrondissement,60
-751093602,Rochechouart 2,9e arrondissement,54
-751093603,Rochechouart 3,9e arrondissement,58
-751093604,Rochechouart 4,9e arrondissement,74
-751093605,Rochechouart 5,9e arrondissement,62
-751093606,Rochechouart 6,9e arrondissement,62
-751093607,Rochechouart 7,9e arrondissement,67
-751093608,Rochechouart 8,9e arrondissement,80
-751093609,Rochechouart 9,9e arrondissement,72
-751093610,Rochechouart 10,9e arrondissement,56
-751103701,Saint-Vincent de Paul 1,10e arrondissement,55
-751103702,Saint-Vincent de Paul 2,10e arrondissement,58
-751103703,Saint-Vincent de Paul 3,10e arrondissement,56
-751103704,Saint-Vincent de Paul 4,10e arrondissement,58
-751103705,Saint-Vincent de Paul 5,10e arrondissement,57
-751103706,Saint-Vincent de Paul 6,10e arrondissement,62
-751103707,Saint-Vincent de Paul 7,10e arrondissement,50
-751103708,Saint-Vincent de Paul 8,10e arrondissement,55
-751103709,Saint-Vincent de Paul 9,10e arrondissement,65
-751103710,Saint-Vincent de Paul 10,10e arrondissement,61
-751103711,Saint-Vincent de Paul 11,10e arrondissement,58
-751103712,Saint-Vincent de Paul 12,10e arrondissement,56
-751103801,Porte Saint-Denis 1,10e arrondissement,51
-751103802,Porte Saint-Denis 2,10e arrondissement,51
-751103803,Porte Saint-Denis 3,10e arrondissement,38
-751103804,Porte Saint-Denis 4,10e arrondissement,55
-751103805,Porte Saint-Denis 5,10e arrondissement,60
-751103806,Porte Saint-Denis 6,10e arrondissement,62
-751103901,Porte Saint-Martin 1,10e arrondissement,53
-751103902,Porte Saint-Martin 2,10e arrondissement,53
-751103903,Porte Saint-Martin 3,10e arrondissement,53
-751103904,Porte Saint-Martin 4,10e arrondissement,61
-751103905,Porte Saint-Martin 5,10e arrondissement,57
-751103906,Porte Saint-Martin 6,10e arrondissement,60
-751103907,Porte Saint-Martin 7,10e arrondissement,45
-751103908,Porte Saint-Martin 8,10e arrondissement,46
-751103909,Porte Saint-Martin 9,10e arrondissement,54
-751103910,Porte Saint-Martin 10,10e arrondissement,66
-751103988,Canal Saint-Martin 1,10e arrondissement,52
-751104001,Hôpital Saint-Louis 1,10e arrondissement,59
-751104002,Hôpital Saint-Louis 2,10e arrondissement,52
-751104003,Hôpital Saint-Louis 3,10e arrondissement,48
-751104004,Hôpital Saint-Louis 4,10e arrondissement,47
-751104005,Hôpital Saint-Louis 5,10e arrondissement,51
-751104006,Hôpital Saint-Louis 6,10e arrondissement,59
-751104007,Hôpital Saint-Louis 7,10e arrondissement,43
-751104008,Hôpital Saint-Louis 8,10e arrondissement,64
-751104009,Hôpital Saint-Louis 9,10e arrondissement,58
-751104010,Hôpital Saint-Louis 10,10e arrondissement,64
-751104011,Hôpital Saint-Louis 11,10e arrondissement,58
-751104012,Hôpital Saint-Louis 12,10e arrondissement,56
-751104088,Canal Saint-Martin 2,10e arrondissement,60
-751114101,Folie Méricourt 1,11e arrondissement,39
-751114102,Folie Méricourt 2,11e arrondissement,53
-751114103,Folie Méricourt 3,11e arrondissement,57
-751114104,Folie Méricourt 4,11e arrondissement,46
-751114105,Folie Méricourt 5,11e arrondissement,48
-751114106,Folie Méricourt 6,11e arrondissement,63
-751114107,Folie Méricourt 7,11e arrondissement,46
-751114108,Folie Méricourt 8,11e arrondissement,48
-751114109,Folie Méricourt 9,11e arrondissement,57
-751114110,Folie Méricourt 10,11e arrondissement,57
-751114111,Folie Méricourt 11,11e arrondissement,43
-751114112,Folie Méricourt 12,11e arrondissement,49
-751114113,Folie Méricourt 13,11e arrondissement,55
-751114114,Folie Méricourt 14,11e arrondissement,50
-751114115,Folie Méricourt 15,11e arrondissement,53
-751114201,Saint-Ambroise 1,11e arrondissement,58
-751114202,Saint-Ambroise 2,11e arrondissement,58
-751114203,Saint-Ambroise 3,11e arrondissement,54
-751114204,Saint-Ambroise 4,11e arrondissement,42
-751114205,Saint-Ambroise 5,11e arrondissement,55
-751114206,Saint-Ambroise 6,11e arrondissement,60
-751114207,Saint-Ambroise 7,11e arrondissement,50
-751114208,Saint-Ambroise 8,11e arrondissement,56
-751114209,Saint-Ambroise 9,11e arrondissement,52
-751114210,Saint-Ambroise 10,11e arrondissement,53
-751114211,Saint-Ambroise 11,11e arrondissement,45
-751114212,Saint-Ambroise 12,11e arrondissement,55
-751114213,Saint-Ambroise 13,11e arrondissement,55
-751114214,Saint-Ambroise 14,11e arrondissement,52
-751114301,Roquette 1,11e arrondissement,53
-751114302,Roquette 2,11e arrondissement,60
-751114303,Roquette 3,11e arrondissement,54
-751114304,Roquette 4,11e arrondissement,54
-751114305,Roquette 5,11e arrondissement,56
-751114306,Roquette 6,11e arrondissement,54
-751114307,Roquette 7,11e arrondissement,56
-751114308,Roquette 8,11e arrondissement,51
-751114309,Roquette 9,11e arrondissement,57
-751114310,Roquette 10,11e arrondissement,48
-751114311,Roquette 11,11e arrondissement,53
-751114312,Roquette 12,11e arrondissement,40
-751114313,Roquette 13,11e arrondissement,60
-751114314,Roquette 14,11e arrondissement,54
-751114315,Roquette 15,11e arrondissement,55
-751114316,Roquette 16,11e arrondissement,55
-751114317,Roquette 17,11e arrondissement,51
-751114318,Roquette 18,11e arrondissement,41
-751114319,Roquette 19,11e arrondissement,61
-751114320,Roquette 20,11e arrondissement,44
-751114321,Roquette 21,11e arrondissement,64
-751114401,Sainte-Marguerite 1,11e arrondissement,46
-751114402,Sainte-Marguerite 2,11e arrondissement,59
-751114403,Sainte-Marguerite 3,11e arrondissement,47
-751114404,Sainte-Marguerite 4,11e arrondissement,50
-751114405,Sainte-Marguerite 5,11e arrondissement,62
-751114406,Sainte-Marguerite 6,11e arrondissement,45
-751114407,Sainte-Marguerite 7,11e arrondissement,61
-751114408,Sainte-Marguerite 8,11e arrondissement,55
-751114409,Sainte-Marguerite 9,11e arrondissement,45
-751114410,Sainte-Marguerite 10,11e arrondissement,55
-751114411,Sainte-Marguerite 11,11e arrondissement,47
-751114412,Sainte-Marguerite 12,11e arrondissement,64
-751114413,Sainte-Marguerite 13,11e arrondissement,54
-751124501,Bel-Air 1,12e arrondissement,67
-751124502,Bel-Air 2,12e arrondissement,74
-751124503,Bel-Air 3,12e arrondissement,56
-751124504,Bel-Air 4,12e arrondissement,56
-751124505,Bel-Air 5,12e arrondissement,63
-751124506,Bel-Air 6,12e arrondissement,62
-751124507,Bel-Air 7,12e arrondissement,64
-751124508,Bel-Air 8,12e arrondissement,55
-751124509,Bel-Air 9,12e arrondissement,64
-751124510,Bel-Air 10,12e arrondissement,66
-751124511,Bel-Air 11,12e arrondissement,55
-751124512,Bel-Air 12,12e arrondissement,55
-751124513,Bel-Air 13,12e arrondissement,59
-751124514,Bel-Air 14,12e arrondissement,53
-751124577,Bois de Vincennes 1,12e arrondissement,71
-751124601,Picpus 1,12e arrondissement,65
-751124602,Picpus 2,12e arrondissement,60
-751124603,Picpus 3,12e arrondissement,52
-751124604,Picpus 4,12e arrondissement,56
-751124605,Picpus 5,12e arrondissement,46
-751124606,Picpus 6,12e arrondissement,60
-751124608,Picpus 8,12e arrondissement,57
-751124609,Picpus 9,12e arrondissement,55
-751124610,Picpus 10,12e arrondissement,52
-751124611,Picpus 11,12e arrondissement,65
-751124612,Picpus 12,12e arrondissement,47
-751124613,Picpus 13,12e arrondissement,51
-751124614,Picpus 14,12e arrondissement,64
-751124615,Picpus 15,12e arrondissement,54
-751124616,Picpus 16,12e arrondissement,59
-751124617,Picpus 17,12e arrondissement,70
-751124618,Picpus 18,12e arrondissement,59
-751124619,Picpus 19,12e arrondissement,60
-751124620,Picpus 20,12e arrondissement,61
-751124621,Picpus 21,12e arrondissement,70
-751124622,Picpus 22,12e arrondissement,60
-751124623,Picpus 23,12e arrondissement,54
-751124624,Picpus 24,12e arrondissement,66
-751124677,Bois de Vincennes 2,12e arrondissement,83
-751124701,Bercy 1,12e arrondissement,61
-751124702,Bercy 2,12e arrondissement,57
-751124703,Bercy 3,12e arrondissement,51
-751124704,Bercy 4,12e arrondissement,53
-751124705,Bercy 5,12e arrondissement,70
-751124706,Bercy 6,12e arrondissement,47
-751124707,Bercy 7,12e arrondissement,57
-751124708,Jardin de Bercy,12e arrondissement,59
-751124799,Seine et Berges,12e arrondissement,56
-751124801,Quinze-Vingts 1,12e arrondissement,62
-751124802,Quinze-Vingts 2,12e arrondissement,49
-751124803,Quinze-Vingts 3,12e arrondissement,45
-751124804,Quinze-Vingts 4,12e arrondissement,65
-751124805,Quinze-Vingts 5,12e arrondissement,46
-751124806,Quinze-Vingts 6,12e arrondissement,48
-751124807,Quinze-Vingts 7,12e arrondissement,58
-751124808,Quinze-Vingts 8,12e arrondissement,49
-751124809,Quinze-Vingts 9,12e arrondissement,54
-751124810,Quinze-Vingts 10,12e arrondissement,63
-751124811,Quinze-Vingts 11,12e arrondissement,61
-751124812,Quinze-Vingts 12,12e arrondissement,54
-751124813,Quinze-Vingts 13,12e arrondissement,54
-751124888,Bassin de l'Arsenal,12e arrondissement,51
-751124899,Seine et Berges,12e arrondissement,47
-751134901,Salpêtrière 1,13e arrondissement,52
-751134902,Salpêtrière 2,13e arrondissement,54
-751134903,Salpêtrière 3,13e arrondissement,47
-751134904,Salpêtrière 4,13e arrondissement,49
-751134905,Salpêtrière 5,13e arrondissement,51
-751134906,Salpêtrière 6,13e arrondissement,50
-751134907,Salpêtrière 7,13e arrondissement,46
-751134908,Salpêtrière 8,13e arrondissement,54
-751134999,Seine et Berges 1,13e arrondissement,51
-751135001,Gare 1,13e arrondissement,61
-751135002,Gare 2,13e arrondissement,45
-751135003,Gare 3,13e arrondissement,50
-751135004,Gare 4,13e arrondissement,66
-751135005,Gare 5,13e arrondissement,58
-751135006,Gare 6,13e arrondissement,47
-751135007,Gare 7,13e arrondissement,51
-751135008,Gare 8,13e arrondissement,50
-751135009,Gare 9,13e arrondissement,66
-751135010,Gare 10,13e arrondissement,55
-751135011,Gare 11,13e arrondissement,52
-751135012,Gare 12,13e arrondissement,48
-751135013,Gare 13,13e arrondissement,52
-751135014,Gare 14,13e arrondissement,57
-751135015,Gare 15,13e arrondissement,57
-751135016,Gare 16,13e arrondissement,58
-751135017,Gare 17,13e arrondissement,61
-751135018,Gare 18,13e arrondissement,50
-751135019,Gare 19,13e arrondissement,55
-751135020,Gare 20,13e arrondissement,70
-751135021,Gare 21,13e arrondissement,60
-751135023,Gare 23,13e arrondissement,54
-751135024,Gare 24,13e arrondissement,55
-751135025,Gare 25,13e arrondissement,70
-751135026,Gare 26,13e arrondissement,60
-751135027,Gare 27,13e arrondissement,47
-751135028,Gare 28,13e arrondissement,50
-751135029,Gare 29,13e arrondissement,56
-751135030,Gare 30,13e arrondissement,54
-751135031,Gare 31,13e arrondissement,47
-751135032,Gare 32,13e arrondissement,51
-751135099,Seine et Berges 2,13e arrondissement,58
-751135101,Maison Blanche 1,13e arrondissement,50
-751135102,Maison Blanche 2,13e arrondissement,55
-751135103,Maison Blanche 3,13e arrondissement,50
-751135104,Maison Blanche 4,13e arrondissement,53
-751135105,Maison Blanche 5,13e arrondissement,58
-751135106,Maison Blanche 6,13e arrondissement,63
-751135107,Maison Blanche 7,13e arrondissement,57
-751135108,Maison Blanche 8,13e arrondissement,54
-751135109,Maison Blanche 9,13e arrondissement,51
-751135110,Maison Blanche 10,13e arrondissement,59
-751135111,Maison Blanche 11,13e arrondissement,53
-751135112,Maison Blanche 12,13e arrondissement,59
-751135113,Maison Blanche 13,13e arrondissement,66
-751135114,Maison Blanche 14,13e arrondissement,57
-751135115,Maison Blanche 15,13e arrondissement,49
-751135116,Maison Blanche 16,13e arrondissement,49
-751135117,Maison Blanche 17,13e arrondissement,47
-751135118,Maison Blanche 18,13e arrondissement,48
-751135119,Maison Blanche 19,13e arrondissement,44
-751135120,Maison Blanche 20,13e arrondissement,67
-751135121,Maison Blanche 21,13e arrondissement,48
-751135122,Maison Blanche 22,13e arrondissement,52
-751135123,Maison Blanche 23,13e arrondissement,44
-751135124,Maison Blanche 24,13e arrondissement,55
-751135125,Maison Blanche 25,13e arrondissement,63
-751135201,Croulebarbe 1,13e arrondissement,57
-751135202,Croulebarbe 2,13e arrondissement,48
-751135203,Croulebarbe 3,13e arrondissement,49
-751135204,Croulebarbe 4,13e arrondissement,53
-751135205,Croulebarbe 5,13e arrondissement,54
-751135206,Croulebarbe 6,13e arrondissement,62
-751135207,Croulebarbe 7,13e arrondissement,45
-751145301,Montparnasse 1,14e arrondissement,48
-751145302,Montparnasse 2,14e arrondissement,59
-751145303,Montparnasse 3,14e arrondissement,59
-751145304,Montparnasse 4,14e arrondissement,59
-751145305,Montparnasse 5,14e arrondissement,51
-751145306,Montparnasse 6,14e arrondissement,45
-751145307,Montparnasse 7,14e arrondissement,56
-751145308,Montparnasse 8,14e arrondissement,41
-751145309,Montparnasse 9,14e arrondissement,49
-751145310,Montparnasse 10,14e arrondissement,51
-751145311,Montparnasse 11,14e arrondissement,46
-751145401,Parc de Montsouris 1,14e arrondissement,54
-751145402,Parc de Montsouris 2,14e arrondissement,52
-751145403,Parc de Montsouris 3,14e arrondissement,65
-751145404,Parc de Montsouris 4,14e arrondissement,53
-751145405,Parc de Montsouris 5,14e arrondissement,43
-751145406,Parc de Montsouris 6,14e arrondissement,52
-751145407,Parc de Montsouris 7,14e arrondissement,47
-751145501,Petit Montrouge 1,14e arrondissement,45
-751145502,Petit Montrouge 2,14e arrondissement,55
-751145503,Petit Montrouge 3,14e arrondissement,44
-751145504,Petit Montrouge 4,14e arrondissement,51
-751145505,Petit Montrouge 5,14e arrondissement,41
-751145506,Petit Montrouge 6,14e arrondissement,46
-751145507,Petit Montrouge 7,14e arrondissement,57
-751145508,Petit Montrouge 8,14e arrondissement,46
-751145509,Petit Montrouge 9,14e arrondissement,45
-751145510,Petit Montrouge 10,14e arrondissement,45
-751145511,Petit Montrouge 11,14e arrondissement,60
-751145512,Petit Montrouge 12,14e arrondissement,48
-751145513,Petit Montrouge 13,14e arrondissement,50
-751145514,Petit Montrouge 14,14e arrondissement,59
-751145515,Petit Montrouge 15,14e arrondissement,53
-751145516,Petit Montrouge 16,14e arrondissement,54
-751145601,Plaisance 1,14e arrondissement,45
-751145602,Plaisance 2,14e arrondissement,43
-751145603,Plaisance 3,14e arrondissement,45
-751145604,Plaisance 4,14e arrondissement,43
-751145605,Plaisance 5,14e arrondissement,50
-751145606,Plaisance 6,14e arrondissement,44
-751145607,Plaisance 7,14e arrondissement,49
-751145608,Plaisance 8,14e arrondissement,41
-751145609,Plaisance 9,14e arrondissement,42
-751145610,Plaisance 10,14e arrondissement,47
-751145611,Plaisance 11,14e arrondissement,44
-751145612,Plaisance 12,14e arrondissement,47
-751145613,Plaisance 13,14e arrondissement,49
-751145614,Plaisance 14,14e arrondissement,42
-751145615,Plaisance 15,14e arrondissement,48
-751145616,Plaisance 16,14e arrondissement,48
-751145617,Plaisance 17,14e arrondissement,44
-751145618,Plaisance 18,14e arrondissement,41
-751145619,Plaisance 19,14e arrondissement,53
-751145620,Plaisance 20,14e arrondissement,39
-751145621,Plaisance 21,14e arrondissement,53
-751145622,Plaisance 22,14e arrondissement,49
-751145623,Plaisance 23,14e arrondissement,40
-751145624,Plaisance 24,14e arrondissement,45
-751145625,Plaisance 25,14e arrondissement,38
-751155701,Saint-Lambert 1,15e arrondissement,44
-751155702,Saint-Lambert 2,15e arrondissement,37
-751155703,Saint-Lambert 3,15e arrondissement,35
-751155704,Saint-Lambert 4,15e arrondissement,40
-751155705,Saint-Lambert 5,15e arrondissement,50
-751155706,Saint-Lambert 6,15e arrondissement,41
-751155707,Saint-Lambert 7,15e arrondissement,32
-751155708,Saint-Lambert 8,15e arrondissement,41
-751155709,Saint-Lambert 9,15e arrondissement,41
-751155710,Saint-Lambert 10,15e arrondissement,31
-751155711,Saint-Lambert 11,15e arrondissement,38
-751155712,Saint-Lambert 12,15e arrondissement,33
-751155713,Saint-Lambert 13,15e arrondissement,47
-751155714,Saint-Lambert 14,15e arrondissement,44
-751155715,Saint-Lambert 15,15e arrondissement,45
-751155716,Saint-Lambert 16,15e arrondissement,47
-751155717,Saint-Lambert 17,15e arrondissement,34
-751155718,Saint-Lambert 18,15e arrondissement,44
-751155719,Saint-Lambert 19,15e arrondissement,44
-751155720,Saint-Lambert 20,15e arrondissement,41
-751155721,Saint-Lambert 21,15e arrondissement,46
-751155722,Saint-Lambert 22,15e arrondissement,46
-751155723,Saint-Lambert 23,15e arrondissement,44
-751155724,Saint-Lambert 24,15e arrondissement,48
-751155725,Saint-Lambert 25,15e arrondissement,30
-751155726,Saint-Lambert 26,15e arrondissement,35
-751155727,Saint-Lambert 27,15e arrondissement,41
-751155728,Saint-Lambert 28,15e arrondissement,34
-751155729,Saint-Lambert 29,15e arrondissement,43
-751155730,Saint-Lambert 30,15e arrondissement,36
-751155731,Saint-Lambert 31,15e arrondissement,50
-751155732,Saint-Lambert 32,15e arrondissement,41
-751155733,Saint-Lambert 33,15e arrondissement,37
-751155801,Necker 1,15e arrondissement,42
-751155802,Necker 2,15e arrondissement,41
-751155803,Necker 3,15e arrondissement,35
-751155804,Necker 4,15e arrondissement,34
-751155805,Necker 5,15e arrondissement,40
-751155806,Necker 6,15e arrondissement,44
-751155807,Necker 7,15e arrondissement,41
-751155808,Necker 8,15e arrondissement,46
-751155809,Necker 9,15e arrondissement,40
-751155810,Necker 10,15e arrondissement,39
-751155811,Necker 11,15e arrondissement,39
-751155812,Necker 12,15e arrondissement,41
-751155813,Necker 13,15e arrondissement,47
-751155814,Necker 14,15e arrondissement,46
-751155815,Necker 15,15e arrondissement,56
-751155816,Necker 16,15e arrondissement,37
-751155817,Necker 17,15e arrondissement,52
-751155818,Necker 18,15e arrondissement,48
-751155819,Necker 19,15e arrondissement,51
-751155901,Grenelle 1,15e arrondissement,33
-751155902,Grenelle 2,15e arrondissement,32
-751155903,Grenelle 3,15e arrondissement,45
-751155904,Grenelle 4,15e arrondissement,30
-751155905,Grenelle 5,15e arrondissement,37
-751155906,Grenelle 6,15e arrondissement,29
-751155907,Grenelle 7,15e arrondissement,22
-751155908,Grenelle 8,15e arrondissement,20
-751155909,Grenelle 9,15e arrondissement,33
-751155910,Grenelle 10,15e arrondissement,28
-751155911,Grenelle 11,15e arrondissement,37
-751155912,Grenelle 12,15e arrondissement,43
-751155913,Grenelle 13,15e arrondissement,44
-751155914,Grenelle 14,15e arrondissement,55
-751155915,Grenelle 15,15e arrondissement,29
-751155916,Grenelle 16,15e arrondissement,36
-751155917,Grenelle 17,15e arrondissement,29
-751155918,Grenelle 18,15e arrondissement,37
-751155919,Grenelle 19,15e arrondissement,38
-751155920,Grenelle 20,15e arrondissement,32
-751155999,Seine et Berges,15e arrondissement,28
-751156001,Javel 1,15e arrondissement,34
-751156002,Javel 2,15e arrondissement,38
-751156003,Javel 3,15e arrondissement,35
-751156004,Javel 4,15e arrondissement,45
-751156005,Javel 5,15e arrondissement,27
-751156006,Javel 6,15e arrondissement,42
-751156007,Javel 7,15e arrondissement,26
-751156008,Javel 8,15e arrondissement,33
-751156009,Javel 9,15e arrondissement,45
-751156010,Javel 10,15e arrondissement,21
-751156012,Javel 12,15e arrondissement,20
-751156013,Javel 13,15e arrondissement,16
-751156014,Javel 14,15e arrondissement,20
-751156015,Javel 15,15e arrondissement,35
-751156016,Javel 16,15e arrondissement,23
-751156017,Javel 17,15e arrondissement,27
-751156018,Javel 18,15e arrondissement,33
-751156019,Javel 19,15e arrondissement,37
-751156020,Javel 20,15e arrondissement,34
-751156021,Javel 21,15e arrondissement,39
-751156022,Javel 22,15e arrondissement,32
-751156023,Jardin Citroën-Cévennes,15e arrondissement,31
-751156099,Seine et Berges,15e arrondissement,29
-751166101,Auteuil 1,16e arrondissement,20
-751166102,Auteuil 2,16e arrondissement,24
-751166103,Auteuil 3,16e arrondissement,23
-751166104,Auteuil 4,16e arrondissement,32
-751166105,Auteuil 5,16e arrondissement,28
-751166106,Auteuil 6,16e arrondissement,34
-751166107,Auteuil 7,16e arrondissement,14
-751166108,Auteuil 8,16e arrondissement,17
-751166109,Auteuil 9,16e arrondissement,27
-751166110,Auteuil 10,16e arrondissement,13
-751166111,Auteuil 11,16e arrondissement,24
-751166112,Auteuil 12,16e arrondissement,14
-751166113,Auteuil 13,16e arrondissement,29
-751166114,Auteuil 14,16e arrondissement,7
-751166115,Auteuil 15,16e arrondissement,15
-751166116,Auteuil 16,16e arrondissement,30
-751166117,Auteuil 17,16e arrondissement,24
-751166118,Auteuil 18,16e arrondissement,22
-751166119,Auteuil 19,16e arrondissement,5
-751166120,Auteuil 20,16e arrondissement,27
-751166121,Auteuil 21,16e arrondissement,13
-751166122,Auteuil 22,16e arrondissement,18
-751166123,Auteuil 23,16e arrondissement,18
-751166124,Auteuil 24,16e arrondissement,27
-751166125,Auteuil 25,16e arrondissement,23
-751166126,Auteuil 26,16e arrondissement,29
-751166127,Auteuil 27,16e arrondissement,29
-751166128,Auteuil 28,16e arrondissement,34
-751166129,Auteuil 29,16e arrondissement,24
-751166130,Auteuil 30,16e arrondissement,23
-751166131,Auteuil 31,16e arrondissement,24
-751166177,Bois de Boulogne 1,16e arrondissement,12
-751166199,Seine et Berges 1,16e arrondissement,24
-751166201,Muette 1,16e arrondissement,33
-751166202,Muette 2,16e arrondissement,24
-751166203,Muette 3,16e arrondissement,15
-751166204,Muette 4,16e arrondissement,34
-751166205,Muette 5,16e arrondissement,14
-751166206,Muette 6,16e arrondissement,26
-751166207,Muette 7,16e arrondissement,25
-751166208,Muette 8,16e arrondissement,31
-751166209,Muette 9,16e arrondissement,30
-751166210,Muette 10,16e arrondissement,28
-751166211,Muette 11,16e arrondissement,31
-751166212,Muette 12,16e arrondissement,25
-751166213,Muette 13,16e arrondissement,30
-751166214,Muette 14,16e arrondissement,26
-751166215,Muette 15,16e arrondissement,27
-751166216,Muette 16,16e arrondissement,31
-751166217,Muette 17,16e arrondissement,27
-751166218,Muette 18,16e arrondissement,36
-751166219,Muette 19,16e arrondissement,29
-751166220,Muette 20,16e arrondissement,40
-751166221,Muette 21,16e arrondissement,29
-751166222,Muette 22,16e arrondissement,28
-751166223,Muette 23,16e arrondissement,29
-751166277,Bois de Boulogne 2,16e arrondissement,26
-751166299,Seine et Berges 2,16e arrondissement,34
-751166301,Porte Dauphine 1,16e arrondissement,44
-751166302,Porte Dauphine 2,16e arrondissement,35
-751166303,Porte Dauphine 3,16e arrondissement,25
-751166304,Porte Dauphine 4,16e arrondissement,37
-751166305,Porte Dauphine 5,16e arrondissement,32
-751166306,Porte Dauphine 6,16e arrondissement,49
-751166307,Porte Dauphine 7,16e arrondissement,41
-751166308,Porte Dauphine 8,16e arrondissement,37
-751166309,Porte Dauphine 9,16e arrondissement,49
-751166310,Porte Dauphine 10,16e arrondissement,46
-751166311,Porte Dauphine 11,16e arrondissement,55
-751166377,Bois de Boulogne 3,16e arrondissement,44
-751166401,Chaillot 1,16e arrondissement,52
-751166402,Chaillot 2,16e arrondissement,56
-751166403,Chaillot 3,16e arrondissement,38
-751166404,Chaillot 4,16e arrondissement,38
-751166405,Chaillot 5,16e arrondissement,38
-751166406,Chaillot 6,16e arrondissement,54
-751166407,Chaillot 7,16e arrondissement,65
-751166409,Chaillot 9,16e arrondissement,54
-751166410,Chaillot 10,16e arrondissement,48
-751166411,Chaillot 11,16e arrondissement,57
-751166412,Chaillot 12,16e arrondissement,52
-751166413,Chaillot 13,16e arrondissement,65
-751166499,Seine et Berges 3,16e arrondissement,54
-751176501,Ternes 1,17e arrondissement,65
-751176502,Ternes 2,17e arrondissement,63
-751176503,Ternes 3,17e arrondissement,65
-751176504,Ternes 4,17e arrondissement,62
-751176505,Ternes 5,17e arrondissement,76
-751176506,Ternes 6,17e arrondissement,69
-751176507,Ternes 7,17e arrondissement,65
-751176508,Ternes 8,17e arrondissement,68
-751176509,Ternes 9,17e arrondissement,58
-751176510,Ternes 10,17e arrondissement,60
-751176511,Ternes 11,17e arrondissement,70
-751176512,Ternes 12,17e arrondissement,76
-751176513,Ternes 13,17e arrondissement,69
-751176514,Ternes 14,17e arrondissement,66
-751176515,Ternes 15,17e arrondissement,66
-751176516,Ternes 16,17e arrondissement,61
-751176601,Plaine Monceau 1,17e arrondissement,64
-751176602,Plaine Monceau 2,17e arrondissement,69
-751176603,Plaine Monceau 3,17e arrondissement,56
-751176604,Plaine Monceau 4,17e arrondissement,75
-751176605,Plaine Monceau 5,17e arrondissement,63
-751176606,Plaine Monceau 6,17e arrondissement,77
-751176607,Plaine Monceau 7,17e arrondissement,76
-751176608,Plaine Monceau 8,17e arrondissement,68
-751176609,Plaine Monceau 9,17e arrondissement,78
-751176610,Plaine Monceau 10,17e arrondissement,73
-751176611,Plaine Monceau 11,17e arrondissement,77
-751176612,Plaine Monceau 12,17e arrondissement,70
-751176613,Plaine Monceau 13,17e arrondissement,64
-751176614,Plaine Monceau 14,17e arrondissement,71
-751176615,Plaine Monceau 15,17e arrondissement,81
-751176616,Plaine Monceau 16,17e arrondissement,80
-751176701,Batignolles 1,17e arrondissement,67
-751176702,Batignolles 2,17e arrondissement,78
-751176703,Batignolles 3,17e arrondissement,76
-751176704,Batignolles 4,17e arrondissement,63
-751176705,Batignolles 5,17e arrondissement,76
-751176706,Batignolles 6,17e arrondissement,69
-751176707,Batignolles 7,17e arrondissement,75
-751176708,Batignolles 8,17e arrondissement,76
-751176709,Batignolles 9,17e arrondissement,73
-751176710,Batignolles 10,17e arrondissement,84
-751176711,Batignolles 11,17e arrondissement,75
-751176712,Batignolles 12,17e arrondissement,62
-751176713,Batignolles 13,17e arrondissement,74
-751176714,Batignolles 14,17e arrondissement,74
-751176715,Batignolles 15,17e arrondissement,67
-751176716,Batignolles 16,17e arrondissement,81
-751176801,Épinettes 1,17e arrondissement,77
-751176802,Épinettes 2,17e arrondissement,69
-751176803,Épinettes 3,17e arrondissement,80
-751176804,Épinettes 4,17e arrondissement,64
-751176805,Épinettes 5,17e arrondissement,74
-751176806,Épinettes 6,17e arrondissement,86
-751176807,Épinettes 7,17e arrondissement,83
-751176808,Épinettes 8,17e arrondissement,87
-751176809,Épinettes 9,17e arrondissement,67
-751176810,Épinettes 10,17e arrondissement,75
-751176811,Épinettes 11,17e arrondissement,95
-751176812,Épinettes 12,17e arrondissement,76
-751176813,Épinettes 13,17e arrondissement,82
-751176814,Épinettes 14,17e arrondissement,76
-751176815,Épinettes 15,17e arrondissement,80
-751176816,Épinettes 16,17e arrondissement,83
-751176817,Épinettes 17,17e arrondissement,90
-751186901,Grandes Carrières 1,18e arrondissement,71
-751186902,Grandes Carrières 2,18e arrondissement,64
-751186903,Grandes Carrières 3,18e arrondissement,63
-751186904,Grandes Carrières 4,18e arrondissement,63
-751186905,Grandes Carrières 5,18e arrondissement,79
-751186906,Grandes Carrières 6,18e arrondissement,73
-751186907,Grandes Carrières 7,18e arrondissement,79
-751186908,Grandes Carrières 8,18e arrondissement,70
-751186909,Grandes Carrières 9,18e arrondissement,68
-751186910,Grandes Carrières 10,18e arrondissement,78
-751186911,Grandes Carrières 11,18e arrondissement,78
-751186912,Grandes Carrières 12,18e arrondissement,74
-751186913,Grandes Carrières 13,18e arrondissement,76
-751186914,Grandes Carrières 14,18e arrondissement,63
-751186915,Grandes Carrières 15,18e arrondissement,74
-751186916,Grandes Carrières 16,18e arrondissement,84
-751186917,Grandes Carrières 17,18e arrondissement,72
-751186918,Grandes Carrières 18,18e arrondissement,72
-751186919,Grandes Carrières 19,18e arrondissement,69
-751186920,Grandes Carrières 20,18e arrondissement,72
-751186921,Grandes Carrières 21,18e arrondissement,83
-751186922,Grandes Carrières 22,18e arrondissement,79
-751186923,Grandes Carrières 23,18e arrondissement,79
-751186924,Grandes Carrières 24,18e arrondissement,78
-751186925,Grandes Carrières 25,18e arrondissement,78
-751186926,Grandes Carrières 26,18e arrondissement,79
-751186927,Grandes Carrières 27,18e arrondissement,74
-751186928,Grandes Carrières 28,18e arrondissement,86
-751186929,Grandes Carrières 29,18e arrondissement,81
-751187001,Clignancourt 1,18e arrondissement,53
-751187002,Clignancourt 2,18e arrondissement,68
-751187003,Clignancourt 3,18e arrondissement,66
-751187004,Clignancourt 4,18e arrondissement,59
-751187005,Clignancourt 5,18e arrondissement,61
-751187006,Clignancourt 6,18e arrondissement,60
-751187007,Clignancourt 7,18e arrondissement,64
-751187008,Clignancourt 8,18e arrondissement,49
-751187009,Clignancourt 9,18e arrondissement,59
-751187010,Clignancourt 10,18e arrondissement,75
-751187011,Clignancourt 11,18e arrondissement,69
-751187012,Clignancourt 12,18e arrondissement,69
-751187013,Clignancourt 13,18e arrondissement,61
-751187014,Clignancourt 14,18e arrondissement,71
-751187015,Clignancourt 15,18e arrondissement,70
-751187016,Clignancourt 16,18e arrondissement,63
-751187017,Clignancourt 17,18e arrondissement,64
-751187018,Clignancourt 18,18e arrondissement,63
-751187019,Clignancourt 19,18e arrondissement,59
-751187020,Clignancourt 20,18e arrondissement,65
-751187021,Clignancourt 21,18e arrondissement,78
-751187022,Clignancourt 22,18e arrondissement,66
-751187023,Clignancourt 23,18e arrondissement,73
-751187024,Clignancourt 24,18e arrondissement,73
-751187025,Clignancourt 25,18e arrondissement,85
-751187026,Clignancourt 26,18e arrondissement,61
-751187027,Clignancourt 27,18e arrondissement,69
-751187101,Goutte d'Or 1,18e arrondissement,49
-751187102,Goutte d'Or 2,18e arrondissement,55
-751187103,Goutte d'Or 3,18e arrondissement,64
-751187104,Goutte d'Or 4,18e arrondissement,72
-751187105,Goutte d'Or 5,18e arrondissement,72
-751187106,Goutte d'Or 6,18e arrondissement,54
-751187107,Goutte d'Or 7,18e arrondissement,63
-751187108,Goutte d'Or 8,18e arrondissement,69
-751187109,Goutte d'Or 9,18e arrondissement,59
-751187110,Goutte d'Or 10,18e arrondissement,65
-751187201,Chapelle 1,18e arrondissement,68
-751187202,Chapelle 2,18e arrondissement,62
-751187203,Chapelle 3,18e arrondissement,59
-751187204,Chapelle 4,18e arrondissement,65
-751187205,Chapelle 5,18e arrondissement,66
-751187206,Chapelle 6,18e arrondissement,58
-751187207,Chapelle 7,18e arrondissement,71
-751187208,Chapelle 8,18e arrondissement,67
-751187209,Chapelle 9,18e arrondissement,64
-751197301,Villette 1,19e arrondissement,44
-751197302,Villette 2,19e arrondissement,63
-751197303,Villette 3,19e arrondissement,48
-751197304,Villette 4,19e arrondissement,63
-751197305,Villette 5,19e arrondissement,66
-751197306,Villette 6,19e arrondissement,65
-751197307,Villette 7,19e arrondissement,60
-751197308,Villette 8,19e arrondissement,62
-751197309,Villette 9,19e arrondissement,66
-751197310,Villette 10,19e arrondissement,57
-751197311,Villette 11,19e arrondissement,61
-751197312,Villette 12,19e arrondissement,44
-751197313,Villette 13,19e arrondissement,46
-751197314,Villette 14,19e arrondissement,51
-751197315,Villette 15,19e arrondissement,67
-751197316,Villette 16,19e arrondissement,61
-751197317,Villette 17,19e arrondissement,62
-751197318,Villette 18,19e arrondissement,54
-751197388,Bassin de la Villette,19e arrondissement,55
-751197401,Pont de Flandre 1,19e arrondissement,51
-751197402,Pont de Flandre 2,19e arrondissement,46
-751197403,Pont de Flandre 3,19e arrondissement,57
-751197404,Pont de Flandre 4,19e arrondissement,57
-751197405,Pont de Flandre 5,19e arrondissement,55
-751197406,Pont de Flandre 6,19e arrondissement,53
-751197407,Pont de Flandre 7,19e arrondissement,52
-751197408,Pont de Flandre 8,19e arrondissement,58
-751197409,Pont de Flandre 9,19e arrondissement,63
-751197410,Pont de Flandre 10,19e arrondissement,60
-751197411,Pont de Flandre 11,19e arrondissement,56
-751197412,Pont de Flandre 12,19e arrondissement,53
-751197413,Pont de Flandre 13,19e arrondissement,63
-751197488,Canal Saint-Denis,19e arrondissement,65
-751197501,Amérique 1,19e arrondissement,57
-751197502,Amérique 2,19e arrondissement,50
-751197503,Amérique 3,19e arrondissement,46
-751197504,Amérique 4,19e arrondissement,53
-751197505,Amérique 5,19e arrondissement,54
-751197506,Amérique 6,19e arrondissement,47
-751197507,Amérique 7,19e arrondissement,50
-751197508,Amérique 8,19e arrondissement,52
-751197509,Amérique 9,19e arrondissement,46
-751197510,Amérique 10,19e arrondissement,53
-751197511,Amérique 11,19e arrondissement,50
-751197512,Amérique 12,19e arrondissement,38
-751197513,Amérique 13,19e arrondissement,49
-751197514,Amérique 14,19e arrondissement,49
-751197515,Amérique 15,19e arrondissement,51
-751197516,Amérique 16,19e arrondissement,49
-751197517,Amérique 17,19e arrondissement,57
-751197518,Amérique 18,19e arrondissement,48
-751197519,Amérique 19,19e arrondissement,48
-751197520,Amérique 20,19e arrondissement,57
-751197521,Amérique 21,19e arrondissement,52
-751197522,Amérique 22,19e arrondissement,38
-751197523,Amérique 23,19e arrondissement,61
-751197524,Amérique 24,19e arrondissement,51
-751197525,Amérique 25,19e arrondissement,43
-751197601,Combat 1,19e arrondissement,51
-751197602,Combat 2,19e arrondissement,40
-751197603,Combat 3,19e arrondissement,47
-751197604,Combat 4,19e arrondissement,47
-751197605,Combat 5,19e arrondissement,44
-751197606,Combat 6,19e arrondissement,57
-751197607,Combat 7,19e arrondissement,58
-751197608,Combat 8,19e arrondissement,52
-751197609,Combat 9,19e arrondissement,57
-751197610,Combat 10,19e arrondissement,62
-751197611,Combat 11,19e arrondissement,55
-751197612,Combat 12,19e arrondissement,58
-751197613,Combat 13,19e arrondissement,62
-751197614,Combat 14,19e arrondissement,44
-751197615,Combat 15,19e arrondissement,62
-751197616,Combat 16,19e arrondissement,59
-751197617,Buttes Chaumont,19e arrondissement,49
-751207701,Belleville 1,20e arrondissement,56
-751207702,Belleville 2,20e arrondissement,58
-751207703,Belleville 3,20e arrondissement,58
-751207704,Belleville 4,20e arrondissement,46
-751207705,Belleville 5,20e arrondissement,46
-751207706,Belleville 6,20e arrondissement,47
-751207707,Belleville 7,20e arrondissement,55
-751207708,Belleville 8,20e arrondissement,48
-751207709,Belleville 9,20e arrondissement,39
-751207710,Belleville 10,20e arrondissement,59
-751207711,Belleville 11,20e arrondissement,49
-751207712,Belleville 12,20e arrondissement,38
-751207713,Belleville 13,20e arrondissement,57
-751207714,Belleville 14,20e arrondissement,53
-751207801,Saint-Fargeau 1,20e arrondissement,41
-751207802,Saint-Fargeau 2,20e arrondissement,47
-751207803,Saint-Fargeau 3,20e arrondissement,55
-751207804,Saint-Fargeau 4,20e arrondissement,53
-751207805,Saint-Fargeau 5,20e arrondissement,46
-751207806,Saint-Fargeau 6,20e arrondissement,60
-751207807,Saint-Fargeau 7,20e arrondissement,55
-751207808,Saint-Fargeau 8,20e arrondissement,58
-751207809,Saint-Fargeau 9,20e arrondissement,55
-751207810,Saint-Fargeau 10,20e arrondissement,40
-751207811,Saint-Fargeau 11,20e arrondissement,55
-751207812,Saint-Fargeau 12,20e arrondissement,46
-751207813,Saint-Fargeau 13,20e arrondissement,62
-751207814,Saint-Fargeau 14,20e arrondissement,54
-751207815,Saint-Fargeau 15,20e arrondissement,51
-751207816,Saint-Fargeau 16,20e arrondissement,48
-751207901,Père Lachaise 1,20e arrondissement,41
-751207902,Père Lachaise 2,20e arrondissement,59
-751207903,Père Lachaise 3,20e arrondissement,52
-751207904,Père Lachaise 4,20e arrondissement,50
-751207905,Père Lachaise 5,20e arrondissement,53
-751207906,Père Lachaise 6,20e arrondissement,60
-751207907,Père Lachaise 7,20e arrondissement,50
-751207908,Père Lachaise 8,20e arrondissement,60
-751207909,Père Lachaise 9,20e arrondissement,44
-751207910,Père Lachaise 10,20e arrondissement,57
-751207911,Père Lachaise 11,20e arrondissement,58
-751207912,Père Lachaise 12,20e arrondissement,47
-751207913,Père Lachaise 13,20e arrondissement,51
-751207914,Père Lachaise 14,20e arrondissement,50
-751207915,Père Lachaise 15,20e arrondissement,53
-751207916,Père Lachaise 16,20e arrondissement,55
-751207917,Père Lachaise 17,20e arrondissement,48
-751208001,Charonne 1,20e arrondissement,57
-751208002,Charonne 2,20e arrondissement,57
-751208003,Charonne 3,20e arrondissement,46
-751208004,Charonne 4,20e arrondissement,66
-751208005,Charonne 5,20e arrondissement,47
-751208006,Charonne 6,20e arrondissement,67
-751208007,Charonne 7,20e arrondissement,63
-751208008,Charonne 8,20e arrondissement,53
-751208009,Charonne 9,20e arrondissement,56
-751208010,Charonne 10,20e arrondissement,56
-751208011,Charonne 11,20e arrondissement,61
-751208012,Charonne 12,20e arrondissement,46
-751208013,Charonne 13,20e arrondissement,50
-751208014,Charonne 14,20e arrondissement,64
-751208015,Charonne 15,20e arrondissement,51
-751208016,Charonne 16,20e arrondissement,57
-751208017,Charonne 17,20e arrondissement,55
-751208018,Charonne 18,20e arrondissement,64
-751208019,Charonne 19,20e arrondissement,45
-751208020,Charonne 20,20e arrondissement,67
-751208021,Charonne 21,20e arrondissement,52
-751208022,Charonne 22,20e arrondissement,41
-751208023,Charonne 23,20e arrondissement,54
-751208024,Charonne 24,20e arrondissement,55
-751208025,Charonne 25,20e arrondissement,66
-751208026,Charonne 26,20e arrondissement,55
+iris,name,arrondissement,population
+751010101,Saint-Germain l'Auxerrois 1,1er arrondissement,1085
+751010102,Saint-Germain l'Auxerrois 2,1er arrondissement,158
+751010103,Saint-Germain l'Auxerrois 3,1er arrondissement,346
+751010104,Saint-Germain l'Auxerrois 4,1er arrondissement,0
+751010105,Tuileries,1er arrondissement,0
+751010199,Seine et Berges,1er arrondissement,0
+751010201,Les Halles 1,1er arrondissement,2122
+751010202,Les Halles 2,1er arrondissement,1666
+751010203,Les Halles 3,1er arrondissement,2373
+751010204,Les Halles 4,1er arrondissement,2000
+751010205,Les Halles 5,1er arrondissement,0
+751010206,Les Halles 6,1er arrondissement,549
+751010301,Palais Royal 1,1er arrondissement,2501
+751010302,Palais Royal 2,1er arrondissement,177
+751010303,Palais Royal 3,1er arrondissement,290
+751010401,Place Vendôme 1,1er arrondissement,1045
+751010402,Place Vendôme 2,1er arrondissement,1163
+751020501,Gaillon 1,2e arrondissement,923
+751020502,Gaillon 2,2e arrondissement,274
+751020503,Gaillon 3,2e arrondissement,124
+751020601,Vivienne 1,2e arrondissement,1625
+751020602,Vivienne 2,2e arrondissement,1376
+751020701,Mail 1,2e arrondissement,1724
+751020702,Mail 2,2e arrondissement,2023
+751020703,Mail 3,2e arrondissement,1861
+751020704,Mail 4,2e arrondissement,732
+751020801,Bonne Nouvelle 1,2e arrondissement,2000
+751020802,Bonne Nouvelle 2,2e arrondissement,1764
+751020803,Bonne Nouvelle 3,2e arrondissement,1902
+751020804,Bonne Nouvelle 4,2e arrondissement,1970
+751020805,Bonne Nouvelle 5,2e arrondissement,2135
+751030901,Arts et Métiers 1,3e arrondissement,1858
+751030902,Arts et Métiers 2,3e arrondissement,1791
+751030903,Arts et Métiers 3,3e arrondissement,1786
+751030904,Arts et Métiers 4,3e arrondissement,1710
+751030905,Arts et Métiers 5,3e arrondissement,1672
+751031001,Enfants Rouges 1,3e arrondissement,2008
+751031002,Enfants Rouges 2,3e arrondissement,1997
+751031003,Enfants Rouges 3,3e arrondissement,2364
+751031004,Enfants Rouges 4,3e arrondissement,1913
+751031101,Les Archives 1,3e arrondissement,2317
+751031102,Les Archives 2,3e arrondissement,1960
+751031103,Les Archives 3,3e arrondissement,1519
+751031104,Les Archives 4,3e arrondissement,2485
+751031201,Sainte-Avoye 1,3e arrondissement,1903
+751031202,Sainte-Avoye 2,3e arrondissement,1785
+751031203,Sainte-Avoye 3,3e arrondissement,1737
+751031204,Sainte-Avoye 4,3e arrondissement,1967
+751041301,Saint-Merri 1,4e arrondissement,1746
+751041302,Saint-Merri 2,4e arrondissement,2319
+751041303,Saint-Merri 3,4e arrondissement,1701
+751041304,Saint-Merri 4,4e arrondissement,304
+751041305,Saint-Merri 5,4e arrondissement,0
+751041399,Seine et Berges 1,4e arrondissement,0
+751041401,Saint-Gervais 1,4e arrondissement,2961
+751041402,Saint-Gervais 2,4e arrondissement,2071
+751041403,Saint-Gervais 3,4e arrondissement,2643
+751041404,Saint-Gervais 4,4e arrondissement,1792
+751041499,Seine et Berges 2,4e arrondissement,0
+751041501,Arsenal 1,4e arrondissement,3618
+751041502,Arsenal 2,4e arrondissement,1655
+751041503,Arsenal 3,4e arrondissement,1921
+751041504,Arsenal 4,4e arrondissement,1915
+751041588,Bassin de l'Arsenal,4e arrondissement,0
+751041599,Seine et Berges 3,4e arrondissement,0
+751041601,Notre-Dame 1,4e arrondissement,2678
+751041602,Notre-Dame 2,4e arrondissement,560
+751041603,Notre-Dame 3,4e arrondissement,155
+751041699,Seine et Berges 4,4e arrondissement,0
+751051701,Saint-Victor 1,5e arrondissement,2145
+751051702,Saint-Victor 2,5e arrondissement,1666
+751051703,Saint-Victor 3,5e arrondissement,2452
+751051704,Saint-Victor 4,5e arrondissement,2908
+751051705,Saint-Victor 5,5e arrondissement,2056
+751051706,Saint-Victor 6,5e arrondissement,74
+751051799,Seine et Berges 1,5e arrondissement,0
+751051801,Jardin des Plantes 1,5e arrondissement,1825
+751051802,Jardin des Plantes 2,5e arrondissement,2444
+751051803,Jardin des Plantes 3,5e arrondissement,1890
+751051804,Jardin des Plantes 4,5e arrondissement,1952
+751051805,Jardin des Plantes 5,5e arrondissement,3159
+751051806,Jardin des Plantes 6,5e arrondissement,2009
+751051807,Jardin des Plantes 7,5e arrondissement,2136
+751051808,Jardin des Plantes 8,5e arrondissement,1375
+751051809,Jardin des Plantes,5e arrondissement,4
+751051899,Seine et Berges 2,5e arrondissement,70
+751051901,Val de Grâce 1,5e arrondissement,2903
+751051902,Val de Grâce 2,5e arrondissement,1754
+751051903,Val de Grâce 3,5e arrondissement,2273
+751051904,Val de Grâce 4,5e arrondissement,1875
+751051905,Val de Grâce 5,5e arrondissement,2494
+751051906,Val de Grâce 6,5e arrondissement,2134
+751051907,Val de Grâce 7,5e arrondissement,2296
+751051908,Val de Grâce 8,5e arrondissement,2929
+751052001,Sorbonne 1,5e arrondissement,2387
+751052002,Sorbonne 2,5e arrondissement,1644
+751052003,Sorbonne 3,5e arrondissement,1662
+751052004,Sorbonne 4,5e arrondissement,2945
+751052005,Sorbonne 5,5e arrondissement,464
+751052099,Seine et Berges 3,5e arrondissement,0
+751062101,Monnaie 1,6e arrondissement,1846
+751062102,Monnaie 2,6e arrondissement,1986
+751062103,Monnaie 3,6e arrondissement,1753
+751062199,Seine et Berges 1,6e arrondissement,0
+751062201,Odéon 1,6e arrondissement,1750
+751062202,Odéon 2,6e arrondissement,1363
+751062203,Odéon 3,6e arrondissement,2147
+751062204,Odéon 4,6e arrondissement,2530
+751062205,Jardin du Luxembourg,6e arrondissement,0
+751062301,Notre-Dame des Champs 1,6e arrondissement,1384
+751062302,Notre-Dame des Champs 2,6e arrondissement,1613
+751062303,Notre-Dame des Champs 3,6e arrondissement,1961
+751062304,Notre-Dame des Champs 4,6e arrondissement,1563
+751062305,Notre-Dame des Champs 5,6e arrondissement,2833
+751062306,Notre-Dame des Champs 6,6e arrondissement,2444
+751062307,Notre-Dame des Champs 7,6e arrondissement,1910
+751062308,Notre-Dame des Champs 8,6e arrondissement,2878
+751062309,Notre-Dame des Champs 9,6e arrondissement,2415
+751062310,Notre-Dame des Champs 10,6e arrondissement,1875
+751062311,Notre-Dame des Champs 11,6e arrondissement,1613
+751062401,Saint-Germain des Prés 1,6e arrondissement,1908
+751062402,Saint-Germain des Prés 2,6e arrondissement,2660
+751062499,Seine et Berges 2,6e arrondissement,0
+751072501,Saint-Thomas d'Aquin 1,7e arrondissement,1637
+751072502,Saint-Thomas d'Aquin 2,7e arrondissement,1384
+751072503,Saint-Thomas d'Aquin 3,7e arrondissement,1707
+751072504,Saint-Thomas d'Aquin 4,7e arrondissement,1235
+751072505,Saint-Thomas d'Aquin 5,7e arrondissement,1552
+751072506,Saint-Thomas d'Aquin 6,7e arrondissement,2336
+751072507,Saint-Thomas d'Aquin 7,7e arrondissement,0
+751072508,Saint-Thomas d'Aquin 8,7e arrondissement,4
+751072599,Seine et Berges 1,7e arrondissement,0
+751072601,Invalides 1,7e arrondissement,1914
+751072602,Invalides 2,7e arrondissement,1166
+751072603,Invalides 3,7e arrondissement,737
+751072604,Invalides 4,7e arrondissement,1174
+751072605,Invalides 5,7e arrondissement,0
+751072606,Invalides 6,7e arrondissement,237
+751072699,Seine et Berges 2,7e arrondissement,0
+751072701,École Militaire 1,7e arrondissement,2558
+751072702,École Militaire 2,7e arrondissement,1653
+751072703,École Militaire 3,7e arrondissement,1686
+751072704,École Militaire 4,7e arrondissement,1681
+751072705,École Militaire 5,7e arrondissement,1829
+751072706,École Militaire 6,7e arrondissement,1721
+751072707,École Militaire 7,7e arrondissement,119
+751072801,Gros Caillou 1,7e arrondissement,2247
+751072802,Gros Caillou 2,7e arrondissement,1536
+751072803,Gros Caillou 3,7e arrondissement,1518
+751072804,Gros Caillou 4,7e arrondissement,2889
+751072805,Gros Caillou 5,7e arrondissement,2872
+751072806,Gros Caillou 6,7e arrondissement,1744
+751072807,Gros Caillou 7,7e arrondissement,1643
+751072808,Gros Caillou 8,7e arrondissement,1488
+751072809,Gros Caillou 9,7e arrondissement,1464
+751072810,Gros Caillou 10,7e arrondissement,2785
+751072811,Gros Caillou 11,7e arrondissement,1680
+751072812,Champ de Mars,7e arrondissement,0
+751072899,Seine et Berges 3,7e arrondissement,0
+751082901,Champs Élysées 1,8e arrondissement,1031
+751082902,Champs Élysées 2,8e arrondissement,486
+751082903,Champs Élysées 3,8e arrondissement,400
+751082904,Champs Élysées 4,8e arrondissement,234
+751082905,Champs Élysées 5,8e arrondissement,329
+751082906,Champs Élysées 6,8e arrondissement,16
+751082907,Concorde Jardin Champs Élysées,8e arrondissement,0
+751082999,Seine et Berges,8e arrondissement,0
+751083001,Faubourg du Roule 1,8e arrondissement,2128
+751083002,Faubourg du Roule 2,8e arrondissement,3653
+751083003,Faubourg du Roule 3,8e arrondissement,610
+751083004,Faubourg du Roule 4,8e arrondissement,1505
+751083005,Faubourg du Roule 5,8e arrondissement,1369
+751083006,Faubourg du Roule 6,8e arrondissement,331
+751083101,Madeleine 1,8e arrondissement,129
+751083102,Madeleine 2,8e arrondissement,225
+751083103,Madeleine 3,8e arrondissement,837
+751083104,Madeleine 4,8e arrondissement,469
+751083105,Madeleine 5,8e arrondissement,1368
+751083106,Madeleine 6,8e arrondissement,1268
+751083107,Madeleine 7,8e arrondissement,339
+751083108,Madeleine 8,8e arrondissement,358
+751083201,Europe 1,8e arrondissement,1764
+751083202,Europe 2,8e arrondissement,1689
+751083203,Europe 3,8e arrondissement,1510
+751083204,Europe 4,8e arrondissement,2593
+751083205,Europe 5,8e arrondissement,3188
+751083206,Europe 6,8e arrondissement,2836
+751083207,Europe 7,8e arrondissement,2295
+751083208,Europe 8,8e arrondissement,737
+751083209,Europe 9,8e arrondissement,794
+751083210,Europe 10,8e arrondissement,927
+751093301,Saint-Georges 1,9e arrondissement,1511
+751093302,Saint-Georges 2,9e arrondissement,1799
+751093303,Saint-Georges 3,9e arrondissement,1963
+751093304,Saint-Georges 4,9e arrondissement,2407
+751093305,Saint-Georges 5,9e arrondissement,2164
+751093306,Saint-Georges 6,9e arrondissement,2231
+751093307,Saint-Georges 7,9e arrondissement,3041
+751093308,Saint-Georges 8,9e arrondissement,1885
+751093309,Saint-Georges 9,9e arrondissement,1853
+751093310,Saint-Georges 10,9e arrondissement,1610
+751093311,Saint-Georges 11,9e arrondissement,459
+751093401,Chaussée d'Antin 1,9e arrondissement,150
+751093402,Chaussée d'Antin 2,9e arrondissement,0
+751093403,Chaussée d'Antin 3,9e arrondissement,1252
+751093404,Chaussée d'Antin 4,9e arrondissement,112
+751093405,Chaussée d'Antin 5,9e arrondissement,406
+751093406,Chaussée d'Antin 6,9e arrondissement,57
+751093407,Chaussée d'Antin 7,9e arrondissement,1220
+751093408,Chaussée d'Antin 8,9e arrondissement,981
+751093409,Chaussée d'Antin 9,9e arrondissement,693
+751093501,Faubourg Montmartre 1,9e arrondissement,2913
+751093502,Faubourg Montmartre 2,9e arrondissement,1982
+751093503,Faubourg Montmartre 3,9e arrondissement,4002
+751093504,Faubourg Montmartre 4,9e arrondissement,1751
+751093601,Rochechouart 1,9e arrondissement,2513
+751093602,Rochechouart 2,9e arrondissement,3000
+751093603,Rochechouart 3,9e arrondissement,1493
+751093604,Rochechouart 4,9e arrondissement,1749
+751093605,Rochechouart 5,9e arrondissement,2171
+751093606,Rochechouart 6,9e arrondissement,2046
+751093607,Rochechouart 7,9e arrondissement,2151
+751093608,Rochechouart 8,9e arrondissement,2504
+751093609,Rochechouart 9,9e arrondissement,1925
+751093610,Rochechouart 10,9e arrondissement,2425
+751103701,Saint-Vincent de Paul 1,10e arrondissement,2157
+751103702,Saint-Vincent de Paul 2,10e arrondissement,1946
+751103703,Saint-Vincent de Paul 3,10e arrondissement,2295
+751103704,Saint-Vincent de Paul 4,10e arrondissement,2350
+751103705,Saint-Vincent de Paul 5,10e arrondissement,2151
+751103706,Saint-Vincent de Paul 6,10e arrondissement,2298
+751103707,Saint-Vincent de Paul 7,10e arrondissement,2669
+751103708,Saint-Vincent de Paul 8,10e arrondissement,1664
+751103709,Saint-Vincent de Paul 9,10e arrondissement,1832
+751103710,Saint-Vincent de Paul 10,10e arrondissement,0
+751103711,Saint-Vincent de Paul 11,10e arrondissement,0
+751103712,Saint-Vincent de Paul 12,10e arrondissement,687
+751103801,Porte Saint-Denis 1,10e arrondissement,1860
+751103802,Porte Saint-Denis 2,10e arrondissement,1515
+751103803,Porte Saint-Denis 3,10e arrondissement,2609
+751103804,Porte Saint-Denis 4,10e arrondissement,2848
+751103805,Porte Saint-Denis 5,10e arrondissement,2356
+751103806,Porte Saint-Denis 6,10e arrondissement,3573
+751103901,Porte Saint-Martin 1,10e arrondissement,1840
+751103902,Porte Saint-Martin 2,10e arrondissement,2359
+751103903,Porte Saint-Martin 3,10e arrondissement,1681
+751103904,Porte Saint-Martin 4,10e arrondissement,2270
+751103905,Porte Saint-Martin 5,10e arrondissement,1872
+751103906,Porte Saint-Martin 6,10e arrondissement,2257
+751103907,Porte Saint-Martin 7,10e arrondissement,1901
+751103908,Porte Saint-Martin 8,10e arrondissement,2506
+751103909,Porte Saint-Martin 9,10e arrondissement,1968
+751103910,Porte Saint-Martin 10,10e arrondissement,2280
+751103988,Canal Saint-Martin 1,10e arrondissement,0
+751104001,Hôpital Saint-Louis 1,10e arrondissement,2282
+751104002,Hôpital Saint-Louis 2,10e arrondissement,3200
+751104003,Hôpital Saint-Louis 3,10e arrondissement,2633
+751104004,Hôpital Saint-Louis 4,10e arrondissement,1397
+751104005,Hôpital Saint-Louis 5,10e arrondissement,1403
+751104006,Hôpital Saint-Louis 6,10e arrondissement,2469
+751104007,Hôpital Saint-Louis 7,10e arrondissement,3035
+751104008,Hôpital Saint-Louis 8,10e arrondissement,3348
+751104009,Hôpital Saint-Louis 9,10e arrondissement,2283
+751104010,Hôpital Saint-Louis 10,10e arrondissement,1895
+751104011,Hôpital Saint-Louis 11,10e arrondissement,2065
+751104012,Hôpital Saint-Louis 12,10e arrondissement,172
+751104088,Canal Saint-Martin 2,10e arrondissement,0
+751114101,Folie Méricourt 1,11e arrondissement,2994
+751114102,Folie Méricourt 2,11e arrondissement,2156
+751114103,Folie Méricourt 3,11e arrondissement,1665
+751114104,Folie Méricourt 4,11e arrondissement,1653
+751114105,Folie Méricourt 5,11e arrondissement,2057
+751114106,Folie Méricourt 6,11e arrondissement,2276
+751114107,Folie Méricourt 7,11e arrondissement,2603
+751114108,Folie Méricourt 8,11e arrondissement,2146
+751114109,Folie Méricourt 9,11e arrondissement,2615
+751114110,Folie Méricourt 10,11e arrondissement,1605
+751114111,Folie Méricourt 11,11e arrondissement,1522
+751114112,Folie Méricourt 12,11e arrondissement,1726
+751114113,Folie Méricourt 13,11e arrondissement,1394
+751114114,Folie Méricourt 14,11e arrondissement,1513
+751114115,Folie Méricourt 15,11e arrondissement,1968
+751114201,Saint-Ambroise 1,11e arrondissement,1979
+751114202,Saint-Ambroise 2,11e arrondissement,2182
+751114203,Saint-Ambroise 3,11e arrondissement,2491
+751114204,Saint-Ambroise 4,11e arrondissement,2259
+751114205,Saint-Ambroise 5,11e arrondissement,2035
+751114206,Saint-Ambroise 6,11e arrondissement,2866
+751114207,Saint-Ambroise 7,11e arrondissement,1917
+751114208,Saint-Ambroise 8,11e arrondissement,2136
+751114209,Saint-Ambroise 9,11e arrondissement,2560
+751114210,Saint-Ambroise 10,11e arrondissement,2926
+751114211,Saint-Ambroise 11,11e arrondissement,1849
+751114212,Saint-Ambroise 12,11e arrondissement,1788
+751114213,Saint-Ambroise 13,11e arrondissement,1838
+751114214,Saint-Ambroise 14,11e arrondissement,1609
+751114301,Roquette 1,11e arrondissement,1911
+751114302,Roquette 2,11e arrondissement,4175
+751114303,Roquette 3,11e arrondissement,1527
+751114304,Roquette 4,11e arrondissement,1667
+751114305,Roquette 5,11e arrondissement,3349
+751114306,Roquette 6,11e arrondissement,2729
+751114307,Roquette 7,11e arrondissement,2637
+751114308,Roquette 8,11e arrondissement,1501
+751114309,Roquette 9,11e arrondissement,1443
+751114310,Roquette 10,11e arrondissement,1857
+751114311,Roquette 11,11e arrondissement,1725
+751114312,Roquette 12,11e arrondissement,1571
+751114313,Roquette 13,11e arrondissement,2014
+751114314,Roquette 14,11e arrondissement,2057
+751114315,Roquette 15,11e arrondissement,2023
+751114316,Roquette 16,11e arrondissement,1906
+751114317,Roquette 17,11e arrondissement,1989
+751114318,Roquette 18,11e arrondissement,2072
+751114319,Roquette 19,11e arrondissement,1957
+751114320,Roquette 20,11e arrondissement,2127
+751114321,Roquette 21,11e arrondissement,1865
+751114401,Sainte-Marguerite 1,11e arrondissement,2047
+751114402,Sainte-Marguerite 2,11e arrondissement,2297
+751114403,Sainte-Marguerite 3,11e arrondissement,2146
+751114404,Sainte-Marguerite 4,11e arrondissement,2156
+751114405,Sainte-Marguerite 5,11e arrondissement,1962
+751114406,Sainte-Marguerite 6,11e arrondissement,2805
+751114407,Sainte-Marguerite 7,11e arrondissement,1891
+751114408,Sainte-Marguerite 8,11e arrondissement,3043
+751114409,Sainte-Marguerite 9,11e arrondissement,3181
+751114410,Sainte-Marguerite 10,11e arrondissement,4296
+751114411,Sainte-Marguerite 11,11e arrondissement,3935
+751114412,Sainte-Marguerite 12,11e arrondissement,3151
+751114413,Sainte-Marguerite 13,11e arrondissement,2643
+751124501,Bel-Air 1,12e arrondissement,3325
+751124502,Bel-Air 2,12e arrondissement,3818
+751124503,Bel-Air 3,12e arrondissement,2371
+751124504,Bel-Air 4,12e arrondissement,2656
+751124505,Bel-Air 5,12e arrondissement,2348
+751124506,Bel-Air 6,12e arrondissement,1940
+751124507,Bel-Air 7,12e arrondissement,2211
+751124508,Bel-Air 8,12e arrondissement,2167
+751124509,Bel-Air 9,12e arrondissement,1908
+751124510,Bel-Air 10,12e arrondissement,2055
+751124511,Bel-Air 11,12e arrondissement,2717
+751124512,Bel-Air 12,12e arrondissement,4311
+751124513,Bel-Air 13,12e arrondissement,2081
+751124514,Bel-Air 14,12e arrondissement,1793
+751124577,Bois de Vincennes 1,12e arrondissement,347
+751124601,Picpus 1,12e arrondissement,3426
+751124602,Picpus 2,12e arrondissement,2496
+751124603,Picpus 3,12e arrondissement,1593
+751124604,Picpus 4,12e arrondissement,2287
+751124605,Picpus 5,12e arrondissement,2111
+751124606,Picpus 6,12e arrondissement,2470
+751124608,Picpus 8,12e arrondissement,1935
+751124609,Picpus 9,12e arrondissement,2230
+751124610,Picpus 10,12e arrondissement,2306
+751124611,Picpus 11,12e arrondissement,1876
+751124612,Picpus 12,12e arrondissement,2569
+751124613,Picpus 13,12e arrondissement,3965
+751124614,Picpus 14,12e arrondissement,3657
+751124615,Picpus 15,12e arrondissement,3568
+751124616,Picpus 16,12e arrondissement,5034
+751124617,Picpus 17,12e arrondissement,2612
+751124618,Picpus 18,12e arrondissement,2263
+751124619,Picpus 19,12e arrondissement,4221
+751124620,Picpus 20,12e arrondissement,1881
+751124621,Picpus 21,12e arrondissement,3232
+751124622,Picpus 22,12e arrondissement,1900
+751124623,Picpus 23,12e arrondissement,2531
+751124624,Picpus 24,12e arrondissement,2169
+751124677,Bois de Vincennes 2,12e arrondissement,779
+751124701,Bercy 1,12e arrondissement,2800
+751124702,Bercy 2,12e arrondissement,2948
+751124703,Bercy 3,12e arrondissement,2433
+751124704,Bercy 4,12e arrondissement,2227
+751124705,Bercy 5,12e arrondissement,3535
+751124706,Bercy 6,12e arrondissement,0
+751124707,Bercy 7,12e arrondissement,377
+751124708,Jardin de Bercy,12e arrondissement,232
+751124799,Seine et Berges,12e arrondissement,0
+751124801,Quinze-Vingts 1,12e arrondissement,3226
+751124802,Quinze-Vingts 2,12e arrondissement,2185
+751124803,Quinze-Vingts 3,12e arrondissement,2433
+751124804,Quinze-Vingts 4,12e arrondissement,2294
+751124805,Quinze-Vingts 5,12e arrondissement,1901
+751124806,Quinze-Vingts 6,12e arrondissement,2321
+751124807,Quinze-Vingts 7,12e arrondissement,2834
+751124808,Quinze-Vingts 8,12e arrondissement,2197
+751124809,Quinze-Vingts 9,12e arrondissement,2131
+751124810,Quinze-Vingts 10,12e arrondissement,3125
+751124811,Quinze-Vingts 11,12e arrondissement,0
+751124812,Quinze-Vingts 12,12e arrondissement,1009
+751124813,Quinze-Vingts 13,12e arrondissement,421
+751124888,Bassin de l'Arsenal,12e arrondissement,0
+751124899,Seine et Berges,12e arrondissement,0
+751134901,Salpêtrière 1,13e arrondissement,2816
+751134902,Salpêtrière 2,13e arrondissement,3200
+751134903,Salpêtrière 3,13e arrondissement,1960
+751134904,Salpêtrière 4,13e arrondissement,1790
+751134905,Salpêtrière 5,13e arrondissement,2595
+751134906,Salpêtrière 6,13e arrondissement,2390
+751134907,Salpêtrière 7,13e arrondissement,1934
+751134908,Salpêtrière 8,13e arrondissement,929
+751134999,Seine et Berges 1,13e arrondissement,0
+751135001,Gare 1,13e arrondissement,1976
+751135002,Gare 2,13e arrondissement,2081
+751135003,Gare 3,13e arrondissement,3851
+751135004,Gare 4,13e arrondissement,2216
+751135005,Gare 5,13e arrondissement,3014
+751135006,Gare 6,13e arrondissement,2870
+751135007,Gare 7,13e arrondissement,3769
+751135008,Gare 8,13e arrondissement,1310
+751135009,Gare 9,13e arrondissement,2062
+751135010,Gare 10,13e arrondissement,2279
+751135011,Gare 11,13e arrondissement,2682
+751135012,Gare 12,13e arrondissement,3106
+751135013,Gare 13,13e arrondissement,2340
+751135014,Gare 14,13e arrondissement,3371
+751135015,Gare 15,13e arrondissement,2511
+751135016,Gare 16,13e arrondissement,2388
+751135017,Gare 17,13e arrondissement,945
+751135018,Gare 18,13e arrondissement,1849
+751135019,Gare 19,13e arrondissement,3863
+751135020,Gare 20,13e arrondissement,3559
+751135021,Gare 21,13e arrondissement,2655
+751135023,Gare 23,13e arrondissement,1911
+751135024,Gare 24,13e arrondissement,2356
+751135025,Gare 25,13e arrondissement,2029
+751135026,Gare 26,13e arrondissement,1634
+751135027,Gare 27,13e arrondissement,2566
+751135028,Gare 28,13e arrondissement,2625
+751135029,Gare 29,13e arrondissement,3896
+751135030,Gare 30,13e arrondissement,1918
+751135031,Gare 31,13e arrondissement,2148
+751135032,Gare 32,13e arrondissement,439
+751135099,Seine et Berges 2,13e arrondissement,0
+751135101,Maison Blanche 1,13e arrondissement,3141
+751135102,Maison Blanche 2,13e arrondissement,2860
+751135103,Maison Blanche 3,13e arrondissement,2490
+751135104,Maison Blanche 4,13e arrondissement,2130
+751135105,Maison Blanche 5,13e arrondissement,2887
+751135106,Maison Blanche 6,13e arrondissement,3224
+751135107,Maison Blanche 7,13e arrondissement,2267
+751135108,Maison Blanche 8,13e arrondissement,3004
+751135109,Maison Blanche 9,13e arrondissement,2604
+751135110,Maison Blanche 10,13e arrondissement,4625
+751135111,Maison Blanche 11,13e arrondissement,2685
+751135112,Maison Blanche 12,13e arrondissement,3090
+751135113,Maison Blanche 13,13e arrondissement,2254
+751135114,Maison Blanche 14,13e arrondissement,2632
+751135115,Maison Blanche 15,13e arrondissement,1756
+751135116,Maison Blanche 16,13e arrondissement,2758
+751135117,Maison Blanche 17,13e arrondissement,1863
+751135118,Maison Blanche 18,13e arrondissement,1799
+751135119,Maison Blanche 19,13e arrondissement,1778
+751135120,Maison Blanche 20,13e arrondissement,1797
+751135121,Maison Blanche 21,13e arrondissement,1534
+751135122,Maison Blanche 22,13e arrondissement,3286
+751135123,Maison Blanche 23,13e arrondissement,2029
+751135124,Maison Blanche 24,13e arrondissement,3109
+751135125,Maison Blanche 25,13e arrondissement,2703
+751135201,Croulebarbe 1,13e arrondissement,3329
+751135202,Croulebarbe 2,13e arrondissement,1588
+751135203,Croulebarbe 3,13e arrondissement,2835
+751135204,Croulebarbe 4,13e arrondissement,2725
+751135205,Croulebarbe 5,13e arrondissement,2467
+751135206,Croulebarbe 6,13e arrondissement,3664
+751135207,Croulebarbe 7,13e arrondissement,2989
+751145301,Montparnasse 1,14e arrondissement,1527
+751145302,Montparnasse 2,14e arrondissement,1732
+751145303,Montparnasse 3,14e arrondissement,1854
+751145304,Montparnasse 4,14e arrondissement,1403
+751145305,Montparnasse 5,14e arrondissement,2064
+751145306,Montparnasse 6,14e arrondissement,1930
+751145307,Montparnasse 7,14e arrondissement,1849
+751145308,Montparnasse 8,14e arrondissement,1584
+751145309,Montparnasse 9,14e arrondissement,1900
+751145310,Montparnasse 10,14e arrondissement,1874
+751145311,Montparnasse 11,14e arrondissement,80
+751145401,Parc de Montsouris 1,14e arrondissement,5738
+751145402,Parc de Montsouris 2,14e arrondissement,4109
+751145403,Parc de Montsouris 3,14e arrondissement,3586
+751145404,Parc de Montsouris 4,14e arrondissement,1978
+751145405,Parc de Montsouris 5,14e arrondissement,3172
+751145406,Parc de Montsouris 6,14e arrondissement,3760
+751145407,Parc de Montsouris 7,14e arrondissement,327
+751145501,Petit Montrouge 1,14e arrondissement,2555
+751145502,Petit Montrouge 2,14e arrondissement,3195
+751145503,Petit Montrouge 3,14e arrondissement,2754
+751145504,Petit Montrouge 4,14e arrondissement,2670
+751145505,Petit Montrouge 5,14e arrondissement,3642
+751145506,Petit Montrouge 6,14e arrondissement,2485
+751145507,Petit Montrouge 7,14e arrondissement,1727
+751145508,Petit Montrouge 8,14e arrondissement,3163
+751145509,Petit Montrouge 9,14e arrondissement,1828
+751145510,Petit Montrouge 10,14e arrondissement,1918
+751145511,Petit Montrouge 11,14e arrondissement,1793
+751145512,Petit Montrouge 12,14e arrondissement,1983
+751145513,Petit Montrouge 13,14e arrondissement,2684
+751145514,Petit Montrouge 14,14e arrondissement,1624
+751145515,Petit Montrouge 15,14e arrondissement,2867
+751145516,Petit Montrouge 16,14e arrondissement,2332
+751145601,Plaisance 1,14e arrondissement,2168
+751145602,Plaisance 2,14e arrondissement,1665
+751145603,Plaisance 3,14e arrondissement,2398
+751145604,Plaisance 4,14e arrondissement,2021
+751145605,Plaisance 5,14e arrondissement,2558
+751145606,Plaisance 6,14e arrondissement,2822
+751145607,Plaisance 7,14e arrondissement,3286
+751145608,Plaisance 8,14e arrondissement,2038
+751145609,Plaisance 9,14e arrondissement,2467
+751145610,Plaisance 10,14e arrondissement,2249
+751145611,Plaisance 11,14e arrondissement,1761
+751145612,Plaisance 12,14e arrondissement,1980
+751145613,Plaisance 13,14e arrondissement,2170
+751145614,Plaisance 14,14e arrondissement,1875
+751145615,Plaisance 15,14e arrondissement,2165
+751145616,Plaisance 16,14e arrondissement,2905
+751145617,Plaisance 17,14e arrondissement,2405
+751145618,Plaisance 18,14e arrondissement,2968
+751145619,Plaisance 19,14e arrondissement,1891
+751145620,Plaisance 20,14e arrondissement,2371
+751145621,Plaisance 21,14e arrondissement,2119
+751145622,Plaisance 22,14e arrondissement,1588
+751145623,Plaisance 23,14e arrondissement,3527
+751145624,Plaisance 24,14e arrondissement,2536
+751145625,Plaisance 25,14e arrondissement,1961
+751155701,Saint-Lambert 1,15e arrondissement,4488
+751155702,Saint-Lambert 2,15e arrondissement,1382
+751155703,Saint-Lambert 3,15e arrondissement,3775
+751155704,Saint-Lambert 4,15e arrondissement,2556
+751155705,Saint-Lambert 5,15e arrondissement,4059
+751155706,Saint-Lambert 6,15e arrondissement,2186
+751155707,Saint-Lambert 7,15e arrondissement,2238
+751155708,Saint-Lambert 8,15e arrondissement,3985
+751155709,Saint-Lambert 9,15e arrondissement,3273
+751155710,Saint-Lambert 10,15e arrondissement,4181
+751155711,Saint-Lambert 11,15e arrondissement,1946
+751155712,Saint-Lambert 12,15e arrondissement,2275
+751155713,Saint-Lambert 13,15e arrondissement,1765
+751155714,Saint-Lambert 14,15e arrondissement,1905
+751155715,Saint-Lambert 15,15e arrondissement,3844
+751155716,Saint-Lambert 16,15e arrondissement,2736
+751155717,Saint-Lambert 17,15e arrondissement,2463
+751155718,Saint-Lambert 18,15e arrondissement,2004
+751155719,Saint-Lambert 19,15e arrondissement,2207
+751155720,Saint-Lambert 20,15e arrondissement,1939
+751155721,Saint-Lambert 21,15e arrondissement,1789
+751155722,Saint-Lambert 22,15e arrondissement,3114
+751155723,Saint-Lambert 23,15e arrondissement,2650
+751155724,Saint-Lambert 24,15e arrondissement,2899
+751155725,Saint-Lambert 25,15e arrondissement,2631
+751155726,Saint-Lambert 26,15e arrondissement,3020
+751155727,Saint-Lambert 27,15e arrondissement,2657
+751155728,Saint-Lambert 28,15e arrondissement,1812
+751155729,Saint-Lambert 29,15e arrondissement,3131
+751155730,Saint-Lambert 30,15e arrondissement,2396
+751155731,Saint-Lambert 31,15e arrondissement,2509
+751155732,Saint-Lambert 32,15e arrondissement,0
+751155733,Saint-Lambert 33,15e arrondissement,0
+751155801,Necker 1,15e arrondissement,3151
+751155802,Necker 2,15e arrondissement,2868
+751155803,Necker 3,15e arrondissement,3575
+751155804,Necker 4,15e arrondissement,2477
+751155805,Necker 5,15e arrondissement,1947
+751155806,Necker 6,15e arrondissement,3221
+751155807,Necker 7,15e arrondissement,2905
+751155808,Necker 8,15e arrondissement,2081
+751155809,Necker 9,15e arrondissement,3579
+751155810,Necker 10,15e arrondissement,4954
+751155811,Necker 11,15e arrondissement,1772
+751155812,Necker 12,15e arrondissement,2007
+751155813,Necker 13,15e arrondissement,1968
+751155814,Necker 14,15e arrondissement,1938
+751155815,Necker 15,15e arrondissement,2215
+751155816,Necker 16,15e arrondissement,2156
+751155817,Necker 17,15e arrondissement,2214
+751155818,Necker 18,15e arrondissement,1213
+751155819,Necker 19,15e arrondissement,0
+751155901,Grenelle 1,15e arrondissement,2364
+751155902,Grenelle 2,15e arrondissement,1707
+751155903,Grenelle 3,15e arrondissement,2446
+751155904,Grenelle 4,15e arrondissement,2383
+751155905,Grenelle 5,15e arrondissement,2507
+751155906,Grenelle 6,15e arrondissement,2624
+751155907,Grenelle 7,15e arrondissement,2483
+751155908,Grenelle 8,15e arrondissement,3410
+751155909,Grenelle 9,15e arrondissement,2150
+751155910,Grenelle 10,15e arrondissement,2122
+751155911,Grenelle 11,15e arrondissement,2614
+751155912,Grenelle 12,15e arrondissement,3298
+751155913,Grenelle 13,15e arrondissement,2496
+751155914,Grenelle 14,15e arrondissement,1968
+751155915,Grenelle 15,15e arrondissement,2075
+751155916,Grenelle 16,15e arrondissement,2287
+751155917,Grenelle 17,15e arrondissement,2978
+751155918,Grenelle 18,15e arrondissement,3353
+751155919,Grenelle 19,15e arrondissement,2329
+751155920,Grenelle 20,15e arrondissement,436
+751155999,Seine et Berges,15e arrondissement,0
+751156001,Javel 1,15e arrondissement,2725
+751156002,Javel 2,15e arrondissement,2123
+751156003,Javel 3,15e arrondissement,2516
+751156004,Javel 4,15e arrondissement,3365
+751156005,Javel 5,15e arrondissement,2930
+751156006,Javel 6,15e arrondissement,1846
+751156007,Javel 7,15e arrondissement,2747
+751156008,Javel 8,15e arrondissement,1721
+751156009,Javel 9,15e arrondissement,1584
+751156010,Javel 10,15e arrondissement,2794
+751156012,Javel 12,15e arrondissement,3840
+751156013,Javel 13,15e arrondissement,2149
+751156014,Javel 14,15e arrondissement,3105
+751156015,Javel 15,15e arrondissement,1687
+751156016,Javel 16,15e arrondissement,2337
+751156017,Javel 17,15e arrondissement,1904
+751156018,Javel 18,15e arrondissement,2919
+751156019,Javel 19,15e arrondissement,3855
+751156020,Javel 20,15e arrondissement,3367
+751156021,Javel 21,15e arrondissement,132
+751156022,Javel 22,15e arrondissement,975
+751156023,Jardin Citroën-Cévennes,15e arrondissement,0
+751156099,Seine et Berges,15e arrondissement,47
+751166101,Auteuil 1,16e arrondissement,2390
+751166102,Auteuil 2,16e arrondissement,2620
+751166103,Auteuil 3,16e arrondissement,1888
+751166104,Auteuil 4,16e arrondissement,2035
+751166105,Auteuil 5,16e arrondissement,2145
+751166106,Auteuil 6,16e arrondissement,2734
+751166107,Auteuil 7,16e arrondissement,3260
+751166108,Auteuil 8,16e arrondissement,1946
+751166109,Auteuil 9,16e arrondissement,2611
+751166110,Auteuil 10,16e arrondissement,2335
+751166111,Auteuil 11,16e arrondissement,1968
+751166112,Auteuil 12,16e arrondissement,2086
+751166113,Auteuil 13,16e arrondissement,1753
+751166114,Auteuil 14,16e arrondissement,2035
+751166115,Auteuil 15,16e arrondissement,3518
+751166116,Auteuil 16,16e arrondissement,1848
+751166117,Auteuil 17,16e arrondissement,2447
+751166118,Auteuil 18,16e arrondissement,2392
+751166119,Auteuil 19,16e arrondissement,1872
+751166120,Auteuil 20,16e arrondissement,1887
+751166121,Auteuil 21,16e arrondissement,2885
+751166122,Auteuil 22,16e arrondissement,2748
+751166123,Auteuil 23,16e arrondissement,2289
+751166124,Auteuil 24,16e arrondissement,1792
+751166125,Auteuil 25,16e arrondissement,2195
+751166126,Auteuil 26,16e arrondissement,2855
+751166127,Auteuil 27,16e arrondissement,3106
+751166128,Auteuil 28,16e arrondissement,2785
+751166129,Auteuil 29,16e arrondissement,1814
+751166130,Auteuil 30,16e arrondissement,2025
+751166131,Auteuil 31,16e arrondissement,41
+751166177,Bois de Boulogne 1,16e arrondissement,139
+751166199,Seine et Berges 1,16e arrondissement,0
+751166201,Muette 1,16e arrondissement,1621
+751166202,Muette 2,16e arrondissement,2041
+751166203,Muette 3,16e arrondissement,2045
+751166204,Muette 4,16e arrondissement,2347
+751166205,Muette 5,16e arrondissement,1878
+751166206,Muette 6,16e arrondissement,1756
+751166207,Muette 7,16e arrondissement,1594
+751166208,Muette 8,16e arrondissement,2336
+751166209,Muette 9,16e arrondissement,2217
+751166210,Muette 10,16e arrondissement,1728
+751166211,Muette 11,16e arrondissement,2309
+751166212,Muette 12,16e arrondissement,2001
+751166213,Muette 13,16e arrondissement,2309
+751166214,Muette 14,16e arrondissement,2048
+751166215,Muette 15,16e arrondissement,2544
+751166216,Muette 16,16e arrondissement,1914
+751166217,Muette 17,16e arrondissement,2620
+751166218,Muette 18,16e arrondissement,2394
+751166219,Muette 19,16e arrondissement,2784
+751166220,Muette 20,16e arrondissement,2384
+751166221,Muette 21,16e arrondissement,1764
+751166222,Muette 22,16e arrondissement,0
+751166223,Muette 23,16e arrondissement,103
+751166277,Bois de Boulogne 2,16e arrondissement,230
+751166299,Seine et Berges 2,16e arrondissement,0
+751166301,Porte Dauphine 1,16e arrondissement,2244
+751166302,Porte Dauphine 2,16e arrondissement,3301
+751166303,Porte Dauphine 3,16e arrondissement,2424
+751166304,Porte Dauphine 4,16e arrondissement,3267
+751166305,Porte Dauphine 5,16e arrondissement,1949
+751166306,Porte Dauphine 6,16e arrondissement,2626
+751166307,Porte Dauphine 7,16e arrondissement,2269
+751166308,Porte Dauphine 8,16e arrondissement,2581
+751166309,Porte Dauphine 9,16e arrondissement,1666
+751166310,Porte Dauphine 10,16e arrondissement,1413
+751166311,Porte Dauphine 11,16e arrondissement,1516
+751166377,Bois de Boulogne 3,16e arrondissement,224
+751166401,Chaillot 1,16e arrondissement,1347
+751166402,Chaillot 2,16e arrondissement,1947
+751166403,Chaillot 3,16e arrondissement,2521
+751166404,Chaillot 4,16e arrondissement,2082
+751166405,Chaillot 5,16e arrondissement,2364
+751166406,Chaillot 6,16e arrondissement,1776
+751166407,Chaillot 7,16e arrondissement,3250
+751166409,Chaillot 9,16e arrondissement,2210
+751166410,Chaillot 10,16e arrondissement,90
+751166411,Chaillot 11,16e arrondissement,348
+751166412,Chaillot 12,16e arrondissement,728
+751166413,Chaillot 13,16e arrondissement,179
+751166499,Seine et Berges 3,16e arrondissement,0
+751176501,Ternes 1,17e arrondissement,3498
+751176502,Ternes 2,17e arrondissement,2331
+751176503,Ternes 3,17e arrondissement,1683
+751176504,Ternes 4,17e arrondissement,2909
+751176505,Ternes 5,17e arrondissement,1931
+751176506,Ternes 6,17e arrondissement,2022
+751176507,Ternes 7,17e arrondissement,2423
+751176508,Ternes 8,17e arrondissement,3139
+751176509,Ternes 9,17e arrondissement,1758
+751176510,Ternes 10,17e arrondissement,2777
+751176511,Ternes 11,17e arrondissement,2135
+751176512,Ternes 12,17e arrondissement,2562
+751176513,Ternes 13,17e arrondissement,1747
+751176514,Ternes 14,17e arrondissement,2115
+751176515,Ternes 15,17e arrondissement,3628
+751176516,Ternes 16,17e arrondissement,4
+751176601,Plaine Monceau 1,17e arrondissement,2041
+751176602,Plaine Monceau 2,17e arrondissement,2901
+751176603,Plaine Monceau 3,17e arrondissement,3183
+751176604,Plaine Monceau 4,17e arrondissement,2374
+751176605,Plaine Monceau 5,17e arrondissement,1625
+751176606,Plaine Monceau 6,17e arrondissement,2200
+751176607,Plaine Monceau 7,17e arrondissement,1755
+751176608,Plaine Monceau 8,17e arrondissement,1669
+751176609,Plaine Monceau 9,17e arrondissement,2124
+751176610,Plaine Monceau 10,17e arrondissement,2369
+751176611,Plaine Monceau 11,17e arrondissement,2503
+751176612,Plaine Monceau 12,17e arrondissement,2895
+751176613,Plaine Monceau 13,17e arrondissement,2178
+751176614,Plaine Monceau 14,17e arrondissement,2775
+751176615,Plaine Monceau 15,17e arrondissement,3989
+751176616,Plaine Monceau 16,17e arrondissement,2517
+751176701,Batignolles 1,17e arrondissement,2131
+751176702,Batignolles 2,17e arrondissement,2258
+751176703,Batignolles 3,17e arrondissement,1815
+751176704,Batignolles 4,17e arrondissement,2471
+751176705,Batignolles 5,17e arrondissement,1822
+751176706,Batignolles 6,17e arrondissement,2040
+751176707,Batignolles 7,17e arrondissement,1896
+751176708,Batignolles 8,17e arrondissement,2332
+751176709,Batignolles 9,17e arrondissement,2026
+751176710,Batignolles 10,17e arrondissement,3764
+751176711,Batignolles 11,17e arrondissement,2075
+751176712,Batignolles 12,17e arrondissement,1904
+751176713,Batignolles 13,17e arrondissement,2424
+751176714,Batignolles 14,17e arrondissement,8869
+751176715,Batignolles 15,17e arrondissement,2415
+751176716,Batignolles 16,17e arrondissement,2063
+751176801,Épinettes 1,17e arrondissement,2622
+751176802,Épinettes 2,17e arrondissement,3162
+751176803,Épinettes 3,17e arrondissement,2554
+751176804,Épinettes 4,17e arrondissement,2210
+751176805,Épinettes 5,17e arrondissement,1670
+751176806,Épinettes 6,17e arrondissement,5114
+751176807,Épinettes 7,17e arrondissement,2672
+751176808,Épinettes 8,17e arrondissement,2598
+751176809,Épinettes 9,17e arrondissement,2161
+751176810,Épinettes 10,17e arrondissement,1985
+751176811,Épinettes 11,17e arrondissement,2414
+751176812,Épinettes 12,17e arrondissement,1990
+751176813,Épinettes 13,17e arrondissement,2601
+751176814,Épinettes 14,17e arrondissement,2737
+751176815,Épinettes 15,17e arrondissement,2144
+751176816,Épinettes 16,17e arrondissement,2786
+751176817,Épinettes 17,17e arrondissement,1721
+751186901,Grandes Carrières 1,18e arrondissement,2486
+751186902,Grandes Carrières 2,18e arrondissement,1964
+751186903,Grandes Carrières 3,18e arrondissement,1894
+751186904,Grandes Carrières 4,18e arrondissement,2985
+751186905,Grandes Carrières 5,18e arrondissement,2390
+751186906,Grandes Carrières 6,18e arrondissement,2534
+751186907,Grandes Carrières 7,18e arrondissement,3290
+751186908,Grandes Carrières 8,18e arrondissement,1913
+751186909,Grandes Carrières 9,18e arrondissement,1629
+751186910,Grandes Carrières 10,18e arrondissement,2481
+751186911,Grandes Carrières 11,18e arrondissement,1811
+751186912,Grandes Carrières 12,18e arrondissement,2583
+751186913,Grandes Carrières 13,18e arrondissement,1836
+751186914,Grandes Carrières 14,18e arrondissement,1966
+751186915,Grandes Carrières 15,18e arrondissement,2076
+751186916,Grandes Carrières 16,18e arrondissement,2648
+751186917,Grandes Carrières 17,18e arrondissement,1898
+751186918,Grandes Carrières 18,18e arrondissement,3187
+751186919,Grandes Carrières 19,18e arrondissement,3297
+751186920,Grandes Carrières 20,18e arrondissement,2019
+751186921,Grandes Carrières 21,18e arrondissement,2040
+751186922,Grandes Carrières 22,18e arrondissement,2384
+751186923,Grandes Carrières 23,18e arrondissement,3990
+751186924,Grandes Carrières 24,18e arrondissement,3196
+751186925,Grandes Carrières 25,18e arrondissement,3172
+751186926,Grandes Carrières 26,18e arrondissement,2580
+751186927,Grandes Carrières 27,18e arrondissement,1996
+751186928,Grandes Carrières 28,18e arrondissement,2290
+751186929,Grandes Carrières 29,18e arrondissement,382
+751187001,Clignancourt 1,18e arrondissement,3140
+751187002,Clignancourt 2,18e arrondissement,2207
+751187003,Clignancourt 3,18e arrondissement,1914
+751187004,Clignancourt 4,18e arrondissement,1655
+751187005,Clignancourt 5,18e arrondissement,1964
+751187006,Clignancourt 6,18e arrondissement,2096
+751187007,Clignancourt 7,18e arrondissement,1813
+751187008,Clignancourt 8,18e arrondissement,1404
+751187009,Clignancourt 9,18e arrondissement,2813
+751187010,Clignancourt 10,18e arrondissement,1792
+751187011,Clignancourt 11,18e arrondissement,1944
+751187012,Clignancourt 12,18e arrondissement,2302
+751187013,Clignancourt 13,18e arrondissement,2472
+751187014,Clignancourt 14,18e arrondissement,1617
+751187015,Clignancourt 15,18e arrondissement,1930
+751187016,Clignancourt 16,18e arrondissement,2257
+751187017,Clignancourt 17,18e arrondissement,3799
+751187018,Clignancourt 18,18e arrondissement,2348
+751187019,Clignancourt 19,18e arrondissement,2940
+751187020,Clignancourt 20,18e arrondissement,2539
+751187021,Clignancourt 21,18e arrondissement,3902
+751187022,Clignancourt 22,18e arrondissement,3002
+751187023,Clignancourt 23,18e arrondissement,2739
+751187024,Clignancourt 24,18e arrondissement,1858
+751187025,Clignancourt 25,18e arrondissement,2253
+751187026,Clignancourt 26,18e arrondissement,2526
+751187027,Clignancourt 27,18e arrondissement,2923
+751187101,Goutte d'Or 1,18e arrondissement,2704
+751187102,Goutte d'Or 2,18e arrondissement,3811
+751187103,Goutte d'Or 3,18e arrondissement,2158
+751187104,Goutte d'Or 4,18e arrondissement,2290
+751187105,Goutte d'Or 5,18e arrondissement,1768
+751187106,Goutte d'Or 6,18e arrondissement,2394
+751187107,Goutte d'Or 7,18e arrondissement,1895
+751187108,Goutte d'Or 8,18e arrondissement,2113
+751187109,Goutte d'Or 9,18e arrondissement,1931
+751187110,Goutte d'Or 10,18e arrondissement,8542
+751187201,Chapelle 1,18e arrondissement,2370
+751187202,Chapelle 2,18e arrondissement,2101
+751187203,Chapelle 3,18e arrondissement,2063
+751187204,Chapelle 4,18e arrondissement,2356
+751187205,Chapelle 5,18e arrondissement,3069
+751187206,Chapelle 6,18e arrondissement,2485
+751187207,Chapelle 7,18e arrondissement,2504
+751187208,Chapelle 8,18e arrondissement,3565
+751187209,Chapelle 9,18e arrondissement,2640
+751197301,Villette 1,19e arrondissement,4744
+751197302,Villette 2,19e arrondissement,3034
+751197303,Villette 3,19e arrondissement,3435
+751197304,Villette 4,19e arrondissement,2207
+751197305,Villette 5,19e arrondissement,3062
+751197306,Villette 6,19e arrondissement,2909
+751197307,Villette 7,19e arrondissement,2971
+751197308,Villette 8,19e arrondissement,3244
+751197309,Villette 9,19e arrondissement,2683
+751197310,Villette 10,19e arrondissement,4503
+751197311,Villette 11,19e arrondissement,2658
+751197312,Villette 12,19e arrondissement,1887
+751197313,Villette 13,19e arrondissement,2814
+751197314,Villette 14,19e arrondissement,2539
+751197315,Villette 15,19e arrondissement,2663
+751197316,Villette 16,19e arrondissement,3407
+751197317,Villette 17,19e arrondissement,1878
+751197318,Villette 18,19e arrondissement,639
+751197388,Bassin de la Villette,19e arrondissement,0
+751197401,Pont de Flandre 1,19e arrondissement,1711
+751197402,Pont de Flandre 2,19e arrondissement,3143
+751197403,Pont de Flandre 3,19e arrondissement,2409
+751197404,Pont de Flandre 4,19e arrondissement,1989
+751197405,Pont de Flandre 5,19e arrondissement,2236
+751197406,Pont de Flandre 6,19e arrondissement,4665
+751197407,Pont de Flandre 7,19e arrondissement,2405
+751197408,Pont de Flandre 8,19e arrondissement,2216
+751197409,Pont de Flandre 9,19e arrondissement,2024
+751197410,Pont de Flandre 10,19e arrondissement,2113
+751197411,Pont de Flandre 11,19e arrondissement,2567
+751197412,Pont de Flandre 12,19e arrondissement,340
+751197413,Pont de Flandre 13,19e arrondissement,2279
+751197488,Canal Saint-Denis,19e arrondissement,0
+751197501,Amérique 1,19e arrondissement,2461
+751197502,Amérique 2,19e arrondissement,2749
+751197503,Amérique 3,19e arrondissement,2167
+751197504,Amérique 4,19e arrondissement,1922
+751197505,Amérique 5,19e arrondissement,1913
+751197506,Amérique 6,19e arrondissement,1924
+751197507,Amérique 7,19e arrondissement,1724
+751197508,Amérique 8,19e arrondissement,2172
+751197509,Amérique 9,19e arrondissement,2062
+751197510,Amérique 10,19e arrondissement,2389
+751197511,Amérique 11,19e arrondissement,2019
+751197512,Amérique 12,19e arrondissement,1306
+751197513,Amérique 13,19e arrondissement,2160
+751197514,Amérique 14,19e arrondissement,3254
+751197515,Amérique 15,19e arrondissement,2268
+751197516,Amérique 16,19e arrondissement,1580
+751197517,Amérique 17,19e arrondissement,3912
+751197518,Amérique 18,19e arrondissement,3267
+751197519,Amérique 19,19e arrondissement,1915
+751197520,Amérique 20,19e arrondissement,3276
+751197521,Amérique 21,19e arrondissement,2201
+751197522,Amérique 22,19e arrondissement,3173
+751197523,Amérique 23,19e arrondissement,1534
+751197524,Amérique 24,19e arrondissement,2306
+751197525,Amérique 25,19e arrondissement,473
+751197601,Combat 1,19e arrondissement,2672
+751197602,Combat 2,19e arrondissement,4995
+751197603,Combat 3,19e arrondissement,2718
+751197604,Combat 4,19e arrondissement,2557
+751197605,Combat 5,19e arrondissement,2435
+751197606,Combat 6,19e arrondissement,1834
+751197607,Combat 7,19e arrondissement,1857
+751197608,Combat 8,19e arrondissement,2745
+751197609,Combat 9,19e arrondissement,3143
+751197610,Combat 10,19e arrondissement,1555
+751197611,Combat 11,19e arrondissement,2965
+751197612,Combat 12,19e arrondissement,2230
+751197613,Combat 13,19e arrondissement,2804
+751197614,Combat 14,19e arrondissement,2373
+751197615,Combat 15,19e arrondissement,2375
+751197616,Combat 16,19e arrondissement,1612
+751197617,Buttes Chaumont,19e arrondissement,0
+751207701,Belleville 1,20e arrondissement,2106
+751207702,Belleville 2,20e arrondissement,2414
+751207703,Belleville 3,20e arrondissement,2094
+751207704,Belleville 4,20e arrondissement,2150
+751207705,Belleville 5,20e arrondissement,2080
+751207706,Belleville 6,20e arrondissement,2054
+751207707,Belleville 7,20e arrondissement,2426
+751207708,Belleville 8,20e arrondissement,2906
+751207709,Belleville 9,20e arrondissement,1404
+751207710,Belleville 10,20e arrondissement,2622
+751207711,Belleville 11,20e arrondissement,3254
+751207712,Belleville 12,20e arrondissement,2666
+751207713,Belleville 13,20e arrondissement,2413
+751207714,Belleville 14,20e arrondissement,2846
+751207801,Saint-Fargeau 1,20e arrondissement,4544
+751207802,Saint-Fargeau 2,20e arrondissement,3478
+751207803,Saint-Fargeau 3,20e arrondissement,1851
+751207804,Saint-Fargeau 4,20e arrondissement,2212
+751207805,Saint-Fargeau 5,20e arrondissement,2998
+751207806,Saint-Fargeau 6,20e arrondissement,3733
+751207807,Saint-Fargeau 7,20e arrondissement,2621
+751207808,Saint-Fargeau 8,20e arrondissement,4035
+751207809,Saint-Fargeau 9,20e arrondissement,3838
+751207810,Saint-Fargeau 10,20e arrondissement,2212
+751207811,Saint-Fargeau 11,20e arrondissement,1706
+751207812,Saint-Fargeau 12,20e arrondissement,1856
+751207813,Saint-Fargeau 13,20e arrondissement,2415
+751207814,Saint-Fargeau 14,20e arrondissement,2055
+751207815,Saint-Fargeau 15,20e arrondissement,3052
+751207816,Saint-Fargeau 16,20e arrondissement,3308
+751207901,Père Lachaise 1,20e arrondissement,3578
+751207902,Père Lachaise 2,20e arrondissement,2394
+751207903,Père Lachaise 3,20e arrondissement,2379
+751207904,Père Lachaise 4,20e arrondissement,2160
+751207905,Père Lachaise 5,20e arrondissement,5197
+751207906,Père Lachaise 6,20e arrondissement,2379
+751207907,Père Lachaise 7,20e arrondissement,2532
+751207908,Père Lachaise 8,20e arrondissement,2998
+751207909,Père Lachaise 9,20e arrondissement,1925
+751207910,Père Lachaise 10,20e arrondissement,2899
+751207911,Père Lachaise 11,20e arrondissement,2324
+751207912,Père Lachaise 12,20e arrondissement,3196
+751207913,Père Lachaise 13,20e arrondissement,1955
+751207914,Père Lachaise 14,20e arrondissement,2273
+751207915,Père Lachaise 15,20e arrondissement,3018
+751207916,Père Lachaise 16,20e arrondissement,2959
+751207917,Père Lachaise 17,20e arrondissement,5
+751208001,Charonne 1,20e arrondissement,2404
+751208002,Charonne 2,20e arrondissement,2110
+751208003,Charonne 3,20e arrondissement,2729
+751208004,Charonne 4,20e arrondissement,1809
+751208005,Charonne 5,20e arrondissement,1710
+751208006,Charonne 6,20e arrondissement,2700
+751208007,Charonne 7,20e arrondissement,3130
+751208008,Charonne 8,20e arrondissement,2527
+751208009,Charonne 9,20e arrondissement,1604
+751208010,Charonne 10,20e arrondissement,1894
+751208011,Charonne 11,20e arrondissement,1800
+751208012,Charonne 12,20e arrondissement,2844
+751208013,Charonne 13,20e arrondissement,2453
+751208014,Charonne 14,20e arrondissement,2059
+751208015,Charonne 15,20e arrondissement,2642
+751208016,Charonne 16,20e arrondissement,2420
+751208017,Charonne 17,20e arrondissement,2264
+751208018,Charonne 18,20e arrondissement,2469
+751208019,Charonne 19,20e arrondissement,5018
+751208020,Charonne 20,20e arrondissement,2844
+751208021,Charonne 21,20e arrondissement,3513
+751208022,Charonne 22,20e arrondissement,1717
+751208023,Charonne 23,20e arrondissement,2096
+751208024,Charonne 24,20e arrondissement,2937
+751208025,Charonne 25,20e arrondissement,2497
+751208026,Charonne 26,20e arrondissement,1984

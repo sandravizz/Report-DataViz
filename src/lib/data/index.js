@@ -13,6 +13,10 @@ import parisMetroCentre from "./figures/5-paris-metro-centre.js";
 import parisMetroRidership from "./figures/6-paris-metro-ridership.js";
 import parisMetroRidershipLines from "./figures/7-paris-metro-ridership-lines.js";
 import parisMetroStory from "./figures/8-paris-metro-story.js";
+import parisMetroLens from "./figures/9-paris-metro-lens.js";
+import parisIrisIncome from "./figures/10-paris-iris-income.js";
+import parisIrisSingleHouseholds from "./figures/11-paris-iris-single-households.js";
+import parisIrisOwners from "./figures/12-paris-iris-owners.js";
 
 export const figures = {
   parisArrondissements,
@@ -23,4 +27,8 @@ export const figures = {
   parisMetroRidership,
   parisMetroRidershipLines,
   parisMetroStory,
+  parisMetroLens,
+  parisIrisIncome,
+  parisIrisSingleHouseholds,
+  parisIrisOwners,
 };

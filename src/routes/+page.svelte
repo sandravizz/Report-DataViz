@@ -1,6 +1,7 @@
 <script>
   import { page } from "$app/state";
   import { figures } from "$lib/data/index.js";
+  import { formatNumber } from "$lib/format";
 
   const meta = {
     title: "Paris by Maps | An Interactive Report",
@@ -29,8 +30,9 @@
 
   // paris-demo (2026-11-04): carta-demo's structure in main's look, with
   // THREE placeholder chapters — the copy and data are still to come.
-  // Chapter One steps through Paris at three levels of detail (arrondissements,
-  // quartiers, IRIS), with random placeholder values; Chapter Two draws the
+  // Chapter One, "Population", opens on the city's total as a big number and
+  // steps through Paris at three levels of detail (arrondissements,
+  // quartiers, IRIS), coloured by residents (INSEE census 2022); Chapter Two draws the
   // whole métro network, then zooms in on the city of Paris. Chapter Three stays text-only,
   // so the report ends on text.
   //
@@ -46,13 +48,35 @@
   // never a pinned figure straight into the ending screen.
   const sections = assignIds([
     {
-      title: "Chapter One",
+      title: "Population",
       subchapters: [
         {
-          title: "Sub-chapter title",
-          intro: "Placeholder lede: <mark class=\"accent-mark\">the one line that says what this sub-chapter is about</mark>.",
-          body: ["Placeholder body copy for this sub-chapter."],
-          charts: [figures.parisArrondissements, figures.parisQuartiers, figures.parisIris],
+          title: "One city, three levels of detail",
+          // THE BIG NUMBER (Sandra, 2026-11-15): the chapter opens on the
+          // city's total, set large above the lede. It is read off Figure 1's
+          // data, and Figures 1–3 are one dataset at three levels, so the
+          // number is the sum of each of the three maps.
+          stat: {
+            value: formatNumber(figures.parisArrondissements.total),
+            label: "people live in Paris",
+            note: "INSEE census, 2022",
+          },
+          intro:
+            "The same residents, counted three ways: <mark class=\"accent-mark\">by arrondissement, by quartier and by census unit</mark>.",
+          body: [
+            "The three maps below show one population at three levels of detail: 20 arrondissements, 80 quartiers, 992 IRIS. The total never changes, only how finely it is divided. The darker a shape, the more people live in it.",
+          ],
+          // Figures 4–6 (2026-11-15): the same IRIS units on further
+          // measures, each in a ramp of its own: median income (green),
+          // one-person households (pink), home owners (blue).
+          charts: [
+            figures.parisArrondissements,
+            figures.parisQuartiers,
+            figures.parisIris,
+            figures.parisIrisIncome,
+            figures.parisIrisSingleHouseholds,
+            figures.parisIrisOwners,
+          ],
         },
       ],
     },
@@ -71,7 +95,7 @@
       ],
     },
     {
-      title: "Chapter Two",
+      title: "Métro",
       subchapters: [
         {
           title: "Sub-chapter title",
@@ -82,6 +106,20 @@
           // the map-to-chart study here (figures.parisMetroRidershipLines,
           // still registered), which was the same morph the other way round.
           charts: [figures.parisMetroStory],
+        },
+      ],
+    },
+    {
+      // TEST CHAPTER (Sandra, 2026-11-14): the street map with line 1, read
+      // through the cover's lens (figures.parisMetroLens). Delete the first
+      // sub-chapter to drop the test; the closing text moved here with it.
+      title: "Chapter Three",
+      subchapters: [
+        {
+          title: "Test: the lens on the street map",
+          intro: "A test: <mark class=\"accent-mark\">the cover's lens on the métro map</mark>.",
+          body: ["Move the mouse over the map below. The lens shows the street names, as on the cover, and the stations of line 1."],
+          charts: [figures.parisMetroLens],
         },
         // The report ENDS ON TEXT: a closing sub-chapter after the figure.
         {
@@ -153,6 +191,27 @@
 <!-- A text block's lede and body, shared by a sub-chapter and its
      heading-less passages. -->
 {#snippet copy(text)}
+              {#if text.stat}
+                <!-- THE BIG NUMBER (2026-11-15): one figure a text block
+                     opens on, in the heading face, with what it counts on
+                     the line below and its source in the quiet tier. Sized
+                     against the column: a seven-digit number with commas
+                     fits 88vw at 3.5rem on a phone. tabular-nums so the
+                     digits sit evenly. -->
+                <p class="mb-8 text-center md:mb-12 lg:mb-16">
+                  <span
+                    class="block font-serif text-[3.5rem] leading-none font-bold tracking-[-0.02em] tabular-nums text-base-content sm:text-[5rem] lg:text-[7rem]"
+                  >
+                    {text.stat.value}
+                  </span>
+                  <span class="mt-3 block text-[1.0625rem] leading-snug text-base-content/90 md:mt-4 md:text-[1.375rem]">
+                    {text.stat.label}
+                  </span>
+                  {#if text.stat.note}
+                    <span class="mt-1 block text-sm text-base-content/70">{text.stat.note}</span>
+                  {/if}
+                </p>
+              {/if}
               {#if text.intro}
                 <!-- The lede: one tier above the body, full ink, tight
                      leading — the line that says what the sub-chapter is

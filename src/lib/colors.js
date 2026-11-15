@@ -114,3 +114,19 @@ export const colors = {
 // lightest step is still clearly off the ground #EFF1EF; regions are separated
 // by a 1px ground-coloured stroke, so neighbouring light steps never merge.
 export const sequential = ["#E0DBF3", "#BCB1E6", "#9485D7", "#705DC8", "#4D3D9B"];
+
+// The same ramp in GREEN (Sandra, 2026-11-15: "not the violet, maybe the
+// green"), for a map of a second measure, so the reader sees at once that
+// the colour now means something else. Built on the palette's chart green
+// `positive` #009580 as step four (the spring-green accent stays reserved),
+// with `accentDeep` as the darkest step. A figure opts in with
+// `palette: sequentialGreen`.
+export const sequentialGreen = ["#D6EEE8", "#A3D9CE", "#55B8A8", "#009580", "#006B5C"];
+
+// Two more ramps for the IRIS maps of further measures (Sandra, 2026-11-15:
+// single households "in a pink color", owners "in a blue map"): one hue
+// each, five steps light → dark like the two above, so each measure has a
+// colour of its own. Neither hue is in main's palette; they are map ramps
+// only, never series colours.
+export const sequentialPink = ["#F8DCE7", "#EFB2CB", "#E27FAB", "#CC4A87", "#9C2762"];
+export const sequentialBlue = ["#DBE7F4", "#AFCBE8", "#78A7D6", "#3F7DBD", "#1F5796"];

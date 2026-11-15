@@ -7,16 +7,25 @@
   // FIVE STATES, four moves (`pair.stages`, fractions of progress):
   //   A  the whole métro as one black line, 2000–2025, its events named;
   //   →  stretchStart … stretchEnd (Sandra, 2026-11-14): the x axis
-  //      stretches until it starts in 2007, where the lines' series start.
+  //      stretches until it starts in 2015, where the lines' series start.
   //      The total line stays one black line and the scale stays its own;
-  //      the years before 2007 leave at the plot's left edge;
-  //   A′ the total, 2007–2025;
+  //      the years before 2015 leave at the plot's left edge;
+  //   A′ the total, 2015–2025;
   //   →  linesStart … linesEnd: a copy of that line per métro line moves to
   //      the line's own values, still black (the colours come in one quick
   //      fade once all have landed), while the scale goes from the total's
   //      to the lines'. (Without the two stretch stages the years stretch
   //      during this move, as they did before.)
   //   B  every line in one chart, a badge at each line's end;
+  //      WITH `pair.stacked` (Sandra, 2026-11-15: the lines add up to the
+  //      total, so show that): B is a STACKED AREA CHART instead. The copies
+  //      fan out DOWNWARDS from the total line to the stack's boundaries
+  //      (the top copy stays where the total is), the scale stays the
+  //      total's, and once they have landed the bands fill with the lines'
+  //      colours in the same timed fade. The line with the most trips in
+  //      the last year is on top, the one with the fewest on the x axis.
+  //      On the way to C the fills go and each band's top edge travels to
+  //      its own panel, down to its own values;
   //   →  panelsStart … panelsEnd: each line moves into its own panel;
   //   C  the small multiples (MetroMorphPanel's grid);
   //   →  mapStart … mapEnd: the lines roll back onto the map, one after
@@ -289,8 +298,9 @@
   // The one chart's axes: there for A and B, gone early in the move to C.
   const oneChartOpacity = $derived(1 - clamp01(tPanels / 0.25));
   // Its two label sets cross-fade half-way through A → B.
-  const totalLabels = $derived(clamp01(1 - 2 * tLines));
-  const lineLabels = $derived(clamp01(2 * tLines - 1));
+  // (Stacked, the scale stays the total's: its labels stay.)
+  const totalLabels = $derived(pair.stacked ? 1 : clamp01(1 - 2 * tLines));
+  const lineLabels = $derived(pair.stacked ? 0 : clamp01(2 * tLines - 1));
   // The black total and its events go as the copies leave it.
   const totalOpacity = $derived(clamp01(1 - 2.5 * tLines));
   const eventsOpacity = $derived(clamp01(1 - 4 * tLines));
@@ -329,12 +339,39 @@
   const values = $derived(rows.map((r) => r.map((d) => d[pair.yKey])));
   const lineFirst = $derived(yearOf(rows[0][0]));
   const lineLast = $derived(yearOf(rows[0][rows[0].length - 1]));
-  // The year the total's x axis starts at: 2000, then (A → A′) 2007.
+  // The year the total's x axis starts at: 2000, then (A → A′) 2015.
   const firstShown = $derived(lerp(totalFirst, lineFirst, tStretch));
   // The year labels cross-fade from the total's to the lines' half-way
   // through the stretch.
   const totalYears = $derived(clamp01(1 - 2 * tStretch));
   const lineYears = $derived(clamp01(2 * tStretch - 1));
+
+  // THE STACK (`pair.stacked`): the panels' indices from the bottom band to
+  // the top one, by the last year's value (fewest trips on the x axis, most
+  // on top; the order holds for every year, as in any stacked chart). Then
+  // each panel's two boundaries as series of their own: `stackTop[p]` is its
+  // line's values plus everything under it, `stackBase[p]` the band below's
+  // top (zeros for the lowest). The highest `stackTop` is the lines' sum,
+  // which is the total line (within 0.3%: the source's total counts a little
+  // more than its lines from 2022 on).
+  const stacked = $derived(!!pair.stacked);
+  const stackOrder = $derived(
+    values.map((_, p) => p).sort((a, b) => values[a][values[a].length - 1] - values[b][values[b].length - 1]),
+  );
+  const stack = $derived.by(() => {
+    const top = [];
+    const base = [];
+    let running = values[0].map(() => 0);
+    for (const p of stackOrder) {
+      base[p] = running;
+      running = running.map((v, k) => v + values[p][k]);
+      top[p] = running;
+    }
+    return { top, base };
+  });
+  // The fills: in with the colours, out early on the way to the panels.
+  // The lines themselves step back while the fills are there.
+  const fillOpacity = $derived(stacked ? colourFade.current * (1 - clamp01(tPanels / 0.15)) : 0);
 
   // Round scale tops, and the gridlines under them (the top tick is the
   // scale's headroom only: no gridline or label for it).
@@ -364,7 +401,7 @@
     totalRows.map(yearOf).filter((year) => (totalLast - year) % 5 === 0),
   );
   const lineSpan = $derived(lineLast - lineFirst);
-  // The one chart, 2007–2025: EVERY SECOND YEAR, counted back from the last
+  // The one chart, 2015–2025: EVERY SECOND YEAR, counted back from the last
   // (Sandra, 2026-11-14: with four labels the stretched axis looked empty).
   const lineYearTicks = $derived(rows[0].map(yearOf).filter((year) => (lineLast - year) % 2 === 0));
   // A small panel has room for four at most: even steps of six (or five).
@@ -539,6 +576,11 @@
             const series = values[track.panel];
             const panel = panels[track.panel];
             const toMap = tMap(i);
+            // State B: on its own line — or, stacked, on its band's top edge.
+            const inOne = (u) =>
+              stacked
+                ? one.yOf(valueAt(stack.top[track.panel], u) / totalTop)
+                : one.yOf(valueAt(series, u) / lineTop);
             const point = ([long, lat, u]) => {
               let x;
               let y;
@@ -548,18 +590,18 @@
                 y = lerp(panel.yOf(valueAt(series, u)), mapY, toMap);
               } else if (tPanels > 0) {
                 x = lerp(one.lineX(u), lerp(panel.x0, panel.plotX1, u), tPanels);
-                y = lerp(one.yOf(valueAt(series, u) / lineTop), panel.yOf(valueAt(series, u)), tPanels);
+                y = lerp(inOne(u), panel.yOf(valueAt(series, u)), tPanels);
               } else {
                 const year = lerp(lineFirst, lineLast, u);
                 const total = valueAt(totalValues, (year - totalFirst) / (totalLast - totalFirst));
                 x = lerp(one.totalX(year), one.lineX(u), tLines);
-                y = lerp(one.yOf(total / totalTop), one.yOf(valueAt(series, u) / lineTop), tLines);
+                y = lerp(one.yOf(total / totalTop), inOne(u), tLines);
               }
               return `${x.toFixed(1)},${y.toFixed(1)}`;
             };
             return {
               line: track.line,
-              opacity: lineStrength(track.line),
+              opacity: lineStrength(track.line) * (1 - fillOpacity),
               color: mix(brand.ink, track.color, colourFade.current),
               d: track.strands.map((strand) => "M" + strand.map(point).join("L")).join(""),
               width: lerp(chartWidth, mapWidth, toMap),
@@ -570,8 +612,30 @@
 
     // The badges: from each line's end in the one chart to its panel's title.
     const r = one.badgeRadius;
+    // THE BANDS (stacked, state B): each line's area between its two
+    // boundaries, four points a year on the house curve, the top edge left
+    // to right and the base back.
+    let bands = [];
+    if (fillOpacity > 0) {
+      const count = (lineLast - lineFirst) * 4;
+      const edge = (series, k) =>
+        `${one.lineX(k / count).toFixed(1)},${one.yOf(valueAt(series, k / count) / totalTop).toFixed(1)}`;
+      const steps = Array.from({ length: count + 1 }, (_, k) => k);
+      const back = [...steps].reverse();
+      bands = stackOrder.map((p) => ({
+        group: pair.groups[p],
+        color: pair.colors[p],
+        d: `M${steps.map((k) => edge(stack.top[p], k)).join("L")}L${back.map((k) => edge(stack.base[p], k)).join("L")}Z`,
+      }));
+    }
+
     const ends = spread(
-      values.map((series) => one.yOf(series[series.length - 1] / lineTop)),
+      values.map((series, p) =>
+        stacked
+          ? // The middle of the band's right end.
+            one.yOf((stack.top[p].at(-1) + stack.base[p].at(-1)) / 2 / totalTop)
+          : one.yOf(series[series.length - 1] / lineTop),
+      ),
       2 * r + 2,
       one.top,
       one.bottom - r,
@@ -636,7 +700,7 @@
       }
     }
 
-    return { compact, one, panels, paths, totalPath, chartWidth, events, badges, dots, explore, legend };
+    return { compact, one, panels, paths, bands, totalPath, chartWidth, events, badges, dots, explore, legend };
   }
 </script>
 
@@ -645,7 +709,7 @@
 {#snippet oneChartFrame(one, compact, events)}
   {@const labelSize = compact ? 10 : 12}
   {#each gridlines as gridline (gridline.line)}
-    {@const y = one.yOf(lerp(gridline.total / totalTop, gridline.line / lineTop, tLines))}
+    {@const y = one.yOf(lerp(gridline.total / totalTop, gridline.line / lineTop, stacked ? 0 : tLines))}
     <Line x1={one.x0} x2={one.x1} y1={y} y2={y} stroke={neutral.faint} strokeWidth={1} />
     {#each [[gridline.total, totalLabels], [gridline.line, lineLabels]] as [value, opacity], k (k)}
       {#if opacity > 0}
@@ -767,7 +831,7 @@
 {#snippet overlay(context)}
   {@const drawn = scene(context)}
   {#if drawn}
-    {@const { compact, one, panels, paths, totalPath, chartWidth, events, badges, dots, explore, legend } = drawn}
+    {@const { compact, one, panels, paths, bands, totalPath, chartWidth, events, badges, dots, explore, legend } = drawn}
     <!-- Inside MetroPanel's Layer, under its stations and badges. -->
     <Group pointer-events="none">
       {#if oneChartOpacity > 0}
@@ -802,6 +866,16 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         />
+      {/if}
+
+      <!-- The stacked bands (state B with `pair.stacked`): each line's area
+           in its colour, a ground-coloured hairline between neighbours. -->
+      {#if bands.length}
+        <Group opacity={fillOpacity}>
+          {#each bands as band (band.group)}
+            <Path pathData={band.d} fill={band.color} stroke={brand.ground} strokeWidth={1} stroke-linejoin="round" />
+          {/each}
+        </Group>
       {/if}
 
       <!-- The casing, then the line: drawn as a pair, so on the map each

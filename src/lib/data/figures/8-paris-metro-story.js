@@ -2,10 +2,13 @@
 // métro chapter and plays Figure 6's map-to-chart morph BACKWARDS, with two
 // stages in front of it (`kind: "metro-story"`, MetroStoryPanel.svelte):
 //   start     the whole métro as ONE black line, 2000–2025, with its events;
-//   scroll    the x axis stretches to 2007–2025, where the lines' data starts;
-//   scroll 1  that line splits: a copy per métro line moves to the line's own
-//             values and takes its colour — every line in one chart;
-//   scroll 2  the lines part into the small multiples;
+//   scroll    the x axis stretches to 2015–2025 (`ZOOM_FROM`): little changes
+//             before 2015, so the lines are shown from there;
+//   scroll 1  that line splits into a STACKED AREA CHART (`stacked`, Sandra
+//             2026-11-15): the lines add up to the total, so the total stays
+//             as the stack's top edge and a band per métro line fills in
+//             under it, most trips on top, fewest on the x axis;
+//   scroll 2  the bands part into the small multiples;
 //   scroll 3  each line leaves its panel and rolls back onto the map;
 //   scroll 4  the stations and the badges come in (no grey city shapes);
 //   scroll 5  the street map (the landing page's OpenStreetMap streets)
@@ -15,9 +18,8 @@
 //             size legend;
 //   scroll 8  line 4 joins, its stations sized the same way;
 //   then      the map travels, the text beside the figure changing at
-//             every stop (`notes`): it zooms in on Cité, moves on to
-//             Montparnasse, zooms out as line 14 arrives, zooms in on
-//             Saint-Lazare and out again;
+//             every state (`notes`): line 14 joins, then ONE stop — it
+//             zooms in on Saint-Lazare and out again;
 //   last      every line and every station, for the reader to explore
 //             (`explore`): circles by entries, a switch for them, click a
 //             station to zoom in.
@@ -68,11 +70,20 @@ const rows = parseFigureCsv(csv).map((d) => ({ ...d, line: String(d.line) }));
 
 // The figure's length in scrolls of 80vh, and a stage's place in it: the
 // figure progress (0 → 1) after `steps` scrolls.
-const STEPS = 16;
+// THE YEAR THE X AXIS ZOOMS TO (Sandra, 2026-11-15: "nothing much changes
+// before this year"). The total opens on 2000–2025 and stretches to start
+// here; the lines, the small multiples and their year labels start here
+// too. The CSV has the lines from 2007: lower this to show more of them.
+const ZOOM_FROM = 2015;
+
+const STEPS = 14;
 const at = (steps) => steps / STEPS;
 
 export default {
   kind: "metro-story",
+  // The split of the total is a stacked area chart, not one line per métro
+  // line. Leave this out to get the lines back.
+  stacked: true,
   // The map the figure ends on (Figure 5), the lines prepared for the morph
   // and the panel order and colours: all as in Figure 6.
   // Its base map and framing leave out the two woods (paris-city.js),
@@ -94,10 +105,10 @@ export default {
   holdVh: STEPS * 80,
   stages: {
     stretchStart: at(0.4), // the total 2000–2025, pinned
-    stretchEnd: at(1), //     the x axis stretches to start in 2007
-    linesStart: at(1.45), //  the total, 2007–2025
-    linesEnd: at(2.05), //    one line becomes all the lines
-    panelsStart: at(2.5), //  all lines in one chart
+    stretchEnd: at(1), //     the x axis stretches to start in 2015
+    linesStart: at(1.45), //  the total, 2015–2025
+    linesEnd: at(2.05), //    one line becomes the stacked bands
+    panelsStart: at(2.5), //  the stacked area chart
     panelsEnd: at(3.15), //   they part into the small multiples
     mapStart: at(3.65), //    the small multiples
     mapEnd: at(4.85), //      the lines roll back onto the map
@@ -120,7 +131,7 @@ export default {
     // 2026-11-14: first one line, then the other).
     more: [
       { line: "4", at: at(9.06) },
-      { line: "14", at: at(12.06) },
+      { line: "14", at: at(10.06) },
     ],
     stations,
     lineKey: "line",
@@ -139,18 +150,17 @@ export default {
     // stop takes it on to the next station; a stop without a station shows
     // the whole map again. Each stop has its text in `notes` below.
     zoom: [
-      // Line 4's two stops, then out again as line 14 arrives, then line 14's.
-      { at: at(10.06), station: "Cité", scale: 4 },
-      { at: at(11.06), station: "Montparnasse-Bienvenüe", scale: 4 },
+      // ONE stop only (Sandra, 2026-11-14): in on the busiest station, out
+      // again. (Cité and Montparnasse were stops too; add lines here to
+      // bring a stop back, with a note of the same `at` below.)
+      { at: at(11.06), station: "Saint-Lazare", scale: 4 },
       { at: at(12.06) },
-      { at: at(13.06), station: "Saint-Lazare", scale: 4 },
-      { at: at(14.06) },
     ],
   },
   // THE LAST STATE, after the story (MetroStoryPanel's `exploring`): all
   // lines, every station a circle, a switch for the circles, click to zoom.
   explore: {
-    at: at(15.06),
+    at: at(13.06),
     stations: parseFigureCsv(allStationsCsv),
     lineKey: "line",
     nameKey: "station",
@@ -211,26 +221,18 @@ export default {
     },
     {
       at: at(10.06),
-      text: "Under the river it stops once, at Cité: the only métro station on an island, and one of the quietest on the line.",
-    },
-    {
-      at: at(11.06),
-      text: "Montparnasse-Bienvenüe is the opposite: the busiest station on line 4, far ahead of every stop around it.",
-    },
-    {
-      at: at(12.06),
       text: "Line 14 opened in 1998, the first new line since the 1930s and driverless from its first day. It was built to relieve the crowded east–west axis that line 1 serves.",
     },
     {
-      at: at(13.06),
+      at: at(11.06),
       text: "Its station at Saint-Lazare is the busiest on the map, with about 41 million entries in a year, roughly three times as many as Châtelet.",
     },
     {
-      at: at(14.06),
+      at: at(12.06),
       text: "Three lines, built almost a century apart, show the same thing: the métro fills up where the trains arrive, and the stops between two big stations stay small.",
     },
     {
-      at: at(15.06),
+      at: at(13.06),
       text: "Now the whole network: every station sized by its entries in 2025, in the colour of the busiest line that stops there. Point at a station for its name and number, click it to zoom in, and click anywhere else to zoom out.",
     },
   ],
@@ -244,9 +246,10 @@ export default {
   // Data) and the streets, water and parks (OpenStreetMap). The datasets
   // and licences in full: the comments above and metro-trips.js.
   sourceNote: "; map © Paris Open Data, © OpenStreetMap contributors",
-  // The whole network (2000–2025) and the lines (2007–2025), in one CSV.
+  // The whole network (2000–2025) and the lines (2007–2025), in one CSV;
+  // the lines are drawn from `ZOOM_FROM` on (the CSV download keeps them all).
   total: rows.filter((d) => d.line === "Total"),
-  data: rows.filter((d) => d.line !== "Total"),
+  data: rows.filter((d) => d.line !== "Total" && d.year.getFullYear() >= ZOOM_FROM),
   csv,
   xKey: "year",
   yKey: "passengers",

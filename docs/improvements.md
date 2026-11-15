@@ -52,6 +52,7 @@ Branch columns: **main**, **tmpl** (`template`), **iw**, **kiel**
 | 17 | Locked chapters: in the Index, greyed, not on the page | 2026-10-27, carta | ? | | | | | | ✓ | ✓ |
 | 18 | Symmetric desktop layout: rail, centred figure, description column | 2026-09-29, fdl | ? | | | | | ✓ | ✓ | ✓ |
 | 19 | Skip link and `main` landmark (keyboard and screen readers) | 2026-09-16, fdl | ? | | | | | ✓ | ✓ | ✓ |
+| 30 | Big number opening a text block (`stat` on a sub-chapter or passage) | 2026-11-15, paris | ? | | | | | | | ✓ |
 
 ## Header, rail, footer
 
