@@ -29,6 +29,6 @@ export default {
   subtitle: "Share of Owner-Occupied Main Homes, 2022, in %",
   description:
     "Paris rents: only about a third of households own the home they live in. Owning is most common in the 16th, 6th and 7th arrondissements and rarest on the eastern and southern edge, in the 13th, 19th and 20th. Grey units have too few homes for a share.",
-  source: "Source: INSEE, Recensement de la population 2022; map © IGN/INSEE",
+  source: "Source: INSEE, Census 2022; map © IGN/INSEE",
   strokeWidth: 0.4,
 };

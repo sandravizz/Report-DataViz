@@ -10,7 +10,6 @@
   import LineMultiplesPanel from "./LineMultiplesPanel.svelte";
   import MetroMorphPanel from "./MetroMorphPanel.svelte";
   import MetroStoryPanel from "./MetroStoryPanel.svelte";
-  import MetroLensPanel from "./MetroLensPanel.svelte";
 
   // progress: the figure's scroll progress (ChartDisplay), for scroll-driven
   // panels only.
@@ -35,6 +34,4 @@
   <MetroMorphPanel {pair} {progress} />
 {:else if pair.kind === "metro-story"}
   <MetroStoryPanel {pair} {progress} />
-{:else if pair.kind === "metro-lens"}
-  <MetroLensPanel {pair} />
 {/if}

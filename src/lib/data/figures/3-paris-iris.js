@@ -26,7 +26,7 @@ export default {
   subtitle: "Residents by IRIS Census Unit, 2022",
   description:
     "At the finest level the map evens out, by design: an IRIS is drawn to hold about 2,000 residents, so most units land in the same two classes. What shows instead is where almost nobody lives: the big parks, the Seine and the canal basins. The two woods on the city’s edge are left off the map.",
-  source: "Source: INSEE, Recensement de la population 2022; map © IGN/INSEE",
+  source: "Source: INSEE, Census 2022; map © IGN/INSEE",
   // A hairline between ~1,000 small shapes; a 1px gap would grey the map.
   strokeWidth: 0.4,
 };

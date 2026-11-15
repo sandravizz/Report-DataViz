@@ -28,6 +28,6 @@ export default {
   subtitle: "Share of One-Person Households, 2022, in %",
   description:
     "Living alone is the norm in Paris: more than half of all households are one person. The pink is deepest in the centre and around the 5th and the 11th arrondissements, and palest in the 16th in the west and the 19th in the north-east. Grey units have too few households for a share.",
-  source: "Source: INSEE, Recensement de la population 2022; map © IGN/INSEE",
+  source: "Source: INSEE, Census 2022; map © IGN/INSEE",
   strokeWidth: 0.4,
 };

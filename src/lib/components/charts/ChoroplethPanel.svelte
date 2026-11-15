@@ -107,7 +107,12 @@
 
 <svelte:window bind:innerWidth={viewportWidth} />
 
-<div class="relative min-w-0 flex-1 lg:-mx-10 lg:-mt-8">
+<!-- THE MAP'S BOX. Below lg it takes all the room there is (Sandra,
+     2026-11-15: on an iPhone the map was very small): it bleeds 6vw each
+     side, out to the screen's edges (the figure is 88vw), and 24px up and
+     down into the air under the subtitle and above the source — MetroPanel's
+     `roomy` box. The key keeps the figure's left edge (left-[6vw]). -->
+<div class="relative min-w-0 flex-1 max-lg:-mx-[6vw] max-lg:-mt-6 max-lg:-mb-6 lg:-mx-10 lg:-mt-8">
   <Chart
     data={pair.data}
     c={valueOf}
@@ -175,7 +180,7 @@
        Lower left corner of the map from lg; on phones in the strip the
        Chart's bottom padding leaves under the map. -->
   {#if histogram.length}
-    <div class="absolute bottom-0 left-0 w-40 lg:-bottom-8 lg:left-16 lg:w-52">
+    <div class="absolute bottom-0 left-[6vw] w-40 lg:-bottom-8 lg:left-16 lg:w-52">
       <!-- The measure's name, as the Legend's title was. `data-export-label`
            puts it in the PNG. -->
       <div data-export-label class="mb-1 text-[10px] leading-none text-base-content">{pair.legendTitle}</div>

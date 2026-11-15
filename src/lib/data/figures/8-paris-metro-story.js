@@ -238,14 +238,18 @@ export default {
   ],
   description:
     "Métro traffic grew through the 2000s, held level for a decade at around 1.5 billion trips a year, was halved by the pandemic and is back at that level today. Line by line the recovery is uneven: line 14, extended twice, carries far more than before, while most of the older lines sit a little below where they were.",
-  source,
+  // TWO LINES AT MOST ON A PHONE (Sandra, 2026-11-15): the source line
+  // shares its row with the PNG | CSV button, so about 36 characters fit a
+  // line there. Hence no "(Omnil)" here (the link still goes to it) and
+  // the short credits below.
+  source: source.replace(" (Omnil)", ""),
   sourceUrl,
   // Short on the page (Sandra, 2026-11-14). The trips, the métro lines and
   // the station entries are all Île-de-France Mobilités (the link); the note
   // keeps the two credits the ODbL asks for: the boundaries (Paris Open
   // Data) and the streets, water and parks (OpenStreetMap). The datasets
   // and licences in full: the comments above and metro-trips.js.
-  sourceNote: "; map © Paris Open Data, © OpenStreetMap contributors",
+  sourceNote: "; map © OpenStreetMap, Paris Open Data",
   // The whole network (2000–2025) and the lines (2007–2025), in one CSV;
   // the lines are drawn from `ZOOM_FROM` on (the CSV download keeps them all).
   total: rows.filter((d) => d.line === "Total"),

@@ -20,5 +20,5 @@ export default {
   subtitle: "Residents of the 80 Quartiers Administratifs, 2022",
   description:
     "Four quartiers per arrondissement, and the ring breaks up: on the edge, a handful of very large quartiers stand out from their neighbours. In the centre the quartiers are small in area and in number, around the Louvre and the Opéra only a few thousand residents each.",
-  source: "Source: INSEE, Recensement de la population 2022; map © Paris Open Data",
+  source: "Source: INSEE, Census 2022; map © Paris Open Data",
 };

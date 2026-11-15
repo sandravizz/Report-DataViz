@@ -22,5 +22,5 @@ export default {
   subtitle: "Residents of the 20 Arrondissements, 2022",
   description:
     "The people live in the outer half: every arrondissement from the 11th to the 20th counts well over 100,000 residents, the 15th the most of all. The four at the centre, the oldest part of Paris, are home to fewer than 100,000 between them.",
-  source: "Source: INSEE, Recensement de la population 2022; map © Paris Open Data",
+  source: "Source: INSEE, Census 2022; map © Paris Open Data",
 };

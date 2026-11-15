@@ -29,12 +29,12 @@
   const moreHref = "https://www.sandraviz.com/";
 
   // paris-demo (2026-11-04): carta-demo's structure in main's look, with
-  // THREE placeholder chapters — the copy and data are still to come.
+  // TWO chapters on the page — the copy is still to come.
   // Chapter One, "Population", opens on the city's total as a big number and
   // steps through Paris at three levels of detail (arrondissements,
-  // quartiers, IRIS), coloured by residents (INSEE census 2022); Chapter Two draws the
-  // whole métro network, then zooms in on the city of Paris. Chapter Three stays text-only,
-  // so the report ends on text.
+  // quartiers, IRIS), coloured by residents (INSEE census 2022); Chapter Two,
+  // "Métro", is the métro story, then a closing text sub-chapter, so the
+  // report ends on text.
   //
   // THREE LAYERS: chapter → sub-chapter → figure. A sub-chapter may have no
   // figures (text only); `passages` continue a sub-chapter after its figure
@@ -107,21 +107,9 @@
           // still registered), which was the same morph the other way round.
           charts: [figures.parisMetroStory],
         },
-      ],
-    },
-    {
-      // TEST CHAPTER (Sandra, 2026-11-14): the street map with line 1, read
-      // through the cover's lens (figures.parisMetroLens). Delete the first
-      // sub-chapter to drop the test; the closing text moved here with it.
-      title: "Chapter Three",
-      subchapters: [
-        {
-          title: "Test: the lens on the street map",
-          intro: "A test: <mark class=\"accent-mark\">the cover's lens on the métro map</mark>.",
-          body: ["Move the mouse over the map below. The lens shows the street names, as on the cover, and the stations of line 1."],
-          charts: [figures.parisMetroLens],
-        },
         // The report ENDS ON TEXT: a closing sub-chapter after the figure.
+        // (Chapter Three, the lens test, was deleted 2026-11-15; its closing
+        // text moved here.)
         {
           title: "Sub-chapter title",
           intro: "Placeholder lede: <mark class=\"accent-mark\">the closing line of the report</mark>.",
