@@ -15,11 +15,11 @@
 // by reading order.
 import csv from "./csv/11-paris-iris-single-households.csv?raw";
 import geojson from "../geo/paris-iris.json";
-import { choropleth } from "./choropleth.js";
+import { choropleth, isWood } from "./choropleth.js";
 import { sequentialPink } from "$lib/colors";
 
 export default {
-  ...choropleth(geojson, csv, "iris", { valueKey: "single_households_pct", domain: [30, 80], label: "One-person households" }),
+  ...choropleth(geojson, csv, "iris", { valueKey: "single_households_pct", domain: [30, 80], label: "One-person households", drop: isWood }),
   palette: sequentialPink,
   legendTitle: "One-person households, in %",
   legendFormat: (v) => `${v}%`,

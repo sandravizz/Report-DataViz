@@ -16,11 +16,11 @@
 // by reading order.
 import csv from "./csv/12-paris-iris-owners.csv?raw";
 import geojson from "../geo/paris-iris.json";
-import { choropleth } from "./choropleth.js";
+import { choropleth, isWood } from "./choropleth.js";
 import { sequentialBlue } from "$lib/colors";
 
 export default {
-  ...choropleth(geojson, csv, "iris", { valueKey: "owners_pct", domain: [10, 60], label: "Owner-occupied" }),
+  ...choropleth(geojson, csv, "iris", { valueKey: "owners_pct", domain: [10, 60], label: "Owner-occupied", drop: isWood }),
   palette: sequentialBlue,
   legendTitle: "Owner-occupied homes, in %",
   legendFormat: (v) => `${v}%`,

@@ -8,20 +8,24 @@
 // exactly to its census population (largest remainder). Same total as
 // Figures 1 and 2; see 1-paris-arrondissements.js.
 //
+// THE TWO WOODS ARE NOT DRAWN (`isWood`, choropleth.js): 987 of the 992
+// units are on the map, 2,111,986 of the 2,113,705 residents. The CSV keeps
+// all 992, so its sum is still the city's total.
+//
 // Boundaries: IGN/INSEE IRIS 2024, via Opendatasoft "georef-france-iris"
 // (Licence Ouverte / Etalab), simplified (~3 m). Feature ids are the
 // 9-digit IRIS codes.
 import csv from "./csv/3-paris-iris.csv?raw";
 import geojson from "../geo/paris-iris.json";
-import { choropleth, thousands } from "./choropleth.js";
+import { choropleth, isWood, thousands } from "./choropleth.js";
 
 export default {
-  ...choropleth(geojson, csv, "iris", { valueKey: "population", domain: [0, 5000], label: "Residents" }),
+  ...choropleth(geojson, csv, "iris", { valueKey: "population", domain: [0, 5000], label: "Residents", drop: isWood }),
   legendFormat: thousands,
   title: "Population by IRIS",
-  subtitle: "Residents of the 992 IRIS Census Units, 2022",
+  subtitle: "Residents by IRIS Census Unit, 2022",
   description:
-    "At the finest level the map evens out, by design: an IRIS is drawn to hold about 2,000 residents, so most units land in the same two classes. What shows instead is where almost nobody lives: the Bois de Boulogne, the big parks, the Seine and the canal basins.",
+    "At the finest level the map evens out, by design: an IRIS is drawn to hold about 2,000 residents, so most units land in the same two classes. What shows instead is where almost nobody lives: the big parks, the Seine and the canal basins. The two woods on the city’s edge are left off the map.",
   source: "Source: INSEE, Recensement de la population 2022; map © IGN/INSEE",
   // A hairline between ~1,000 small shapes; a 1px gap would grey the map.
   strokeWidth: 0.4,

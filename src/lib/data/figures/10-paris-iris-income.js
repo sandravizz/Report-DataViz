@@ -19,11 +19,11 @@
 // Boundaries: as Figure 3 (IGN/INSEE IRIS 2024).
 import csv from "./csv/10-paris-iris-income.csv?raw";
 import geojson from "../geo/paris-iris.json";
-import { choropleth } from "./choropleth.js";
+import { choropleth, isWood } from "./choropleth.js";
 import { sequentialGreen } from "$lib/colors";
 
 export default {
-  ...choropleth(geojson, csv, "iris", { valueKey: "median_income", domain: [10000, 60000], label: "Median income" }),
+  ...choropleth(geojson, csv, "iris", { valueKey: "median_income", domain: [10000, 60000], label: "Median income", drop: isWood }),
   palette: sequentialGreen,
   legendTitle: "Median income, € per year",
   legendFormat: (v) => `${v / 1000}k`,

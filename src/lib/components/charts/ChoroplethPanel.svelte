@@ -4,8 +4,8 @@
   // example builds it (layerchart.com/docs/components/GeoPath/choropleth):
   // the colour scale lives on the Chart (`c` / `cScale` / `cDomain` /
   // `cRange`), the projection is fitted through `geo.fitGeojson`, each
-  // region is a GeoPath with `tooltip`, and the key is LayerChart's Legend,
-  // which reads the chart's cScale by itself.
+  // region is a GeoPath with `tooltip`. The key is the histogram described
+  // below (it was LayerChart's Legend until 2026-11-15).
   //
   // Figure fields: geojson (a FeatureCollection whose features carry
   // `properties.value`, `properties.name` and optionally `properties.sub`,
@@ -21,7 +21,7 @@
   // NO DATA: a feature whose value is null (a unit the source does not
   // publish a figure for) is filled in the grey wash, off the colour scale,
   // and its tooltip says "No data".
-  import { BarChart, Chart, Layer, Legend, Tooltip } from "layerchart";
+  import { BarChart, Chart, Layer, Tooltip } from "layerchart";
   import { GeoPath } from "layerchart/geo";
   import { geoMercator } from "d3-geo";
   import { scaleQuantize } from "d3-scale";
@@ -41,21 +41,28 @@
   let viewportWidth = $state(0);
   const desktop = $derived(viewportWidth >= 1400);
 
-  // THE DISTRIBUTION, a small histogram WITH THE LEGEND, in the map's lower
-  // left corner, standing on top of the colour key (Sandra, 2026-11-15; it
-  // first sat in the lower right corner, on top of the Bois de Vincennes)
-  // (Sandra, 2026-11-15: the measures may be skewed, so show how the units
-  // are spread before choosing the colour scale). One bar per bin, as tall
-  // as the number of units in it, in the colour the map gives that value —
-  // so it also shows how many units each colour class holds.
+  // THE KEY IS A HISTOGRAM (Sandra, 2026-11-15: "the legend can be the
+  // x-axis of the histogram"). In the map's lower left corner, one element:
+  // the measure's name, the distribution of the units as bars, and directly
+  // under them the colour bar they stand on, with the class boundaries
+  // written below. A bar is as tall as the number of units in its bin and
+  // takes the colour the map gives that value, so the key shows what each
+  // colour means AND how many units wear it. (It began as LayerChart's
+  // Legend with a separate histogram in the lower right corner, which sat
+  // on the Bois de Vincennes.)
   // - Bins are a quarter of a colour class wide and start on the scale's
   //   minimum, so no bin straddles two classes.
   // - Units beyond the scale's ends are counted too, in bins of the same
   //   width out to the data's own minimum and maximum; they take the end
-  //   classes' colours, as on the map.
+  //   classes' colours, as on the map. So the colour bar's first and last
+  //   segments are as long as the values they really cover.
   // - Units without a value are left out.
-  // A LayerChart BarChart of its own, laid over the map (a second chart
-  // root: the PNG export collects every chart root in the figure).
+  // BUILT FROM TWO LayerChart BarCharts on the same bins and the same band
+  // scale (no band padding, so they line up to the pixel): the histogram,
+  // and under it a strip of equal bars, one per bin, which is the colour
+  // bar. Its axis labels the class boundaries; a label is moved half a bin
+  // left, from its bin's centre to the bin's start, where the colour
+  // changes. (Both are chart roots: the PNG export collects them.)
   const palette = $derived(pair.palette ?? sequential);
   const histogram = $derived.by(() => {
     const [d0, d1] = pair.domain;
@@ -67,19 +74,34 @@
     const last = Math.max(palette.length * 4 - 1, ...values.map(index));
     const bins = Array.from({ length: last - first + 1 }, (_, k) => {
       const from = d0 + (first + k) * step;
-      return { from, to: from + step, mid: from + step / 2, count: 0 };
+      return { from, to: from + step, mid: from + step / 2, count: 0, one: 1 };
     });
     for (const v of values) bins[index(v) - first].count += 1;
     return bins;
   });
   const formatTick = (v) => (pair.legendFormat ?? formatValue)(v);
-  // Labelled on the axis: the colour classes' boundaries (the bins that
-  // start on one) — all four on a wide screen, the outer two on a phone.
-  const histogramTicks = $derived.by(() => {
+  // The four class boundaries (each is a bin's start).
+  const keyTicks = $derived.by(() => {
     const [d0, d1] = pair.domain;
     const width = (d1 - d0) / palette.length;
-    const all = [1, 2, 3, 4].map((k) => d0 + k * width);
-    return desktop ? all : [all[0], all[3]];
+    return [1, 2, 3, 4].map((k) => d0 + k * width);
+  });
+  // The key's width in px (the Tailwind widths on its box below): 208 from
+  // lg, 160 on phones and tablets. Half a bin, for the labels' shift.
+  const keyWidth = $derived(desktop ? 208 : 160);
+  const halfBin = $derived(histogram.length ? keyWidth / histogram.length / 2 : 0);
+  // What both charts share: the bins, the band scale, the colours.
+  const keyChart = $derived({
+    data: histogram,
+    x: "from",
+    c: (d) => d.mid,
+    cScale: scaleQuantize(),
+    cDomain: pair.domain,
+    cRange: palette,
+    bandPadding: 0,
+    grid: false,
+    rule: false,
+    legend: false,
   });
 </script>
 
@@ -93,7 +115,7 @@
     cDomain={pair.domain}
     cRange={palette}
     geo={{ projection: geoMercator, fitGeojson: pair.geojson }}
-    padding={{ top: 8, bottom: desktop ? 8 : 60 }}
+    padding={{ top: 8, bottom: desktop ? 8 : 84 }}
     tooltipContext={{ raiseTarget: true }}
   >
     {#snippet children({ context })}
@@ -125,19 +147,6 @@
         {/if}
       </Layer>
 
-      <!-- A key, not a feature: LayerChart's default 320×10 bar is sized
-           down through its own width/height/tickFontSize props (160 / 120px
-           wide, 6px tall), so it stays small and fits a phone's map. -->
-      <Legend
-        title={pair.legendTitle}
-        placement="bottom-left"
-        tickFormat={pair.legendFormat ?? formatValue}
-        width={desktop ? 160 : 120}
-        height={6}
-        tickFontSize={9}
-        tickLength={3}
-        classes={{ root: "lg:left-16", title: "text-[10px] font-normal text-base-content", tick: "fill-base-content/70" }}
-      />
 
       <!-- The same card as every other figure's tooltip (chart-theme's
            tooltipCard), written out because this one is a custom snippet. -->
@@ -162,42 +171,54 @@
     {/snippet}
   </Chart>
 
-  <!-- The histogram: from lg above the legend, left edges aligned (on
-       phones, in the strip under the map, beside the legend). Bars only, no
-       y axis: the shape is the point; a bar's tooltip gives its range and
-       its count. Its baseline is a faint hairline, not an ink axis. -->
+  <!-- THE KEY: name, histogram, colour bar, boundaries — see the script.
+       Lower left corner of the map from lg; on phones in the strip the
+       Chart's bottom padding leaves under the map. -->
   {#if histogram.length}
-    <div class="absolute right-0 bottom-0 h-14 w-32 lg:right-auto lg:bottom-14 lg:left-16 lg:h-22 lg:w-48">
-      <BarChart
-        data={histogram}
-        x="from"
-        series={[{ key: "count", value: "count", label: "Units" }]}
-        c={(d) => d.mid}
-        cScale={scaleQuantize()}
-        cDomain={pair.domain}
-        cRange={palette}
-        bandPadding={0.12}
-        axis="x"
-        grid={false}
-        rule={false}
-        legend={false}
-        padding={{ top: 2, bottom: 14, left: 0, right: 0 }}
-        props={{
-          bars: { strokeWidth: 0, radius: 0 },
-          xAxis: {
-            rule: true,
-            stroke: neutral.faint,
-            tickMarks: false,
-            ticks: histogramTicks,
-            format: formatTick,
-            tickLabelProps: { class: "fill-base-content/70 text-[9px]", dy: 3 },
-          },
-          tooltip: {
-            ...tooltipCard((from) => `${formatValue(from)} – ${formatValue(histogram.find((b) => b.from === from)?.to)}`),
-            item: { format: formatNumber },
-          },
-        }}
-      />
+    <div class="absolute bottom-0 left-0 w-40 lg:-bottom-8 lg:left-16 lg:w-52">
+      <!-- The measure's name, as the Legend's title was. `data-export-label`
+           puts it in the PNG. -->
+      <div data-export-label class="mb-1 text-[10px] leading-none text-base-content">{pair.legendTitle}</div>
+      <!-- The histogram: bars only, a hairline of ground between them
+           (insets, so the band scale stays the strip's). A bar's tooltip
+           gives its range and its count. -->
+      <div class="h-11 lg:h-18">
+        <BarChart
+          {...keyChart}
+          series={[{ key: "count", value: "count", label: "Units" }]}
+          axis={false}
+          padding={{ top: 2, bottom: 0, left: 0, right: 0 }}
+          props={{
+            bars: { strokeWidth: 0, radius: 0, insets: { left: 0.5, right: 0.5 } },
+            tooltip: {
+              ...tooltipCard((from) => `${formatValue(from)} – ${formatValue(histogram.find((b) => b.from === from)?.to)}`),
+              item: { format: formatNumber },
+            },
+          }}
+        />
+      </div>
+      <!-- The colour bar the histogram stands on: 6px of equal bars, one
+           per bin, touching; the class boundaries under it. No tooltip of
+           its own (pointer-events-none). -->
+      <div class="pointer-events-none mt-0.5 h-5">
+        <BarChart
+          {...keyChart}
+          series={[{ key: "one", value: "one" }]}
+          yDomain={[0, 1]}
+          axis="x"
+          padding={{ top: 0, bottom: 14, left: 0, right: 0 }}
+          props={{
+            bars: { strokeWidth: 0, radius: 0 },
+            xAxis: {
+              rule: false,
+              tickMarks: false,
+              ticks: keyTicks,
+              format: formatTick,
+              tickLabelProps: { class: "fill-base-content/70 text-[9px]", dx: -halfBin, dy: 2 },
+            },
+          }}
+        />
+      </div>
     </div>
   {/if}
 </div>
